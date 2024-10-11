@@ -14,7 +14,7 @@
             <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                 <!--begin::Item-->
                 <li class="breadcrumb-item text-muted">
-                    <span class="text-muted text-hover-primary">Total Punch: <b>111</b></span>
+                    <span class="text-muted text-hover-primary">Total Punch: <b>1112</b></span>
                 </li>
                 <!--begin::Item-->
                 <li class="breadcrumb-item text-muted">
