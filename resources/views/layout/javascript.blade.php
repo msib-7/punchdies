@@ -5,14 +5,16 @@
             layout: {
                 topStart: {
                     buttons: [{
-                        extend: 'copy', className: "btn btn-secondary"
+                        extend: 'copy',
+                        className: "btn btn-secondary"
                     }, {
-                        extend: 'print', className: "btn btn-light-dark"
+                        extend: 'print',
+                        className: "btn btn-light-dark"
                     }, {
                         extend: 'collection',
                         className: 'btn btn-light-primary',
                         text: 'Export',
-                        buttons: ['csv','excel','pdf']
+                        buttons: ['csv', 'excel', 'pdf']
                     }],
                 },
                 topEnd: {
@@ -28,10 +30,10 @@
                 }
             },
             initComplete: function () {
-                        var btns = $('.dt-button');
-                        btns.removeClass('dt-button');
-                        btns.removeClass('dt-button');
-                    },
+                var btns = $('.dt-button');
+                btns.removeClass('dt-button');
+                btns.removeClass('dt-button');
+            },
             responsive: true,
             keys: true,
         });
@@ -47,14 +49,16 @@
             layout: {
                 topStart: {
                     buttons: [{
-                        extend: 'copy', className: "btn btn-secondary"
+                        extend: 'copy',
+                        className: "btn btn-secondary"
                     }, {
-                        extend: 'print', className: "btn btn-light-dark"
+                        extend: 'print',
+                        className: "btn btn-light-dark"
                     }, {
                         extend: 'collection',
                         className: 'btn btn-light-primary',
                         text: 'Export',
-                        buttons: ['csv','excel','pdf']
+                        buttons: ['csv', 'excel', 'pdf']
                     }],
                 },
                 topEnd: {
@@ -70,10 +74,10 @@
                 }
             },
             initComplete: function () {
-                        var btns = $('.dt-button');
-                        btns.removeClass('dt-button');
-                        btns.removeClass('dt-button');
-                    },
+                var btns = $('.dt-button');
+                btns.removeClass('dt-button');
+                btns.removeClass('dt-button');
+            },
             responsive: true,
             keys: true,
         });
@@ -81,14 +85,16 @@
             layout: {
                 topStart: {
                     buttons: [{
-                        extend: 'copy', className: "btn btn-secondary"
+                        extend: 'copy',
+                        className: "btn btn-secondary"
                     }, {
-                        extend: 'print', className: "btn btn-light-dark"
+                        extend: 'print',
+                        className: "btn btn-light-dark"
                     }, {
                         extend: 'collection',
                         className: 'btn btn-light-primary',
                         text: 'Export',
-                        buttons: ['csv','excel','pdf']
+                        buttons: ['csv', 'excel', 'pdf']
                     }],
                 },
                 topEnd: {
@@ -104,10 +110,10 @@
                 }
             },
             initComplete: function () {
-                        var btns = $('.dt-button');
-                        btns.removeClass('dt-button');
-                        btns.removeClass('dt-button');
-                    },
+                var btns = $('.dt-button');
+                btns.removeClass('dt-button');
+                btns.removeClass('dt-button');
+            },
             responsive: true,
             keys: true,
         });
@@ -115,14 +121,16 @@
             layout: {
                 topStart: {
                     buttons: [{
-                        extend: 'copy', className: "btn btn-sm btn-secondary"
+                        extend: 'copy',
+                        className: "btn btn-sm btn-secondary"
                     }, {
-                        extend: 'print', className: "btn btn-sm btn-light-dark"
+                        extend: 'print',
+                        className: "btn btn-sm btn-light-dark"
                     }, {
                         extend: 'collection',
                         className: 'btn btn-sm btn-light-primary',
                         text: 'Export',
-                        buttons: ['csv','excel','pdf']
+                        buttons: ['csv', 'excel', 'pdf']
                     }],
                 },
                 topEnd: {
@@ -140,10 +148,31 @@
                 },
             },
             initComplete: function () {
-                        var btns = $('.dt-button');
-                        btns.removeClass('dt-button');
-                        btns.removeClass('dt-button');
+                var btns = $('.dt-button');
+                btns.removeClass('dt-button');
+                btns.removeClass('dt-button');
+            },
+            responsive: true,
+            keys: true,
+        });
+        $('#table_role').DataTable({
+            layout: {
+                topEnd: {
+                    search: {
+                        placeholder: 'Type anything here'
+                    }
+                },
+                bottomEnd: {
+                    paging: {
+                        type: 'simple'
                     },
+                }
+            },
+            initComplete: function () {
+                var btns = $('.dt-button');
+                btns.removeClass('dt-button');
+                btns.removeClass('dt-button');
+            },
             responsive: true,
             keys: true,
         });
@@ -174,6 +203,9 @@
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/table.js')}}"></script>
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/export-users.js')}}"></script>
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/add.js')}}"></script>
+<script src="assets/js/custom/apps/user-management/permissions/list.js"></script>
+<script src="assets/js/custom/apps/user-management/permissions/add-permission.js"></script>
+<script src="assets/js/custom/apps/user-management/permissions/update-permission.js"></script>
 <script src="{{asset('assets/js/widgets.bundle.js')}}"></script>
 <script src="{{asset('assets/js/custom/widgets.js')}}"></script>
 <script src="{{asset('assets/js/custom/utilities/modals/upgrade-plan.js')}}"></script>

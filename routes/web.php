@@ -14,15 +14,21 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-
     Route::get('/dashboard-admin', [AdminController::class, 'dashboard'])->name('dashboard');
 
     Route::get('/data/punch-atas', function () {
         return view('engineer.data.punch_atas');
     });
 
+    //Manajemen User
     Route::get('/manajemen-user', [AdminController::class, 'manajemen_user'])->name('user');
     Route::post('/add-user', [AdminController::class, 'add_user'])->name('add-user');
+
+    //Manajemen Role
+    Route::get('/manajemen-role', [AdminController::class, 'manajemen_role'])->name('roles');
+
+    Route::get('/manajemen-permissions', [AdminController::class, 'manajemen_permission'])->name('permissions');
+    Route::get('/save-permission', [AdminController::class, 'add_permission'])->name('add-permissions');
 
 
 

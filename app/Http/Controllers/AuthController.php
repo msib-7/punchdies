@@ -13,19 +13,19 @@ class AuthController extends Controller
     }
     public function login_auth(Request $request)
     {
-        $email = htmlspecialchars($request->email);
+        $username = htmlspecialchars($request->username);
         $password = htmlspecialchars($request->password);
 
         $request->validate([
-            'email' => 'required',
+            'username' => 'required',
             'password' => 'required'
         ], [
-            'email.required' => 'Email field is required!',
+            'email.required' => 'Username field is required!',
             'password.required' => 'Password field is required',
         ]);
 
         $infoLogin = [
-            'email' => $email,
+            'username' => $username,
             'password' => $password
         ];
         
