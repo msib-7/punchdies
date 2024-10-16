@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\APIContr;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,9 +30,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/manajemen-permissions', [AdminController::class, 'manajemen_permission'])->name('permissions');
     Route::get('/save-permission', [AdminController::class, 'add_permission'])->name('add-permissions');
+    Route::get('/delete-permission/{id}', [AdminController::class, 'del_permission']);
+    Route::get('/edit-permission/{id}', [AdminController::class, 'edit_permission']);
+    Route::post('/update-permission', [AdminController::class, 'update_permission']);
 
 
 
     //Logout
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+
+//test
+Route::get('/getDataPermission', [APIContr::class,'getDataPermission_api'])->name('permission_api');
+Route::get('/getDataPermission/{id}', [APIContr::class,'getDataPermission_api'])->name('permission_api');

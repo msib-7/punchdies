@@ -7,7 +7,8 @@
         <!--begin::Page title-->
         <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
             <!--begin::Title-->
-            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Permission List
+            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Permission
+                List
             </h1>
             <!--end::Title-->
             <!--begin::Breadcrumb-->
@@ -69,18 +70,18 @@
                         <?php $no=1?>
                         @foreach ($dataPermission as $data)
                         <tr>
-                            <td class="text-center">{{$no++}}</td>
+                            <td class="text-center">{{ $no++ }}</td>
                             <td class="d-flex align-items-center">
                                 <!--begin::User details-->
-                                <div class="d-flex flex-column">
+                                <div class="d-flex flex-center">
                                     <a href="../../demo1/dist/apps/user-management/users/view.html"
-                                        class="text-gray-800 text-hover-primary mb-1">{{ $data['name']}}</a>
+                                        class="text-gray-800 text-hover-primary mb-1">{{ $data->name}}</a>
                                 </div>
                                 <!--begin::User details-->
                             </td>
-                            <td>foreach disini!</td>
+                            <td></td>
                             <td>
-                                <div class="text-gray-800">{{ $data['created_at']}}</div>
+                                <div class="text-gray-800">{{ $data->created_at}}</div>
                             </td>
                             <td class="text-center">
                                 <a href="#" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"
@@ -91,13 +92,14 @@
                                     data-kt-menu="true">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="../../demo1/dist/apps/user-management/users/view.html"
-                                            class="menu-link px-3">Edit</a>
+                                        <button id="btn-edit" data-id="{{ $data->id }}" class="menu-link px-3">
+                                            Edit
+                                        </button>
                                     </div>
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3"
+                                        <a href="{{ url("delete-permission/".$data->id) }}" class="menu-link px-3"
                                             data-kt-users-table-filter="delete_row">Delete</a>
                                     </div>
                                     <!--end::Menu item-->
@@ -115,7 +117,7 @@
 </div>
 <!--end::Content-->
 
-<!--begin::Modal - Add task-->
+<!--begin::Modal - Add Permission-->
 <div class="modal fade" id="kt_modal_add_permission" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered modal-dialog-sm">
@@ -127,12 +129,7 @@
                 <h2 class="fw-bold">Add a Permission</h2>
                 <!--end::Modal title-->
                 <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                    <i class="ki-duotone ki-cross fs-1">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
-                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <!--end::Close-->
             </div>
             <!--end::Modal header-->
@@ -151,8 +148,9 @@
                             <label class="required fw-semibold fs-6 mb-2">Permission Name</label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input type="text" name="permission_name" class="form-control form-control-solid mb-3 mb-lg-0"
-                                placeholder="Enter a permission name" />
+                            <input type="text" name="permission_name"
+                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                placeholder="Enter a permission name" value="" />
                             <!--end::Input-->
                         </div>
                         <!--end::Input group-->
@@ -178,5 +176,88 @@
     </div>
     <!--end::Modal dialog-->
 </div>
-<!--end::Modal - Add task-->
+<!--end::Modal - Add Permission-->
+
+<!--begin::Modal - Edit Permission-->
+<div class="modal fade" id="kt_modal_edit_permission" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered modal-dialog-sm">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header" id="kt_modal_add_user_header">
+                <!--begin::Modal title-->
+                <h2 class="fw-bold">Edit a Permission</h2>
+                <!--end::Modal title-->
+                <!--begin::Close-->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!--end::Close-->
+            </div>
+            <!--end::Modal header-->
+            <!--begin::Modal body-->
+            <div class="modal-body px-5">
+                <form class="form" action="{{url('update-permission')}}" method="POST">
+                    @csrf
+                <!--begin::Scroll-->
+                <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_permission_scroll"
+                    data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto"
+                    data-kt-scroll-dependencies="#kt_modal_add_permission_header"
+                    data-kt-scroll-wrappers="#kt_modal_add_permission_scroll" data-kt-scroll-offset="300px">
+                    <!--begin::Input group-->
+                    <div class="fv-row mb-7">
+                        <!--begin::Label-->
+                        <label class="required fw-semibold fs-6 mb-2">Permission Name</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <input type="hidden" name="id_permission" id="id_permissions" />
+                        <input type="text" name="permission_name_edit"
+                            class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Enter a permission name"
+                            id="edit-name-permission" />
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                </div>
+                <!--end::Scroll-->
+                <!--begin::Actions-->
+                <div class="text-center pt-10">
+                    <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
+                    <button type="submit" class="btn btn-warning" id="btn-update">
+                        <span class="indicator-label">Update</span>
+                        <span class="indicator-progress">Please wait...
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                    </button>
+                </div>
+                <!--end::Actions-->
+                </form>
+            </div>
+            <!--end::Modal body-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+<!--end::Modal - Edit Permission-->
+
+<script>
+    //button create post event
+    $('body').on('click', '#btn-edit', function () {
+
+        let edit_id = $(this).data('id');
+
+        //fetch detail post with ajax
+        $.ajax({
+            url: `/edit-permission/${edit_id}`,
+            type: "GET",
+            cache: false,
+            success: function (response) {
+
+                //fill data to form
+                $('#id_permissions').val(response.data.id);
+                $('#edit-name-permission').val(response.data.name);
+                //open modal
+                $('#kt_modal_edit_permission').modal('show');
+            }
+        });
+    });
+</script>
 @endsection
