@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\APIContr;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Permission;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -28,11 +29,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //Manajemen Role
     Route::get('/manajemen-role', [AdminController::class, 'manajemen_role'])->name('roles');
 
-    Route::get('/manajemen-permissions', [AdminController::class, 'manajemen_permission'])->name('permissions');
-    Route::get('/save-permission', [AdminController::class, 'add_permission'])->name('add-permissions');
-    Route::get('/delete-permission/{id}', [AdminController::class, 'del_permission']);
-    Route::get('/edit-permission/{id}', [AdminController::class, 'edit_permission']);
-    Route::post('/update-permission', [AdminController::class, 'update_permission']);
+    //Manajemen Permission
+    Route::get('/manajemen-permissions', [Permission::class, 'manajemen_permission'])->name('permissions');
+    Route::get('/save-permission', [Permission::class, 'add_permission'])->name('add-permissions');
+    Route::get('/delete-permission/{id}', [Permission::class, 'del_permission']);
+    Route::get('/edit-permission/{id}', [Permission::class, 'edit_permission']);
+    Route::post('/update-permission', [Permission::class, 'update_permission']);
 
 
 
