@@ -118,233 +118,115 @@
 <!--end::Content-->
 
 <!--begin::Modal - Add task-->
-<div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="kt_modal_add_role" tabindex="-1" aria-hidden="true" wire:ignore.self>
     <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered modal-dialog-sm">
+    <div class="modal-dialog modal-dialog-centered mw-750px">
         <!--begin::Modal content-->
         <div class="modal-content">
             <!--begin::Modal header-->
-            <div class="modal-header" id="kt_modal_add_user_header">
+            <div class="modal-header">
                 <!--begin::Modal title-->
-                <h2 class="fw-bold">Create New Role</h2>
+                <h2 class="fw-bold">Update Role</h2>
                 <!--end::Modal title-->
                 <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                    <i class="ki-duotone ki-cross fs-1">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal" aria-label="Close">
                 </div>
                 <!--end::Close-->
             </div>
             <!--end::Modal header-->
             <!--begin::Modal body-->
-            <div class="modal-body px-5">
+            <div class="modal-body scroll-y mx-5 my-7">
                 <!--begin::Form-->
-                <form id="kt_modal_add_user_form" class="form" action="{{route('add-user')}}">
+                <form id="kt_modal_update_role_form" class="form" action="#" wire:submit.prevent="submit">
                     <!--begin::Scroll-->
-                    <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll"
-                        data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto"
-                        data-kt-scroll-dependencies="#kt_modal_add_user_header"
-                        data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                    <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_update_role_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
+                         data-kt-scroll-dependencies="#kt_modal_update_role_header" data-kt-scroll-wrappers="#kt_modal_update_role_scroll" data-kt-scroll-offset="300px">
                         <!--begin::Input group-->
-                        <div class="fv-row mb-7">
+                        <div class="fv-row mb-10">
                             <!--begin::Label-->
-                            <label class="required fw-semibold fs-6 mb-2">Username</label>
+                            <label class="fs-5 fw-bold form-label mb-2">
+                                <span class="required">Role name</span>
+                            </label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input type="text" name="username" class="form-control form-control-solid mb-3 mb-lg-0"
-                                placeholder="Username" />
+                            <input class="form-control form-control-solid" placeholder="Enter a role name" name="name" wire:model.defer="name"/>
                             <!--end::Input-->
+                            @error('name')
+                            <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="mb-10 fv-row" data-kt-password-meter="true">
-                            <!--begin::Wrapper-->
-                            <div class="mb-1">
-                                <!--begin::Label-->
-                                <label class="form-label fw-semibold fs-6 mb-2 required">
-                                    New Password
-                                </label>
-                                <!--end::Label-->
-
-                                <!--begin::Input wrapper-->
-                                <div class="position-relative mb-3">
-                                    <input class="form-control form-control-solid" type="password"
-                                        placeholder="********" name="password" autocomplete="off" />
-
-                                    <span
-                                        class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
-                                        data-kt-password-meter-control="visibility">
-                                        <i class="ki-duotone ki-eye-slash fs-1"><span class="path1"></span><span
-                                                class="path2"></span><span class="path3"></span><span
-                                                class="path4"></span></i>
-                                        <i class="ki-duotone ki-eye d-none fs-1"><span class="path1"></span><span
-                                                class="path2"></span><span class="path3"></span></i>
-                                    </span>
-                                </div>
-                                <!--end::Input wrapper-->
-
-                                <!--begin::Meter-->
-                                <div class="d-flex align-items-center mb-3" data-kt-password-meter-control="highlight">
-                                    <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                                    <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                                    <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                                    <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
-                                </div>
-                                <!--end::Meter-->
-                            </div>
-                            <!--end::Wrapper-->
-
-                            <!--begin::Hint-->
-                            <div class="text-muted">
-                                Use 8 or more characters with a mix of letters, numbers & symbols.
-                            </div>
-                            <!--end::Hint-->
-                        </div>
-                        <!--end::Input group--->
-                        {{-- <!--begin::Input group-->
-                        <div class="fv-row mb-7">
-                            <div class="row">
-                                <div class="col-6">
-                                    <!--begin::Label-->
-                                    <label class="required fw-semibold fs-6 mb-2">
-                                        Password
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <div class="col-6 text-end">
-                                    <a href="" class="text-right" data-bs-toggle="tooltip"
-                                        data-bs-custom-class="tooltip-inverse" data-bs-placement="top"
-                                        title="Kalbefarma1">
-                                        <small><i>default</i></small>
-                                    </a>
-                                </div>
-                            </div>
-                            <!--begin::Input-->
-                            <input type="password" name="password" class="form-control form-control-solid mb-3 mb-lg-0"
-                                placeholder="********" value="Kalbefarma1" />
-                            <!--end::Input-->
-                        </div>
-                        <!--end::Input group--> --}}
-                        <!--begin::Input group-->
-                        <div class="mb-5">
+                        <!--begin::Permissions-->
+                        <div class="fv-row">
                             <!--begin::Label-->
-                            <label class="required fw-semibold fs-6 mb-5">Role</label>
+                            <label class="fs-5 fw-bold form-label mb-2">Role Permissions</label>
                             <!--end::Label-->
-                            <!--begin::Roles-->
-                            <!--begin::Input row-->
-                            <div class="d-flex fv-row">
-                                <!--begin::Radio-->
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="0"
-                                        id="kt_modal_update_role_option_0" checked='checked' />
-                                    <!--end::Input-->
-                                    <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_0">
-                                        <div class="fw-bold text-gray-800">Administrator</div>
-                                        <div class="text-gray-600">Best for business owners and company administrators
-                                        </div>
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Radio-->
+                            <!--begin::Table wrapper-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table align-middle table-row-dashed fs-6 gy-5">
+                                    <!--begin::Table body-->
+                                    <tbody class="text-gray-600 fw-semibold">
+                                    <!--begin::Table row-->
+                                    <tr>
+                                        <td class="text-gray-800">Administrator Access
+                                            <span class="ms-1" data-bs-toggle="tooltip" title="Allows a full access to the system">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <!--begin::Checkbox-->
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-9">
+                                                <input class="form-check-input" type="checkbox" id="kt_roles_select_all" wire:model.defer="check_all" wire:change="checkAll" />
+                                                <span class="form-check-label" for="kt_roles_select_all">Select all</span>
+                                            </label>
+                                            <!--end::Checkbox-->
+                                        </td>
+                                    </tr>
+                                    <!--end::Table row-->
+                                    @foreach($permissions_by_group as $group => $permissions)
+                                        <!--begin::Table row-->
+                                        <tr>
+                                            <!--begin::Label-->
+                                            <td class="text-gray-800">{{ ucwords($group) }}</td>
+                                            <!--end::Label-->
+                                            <!--begin::Input group-->
+                                            @foreach($permissions as $permission)
+                                                <td>
+                                                    <!--begin::Wrapper-->
+                                                    <div class="d-flex">
+                                                        <!--begin::Checkbox-->
+                                                        <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20">
+                                                            <input class="form-check-input" type="checkbox" wire:model.defer="checked_permissions" value="{{ $permission->name }}"/>
+                                                            <span class="form-check-label">{{ ucwords(Str::before($permission->name, ' ')) }}</span>
+                                                        </label>
+                                                        <!--end::Checkbox-->
+                                                    </div>
+                                                    <!--end::Wrapper-->
+                                                </td>
+                                            @endforeach
+                                            <!--end::Input group-->
+                                        </tr>
+                                        <!--end::Table row-->
+                                    @endforeach
+                                    <!--begin::Table row-->
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                                <!--end::Table-->
                             </div>
-                            <!--end::Input row-->
-                            <div class='separator separator-dashed my-5'></div>
-                            <!--begin::Input row-->
-                            <div class="d-flex fv-row">
-                                <!--begin::Radio-->
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="1"
-                                        id="kt_modal_update_role_option_1" />
-                                    <!--end::Input-->
-                                    <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_1">
-                                        <div class="fw-bold text-gray-800">Developer</div>
-                                        <div class="text-gray-600">Best for developers or people primarily using the API
-                                        </div>
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Radio-->
-                            </div>
-                            <!--end::Input row-->
-                            <div class='separator separator-dashed my-5'></div>
-                            <!--begin::Input row-->
-                            <div class="d-flex fv-row">
-                                <!--begin::Radio-->
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="2"
-                                        id="kt_modal_update_role_option_2" />
-                                    <!--end::Input-->
-                                    <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_2">
-                                        <div class="fw-bold text-gray-800">Analyst</div>
-                                        <div class="text-gray-600">Best for people who need full access to analytics
-                                            data, but don't need to update business settings</div>
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Radio-->
-                            </div>
-                            <!--end::Input row-->
-                            <div class='separator separator-dashed my-5'></div>
-                            <!--begin::Input row-->
-                            <div class="d-flex fv-row">
-                                <!--begin::Radio-->
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="3"
-                                        id="kt_modal_update_role_option_3" />
-                                    <!--end::Input-->
-                                    <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_3">
-                                        <div class="fw-bold text-gray-800">Support</div>
-                                        <div class="text-gray-600">Best for employees who regularly refund payments and
-                                            respond to disputes</div>
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Radio-->
-                            </div>
-                            <!--end::Input row-->
-                            <div class='separator separator-dashed my-5'></div>
-                            <!--begin::Input row-->
-                            <div class="d-flex fv-row">
-                                <!--begin::Radio-->
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="4"
-                                        id="kt_modal_update_role_option_4" />
-                                    <!--end::Input-->
-                                    <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_4">
-                                        <div class="fw-bold text-gray-800">Trial</div>
-                                        <div class="text-gray-600">Best for people who need to preview content data, but
-                                            don't need to make any updates</div>
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Radio-->
-                            </div>
-                            <!--end::Input row-->
-                            <!--end::Roles-->
+                            <!--end::Table wrapper-->
                         </div>
-                        <!--end::Input group-->
+                        <!--end::Permissions-->
                     </div>
                     <!--end::Scroll-->
                     <!--begin::Actions-->
-                    <div class="text-center pt-10">
-                        <button type="reset" class="btn btn-light me-3"
-                            data-kt-users-modal-action="cancel">Discard</button>
-                        <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
-                            <span class="indicator-label">Submit</span>
-                            <span class="indicator-progress">Please wait...
-                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                    <div class="text-center pt-15">
+                        <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close" wire:loading.attr="disabled">Discard</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="indicator-label" wire:loading.remove>Submit</span>
+                            <span class="indicator-progress" wire:loading wire:target="submit">
+                                Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
                         </button>
                     </div>
                     <!--end::Actions-->
@@ -357,5 +239,15 @@
     </div>
     <!--end::Modal dialog-->
 </div>
+
+@push('scripts')
+    <script>
+        const modal = document.querySelector('#kt_modal_update_role');
+
+        modal.addEventListener('show.bs.modal', (e) => {
+            Livewire.emit('modal.show.role_name', e.relatedTarget.getAttribute('data-role-id'));
+        });
+    </script>
+@endpush
 <!--end::Modal - Add task-->
 @endsection
