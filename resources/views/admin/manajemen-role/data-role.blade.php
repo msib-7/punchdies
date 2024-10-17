@@ -46,6 +46,7 @@
     <!--begin::Content container-->
     <div id="kt_app_content_container" class="app-container container-xxl">
         <div class="row">
+            @foreach ($dataRoles as $data)
             <div class="col-12 col-md-4 col-sm-4">
                 <!--begin::Card-->
                 <div class="card card-flush h-md-100 hover-elevate-up shadow-sm parent-hover">
@@ -53,7 +54,7 @@
                     <div class="card-header">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2>Trial</h2>
+                            <h2>{{ $data->role_name }}</h2>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -65,16 +66,26 @@
                         <!--end::Users-->
                         <!--begin::Permissions-->
                         <div class="d-flex flex-column text-gray-600">
+                            <?php 
+                                $role_id = $data->id;
+                                $no = 1;
+                            ?>
+                            @foreach ($permissions as $data_per)
+                            @if ($data_per->role_id == $role_id and $no <= 5)
                             <div class="d-flex align-items-center py-2">
-                                <span class="bullet bg-primary me-3"></span>No Admin Controls</div>
-                            <div class="d-flex align-items-center py-2">
-                                <span class="bullet bg-primary me-3"></span>View Financial Summaries only</div>
-                            <div class="d-flex align-items-center py-2">
-                                <span class="bullet bg-primary me-3"></span>View Bulk Reports only</div>
-                            <div class="d-flex align-items-center py-2">
-                                <span class="bullet bg-primary me-3"></span>View Payouts only</div>
-                            <div class="d-flex align-items-center py-2">
-                                <span class="bullet bg-primary me-3"></span>View Disputes only</div>
+                                <span class="bullet bg-primary me-3"></span>
+                                {{ $data_per->name }}
+                                <?php 
+                                $no++;?>
+                            </div>
+                            @endif
+                            @endforeach
+                            @if ($no>5)
+                                <div class="d-flex align-items-center py-2">
+                                <span class="bullet bg-primary me-3"></span>
+                                <i>{{ ucfirst('Lebih banyak...') }}</i>
+                            </div>
+                            @endif
                         </div>
                         <!--end::Permissions-->
                     </div>
@@ -90,6 +101,7 @@
                 </div>
                 <!--end::Card-->
             </div>
+            @endforeach
             <div class="col-12 col-md-4 col-sm-4">
                 <!--begin::Card-->
                 <div class="card h-md-100 hover-elevate-up shadow-sm parent-hover">
@@ -137,10 +149,13 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y mx-5 my-7">
                 <!--begin::Form-->
-                <form id="kt_modal_update_role_form" class="form" action="#" wire:submit.prevent="submit">
+                <form id="kt_modal_update_role_form" class="form" action="{{ route('add-role') }}" method="POST">
+                    @csrf
                     <!--begin::Scroll-->
-                    <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_update_role_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
-                         data-kt-scroll-dependencies="#kt_modal_update_role_header" data-kt-scroll-wrappers="#kt_modal_update_role_scroll" data-kt-scroll-offset="300px">
+                    <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_update_role_scroll"
+                        data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}"
+                        data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_update_role_header"
+                        data-kt-scroll-wrappers="#kt_modal_update_role_scroll" data-kt-scroll-offset="300px">
                         <!--begin::Input group-->
                         <div class="fv-row mb-10">
                             <!--begin::Label-->
@@ -149,7 +164,8 @@
                             </label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input class="form-control form-control-solid" placeholder="Enter a role name" name="name" wire:model.defer="name"/>
+                            <input class="form-control form-control-solid" placeholder="Enter a role name"
+                                name="role_name" />
                             <!--end::Input-->
                             @error('name')
                             <span class="text-danger">{{ $message }}</span> @enderror
@@ -166,23 +182,28 @@
                                 <table class="table align-middle table-row-dashed fs-6 gy-5">
                                     <!--begin::Table body-->
                                     <tbody class="text-gray-600 fw-semibold">
-                                    <!--begin::Table row-->
-                                    <tr>
-                                        <td class="text-gray-800">Administrator Access
-                                            <span class="ms-1" data-bs-toggle="tooltip" title="Allows a full access to the system">
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <!--begin::Checkbox-->
-                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-9">
-                                                <input class="form-check-input" type="checkbox" id="kt_roles_select_all" wire:model.defer="check_all" wire:change="checkAll" />
-                                                <span class="form-check-label" for="kt_roles_select_all">Select all</span>
-                                            </label>
-                                            <!--end::Checkbox-->
-                                        </td>
-                                    </tr>
-                                    <!--end::Table row-->
-                                    @foreach($permissions_by_group as $group => $permissions)
+                                        <!--begin::Table row-->
+                                        <tr>
+                                            <td class="text-gray-800">Administrator Access
+                                                <span class="ms-1" data-bs-toggle="tooltip"
+                                                    title="Allows a full access to the system">
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <!--begin::Checkbox-->
+                                                <label
+                                                    class="form-check form-check-sm form-check-custom form-check-solid me-9">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="kt_roles_select_all" wire:model.defer="check_all"
+                                                        wire:change="checkAll" />
+                                                    <span class="form-check-label" for="kt_roles_select_all">Select
+                                                        all</span>
+                                                </label>
+                                                <!--end::Checkbox-->
+                                            </td>
+                                        </tr>
+                                        <!--end::Table row-->
+                                        @foreach($permissions_by_group as $group => $permissions)
                                         <!--begin::Table row-->
                                         <tr>
                                             <!--begin::Label-->
@@ -190,24 +211,27 @@
                                             <!--end::Label-->
                                             <!--begin::Input group-->
                                             @foreach($permissions as $permission)
-                                                <td>
-                                                    <!--begin::Wrapper-->
-                                                    <div class="d-flex">
-                                                        <!--begin::Checkbox-->
-                                                        <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20">
-                                                            <input class="form-check-input" type="checkbox" wire:model.defer="checked_permissions" value="{{ $permission->name }}"/>
-                                                            <span class="form-check-label">{{ ucwords(Str::before($permission->name, ' ')) }}</span>
-                                                        </label>
-                                                        <!--end::Checkbox-->
-                                                    </div>
-                                                    <!--end::Wrapper-->
-                                                </td>
+                                            <td>
+                                                <!--begin::Wrapper-->
+                                                <div class="d-flex">
+                                                    <!--begin::Checkbox-->
+                                                    <label
+                                                        class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            name="permission_value[]" value="{{ $permission->id }}" />
+                                                        <span
+                                                            class="form-check-label">{{ ucwords(Str::before($permission->name, ' ')) }}</span>
+                                                    </label>
+                                                    <!--end::Checkbox-->
+                                                </div>
+                                                <!--end::Wrapper-->
+                                            </td>
                                             @endforeach
                                             <!--end::Input group-->
                                         </tr>
                                         <!--end::Table row-->
-                                    @endforeach
-                                    <!--begin::Table row-->
+                                        @endforeach
+                                        <!--begin::Table row-->
                                     </tbody>
                                     <!--end::Table body-->
                                 </table>
@@ -220,7 +244,8 @@
                     <!--end::Scroll-->
                     <!--begin::Actions-->
                     <div class="text-center pt-15">
-                        <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close" wire:loading.attr="disabled">Discard</button>
+                        <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close"
+                            wire:loading.attr="disabled">Discard</button>
                         <button type="submit" class="btn btn-primary">
                             <span class="indicator-label" wire:loading.remove>Submit</span>
                             <span class="indicator-progress" wire:loading wire:target="submit">
@@ -239,15 +264,5 @@
     </div>
     <!--end::Modal dialog-->
 </div>
-
-@push('scripts')
-    <script>
-        const modal = document.querySelector('#kt_modal_update_role');
-
-        modal.addEventListener('show.bs.modal', (e) => {
-            Livewire.emit('modal.show.role_name', e.relatedTarget.getAttribute('data-role-id'));
-        });
-    </script>
-@endpush
 <!--end::Modal - Add task-->
 @endsection
