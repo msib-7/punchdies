@@ -28,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //Manajemen Role
     Route::get('/manajemen-role', [AdminController::class, 'manajemen_role'])->name('roles');
+    Route::post('/save-role', [AdminController::class, 'add_role'])->name('add-role');
 
     //Manajemen Permission
     Route::get('/manajemen-permissions', [Permission::class, 'manajemen_permission'])->name('permissions');
