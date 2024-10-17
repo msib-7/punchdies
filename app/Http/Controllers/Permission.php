@@ -30,9 +30,18 @@ class Permission extends Controller
 
         $permission_name = ucwords($request->permission_name);
 
-        $saveData = [
-            'name' => $permission_name,
-        ];
+        $autoIncrement = Permissions::select('id')->orderBy('id', 'desc')->limit(1)->first();
+        if(!$autoIncrement){
+            $saveData = [
+                'id' => 1,
+                'name' => $permission_name,
+            ];
+        }else{
+            $saveData = [
+                'id' => $autoIncrement->id + 1,
+                'name' => $permission_name,
+            ];
+        }
 
         $cekPermission = Permissions::whereLike('name', '%' . $permission_name . '%')->first();
         if (!isset($cekPermission)) {
