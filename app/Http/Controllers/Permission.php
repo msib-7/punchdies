@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Permissions;
+use App\Models\Roles;
 use Illuminate\Http\Request;
 
 class Permission extends Controller
@@ -10,6 +11,11 @@ class Permission extends Controller
     //Start Permission
     public function manajemen_permission()
     {
+        $modelRole = new Roles();
+
+        $dataAssigned = $modelRole->getRoleJoinPermission()->all();
+        $data['dataAssigned'] = $dataAssigned;
+
         $getDataPermission = Permissions::count();
         if ($getDataPermission == 0) {
             $dataPermission = [];
@@ -69,7 +75,6 @@ class Permission extends Controller
 
         $autoIncrement = Permissions::select('id')->orderBy('id', 'desc')->limit(1)->first();
         $dataUpdate = [
-            'id' => $autoIncrement->id + 1,
             'name' => $permission_name,
         ];
 

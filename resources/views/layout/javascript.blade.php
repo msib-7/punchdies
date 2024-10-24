@@ -176,15 +176,35 @@
             responsive: true,
             keys: true,
         });
+        $('#table_user_role').DataTable({
+            layout: {
+                topEnd: {
+                    search: {
+                        placeholder: 'Type anything here'
+                    }
+                },
+                bottomEnd: {
+                    paging: {
+                        type: 'simple'
+                    },
+                },
+            },
+            initComplete: function () {
+                var btns = $('.dt-button');
+                btns.removeClass('dt-button');
+                btns.removeClass('dt-button');
+            },
+            responsive: true,
+            keys: true,
+        });
     });
-
 </script>
 <!--begin::Global Javascript Bundle(mandatory for all pages)-->
 <script src="{{asset('assets/plugins/global/plugins.bundle.js')}}"></script>
 <script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
 <script src="{{asset('assets/DataTables/datatables.min.js')}}"></script>
+<script src="{{asset('assets/plugins/custom/draggable/draggable.bundle.js')}}"></script>
 <!--end::Global Javascript Bundle-->
-<!--begin::Vendors Javascript(used for this page only)-->
 <!--begin::Vendors Javascript(used for this page only)-->
 <script src="{{asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js')}}"></script>
 <script src="https://cdn.amcharts.com/lib/5/index.js"></script>

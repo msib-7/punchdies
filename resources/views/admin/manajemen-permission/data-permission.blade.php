@@ -60,8 +60,8 @@
                     <thead>
                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                             <th class="text-center w-100px">No</th>
-                            <th class="min-w-130px">Name</th>
-                            <th class="min-w-130px">Assigned to</th>
+                            <th>Name</th>
+                            <th>Assigned to</th>
                             <th class="min-w-100px">Created date</th>
                             <th class="w-50px">Actions</th>
                         </tr>
@@ -79,7 +79,17 @@
                                 </div>
                                 <!--begin::User details-->
                             </td>
-                            <td></td>
+                            <td>
+                                <div class="text-gray-800">
+                                    @foreach ($dataAssigned as $assign)
+                                    @if ($assign->id == $data->id)
+                                    <span class="badge badge-light-info">
+                                        {{ $assign->role_name}}
+                                    </span>.
+                                    @endif
+                                    @endforeach
+                                </div>
+                            </td>
                             <td>
                                 <div class="text-gray-800">{{ $data->created_at}}</div>
                             </td>
@@ -92,7 +102,7 @@
                                     data-kt-menu="true">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <button id="btn-edit" data-id="{{ $data->id }}" class="menu-link px-3">
+                                        <button id="btn-edit" data-id="{{ $data->id }}" class="btn btn-default menu-link px-3 w-100">
                                             Edit
                                         </button>
                                     </div>
@@ -198,36 +208,37 @@
             <div class="modal-body px-5">
                 <form class="form" action="{{url('update-permission')}}" method="POST">
                     @csrf
-                <!--begin::Scroll-->
-                <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_permission_scroll"
-                    data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto"
-                    data-kt-scroll-dependencies="#kt_modal_add_permission_header"
-                    data-kt-scroll-wrappers="#kt_modal_add_permission_scroll" data-kt-scroll-offset="300px">
-                    <!--begin::Input group-->
-                    <div class="fv-row mb-7">
-                        <!--begin::Label-->
-                        <label class="required fw-semibold fs-6 mb-2">Permission Name</label>
-                        <!--end::Label-->
-                        <!--begin::Input-->
-                        <input type="hidden" name="id_permission" id="id_permissions" />
-                        <input type="text" name="permission_name_edit"
-                            class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Enter a permission name"
-                            id="edit-name-permission" />
-                        <!--end::Input-->
+                    <!--begin::Scroll-->
+                    <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_permission_scroll"
+                        data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto"
+                        data-kt-scroll-dependencies="#kt_modal_add_permission_header"
+                        data-kt-scroll-wrappers="#kt_modal_add_permission_scroll" data-kt-scroll-offset="300px">
+                        <!--begin::Input group-->
+                        <div class="fv-row mb-7">
+                            <!--begin::Label-->
+                            <label class="required fw-semibold fs-6 mb-2">Permission Name</label>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <input type="hidden" name="id_permission" id="id_permissions" />
+                            <input type="text" name="permission_name_edit"
+                                class="form-control form-control-solid mb-3 mb-lg-0"
+                                placeholder="Enter a permission name" id="edit-name-permission" />
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input group-->
                     </div>
-                    <!--end::Input group-->
-                </div>
-                <!--end::Scroll-->
-                <!--begin::Actions-->
-                <div class="text-center pt-10">
-                    <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
-                    <button type="submit" class="btn btn-warning" id="btn-update">
-                        <span class="indicator-label">Update</span>
-                        <span class="indicator-progress">Please wait...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                    </button>
-                </div>
-                <!--end::Actions-->
+                    <!--end::Scroll-->
+                    <!--begin::Actions-->
+                    <div class="text-center pt-10">
+                        <button type="reset" class="btn btn-light me-3"
+                            data-kt-users-modal-action="cancel">Discard</button>
+                        <button type="submit" class="btn btn-warning" id="btn-update">
+                            <span class="indicator-label">Update</span>
+                            <span class="indicator-progress">Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                        </button>
+                    </div>
+                    <!--end::Actions-->
                 </form>
             </div>
             <!--end::Modal body-->
@@ -259,5 +270,6 @@
             }
         });
     });
+
 </script>
 @endsection

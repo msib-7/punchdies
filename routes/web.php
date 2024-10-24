@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\APIContr;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Permission;
+use App\Http\Controllers\Role;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -27,8 +28,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/add-user', [AdminController::class, 'add_user'])->name('add-user');
 
     //Manajemen Role
-    Route::get('/manajemen-role', [AdminController::class, 'manajemen_role'])->name('roles');
-    Route::post('/save-role', [AdminController::class, 'add_role'])->name('add-role');
+    Route::get('/manajemen-role', [Role::class, 'manajemen_role'])->name('roles');
+    Route::post('/save-role', [Role::class, 'add_role'])->name('add-role');
+    Route::get('/view-role/{id}', [Role::class, 'view_role']);
+    Route::get('/edit-role/{id}', [Role::class, 'edit_role']);
+    Route::post('/update-role', [Role::class, 'update_role']);
+    Route::get('/delete-role/{id}', [Role::class, 'del_role']);
 
     //Manajemen Permission
     Route::get('/manajemen-permissions', [Permission::class, 'manajemen_permission'])->name('permissions');

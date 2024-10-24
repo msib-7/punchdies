@@ -16,13 +16,23 @@ class Roles extends Model
         'role_name',
     ];
 
-    public function getRoleJoinPermission()
+    public function getRoleJoinPermission($where = false)
     {
-        $builder = DB::table($this->table);
-        $builder->select('*');
-        $builder->Join('role_permission', 'role.id','=', 'role_permission.role_id');
-        $builder->Join('permission', 'role_permission.permission_id','=', 'permission.id');
-        $builder->orderBy('role.id', 'asc');
-        return $query = $builder->get();
+        if($where === false){
+            $builder = DB::table($this->table);
+            $builder->select('*');
+            $builder->Join('role_permission', 'role.id','=', 'role_permission.role_id');
+            $builder->Join('permission', 'role_permission.permission_id','=', 'permission.id');
+            $builder->orderBy('role.id', 'asc');
+            return $query = $builder->get();
+        }else{
+            $builder = DB::table($this->table);
+            $builder->select('*');
+            $builder->where($where);
+            $builder->Join('role_permission', 'role.id', '=', 'role_permission.role_id');
+            $builder->Join('permission', 'role_permission.permission_id', '=', 'permission.id');
+            $builder->orderBy('role.id', 'asc');
+            return $query = $builder->get();
+        }
     }
 }

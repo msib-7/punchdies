@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,8 +32,11 @@ class AuthController extends Controller
         
 
         if (Auth::attempt($infoLogin)) {
-            return redirect("/dashboard-admin
-            ")->with('success','Login Berhasil!');
+            $last_login = [
+                'last_login_at' => date('Y-m-d H:i:s'),
+            ];
+            User::where('username', $username)->update($last_login);
+            return redirect("/dashboard-admin")->with('success','Login Berhasil!');
         } else {
             return redirect('/')->with( 'error','Username dan Password tidak cocok!');
         }

@@ -167,14 +167,19 @@
                             <td class="d-flex align-items-center">
                                 <!--begin::User details-->
                                 <div class="d-flex flex-column">
-                                    <a href="../../demo1/dist/apps/user-management/users/view.html"
-                                        class="text-gray-800 text-hover-primary mb-1">{{ $data['name']}}</a>
+                                    <a href=""
+                                        class="text-gray-800 text-hover-primary mb-1">{{ ucwords($data->username)}}</a>
                                 </div>
                                 <!--begin::User details-->
                             </td>
-                            <td>Administrator</td>
+                            <td>{{$data->role_name}}</td>
                             <td>
-                                <div class="badge badge-light fw-bold">Yesterday</div>
+                                @if ($data->last_login_at == null)
+                                    n/a
+                                @endif
+                                @if ($data->last_login_at != null)
+                                    {{ date('d M Y H:i:s', strtotime($data->last_login_at))}}
+                                @endif
                             </td>
                             <td class="text-center">
                                 <a href="#" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"
@@ -233,7 +238,9 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5">
                 <!--begin::Form-->
-                <form id="kt_modal_add_user_form" class="form" action="{{route('add-user')}}">
+                {{-- <form id="kt_modal_add_user_form" class="form" action="{{route('add-user')}}" method="post"> --}}
+                <form id="kt_modal_add_user_form" class="form">
+                    @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll"
                         data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto"
@@ -256,7 +263,7 @@
                             <div class="mb-1">
                                 <!--begin::Label-->
                                 <label class="form-label fw-semibold fs-6 mb-2 required">
-                                    New Password
+                                    Password
                                 </label>
                                 <!--end::Label-->
 
@@ -295,8 +302,8 @@
                             <!--end::Hint-->
                         </div>
                         <!--end::Input group--->
-                        {{-- <!--begin::Input group-->
-                        <div class="fv-row mb-7">
+                        <!--begin::Input group-->
+                        {{-- <div class="fv-row mb-7">
                             <div class="row">
                                 <div class="col-6">
                                     <!--begin::Label-->
@@ -317,27 +324,27 @@
                             <input type="password" name="password" class="form-control form-control-solid mb-3 mb-lg-0"
                                 placeholder="********" value="Kalbefarma1" />
                             <!--end::Input-->
-                        </div>
-                        <!--end::Input group--> --}}
+                        </div> --}}
+                        <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="mb-5">
                             <!--begin::Label-->
                             <label class="required fw-semibold fs-6 mb-5">Role</label>
                             <!--end::Label-->
                             <!--begin::Roles-->
+                            <?php $no=1; ?>
+                            @foreach ($dataRoles as $data)
                             <!--begin::Input row-->
                             <div class="d-flex fv-row">
                                 <!--begin::Radio-->
                                 <div class="form-check form-check-custom form-check-solid">
                                     <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="0"
-                                        id="kt_modal_update_role_option_0" checked='checked' />
+                                    <input class="form-check-input me-3" name="user_role" type="radio" value="{{ $data->id}}"
+                                        id="kt_modal_update_role_option_{{$no}}" />
                                     <!--end::Input-->
                                     <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_0">
-                                        <div class="fw-bold text-gray-800">Administrator</div>
-                                        <div class="text-gray-600">Best for business owners and company administrators
-                                        </div>
+                                    <label class="form-check-label" for="kt_modal_update_role_option_{{$no}}">
+                                        <div class="fw-bold text-gray-800">{{ $data->role_name }}</div>
                                     </label>
                                     <!--end::Label-->
                                 </div>
@@ -345,85 +352,8 @@
                             </div>
                             <!--end::Input row-->
                             <div class='separator separator-dashed my-5'></div>
-                            <!--begin::Input row-->
-                            <div class="d-flex fv-row">
-                                <!--begin::Radio-->
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="1"
-                                        id="kt_modal_update_role_option_1" />
-                                    <!--end::Input-->
-                                    <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_1">
-                                        <div class="fw-bold text-gray-800">Developer</div>
-                                        <div class="text-gray-600">Best for developers or people primarily using the API
-                                        </div>
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Radio-->
-                            </div>
-                            <!--end::Input row-->
-                            <div class='separator separator-dashed my-5'></div>
-                            <!--begin::Input row-->
-                            <div class="d-flex fv-row">
-                                <!--begin::Radio-->
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="2"
-                                        id="kt_modal_update_role_option_2" />
-                                    <!--end::Input-->
-                                    <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_2">
-                                        <div class="fw-bold text-gray-800">Analyst</div>
-                                        <div class="text-gray-600">Best for people who need full access to analytics
-                                            data, but don't need to update business settings</div>
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Radio-->
-                            </div>
-                            <!--end::Input row-->
-                            <div class='separator separator-dashed my-5'></div>
-                            <!--begin::Input row-->
-                            <div class="d-flex fv-row">
-                                <!--begin::Radio-->
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="3"
-                                        id="kt_modal_update_role_option_3" />
-                                    <!--end::Input-->
-                                    <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_3">
-                                        <div class="fw-bold text-gray-800">Support</div>
-                                        <div class="text-gray-600">Best for employees who regularly refund payments and
-                                            respond to disputes</div>
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Radio-->
-                            </div>
-                            <!--end::Input row-->
-                            <div class='separator separator-dashed my-5'></div>
-                            <!--begin::Input row-->
-                            <div class="d-flex fv-row">
-                                <!--begin::Radio-->
-                                <div class="form-check form-check-custom form-check-solid">
-                                    <!--begin::Input-->
-                                    <input class="form-check-input me-3" name="user_role" type="radio" value="4"
-                                        id="kt_modal_update_role_option_4" />
-                                    <!--end::Input-->
-                                    <!--begin::Label-->
-                                    <label class="form-check-label" for="kt_modal_update_role_option_4">
-                                        <div class="fw-bold text-gray-800">Trial</div>
-                                        <div class="text-gray-600">Best for people who need to preview content data, but
-                                            don't need to make any updates</div>
-                                    </label>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Radio-->
-                            </div>
-                            <!--end::Input row-->
+                            <?php $no++ ?>
+                            @endforeach
                             <!--end::Roles-->
                         </div>
                         <!--end::Input group-->

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,8 +19,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'username',
         'password',
+        'role_id',
+        'last_login_at'
     ];
 
     /**
@@ -29,7 +32,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -40,8 +42,25 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getUserRole($where = false)
+    {
+        if($where === false){
+            $builder = DB::table('users');
+            $builder->select('*');
+            $builder->Join('role', 'users.role_id', '=', 'role.id');
+            $builder->orderBy('users.id', 'asc');
+            return $query = $builder->get();
+        } else {
+            $builder = DB::table('users');
+            $builder->select('*');
+            $builder->where($where);
+            $builder->Join('role', 'users.role_id', '=', 'role.id');
+            $builder->orderBy('users.id', 'asc');
+            return $query = $builder->get();
+        }
     }
 }
