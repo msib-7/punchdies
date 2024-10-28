@@ -26,6 +26,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //Manajemen User
     Route::get('/manajemen-user', [AdminController::class, 'manajemen_user'])->name('user');
     Route::post('/add-user', [AdminController::class, 'add_user'])->name('add-user');
+    Route::get('/edit-user/{id}', [AdminController::class, 'edit_user']);
+    Route::post('/update-user', [AdminController::class, 'update_user']);
 
     //Manajemen Role
     Route::get('/manajemen-role', [Role::class, 'manajemen_role'])->name('roles');

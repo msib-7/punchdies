@@ -74,7 +74,7 @@
                             <td class="d-flex align-items-center">
                                 <!--begin::User details-->
                                 <div class="d-flex flex-center">
-                                    <a href="../../demo1/dist/apps/user-management/users/view.html"
+                                    <a href=""
                                         class="text-gray-800 text-hover-primary mb-1">{{ $data->name}}</a>
                                 </div>
                                 <!--begin::User details-->

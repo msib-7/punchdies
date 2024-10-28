@@ -49,6 +49,12 @@ class Permission extends Controller
             ];
         }
 
+        $dataAudit = [
+            'event' => $permission_name.' Created',
+            'logdate' => date(date('Y-m-d H:i:s')),
+            'user_id' => session()->get('user_id'),
+        ];
+
         $cekPermission = Permissions::whereLike('name', '%' . $permission_name . '%')->first();
         if (!isset($cekPermission)) {
             Permissions::create($saveData);

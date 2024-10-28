@@ -29,13 +29,14 @@ class AuthController extends Controller
             'username' => $username,
             'password' => $password
         ];
-        
 
         if (Auth::attempt($infoLogin)) {
             $last_login = [
                 'last_login_at' => date('Y-m-d H:i:s'),
             ];
             User::where('username', $username)->update($last_login);
+            $user_id = User::where('username', $username)->first();
+            session()->put('user_id',$user_id->id);
             return redirect("/dashboard-admin")->with('success','Login Berhasil!');
         } else {
             return redirect('/')->with( 'error','Username dan Password tidak cocok!');

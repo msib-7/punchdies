@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('audit_tr', function (Blueprint $table) {
+        Schema::create('permission', function (Blueprint $table) {
             $table->id();
-            $table->string('event');
-            $table->datetime('logdate');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->string('line');
-            $table->string('category');
-            $table->string('detail');
+            $table->string('name')->unique();
             $table->timestamps();
         });
     }
