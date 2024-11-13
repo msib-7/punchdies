@@ -1,5 +1,5 @@
 <script>
-    var hostUrl = "assets/";
+    // var hostUrl = "assets/"; 
     $(document).ready(function () {
         $('#dboard_Table1').DataTable({
             layout: {
@@ -37,13 +37,60 @@
             responsive: true,
             keys: true,
         });
+        $('#Table_pengukuran').DataTable({
+            responsive: true,
+            lengthMenu: [
+                [10]
+            ]
+        });
         $('#PA_Table_List').DataTable({
             responsive: true,
             lengthMenu: [
                 [5, 10, 25],
                 [5, 10, 25]
             ],
-            ordering: true
+            columnDefs: [
+                {
+                    searchable: false,  
+                    target: 0,
+                    visible: true,
+                },
+                {
+                    searchable: true,  
+                    target: 1,
+                    visible: false,
+                },
+                {
+                    searchable: true,  
+                    target: 2,
+                    visible: false,
+                },
+                {
+                    searchable: true,  
+                    target: 3,
+                    visible: false,
+                },
+                {
+                    searchable: true,  
+                    target: 4,
+                    visible: false,
+                },
+                {
+                    searchable: true,  
+                    target: 5,
+                    visible: false,
+                },
+                {
+                    searchable: true,  
+                    target: 6,
+                    visible: false,
+                },
+                {
+                    searchable: true,  
+                    target: 7,
+                    visible: false,
+                }
+            ]
         });
         $('#dboard_Table2').DataTable({
             layout: {
@@ -197,6 +244,31 @@
             responsive: true,
             keys: true,
         });
+        $('#table_audit').DataTable({
+            layout: {
+                topEnd: {
+                    search: {
+                        placeholder: 'Type anything here'
+                    }
+                },
+                bottomEnd: {
+                    paging: {
+                        type: 'simple'
+                    },
+                },
+            },
+            initComplete: function () {
+                var btns = $('.dt-button');
+                btns.removeClass('dt-button');
+                btns.removeClass('dt-button');
+            },
+            responsive: true,
+            lengthMenu: [
+                [25, 50, 100],
+                [25, 50, 100]
+            ],
+            keys: true,
+        });
     });
 </script>
 <!--begin::Global Javascript Bundle(mandatory for all pages)-->
@@ -207,18 +279,6 @@
 <!--end::Global Javascript Bundle-->
 <!--begin::Vendors Javascript(used for this page only)-->
 <script src="{{asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js')}}"></script>
-<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/geodata/continentsLow.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
-<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
-<!--end::Vendors Javascript-->
 <!--begin::Custom Javascript(used for this page only)-->
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/table.js')}}"></script>
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/export-users.js')}}"></script>

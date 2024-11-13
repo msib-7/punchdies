@@ -6,18 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Audit_tr extends Model
+class Lines extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'audit_tr';
+    protected $table = 'tbl_line';
 
     protected $fillable = [
-        'event',
-        'logdate',
-        'user_id',
-        'line',
-        'category',
-        'detail',
+        'nama_line',
     ];
 }

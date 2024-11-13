@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('tbl_pengukuran_punch', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('punch_id');
-            $table->foreign('punch_id')->references('id')->on('tbl_punch');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->bigInteger('punch_id');
+            $table->bigInteger('user_id');
             $table->double('head_outer_diameter');
             $table->double('neck_diameter');
             $table->double('barrel');

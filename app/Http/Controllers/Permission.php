@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Audit_tr;
 use App\Models\Permissions;
 use App\Models\Roles;
 use Illuminate\Http\Request;
 
 class Permission extends Controller
 {
+    public function mount()
+    {
+        // Get all permissions.
+        $this->permissions = Permissions::all();
+        // Set the checked permissions property to an empty array.
+        $this->checked_permissions = [];
+    }
     //Start Permission
     public function manajemen_permission()
     {
@@ -49,20 +57,26 @@ class Permission extends Controller
             ];
         }
 
+        //Data Audit Pembuatan Permission Baru
+        $logdate = date('Y-m-d H:i:s');
         $dataAudit = [
-            'event' => $permission_name.' Created',
-            'logdate' => date(date('Y-m-d H:i:s')),
-            'user_id' => session()->get('user_id'),
+            'event' => 'Permission Created',
+            'logdate' => $logdate,
+            'user_id' => session('user_id'),
+            'line' => session('line_user'),
+            'category' => 'Create',
+            'detail' => 'User '.session('username').', Create Permission "'.$permission_name.'", '.$logdate,
         ];
 
         $cekPermission = Permissions::whereLike('name', '%' . $permission_name . '%')->first();
         if (!isset($cekPermission)) {
             Permissions::create($saveData);
+            //simpan data audit
+            Audit_tr::create($dataAudit);
             return redirect(route('permissions'))->with('success', 'New Permission has been added!');
         } else {
             return redirect(route('permissions'))->with('error', 'Permission sudah ada!');
         }
-
     }
     public function edit_permission(Request $request, $id)
     {
@@ -85,7 +99,16 @@ class Permission extends Controller
         ];
 
         $cekPermission = Permissions::whereLike('name', '%' . $permission_name . '%')->first();
-        // dd(isset($cekPermission));
+
+        $logdate = date('Y-m-d H:i:s');
+        $dataAudit = [
+            'event' => $permission_name . ' Updated',
+            'logdate' => $logdate,
+            'user_id' => session('user_id'),
+            'line' => session('line_user'),
+            'category' => 'Update',
+            'detail' => 'User ' . session('username') . ', Update Permission "' . $permission_name . '", ' . $logdate,
+        ];
         if (!isset($cekPermission)) {
             Permissions::where('id', '=', $id)->update($dataUpdate);
             return redirect(route('permissions'))->with('success', 'Permission berhasil diUpdate!');

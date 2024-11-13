@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lines;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,8 +36,10 @@ class AuthController extends Controller
                 'last_login_at' => date('Y-m-d H:i:s'),
             ];
             User::where('username', $username)->update($last_login);
-            $user_id = User::where('username', $username)->first();
-            session()->put('user_id',$user_id->id);
+            $user = User::where('username','=', $username)->first();
+            $user_line = Lines::where('id','=', $user->line_id)->first();
+            session()->put($infoLogin);
+            session()->put(['user_id' => $user->id, 'line_user' => $user_line->nama_line]);
             return redirect("/dashboard-admin")->with('success','Login Berhasil!');
         } else {
             return redirect('/')->with( 'error','Username dan Password tidak cocok!');

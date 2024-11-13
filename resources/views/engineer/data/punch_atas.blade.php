@@ -46,1293 +46,185 @@
                     <div class="col-12">
                         <div class="row">
                             <div class="col-10">
-                                <table id="PA_Table_List" class="" style="width:100%">
+                                <table id="PA_Table_List" class="display" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>Data Punch</th>
+                                            <th>Merk</th>
+                                            <th>Bulan/Tahun</th>
+                                            <th>Nama Mesin</th>
+                                            <th>Kode/Nama Produk</th>
+                                            <th>Pengukuran</th>
+                                            <th>Tgl Pengukuran</th>
+                                            <th>diukur oleh</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($dataPunch as $data)
                                         <tr>
                                             <td>
-                                                <a href="#" class="btn btn-active-light-dark"
+                                                <div class="btn btn-active-light-dark"
                                                     style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
                                                     <div class="col-12">
-                                                        {{-- <div class="row">
-                                                            <div class="col-12 mb-5">
-                                                                <h1>{ Merk Punch }</h1>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Bulan/Tahun Pembuatan
-                                                                            </div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama Mesin Cetak</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Mesin Cetak}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama/Kode Produk</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Produk}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Tanggal Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">29 September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">
+                                                        <div class="px-10">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="d-flex">
+                                                                        <div class="me-auto">
+                                                                            <h1 class="p-4 d-flex align-items-center">
+                                                                                {{ strtoupper($data->merk)}}
+                                                                                &nbsp;
                                                                                 <span
-                                                                                    class="badge badge-light-success">Approval</span>
+                                                                                    class="badge badge-square badge-outline badge-primary px-2">New</span>
+                                                                            </h1>
+                                                                        </div>
+                                                                        <div class="p-2">
+                                                                            <button href="#" data-bs-toggle="modal"
+                                                                                data-bs-target="#modal_cek_pengukuran"
+                                                                                class="btn btn-secondary p-2">
+                                                                                <i
+                                                                                    class="ki-duotone ki-magnifier fs-1 px-2">
+                                                                                    <span class="path1"></span>
+                                                                                    <span class="path2"></span>
+                                                                                </i>
+                                                                                Lihat Data Pengukuran</button>
+                                                                        </div>
+                                                                        <div class="p-2">
+                                                                            <button class="btn btn-outline p-2">
+                                                                                <i
+                                                                                    class="ki-outline ki-dots-vertical fs-1 p-0"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="table-responsive">
+                                                                                <table style="border: none;">
+                                                                                    <tbody>
+                                                                                        <tr
+                                                                                            style="border: none; height: 30px;">
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                Bulan/Tahun Pembuatan
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">:
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                {{$data->bulan_pembuatan}}
+                                                                                                {{$data->tahun_pembuatan}}
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr
+                                                                                            style="border: none; height: 30px;">
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                Nama Mesin Cetak
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">:
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                {{ strtoupper($data->nama_mesin_cetak)}}
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr
+                                                                                            style="border: none; height: 30px;">
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                Kode/Nama Produk
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">:
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                TCRV3</td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </div> --}}
-                                                        <div class="row">
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        {{-- <div class="d-flex flex-center"> --}}
-                                                                        {{-- <span class="fs-1">{MERK PUNCH}</span> --}}
-                                                                        {{-- </div> --}}
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <span class="fs-1">ALTINEX</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Bulan/Tahun Pembuatan
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JUNI 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Nama Mesin Cetak
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JCMCO</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Kode/Nama Produk
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            TCRV3</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    {{-- <div class="col-12">
-                                                                        <h3>JCMCO</h3>
-                                                                    </div> --}}
-                                                                    <div class="col-12">
-                                                                        <span class="fs-3">Pengukuran Awal</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Tanggal Pengukuran
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            14 Juli 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Diukur oleh
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            Teknisi 1</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;" colspan="3">
-                                                                                            <span class="badge badge-light-success fs-5">Approved</span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
+                                                                <div class="col-6">
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="table-responsive">
+                                                                                <table style="border: none;">
+                                                                                    <tbody>
+                                                                                        <tr
+                                                                                            style="border: none; height: 30px;">
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                Pengukuran Terakhir
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">:
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                Pengukuran Awal</td>
+                                                                                        </tr>
+                                                                                        <tr
+                                                                                            style="border: none; height: 30px;">
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                Tanggal Pengukuran
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">:
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                14 Juli 2024</td>
+                                                                                        </tr>
+                                                                                        <tr
+                                                                                            style="border: none; height: 30px;">
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                Diukur oleh
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">:
+                                                                                            </td>
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4">
+                                                                                                Teknisi 1</td>
+                                                                                        </tr>
+                                                                                        <tr
+                                                                                            style="border: none; height: 30px;">
+                                                                                            <td style="border: none;"
+                                                                                                class="fs-3 px-4 my-4"
+                                                                                                colspan="3">
+                                                                                                <span
+                                                                                                    class="badge badge-light-success fs-5">Approved</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </a>
+                                                </div>
                                             </td>
+                                            <td>{{$data->merk}}</td>
+                                            <td>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</td>
+                                            <td>{{$data->nama_mesin_cetak}}</td>
+                                            <td>{{$data->kode_produk}}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="#" class="btn btn-active-light-dark"
-                                                    style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
-                                                    <div class="col-12">
-                                                        {{-- <div class="row">
-                                                            <div class="col-12 mb-5">
-                                                                <h1>{ Merk Punch }</h1>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Bulan/Tahun Pembuatan
-                                                                            </div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama Mesin Cetak</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Mesin Cetak}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama/Kode Produk</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Produk}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Tanggal Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">29 September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">
-                                                                                <span
-                                                                                    class="badge badge-light-success">Approval</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
-                                                        <div class="row">
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        {{-- <div class="d-flex flex-center"> --}}
-                                                                        {{-- <span class="fs-1">{MERK PUNCH}</span> --}}
-                                                                        {{-- </div> --}}
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <span class="fs-1">ALTINEX</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Bulan/Tahun Pembuatan
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JUNI 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Nama Mesin Cetak
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JCMCO</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Kode/Nama Produk
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            TCRV3</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    {{-- <div class="col-12">
-                                                                        <h3>JCMCO</h3>
-                                                                    </div> --}}
-                                                                    <div class="col-12">
-                                                                        <span class="fs-3">Pengukuran Awal</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Tanggal Pengukuran
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            14 Juli 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Diukur oleh
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            Teknisi 1</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;" colspan="3">
-                                                                                            <span class="badge badge-light-success fs-5">Approved</span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="#" class="btn btn-active-light-dark"
-                                                    style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
-                                                    <div class="col-12">
-                                                        {{-- <div class="row">
-                                                            <div class="col-12 mb-5">
-                                                                <h1>{ Merk Punch }</h1>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Bulan/Tahun Pembuatan
-                                                                            </div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama Mesin Cetak</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Mesin Cetak}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama/Kode Produk</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Produk}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Tanggal Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">29 September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">
-                                                                                <span
-                                                                                    class="badge badge-light-success">Approval</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
-                                                        <div class="row">
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        {{-- <div class="d-flex flex-center"> --}}
-                                                                        {{-- <span class="fs-1">{MERK PUNCH}</span> --}}
-                                                                        {{-- </div> --}}
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <span class="fs-1">ALTINEX</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Bulan/Tahun Pembuatan
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JUNI 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Nama Mesin Cetak
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JCMCO</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Kode/Nama Produk
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            TCRV3</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    {{-- <div class="col-12">
-                                                                        <h3>JCMCO</h3>
-                                                                    </div> --}}
-                                                                    <div class="col-12">
-                                                                        <span class="fs-3">Pengukuran Awal</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Tanggal Pengukuran
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            14 Juli 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Diukur oleh
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            Teknisi 1</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;" colspan="3">
-                                                                                            <span class="badge badge-light-success fs-5">Approved</span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="#" class="btn btn-active-light-dark"
-                                                    style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
-                                                    <div class="col-12">
-                                                        {{-- <div class="row">
-                                                            <div class="col-12 mb-5">
-                                                                <h1>{ Merk Punch }</h1>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Bulan/Tahun Pembuatan
-                                                                            </div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama Mesin Cetak</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Mesin Cetak}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama/Kode Produk</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Produk}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Tanggal Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">29 September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">
-                                                                                <span
-                                                                                    class="badge badge-light-success">Approval</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
-                                                        <div class="row">
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        {{-- <div class="d-flex flex-center"> --}}
-                                                                        {{-- <span class="fs-1">{MERK PUNCH}</span> --}}
-                                                                        {{-- </div> --}}
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <span class="fs-1">ALTINEX</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Bulan/Tahun Pembuatan
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JUNI 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Nama Mesin Cetak
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JCMCO</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Kode/Nama Produk
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            TCRV3</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    {{-- <div class="col-12">
-                                                                        <h3>JCMCO</h3>
-                                                                    </div> --}}
-                                                                    <div class="col-12">
-                                                                        <span class="fs-3">Pengukuran Awal</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Tanggal Pengukuran
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            14 Juli 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Diukur oleh
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            Teknisi 1</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;" colspan="3">
-                                                                                            <span class="badge badge-light-success fs-5">Approved</span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="#" class="btn btn-active-light-dark"
-                                                    style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
-                                                    <div class="col-12">
-                                                        {{-- <div class="row">
-                                                            <div class="col-12 mb-5">
-                                                                <h1>{ Merk Punch }</h1>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Bulan/Tahun Pembuatan
-                                                                            </div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama Mesin Cetak</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Mesin Cetak}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama/Kode Produk</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Produk}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Tanggal Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">29 September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">
-                                                                                <span
-                                                                                    class="badge badge-light-success">Approval</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
-                                                        <div class="row">
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        {{-- <div class="d-flex flex-center"> --}}
-                                                                        {{-- <span class="fs-1">{MERK PUNCH}</span> --}}
-                                                                        {{-- </div> --}}
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <span class="fs-1">ALTINEX</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Bulan/Tahun Pembuatan
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JUNI 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Nama Mesin Cetak
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JCMCO</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Kode/Nama Produk
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            TCRV3</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    {{-- <div class="col-12">
-                                                                        <h3>JCMCO</h3>
-                                                                    </div> --}}
-                                                                    <div class="col-12">
-                                                                        <span class="fs-3">Pengukuran Awal</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Tanggal Pengukuran
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            14 Juli 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Diukur oleh
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            Teknisi 1</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;" colspan="3">
-                                                                                            <span class="badge badge-light-success fs-5">Approved</span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="#" class="btn btn-active-light-dark"
-                                                    style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
-                                                    <div class="col-12">
-                                                        {{-- <div class="row">
-                                                            <div class="col-12 mb-5">
-                                                                <h1>{ Merk Punch }</h1>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Bulan/Tahun Pembuatan
-                                                                            </div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama Mesin Cetak</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Mesin Cetak}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama/Kode Produk</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Produk}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Tanggal Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">29 September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">
-                                                                                <span
-                                                                                    class="badge badge-light-success">Approval</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
-                                                        <div class="row">
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        {{-- <div class="d-flex flex-center"> --}}
-                                                                        {{-- <span class="fs-1">{MERK PUNCH}</span> --}}
-                                                                        {{-- </div> --}}
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <span class="fs-1">ALTINEX</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Bulan/Tahun Pembuatan
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JUNI 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Nama Mesin Cetak
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JCMCO</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Kode/Nama Produk
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            TCRV3</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    {{-- <div class="col-12">
-                                                                        <h3>JCMCO</h3>
-                                                                    </div> --}}
-                                                                    <div class="col-12">
-                                                                        <span class="fs-3">Pengukuran Awal</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Tanggal Pengukuran
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            14 Juli 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Diukur oleh
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            Teknisi 1</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;" colspan="3">
-                                                                                            <span class="badge badge-light-success fs-5">Approved</span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="#" class="btn btn-active-light-dark"
-                                                    style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
-                                                    <div class="col-12">
-                                                        {{-- <div class="row">
-                                                            <div class="col-12 mb-5">
-                                                                <h1>{ Merk Punch }</h1>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Bulan/Tahun Pembuatan
-                                                                            </div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama Mesin Cetak</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Mesin Cetak}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama/Kode Produk</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Produk}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Tanggal Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">29 September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">
-                                                                                <span
-                                                                                    class="badge badge-light-success">Approval</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
-                                                        <div class="row">
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        {{-- <div class="d-flex flex-center"> --}}
-                                                                        {{-- <span class="fs-1">{MERK PUNCH}</span> --}}
-                                                                        {{-- </div> --}}
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <span class="fs-1">ALTINEX</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Bulan/Tahun Pembuatan
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JUNI 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Nama Mesin Cetak
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JCMCO</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Kode/Nama Produk
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            TCRV3</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    {{-- <div class="col-12">
-                                                                        <h3>JCMCO</h3>
-                                                                    </div> --}}
-                                                                    <div class="col-12">
-                                                                        <span class="fs-3">Pengukuran Awal</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Tanggal Pengukuran
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            14 Juli 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Diukur oleh
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            Teknisi 1</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;" colspan="3">
-                                                                                            <span class="badge badge-light-success fs-5">Approved</span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="#" class="btn btn-active-light-dark"
-                                                    style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
-                                                    <div class="col-12">
-                                                        {{-- <div class="row">
-                                                            <div class="col-12 mb-5">
-                                                                <h1>{ Merk Punch }</h1>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Bulan/Tahun Pembuatan
-                                                                            </div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama Mesin Cetak</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Mesin Cetak}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Nama/Kode Produk</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">{Nama Produk}</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-12 col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-5">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Tanggal Pengukuran</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">29 September 2024</div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="row">
-                                                                            <div class="col-5">Status</div>
-                                                                            <div class="col-1">:</div>
-                                                                            <div class="col-6">
-                                                                                <span
-                                                                                    class="badge badge-light-success">Approval</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
-                                                        <div class="row">
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        {{-- <div class="d-flex flex-center"> --}}
-                                                                        {{-- <span class="fs-1">{MERK PUNCH}</span> --}}
-                                                                        {{-- </div> --}}
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <span class="fs-1">ALTINEX</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Bulan/Tahun Pembuatan
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JUNI 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Nama Mesin Cetak
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            JCMCO</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Kode/Nama Produk
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            TCRV3</td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-6 d-flex flex-center">
-                                                                <div class="row">
-                                                                    {{-- <div class="col-12">
-                                                                        <h3>JCMCO</h3>
-                                                                    </div> --}}
-                                                                    <div class="col-12">
-                                                                        <span class="fs-3">Pengukuran Awal</span>
-                                                                        <div class="table-responsive">
-                                                                            <table style="border: none;">
-                                                                                <tbody>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Tanggal Pengukuran
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            14 Juli 2024</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;">
-                                                                                            Diukur oleh
-                                                                                        </td>
-                                                                                        <td style="border: none;">:
-                                                                                        </td>
-                                                                                        <td style="border: none;">
-                                                                                            Teknisi 1</td>
-                                                                                    </tr>
-                                                                                    <tr
-                                                                                        style="border: none; height: 30px;">
-                                                                                        <td style="border: none;" colspan="3">
-                                                                                            <span class="badge badge-light-success fs-5">Approved</span>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -1400,6 +292,7 @@
 </div>
 <!--end::Content-->
 
+{{-- Create Data Punch Modal --}}
 <div class="modal fade" tabindex="-1" id="modal_create_data_punch">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -1416,89 +309,221 @@
 
             <div class="modal-body">
                 <div class="col-12">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="mb-5">
-                                <label for="exampleFormControlInput1" class="required form-label">
-                                    Merk Punch</label>
-                                <input type="email" class="form-control form-control-solid"
-                                    placeholder="Example input" />
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="row">
-                                <label for="exampleFormControlInput1" class="required form-label">
-                                    Bulan & Tahun Pembuatan</label>
-                                <div class="col-6">
-                                    <select class="form-select" aria-label="Select example">
-                                        <option>Open this select menu</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <select class="form-select" aria-label="Select example">
-                                        <option>Open this select menu</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
+                    <form id="form_create_punch">
+                        @csrf
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-5">
+                                    <label for="exampleFormControlInput1" class="required form-label">
+                                        Merk Punch</label>
+                                    <input type="text" class="form-control form-control-solid"
+                                        placeholder="Masukkan Merk Punch" name="merk" />
                                 </div>
                             </div>
-                        </div>
-                        <div class="separator my-10"></div>
-                        <div class="col-12">
-                            <div class="mb-5">
-                                <label for="exampleFormControlInput1" class="required form-label">
-                                    Nama Mesin Cetak
-                                </label>
-                                <input type="email" class="form-control form-control-solid"
-                                    placeholder="Example input" />
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="mb-5">
-                                        <label for="exampleFormControlInput1" class="required form-label">
-                                            Nama Produk</label>
-                                        <input type="email" class="form-control form-control-solid"
-                                            placeholder="Example input" />
+                            <div class="col-12">
+                                <div class="row">
+                                    <label for="exampleFormControlInput1" class="required form-label">
+                                        Bulan & Tahun Pembuatan</label>
+                                    <div class="col-6">
+                                        <select class="form-select" aria-label="Select example" name="bulan_pembuatan">
+                                            <option>Open this select menu</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
                                     </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="mb-5">
-                                        <label for="exampleFormControlInput1" class="required form-label">
-                                            Kode Produk</label>
-                                        <input type="email" class="form-control form-control-solid"
-                                            placeholder="Example input" />
+                                    <div class="col-6">
+                                        <select class="form-select" aria-label="Select example" name="tahun_pembuatan">
+                                            <option>Open this select menu</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="">
-                                <label for="exampleFormControlInput1" class="required form-label">
-                                    Pilih Line untuk Punch
-                                </label>
-                                <select class="form-select" aria-label="Select example">
-                                    <option>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
+                            <div class="separator my-10"></div>
+                            <div class="col-12">
+                                <div class="mb-5">
+                                    <label for="exampleFormControlInput1" class="required form-label">
+                                        Nama Mesin Cetak
+                                    </label>
+                                    <input type="text" class="form-control form-control-solid"
+                                        placeholder="Masukkan Nama Mesin" name="nama_mesin_cetak" />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="mb-5">
+                                            <label for="exampleFormControlInput1" class="required form-label">
+                                                Nama Produk</label>
+                                            <input type="text" class="form-control form-control-solid"
+                                                placeholder="Masukkan Nama Produk" name="nama_produk" />
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-5">
+                                            <label for="exampleFormControlInput1" class="required form-label">
+                                                Kode Produk</label>
+                                            <input type="text" class="form-control form-control-solid"
+                                                placeholder="Masukkan Kode Produk" name="kode_produk" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="">
+                                    <label for="exampleFormControlInput1" class="required form-label">
+                                        Pilih Line untuk Punch
+                                    </label>
+                                    <select class="form-select" aria-label="Select example" name="line_id">
+                                        <option>Open this select menu</option>
+                                        <option value="1">Line 8A</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- Konfirmasi Lanjut Pegukuran --}}
+<div class="modal fade" tabindex="-1" id="modal_lanjut_pengukuran">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Detail Data</h4>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+
+            <div class="modal-body">
+                <div class="d-flex flex-column justify-content-center">
+                    <p class="text-center fs-4">Data Punch Berhasil Dibuat!</p>
+                    <p class="text-center fs-4">Lanjutkan Pengukuran</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="p-2">
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-stacked-modal="#modal_buat_pengukuran_1">Pengukuran</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+{{-- Kondisi Pengukuran tidak Ditemukan! --}}
+<div class="modal fade" tabindex="-1" id="modal_cek_pengukuran">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Detail Data</h4>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+
+            <div class="modal-body">
+                <div class="d-flex flex-column justify-content-center">
+                    <p class="text-center fs-4">Data Pengukuran Tidak Ditemukan!</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="me-auto">
+                    <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close</button>
+                </div>
+                <div class="p-2">
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                        data-bs-stacked-modal="#modal_buat_pengukuran_1">Buat Pengukuran Awal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Buat Data Pengukuran --}}
+<div class="modal fade" tabindex="-1" id="modal_buat_pengukuran_1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Buat Data Pengukuran</h4>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+
+            <form action="{{ url('/data/punch-atas/pengukuran-awal') }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="d-flex flex-column justify-content-center">
+                        <p class="text-center fs-4">Masukkan Jumlah Punch</p>
+                        <div class="mb-10">
+                            <div class="position-relative">
+                                <div class="required position-absolute top-0"></div>
+                                <input type="number" class="form-control form-control-solid required text-center"
+                                    placeholder="Jumlah Punch" name="jumlah_data_punch" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="p-2">
+                        <button type="submit" class="btn btn-sm btn-primary">Confirm</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // alert('ok');
+        // this is the id of the form
+        $("#form_create_punch").submit(function (e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var form = $(this);
+
+            $.ajax({
+                type: "POST",
+                url: '/data/punch-atas/create-data',
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    // console.log('oke');
+                    $('#modal_create_data_punch').modal('hide');
+                    $('#modal_buat_pengukuran_1').modal('show');
+                    // show response from the php script.
+                }
+            });
+
+        });
+    });
+
+</script>
 @endsection

@@ -25,8 +25,7 @@ class UserFactory extends Factory
     {
         $arrayValues = [1, 2, 3, 4];
         return [
-            'name' => fake()->name(),
-            'username' => fake()->unique(),
+            'username' => 'admin',
             'password' => static::$password ??= Hash::make('password'),
             'role_id' => $arrayValues[rand(0, 3)]
         ];

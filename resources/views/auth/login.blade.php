@@ -189,7 +189,7 @@
                         <div class="d-grid mb-5">
                             <!--begin::Links-->
                             <div class="d-grid fw-semibold text-primary fs-base gap-5">
-                                <a href="#" class="btn btn-outline btn-outline-dashed btn-outline" style="width: auto;">
+                                <a href="{{url('audit-trail')}}" class="btn btn-outline btn-outline-dashed btn-outline" style="width: auto;">
                                     <i class="ki-duotone ki-graph-3 fs-1"><span class="path1"></span><span
                                             class="path2"></span></i>
                                     Audit Trail

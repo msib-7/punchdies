@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tbl_line', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_line');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->bigInteger('line_id')->unsigned()->nullable()->after('role_id');
+            $table->foreign('line_id')->references('id')->on('tbl_line')->onDelete('SET NULL');
         });
     }
 
@@ -23,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('line_id');
+        });
     }
 };

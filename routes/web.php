@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\APIContr;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\pengukuran\PengukuranController;
 use App\Http\Controllers\Permission;
+use App\Http\Controllers\PunchController;
 use App\Http\Controllers\Role;
+use App\Http\Controllers\Users;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -12,6 +16,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'login'])->name('login');
 
     Route::post('/login-auth', [AuthController::class, 'login_auth'])->name('login-auth');
+
+    Route::get('/audit-trail', [AuditController::class, 'audit_trail_guest']);
 });
 
 
@@ -19,15 +25,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/dashboard-admin', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('/data/punch-atas', function () {
-        return view('engineer.data.punch_atas');
-    });
-
     //Manajemen User
-    Route::get('/manajemen-user', [AdminController::class, 'manajemen_user'])->name('user');
-    Route::post('/add-user', [AdminController::class, 'add_user'])->name('add-user');
-    Route::get('/edit-user/{id}', [AdminController::class, 'edit_user']);
-    Route::post('/update-user', [AdminController::class, 'update_user']);
+    Route::get('/manajemen-user', [Users::class, 'manajemen_user'])->name('user');
+    Route::post('/add-user', [Users::class, 'add_user'])->name('add-user');
+    Route::get('/edit-user/{id}', [Users::class, 'edit_user']);
+    Route::post('/update-user', [Users::class, 'update_user']);
 
     //Manajemen Role
     Route::get('/manajemen-role', [Role::class, 'manajemen_role'])->name('roles');
@@ -44,6 +46,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/edit-permission/{id}', [Permission::class, 'edit_permission']);
     Route::post('/update-permission', [Permission::class, 'update_permission']);
 
+    //Data Pengukuran
+    //Punch Atas
+    Route::get('/data/punch-atas', [PunchController::class, 'show_all_punch']);
+    Route::get('/data/punch-atas/pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal']);
+
+    Route::get('/data/punch-atas/pengukuran-awal/view_pengukuran', [PengukuranController::class, 'view_form_pengukuran']);
+
+    Route::post('/data/punch-atas/create-data', [PengukuranController::class, 'create_data_punch']);
 
 
     //Logout

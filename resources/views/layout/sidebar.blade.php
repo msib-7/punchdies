@@ -4,7 +4,7 @@
     <!--begin::Logo-->
     <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
         <!--begin::Logo image-->
-        <a href="../../demo1/dist/index.html">
+        <a>
             <img alt="Logo" src="{{asset('assets/logo/kalbe_farma_svg.svg')}}"
                 class="h-50px app-sidebar-logo-default theme-light-show" />
             <img alt="Logo" src="{{asset('assets/logo/kalbe_farma_svg.svg')}}"

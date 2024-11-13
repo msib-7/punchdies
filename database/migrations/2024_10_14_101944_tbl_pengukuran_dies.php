@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('tbl_pengukuran_dies', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('dies_id');
-            $table->foreign('dies_id')->references('id')->on('tbl_dies');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->bigInteger('dies_id');
+            $table->bigInteger('user_id');
             $table->double('outer_diameter');
             $table->double('inner_diameter_1');
             $table->double('inner_diameter_2');

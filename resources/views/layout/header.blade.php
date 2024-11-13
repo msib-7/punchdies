@@ -13,7 +13,7 @@
         <!--end::Sidebar mobile toggle-->
         <!--begin::Mobile logo-->
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-            <a href="../../demo1/dist/index.html" class="d-lg-none">
+            <a class="d-lg-none">
                 <img alt="Logo" src="{{asset('assets/logo/kalbe_farma.png')}}" class="h-30px" />
             </a>
         </div>
@@ -71,7 +71,7 @@
                         id="kt_menu_notifications">
                         <!--begin::Heading-->
                         <div class="d-flex flex-column bgi-no-repeat rounded-top"
-                            style="background-image:url('assets/media/misc/menu-header-bg.jpg')">
+                            style="background-image:url('/assets/media/misc/menu-header-bg.jpg')">
                             <!--begin::Title-->
                             <div class="d-flex flex-stack p-5">
                                 <div class="d-flex">
@@ -357,7 +357,7 @@
                         data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
                         Teknisi
-                        <img src="assets/media/avatars/300-3.jpg" class="rounded-3" alt="user" />
+                        <img src="/assets/media/avatars/blank.png" class="rounded-3" alt="user" />
                     </div>
                     <!--begin::User account menu-->
                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
@@ -367,7 +367,7 @@
                             <div class="menu-content d-flex align-items-center px-3">
                                 <!--begin::Avatar-->
                                 <div class="symbol symbol-50px me-5">
-                                    <img alt="Logo" src="assets/media/avatars/300-3.jpg" />
+                                    <img alt="Logo" src="/assets/media/avatars/blank.png" />
                                 </div>
                                 <!--end::Avatar-->
                                 <!--begin::Username-->
