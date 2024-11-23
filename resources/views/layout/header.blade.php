@@ -356,7 +356,7 @@
                     <div class="cursor-pointer symbol symbol-35px"
                         data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
-                        Teknisi
+                        {{session('nama_user')}}
                         <img src="/assets/media/avatars/blank.png" class="rounded-3" alt="user" />
                     </div>
                     <!--begin::User account menu-->
@@ -372,10 +372,10 @@
                                 <!--end::Avatar-->
                                 <!--begin::Username-->
                                 <div class="d-flex flex-column">
-                                    <div class="fw-bold d-flex align-items-center fs-5">Robert Fox
-                                        <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
+                                    <div class="fw-bold d-flex align-items-center fs-5">{{session('nama_user')}}
+                                        <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">{{ session('role_name') }}</span>
                                     </div>
-                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">robert@kt.com</a>
+                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{session('email_user')}}</a>
                                 </div>
                                 <!--end::Username-->
                             </div>

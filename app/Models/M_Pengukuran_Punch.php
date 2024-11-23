@@ -28,6 +28,8 @@ class M_Pengukuran_Punch extends Model
         'note',
         'is_draft',
         'is_delete_pp',
-        'is_edit'
+        'is_edit',
+        'is_approved',
+        'is_rejected'
     ];
 }

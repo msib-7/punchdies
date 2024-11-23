@@ -11,31 +11,65 @@ var KTUsersAddUser = (function () {
     var initAddUser = () => {
         // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
         var validator = FormValidation.formValidation(form, {
-            fields: {
-                user_name: {
-                    validators: {
-                        notEmpty: {
-                            message: "Full name is required",
-                        },
-                    },
+          fields: {
+            nama: {
+              validators: {
+                notEmpty: {
+                  message: "Full name is required",
                 },
-                user_email: {
-                    validators: {
-                        notEmpty: {
-                            message: "Valid email address is required",
-                        },
-                    },
-                },
+              },
             },
+            username: {
+              validators: {
+                notEmpty: {
+                  message: "Username is required",
+                },
+              },
+            },
+            email: {
+              validators: {
+                notEmpty: {
+                  message: "Valid email address is required",
+                },
+              },
+            },
+            line_id: {
+              validators: {
+                notEmpty: {
+                  message: "Line is required",
+                },
+              },
+            },
+            password: {
+              validators: {
+                notEmpty: {
+                  message: "The password is required",
+                },
+                callback: {
+                  message: "Please enter valid password",
+                  callback: function (e) {
+                    if (e.value.length > 0) return s();
+                  },
+                },
+              },
+            },
+            line_id: {
+              validators: {
+                notEmpty: {
+                  message: "Role is required",
+                },
+              },
+            },
+          },
 
-            plugins: {
-                trigger: new FormValidation.plugins.Trigger(),
-                bootstrap: new FormValidation.plugins.Bootstrap5({
-                    rowSelector: ".fv-row",
-                    eleInvalidClass: "",
-                    eleValidClass: "",
-                }),
-            },
+          plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap: new FormValidation.plugins.Bootstrap5({
+              rowSelector: ".fv-row",
+              eleInvalidClass: "",
+              eleValidClass: "",
+            }),
+          },
         });
 
         // Submit button handler
@@ -81,7 +115,8 @@ var KTUsersAddUser = (function () {
                                 }).then(function (result) {
                                   if (result.isConfirmed) {
                                     modal.hide();
-                                    document.location("/manajemen-user");
+                                    // document.location("/manajemen-user");
+                                    window.location.reload();
                                   }
                                 });
                               },

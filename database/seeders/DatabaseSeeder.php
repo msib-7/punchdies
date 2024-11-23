@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Lines;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,10 +14,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         User::factory()->create([
-            'username' => 'administrator',
+            'username' => 'admin',
+            'email' => 'admin@admin.com',
+            'nama' => 'Administrator',
+            'role_id' => '1',
+            'line_id' => '1'
+        ]);
+
+        $this->call([
+            LineSeed::class
         ]);
     }
 }

@@ -10,7 +10,9 @@
 <body id="kt_app_body" data-kt-app-layout="light-sidebar" data-kt-app-header-fixed="true"
     data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true"
     data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true"
-    data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
+    <?php if(Request::segment(4) == 'form_pengukuran'){echo 'data-kt-app-sidebar-minimize="on"';}?>
+    data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default"
+    style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repeat-y;">
 
     <!--begin::Theme mode setup on page load-->
     <script>
@@ -68,10 +70,6 @@
         <!--end::Page-->
     </div>
     <!--end::App-->
-
-    <!--begin::Drawers-->
-    @include('layout.drawer')
-    <!--end::Drawers-->
 
     <!--begin::Scrolltop-->
     <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">

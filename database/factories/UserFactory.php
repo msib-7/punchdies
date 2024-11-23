@@ -23,11 +23,9 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $arrayValues = [1, 2, 3, 4];
         return [
-            'username' => 'admin',
             'password' => static::$password ??= Hash::make('password'),
-            'role_id' => $arrayValues[rand(0, 3)]
+            'role_id' => '1'
         ];
     }
 

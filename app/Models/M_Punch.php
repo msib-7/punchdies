@@ -21,5 +21,11 @@ class M_Punch extends Model
         'kode_produk',
         'line_id',
         'jenis',
+        'masa_pengukuran',
+        'is_draft',
+        'is_delete_punch',
+        'is_edit',
+        'is_approved',
+        'is_rejected',
     ];
 }

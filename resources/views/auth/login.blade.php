@@ -33,7 +33,8 @@
 <!--end::Head-->
 <!--begin::Body-->
 
-<body id="kt_body" class="app-blank bgi-size-cover bgi-attachment-fixed bgi-position-center">
+<body id="kt_body" class="app-blank bgi-size-cover bgi-attachment-fixed bgi-position-center"
+style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repeat-y;">
     <!--begin::Theme mode setup on page load-->
     <script>
         var defaultThemeMode = "light";

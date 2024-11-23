@@ -52,6 +52,7 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         ),
         'T' => 
         array (
+            'TimWassenburg\\ServiceGenerator\\' => 31,
             'TijsVerkoyen\\CssToInlineStyles\\' => 31,
             'Tests\\' => 6,
             'Termwind\\' => 9,
@@ -186,6 +187,10 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'TimWassenburg\\ServiceGenerator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/timwassenburg/laravel-service-generator/src',
         ),
         'TijsVerkoyen\\CssToInlineStyles\\' => 
         array (
@@ -333,8 +338,8 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -504,8 +509,33 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminController.php',
+        'App\\Http\\Controllers\\AuditController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuditController.php',
+        'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\DiesController' => __DIR__ . '/../..' . '/app/Http/Controllers/DiesController.php',
+        'App\\Http\\Controllers\\LineController' => __DIR__ . '/../..' . '/app/Http/Controllers/LineController.php',
+        'App\\Http\\Controllers\\Permission' => __DIR__ . '/../..' . '/app/Http/Controllers/Permission.php',
+        'App\\Http\\Controllers\\PunchController' => __DIR__ . '/../..' . '/app/Http/Controllers/PunchController.php',
+        'App\\Http\\Controllers\\Role' => __DIR__ . '/../..' . '/app/Http/Controllers/Role.php',
+        'App\\Http\\Controllers\\Users' => __DIR__ . '/../..' . '/app/Http/Controllers/Users.php',
+        'App\\Http\\Controllers\\approval\\ApprovalController' => __DIR__ . '/../..' . '/app/Http/Controllers/approval/ApprovalController.php',
+        'App\\Http\\Controllers\\pengukuran\\PengukuranController' => __DIR__ . '/../..' . '/app/Http/Controllers/pengukuran/PengukuranController.php',
+        'App\\Http\\Middleware\\Auth' => __DIR__ . '/../..' . '/app/Http/Middleware/Auth.php',
+        'App\\Http\\Middleware\\isAdmin' => __DIR__ . '/../..' . '/app/Http/Middleware/isAdmin.php',
+        'App\\Models\\Audit_tr' => __DIR__ . '/../..' . '/app/Models/Audit_tr.php',
+        'App\\Models\\Lines' => __DIR__ . '/../..' . '/app/Models/Lines.php',
+        'App\\Models\\M_ApprDisposal' => __DIR__ . '/../..' . '/app/Models/M_ApprDisposal.php',
+        'App\\Models\\M_ApprPengukuran' => __DIR__ . '/../..' . '/app/Models/M_ApprPengukuran.php',
+        'App\\Models\\M_Dies' => __DIR__ . '/../..' . '/app/Models/M_Dies.php',
+        'App\\Models\\M_Pengukuran_Dies' => __DIR__ . '/../..' . '/app/Models/M_Pengukuran_Dies.php',
+        'App\\Models\\M_Pengukuran_Punch' => __DIR__ . '/../..' . '/app/Models/M_Pengukuran_Punch.php',
+        'App\\Models\\M_Punch' => __DIR__ . '/../..' . '/app/Models/M_Punch.php',
+        'App\\Models\\Permissions' => __DIR__ . '/../..' . '/app/Models/Permissions.php',
+        'App\\Models\\Roles' => __DIR__ . '/../..' . '/app/Models/Roles.php',
+        'App\\Models\\RolesPermission' => __DIR__ . '/../..' . '/app/Models/RolesPermission.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Models\\UserRole' => __DIR__ . '/../..' . '/app/Models/UserRole.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
@@ -624,8 +654,10 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'Cron\\HoursField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/HoursField.php',
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
+        'Database\\Factories\\LinesFactory' => __DIR__ . '/../..' . '/database/factories/LinesFactory.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\LineSeed' => __DIR__ . '/../..' . '/database/seeders/LineSeed.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
         'DateInvalidOperationException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',
@@ -6419,6 +6451,11 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Property\\Property' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Property/Property.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Processor' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Processor.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Rule' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Rule.php',
+        'TimWassenburg\\ServiceGenerator\\Console\\MakeController' => __DIR__ . '/..' . '/timwassenburg/laravel-service-generator/src/Console/MakeController.php',
+        'TimWassenburg\\ServiceGenerator\\Console\\MakeModel' => __DIR__ . '/..' . '/timwassenburg/laravel-service-generator/src/Console/MakeModel.php',
+        'TimWassenburg\\ServiceGenerator\\Console\\MakeServiceCommand' => __DIR__ . '/..' . '/timwassenburg/laravel-service-generator/src/Console/MakeServiceCommand.php',
+        'TimWassenburg\\ServiceGenerator\\Http\\Providers\\CommandServiceProvider' => __DIR__ . '/..' . '/timwassenburg/laravel-service-generator/src/Http/Providers/CommandServiceProvider.php',
+        'TimWassenburg\\ServiceGenerator\\ServiceGeneratorServiceProvider' => __DIR__ . '/..' . '/timwassenburg/laravel-service-generator/src/ServiceGeneratorServiceProvider.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'Webmozart\\Assert\\Assert' => __DIR__ . '/..' . '/webmozart/assert/src/Assert.php',

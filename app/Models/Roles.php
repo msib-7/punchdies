@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
+use App\Traits\AuditTrailable;
+use App\Traits\UUIDAsPrimaryKey;
 use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Roles extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable, UUIDAsPrimaryKey, AuditTrailable;
 
     protected $table = 'role';
 
-    protected $fillable = [
-        'role_name',
-    ];
+    protected $guarded;
 
     public function getRoleJoinPermission($where = false)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lines;
 use App\Models\Roles;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,21 +16,29 @@ class Users extends Controller
         // $dataUser = User::all();
         $dataUser = $modelUser->getUserRole()->all();
         $dataRoles = Roles::orderBy('role_name', 'asc')->get();
+        $dataLines = Lines::orderBy('nama_line', 'asc')->get();
         $data['dataUser'] = $dataUser;
         $data['dataRoles'] = $dataRoles;
+        $data['dataLines'] = $dataLines;
         return view("admin/manajemen-user/data-user", $data);
     }
     public function add_user(Request $request)
     {
+        $nama = $request->nama;
+        $email = $request->email;
         $username = ucwords($request->username);
         $password = $request->password;
         $role = $request->user_role;
+        $line = $request->line_id;
         $cekUsername = User::where('username', '=', $username)->first();
         if (!$cekUsername) {
             $saveUser = [
+                'nama' => $nama,
                 'username' => $username,
+                'email' => $email,
                 'password' => $password,
                 'role_id' => $role,
+                'line_id' => $line,
                 'last_login_at' => null,
             ];
             User::create($saveUser);
@@ -51,9 +60,15 @@ class Users extends Controller
     public function update_user(Request $request)
     {
         $usn = session()->get('usn');
-        $user_role = ucwords($request->user_role_edit);
+        $nama = $request->nama_edit;
+        $email = $request->email_edit;
+        $role = $request->user_role_edit;
+        $line = $request->line_id_edit;
         $dataUpdate = [
-            'role_id' => $user_role,
+            'nama' => $nama,
+            'email' => $email,
+            'role_id' => $role,
+            'line_id' => $line,
         ];
         User::where('username', '=', $usn)->update($dataUpdate);
         return redirect(route('user'))->with('success', 'User berhasil diUpdate!');

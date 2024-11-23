@@ -53,12 +53,12 @@
                 {
                     searchable: false,  
                     target: 0,
-                    visible: true,
+                    visible: false,
                 },
                 {
                     searchable: true,  
                     target: 1,
-                    visible: false,
+                    visible: true,
                 },
                 {
                     searchable: true,  
@@ -269,7 +269,80 @@
             ],
             keys: true,
         });
+        $('#log_approval_1').DataTable({
+            layout: {
+                topStart: {
+                    buttons: [{
+                        extend: 'copy',
+                        className: "btn btn-secondary"
+                    }, {
+                        extend: 'print',
+                        className: "btn btn-light-dark"
+                    }, {
+                        extend: 'collection',
+                        className: 'btn btn-light-primary',
+                        text: 'Export',
+                        buttons: ['csv', 'excel', 'pdf']
+                    }],
+                },
+                topEnd: {
+                    search: {
+                        placeholder: 'Type search here'
+                    }
+                },
+                bottomStart: {
+                    pageLength: true,
+                },
+                bottom4End: {
+                    info: true,
+                }
+            },
+            initComplete: function () {
+                var btns = $('.dt-button');
+                btns.removeClass('dt-button');
+                btns.removeClass('dt-button');
+            },
+            responsive: true,
+            keys: true,
+        });
+        $('#log_approval_2').DataTable({
+            layout: {
+                topStart: {
+                    buttons: [{
+                        extend: 'copy',
+                        className: "btn btn-secondary"
+                    }, {
+                        extend: 'print',
+                        className: "btn btn-light-dark"
+                    }, {
+                        extend: 'collection',
+                        className: 'btn btn-light-primary',
+                        text: 'Export',
+                        buttons: ['csv', 'excel', 'pdf']
+                    }],
+                },
+                topEnd: {
+                    search: {
+                        placeholder: 'Type search here'
+                    }
+                },
+                bottomStart: {
+                    pageLength: true,
+                },
+                bottom4End: {
+                    info: true,
+                }
+            },
+            initComplete: function () {
+                var btns = $('.dt-button');
+                btns.removeClass('dt-button');
+                btns.removeClass('dt-button');
+            },
+            responsive: true,
+            keys: true,
+        });
     });
+</script>
 </script>
 <!--begin::Global Javascript Bundle(mandatory for all pages)-->
 <script src="{{asset('assets/plugins/global/plugins.bundle.js')}}"></script>
@@ -283,9 +356,10 @@
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/table.js')}}"></script>
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/export-users.js')}}"></script>
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/add.js')}}"></script>
-<script src="assets/js/custom/apps/user-management/permissions/list.js"></script>
-<script src="assets/js/custom/apps/user-management/permissions/add-permission.js"></script>
-<script src="assets/js/custom/apps/user-management/permissions/update-permission.js"></script>
+<script src="{{asset('assets/js/custom/apps/user-management/users/list/add2.js')}}"></script>
+<script src="{{asset('assets/js/custom/apps/user-management/permissions/list.js')}}"></script>
+<script src="{{asset('assets/js/custom/apps/user-management/permissions/add-permission.js')}}"></script>
+<script src="{{asset('assets/js/custom/apps/user-management/permissions/update-permission.js')}}"></script>
 <script src="{{asset('assets/js/widgets.bundle.js')}}"></script>
 <script src="{{asset('assets/js/custom/widgets.js')}}"></script>
 <script src="{{asset('assets/js/custom/utilities/modals/upgrade-plan.js')}}"></script>

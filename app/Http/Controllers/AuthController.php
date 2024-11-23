@@ -36,10 +36,17 @@ class AuthController extends Controller
                 'last_login_at' => date('Y-m-d H:i:s'),
             ];
             User::where('username', $username)->update($last_login);
+
             $user = User::where('username','=', $username)->first();
-            $user_line = Lines::where('id','=', $user->line_id)->first();
+            $line = Lines::where(['id' => $user->line_id])->first();
+            $dataUser = [
+                            'user_id' => $user->id, 
+                            'line_user' => $line->nama_line,
+                            'nama_user' => $user->nama,
+                            'email_user' => $user->email,
+                        ];
             session()->put($infoLogin);
-            session()->put(['user_id' => $user->id, 'line_user' => $user_line->nama_line]);
+            session()->put($dataUser);
             return redirect("/dashboard-admin")->with('success','Login Berhasil!');
         } else {
             return redirect('/')->with( 'error','Username dan Password tidak cocok!');
