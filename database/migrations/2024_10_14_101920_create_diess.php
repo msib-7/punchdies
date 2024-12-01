@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('punchs', function (Blueprint $table) {
-            $table->id();
+        Schema::create('diess', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('dies_id');
             $table->string('merk');
             $table->string('bulan_pembuatan');
             $table->integer('tahun_pembuatan');
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->string('jenis');
             $table->string('masa_pengukuran');
             $table->string('is_draft');
-            $table->string('is_delete_punch');
+            $table->string('is_delete_dies');
             $table->string('is_edit');
             $table->string('is_approved');
             $table->string('is_rejected');
@@ -36,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('punchs');
+        Schema::dropIfExists('diess');
     }
 };

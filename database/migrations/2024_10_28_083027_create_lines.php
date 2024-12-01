@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('audit_trails', function (Blueprint $table) {
-            $table->id();
-            $table->string('event');
-            $table->datetime('logdate');
-            $table->bigInteger('user_id');
-            $table->string('line');
-            $table->string('category');
-            $table->string('detail');
+        Schema::create('lines', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('nama_line');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('audit_trails');
+        Schema::dropIfExists('lines');
     }
 };

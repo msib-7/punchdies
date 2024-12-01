@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pengukuran_awal_punchs', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('punch_id');
-            $table->bigInteger('user_id');
+            $table->string('punch_id');
+            $table->uuid('user_id');
             $table->double('head_outer_diameter')->nullable();
             $table->double('neck_diameter')->nullable();
             $table->double('barrel')->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->double('tip_diameter_2')->nullable();
             $table->double('cup_depth')->nullable();
             $table->double('working_length')->nullable();
-            $table->string('head_configuration')->nullable();
+            $table->string('status')->nullable();
             $table->string('masa_pengukuran');
             $table->string('note')->nullable();
             $table->string('is_draft');

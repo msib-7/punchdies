@@ -2,22 +2,21 @@
 
 namespace App\Models;
 
+use App\Traits\UUIDAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
 class Audit_tr extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, UUIDAsPrimaryKey;
 
-    protected $table = 'audit_tr';
+    protected $table = 'audit_trails';
 
-    protected $fillable = [
-        'event',
-        'logdate',
-        'user_id',
-        'line',
-        'category',
-        'detail',
+    protected $fillable = ['model', 'model_id', 'action', 'old_data', 'new_data', 'user_id'];
+
+    protected $casts = [
+        'old_data' => 'array',
+        'new_data' => 'array',
     ];
 }

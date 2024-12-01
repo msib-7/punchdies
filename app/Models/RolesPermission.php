@@ -11,12 +11,7 @@ class RolesPermission extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'role_permission';
-
-    protected $fillable = [
-        'permission_id',
-        'role_id',
-    ];
+    protected $guarded;
 
     public function deleteRoleData($where)
     {

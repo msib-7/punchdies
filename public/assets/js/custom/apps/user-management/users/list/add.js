@@ -100,7 +100,7 @@ var KTUsersAddUser = (function () {
                             submitButton.disabled = false;
 
                             $.ajax({
-                              url: "/add-user",
+                              url: "{{route('admin.users.create')}}",
                               type: "POST",
                               data: $("#kt_modal_add_user_form").serialize(),
                               success: function (data) {

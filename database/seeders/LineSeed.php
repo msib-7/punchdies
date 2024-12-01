@@ -14,7 +14,7 @@ class LineSeed extends Seeder
     public function run(): void
     {
         Lines::factory()->create([
-            'nama_line' => 'Line 9'
+            'nama_line' => 'LINE 9'
         ]);
     }
 }

@@ -57,7 +57,7 @@
                             <div id="kt_accordion_2_item_1" class="fs-6 collapse show ps-10"
                                 data-bs-parent="#kt_accordion_2">
                                 <div class="row">
-                                    <div class="col-9">
+                                    <div class="col-12">
                                         <table id="dboard_Table1" class="display" style="width:100%">
                                             <thead>
                                                 <tr>
@@ -84,7 +84,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-3">
+                                    {{-- <div class="col-3">
                                         <a href="#" class="card hover-elevate-up shadow-sm parent-hover">
                                             <div class="card-body align-items">
                                                 <div class="row d-flex flex-center">
@@ -101,7 +101,7 @@
                                                 </div>
                                             </div>
                                         </a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             <!--end::Body-->

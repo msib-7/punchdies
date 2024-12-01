@@ -169,14 +169,10 @@
                                             <thead>
                                                 <tr>
                                                     <th class="text-center">No Punch</th>
-                                                    <th class="text-center">Head Outer D</th>
-                                                    <th class="text-center">Neck Dmtr</th>
-                                                    <th class="text-center">Barrel</th>
                                                     <th class="text-center">Overall Length</th>
-                                                    <th class="text-center">Tip Dmtr 1</th>
-                                                    <th class="text-center">Tip Dmtr 2</th>
+                                                    <th class="text-center">Working Length <b>(AWAL)</b></th>
+                                                    <th class="text-center">Working Length <b>(RUTIN)</b></th>
                                                     <th class="text-center">Cup Depth</th>
-                                                    <th class="text-center">Working Length</th>
                                                     <th class="text-center">Status</th>
                                                 </tr>
                                             </thead>
@@ -185,14 +181,10 @@
                                                 @foreach ($dataPengukuran as $item)
                                                     <tr>
                                                         <td class="text-center">{{ $no++ }}</td>
-                                                        <td class="text-center">{{ $item->head_outer_diameter }}</td>
-                                                        <td class="text-center">{{ $item->neck_diameter }}</td>
-                                                        <td class="text-center">{{ $item->barrel }}</td>
                                                         <td class="text-center">{{ $item->overall_length }}</td>
-                                                        <td class="text-center">{{ $item->tip_diameter_1 }}</td>
-                                                        <td class="text-center">{{ $item->tip_diameter_2 }}</td>
+                                                        <td class="text-center">{{ $item->working_length_awal }}</td>
+                                                        <td class="text-center">{{ $item->working_length_rutin }}</td>
                                                         <td class="text-center">{{ $item->cup_depth }}</td>
-                                                        <td class="text-center">{{ $item->working_length }}</td>
                                                         <td class="text-center"></td>
                                                     </tr>
                                                 @endforeach

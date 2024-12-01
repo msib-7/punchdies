@@ -41,7 +41,7 @@
                                             <td>{{$no++}}</td>
                                             @if ($item->punch_id != null)
                                                 @foreach ($dataPunch as $punch)
-                                                    @if ($item->punch_id == $punch->id)
+                                                    @if ($item->punch_id == $punch->punch_id)
                                                     <td>{{$punch->merk}}</td>
                                                     <td>{{$punch->jenis}}</td>
                                                     @endif
@@ -49,7 +49,7 @@
                                             @endif
                                             @if ($item->dies_id != null)
                                                 @foreach ($dataDies as $dies)
-                                                    @if ($item->dies_id == $dies->id)
+                                                    @if ($item->dies_id == $dies->dies_id)
                                                         <td>{{$dies->merk}}</td>
                                                         <td>{{$dies->jenis}}</td>
                                                     @endif

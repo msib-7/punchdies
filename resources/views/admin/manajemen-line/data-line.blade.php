@@ -85,7 +85,7 @@
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="/manajemen-line/delete/{{$data->id}}" class="menu-link px-3"
+                                        <a href="{{route('admin.line.delete', $data->id)}}" class="menu-link px-3"
                                             data-kt-users-table-filter="delete_row">Delete</a>
                                     </div>
                                     <!--end::Menu item-->
@@ -127,7 +127,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5">
                 <!--begin::Form-->
-                <form id="kt_modal_add_line_form" class="form">
+                <form id="kt_modal_add_line_form" action="{{route('admin.line.create')}}" method="POST" class="form">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_line_scroll"
@@ -150,7 +150,7 @@
                     <div class="text-center pt-10">
                         <button type="reset" class="btn btn-light me-3"
                             data-kt-lines-modal-action="cancel">Discard</button>
-                        <button type="submit" class="btn btn-primary" data-kt-lines-modal-action="submit">
+                        <button type="submit" class="btn btn-primary">
                             <span class="indicator-label">Submit</span>
                             <span class="indicator-progress">Please wait...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -187,7 +187,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5">
                 <!--begin::Form-->
-                <form id="kt_modal_add_line_form" action="{{url('update-line')}}" method="POST">
+                <form id="kt_modal_add_line_form" action="{{route('admin.line.update')}}" method="POST">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll"
@@ -235,11 +235,11 @@
     //button create post event
     $('body').on('click', '#btn-edit', function () {
 
-        let edit_id = $(this).data('id');
+        var edit_id = $(this).data('id');
 
         //fetch detail post with ajax
         $.ajax({
-            url: `/edit-line/${edit_id}`,
+            url: "{{route('admin.line.edit', ':id')}}".replace(':id', edit_id),
             type: "GET",
             cache: false,
             success: function (response) {

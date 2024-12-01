@@ -6,33 +6,16 @@ use App\Models\Audit_tr;
 use App\Models\Permissions;
 use App\Models\Roles;
 use Illuminate\Http\Request;
+use Route;
 
 class Permission extends Controller
 {
-    public function mount()
-    {
-        // Get all permissions.
-        $this->permissions = Permissions::all();
-        // Set the checked permissions property to an empty array.
-        $this->checked_permissions = [];
-    }
     //Start Permission
     public function manajemen_permission()
     {
-        $modelRole = new Roles();
-
-        $dataAssigned = $modelRole->getRoleJoinPermission()->all();
-        $data['dataAssigned'] = $dataAssigned;
-
-        $getDataPermission = Permissions::count();
-        if ($getDataPermission == 0) {
-            $dataPermission = [];
-        } else {
-            $dataPermission = Permissions::all();
-        }
-
-        $data['dataPermission'] = $dataPermission;
-        return view("admin/manajemen-permission/data-permission", $data);
+        $permission = Permissions::all();
+        $routes = Route::getRoutes()->getRoutesByName();
+        return view("admin/manajemen-permission/data-permission", compact('permission', 'routes'));
     }
     public function add_permission(Request $request)
     {

@@ -6,7 +6,7 @@
     <div id="kt_app_content_container" class="app-container container-fluid">
         <!--begin::Row-->
         <div class="row g-5 gx-xl-10 mb-5 mb-xl-10">
-            <div class="card">
+            <div class="card shadow-lg">
                 <div class="card-body">
                     <div class="col-12">
                         <div class="row">
@@ -295,9 +295,10 @@
             $no = $count_header;
             foreach($draftPengukuran as $data){ ?>
                 var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("class", "form-control text-center mb-2");
+                x.setAttribute("class", "form-control text-center mb-2 ");
                 x.setAttribute("type", "text");
                 x.setAttribute("readonly", "readonly");
+                x.setAttribute("style", "cursor: not-allowed;");
                 x.setAttribute("value", "Punch <?= $no++?>");
             <?php }?>
             document.getElementById("table_body").appendChild(tr);
@@ -311,11 +312,16 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "6");
                 x.setAttribute("id", "hdo");
                 x.setAttribute("name", "hdo[]");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['head_outer_diameter']; ?>");
+                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                x.setAttribute("style", "cursor: pointer;");
+                <?php if($no == 10){ ?>
+                    x.setAttribute("onkeyup", "saveData()");
+                <?php } ?>
                 document.getElementById("table_body").appendChild(tr);
                 <?php 
             }
@@ -335,6 +341,11 @@
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['neck_diameter']; ?>");
+                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                x.setAttribute("style", "cursor: pointer;");
+                <?php if($no == 10){ ?>
+                    x.setAttribute("onkeyup", "saveData()");
+                <?php } ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -354,6 +365,10 @@
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['barrel']; ?>");
+                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                <?php if($no == 10){ ?>
+                    x.setAttribute("onkeyup", "saveData()");
+                <?php } ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -373,6 +388,10 @@
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['overall_length']; ?>");
+                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                <?php if($no == 10){ ?>
+                    x.setAttribute("onkeyup", "saveData()");
+                <?php } ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -392,6 +411,10 @@
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['tip_diameter_1']; ?>");
+                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                <?php if($no == 10){ ?>
+                    x.setAttribute("onkeyup", "saveData()");
+                <?php } ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -411,6 +434,10 @@
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['tip_diameter_2']; ?>");
+                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                <?php if($no == 10){ ?>
+                    x.setAttribute("onkeyup", "saveData()");
+                <?php } ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -430,6 +457,10 @@
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['cup_depth']; ?>");
+                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                <?php if($no == 10){ ?>
+                    x.setAttribute("onkeyup", "saveData()");
+                <?php } ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -446,9 +477,13 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "wkl[]");
                 x.setAttribute("id", "wkl<?=$no?>");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "6");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['working_length']; ?>");
+                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                <?php if($no == 10){ ?>
+                    x.setAttribute("onkeyup", "saveData()");
+                <?php } ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -504,7 +539,9 @@
 
         $(".inputs").keyup(function () {
             if (this.value.length == this.maxLength) {
-                $(this).next('.inputs').focus();
+                setTimeout(() => {
+                    $(this).next('.inputs').focus();
+                }, 500)
             }
         });
     });

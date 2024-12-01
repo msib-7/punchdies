@@ -85,7 +85,7 @@
                                                                         </div>
                                                                         <div class="p-2">
                                                                              @if ($data->masa_pengukuran == "-")
-                                                                                <button class="btn btn-primary p-2" id="{{$data->id}}" onclick="buatPengukuran(this)">
+                                                                                <button class="btn btn-primary p-2" id="{{$data->dies_id}}" onclick="buatPengukuran(this)">
                                                                                     <i class="ki-duotone ki-add-files fs-1">
                                                                                         <span class="path1"></span>
                                                                                         <span class="path2"></span>
@@ -94,7 +94,7 @@
                                                                                     Buat Pengukuran
                                                                                 </button>
                                                                             @endif
-                                                                            <a href="/data/{{$jenis}}/pengukuran-awal/cek_pengukuran/{{$data->id}}">
+                                                                            <a href="/data/{{$jenis}}/pengukuran-awal/cek_pengukuran/{{$data->dies_id}}">
                                                                                 <button type="submit" class="btn btn-secondary p-2">
                                                                                     <i class="ki-duotone ki-magnifier fs-1">
                                                                                         <span class="path1"></span>
@@ -114,7 +114,7 @@
                                                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 fw-semibold w-auto py-0" data-kt-menu="true">
                                                                                     <!--begin:: Delete button-->
                                                                                     <div class="menu-item rounded shadow border p-0">
-                                                                                        <a href="/data/{{$jenis}}/delete-data/{{$data->id}}" class="menu-link p-0 d-flex justify-content-center">
+                                                                                        <a href="/data/{{$jenis}}/delete-data/{{$data->dies_id}}" class="menu-link p-0 d-flex justify-content-center">
                                                                                             <button class="btn btn-outline btn-outline-danger d-inline-flex p-3">
                                                                                                 &nbsp;<i class="ki-duotone ki-trash fs-2x">
                                                                                                     <span class="path1"></span>

@@ -3,21 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Audit_tr;
+use App\Models\Dies;
 use App\Models\M_Dies;
 use App\Models\M_Pengukuran_Dies;
+use App\Models\PengukuranAwalDies;
 use Illuminate\Http\Request;
 
 class DiesController extends Controller
 {
     public function show_all_dies(Request $request)
     {
-        $dataDies = M_Dies::
+        $dataDies = Dies::
             where(['jenis' => $request->segment(2), 'is_delete_dies' => '0'])
             ->orderBy('created_at', "desc")
             ->get();
         $data['dataDies'] = $dataDies;
 
-        $ttlDies = M_Dies::
+        $ttlDies = Dies::
             where(['jenis' => $request->segment(2), 'is_delete_dies' => '0'])
             ->orderBy('created_at', "desc")
             ->count();
@@ -25,10 +27,10 @@ class DiesController extends Controller
 
         $data['jenis'] = 'dies';
 
-        $dataPengukuranAll = M_Pengukuran_Dies::all();
+        $dataPengukuranAll = PengukuranAwalDies::all();
         $data['dataPengukuran'] = $dataPengukuranAll;
 
-        $dataPengukuran = M_Pengukuran_Dies::where(['dies_id' => session('dies_id'), 'is_draft' => '1'])->count();
+        $dataPengukuran = PengukuranAwalDies::where(['dies_id' => session('dies_id'), 'is_draft' => '1'])->count();
         if ($dataPengukuran > 0) {
             $status = 'draft';
         }
@@ -38,6 +40,7 @@ class DiesController extends Controller
 
     public function create_data(Request $request)
     {
+        $Dies = new Dies();
         $merk = $request->merk;
         $bulan_pembuatan = $request->bulan_pembuatan;
         $tahun_pembuatan = $request->tahun_pembuatan;
@@ -46,9 +49,21 @@ class DiesController extends Controller
         $kode_produk = $request->kode_produk;
         $line_id = $request->line_id;
         $jenis = $request->segment(2);
-        session()->remove('created_id');
 
-        $cekDataDies = M_Dies::where([
+        session()->remove('created_id');
+        session()->remove('create_id');
+
+        $autonum = $Dies->autoId(["substr(dies_id,3,6)" => date('ymd')])->first();
+        if (!$autonum) {
+            $id = str_shuffle("DIS" . date("ymd")) . "0001";
+        } else {
+            $dies_id = $autonum->dies_id;
+            $noUrut = (int) substr($dies_id, 9, 4);
+            $noUrut++;
+            $id = str_shuffle("DIS" . date("ymd")) . sprintf("%04s", $noUrut);
+        }
+
+        $cekDataDies = Dies::where([
             'merk' => $merk,
             'bulan_pembuatan' => $bulan_pembuatan,
             'tahun_pembuatan' => $tahun_pembuatan,
@@ -60,6 +75,7 @@ class DiesController extends Controller
         ])->first();
         if (!$cekDataDies) {
             $createData = [
+                'dies_id' => $id,
                 'merk' => $merk,
                 'bulan_pembuatan' => $bulan_pembuatan,
                 'tahun_pembuatan' => $tahun_pembuatan,
@@ -76,30 +92,30 @@ class DiesController extends Controller
                 'is_rejected' => '-',
             ];
             //Data Audit
-            $logdate = date('Y-m-d H:i:s');
-            $dataAudit = [
-                'event' => 'Dies Created',
-                'logdate' => $logdate,
-                'user_id' => session('user_id'),
-                'line' => session('line_user'),
-                'category' => 'Create',
-                'detail' => 'User ' . session('username') . ', Create Dies "' . $merk . '", ' . $logdate,
-            ];
-            session()->put($createData);
-            M_Dies::create($createData);
-            Audit_tr::create($dataAudit);
+            // $logdate = date('Y-m-d H:i:s');
+            // $dataAudit = [
+            //     'event' => 'Dies Created',
+            //     'logdate' => $logdate,
+            //     'user_id' => session('user_id'),
+            //     'line' => session('line_user'),
+            //     'category' => 'Create',
+            //     'detail' => 'User ' . session('username') . ', Create Dies "' . $merk . '", ' . $logdate,
+            // ];
+            session()->put('dies_id', $id);
+            Dies::create($createData);
+            // Audit_tr::create($dataAudit);
         } else {
             //Data Audit
-            $logdate = date('Y-m-d H:i:s');
-            $dataAudit = [
-                'event' => 'Dies Created',
-                'logdate' => $logdate,
-                'user_id' => session('user_id'),
-                'line' => session('line_user'),
-                'category' => 'Create',
-                'detail' => 'User ' . session('username') . ',Failed to Create Dies "' . $merk . '", ' . $logdate,
-            ];
-            Audit_tr::create($dataAudit);
+            // $logdate = date('Y-m-d H:i:s');
+            // $dataAudit = [
+            //     'event' => 'Dies Created',
+            //     'logdate' => $logdate,
+            //     'user_id' => session('user_id'),
+            //     'line' => session('line_user'),
+            //     'category' => 'Create',
+            //     'detail' => 'User ' . session('username') . ',Failed to Create Dies "' . $merk . '", ' . $logdate,
+            // ];
+            // Audit_tr::create($dataAudit);
         }
     }
 
@@ -113,9 +129,9 @@ class DiesController extends Controller
             'is_delete_pd' => '1',
         ];
 
-        M_Dies::where(['id' => $id])->update($delDies);
+        Dies::where(['dies_id' => $id])->update($delDies);
 
-        M_Pengukuran_Dies::where(['dies_id' => $id])->update($delPengukuran);
+        PengukuranAwalDies::where(['dies_id' => $id])->update($delPengukuran);
 
         return redirect('/data/'.$request->segment(2));
     }

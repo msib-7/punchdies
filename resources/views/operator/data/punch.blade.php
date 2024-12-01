@@ -35,8 +35,8 @@
                 <div class="card-body">
                     <div class="col-12">
                         <div class="row">
-                            <div class="col-10">
-                                <table id="PA_Table_List" class="display" style="width:100%">
+                            <div class="col-12 col-md-12 col-lg-10">
+                                <table id="PA_Table_List" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>Tgl Pengukuran</th>
@@ -46,24 +46,23 @@
                                             <th>Nama Mesin</th>
                                             <th>Kode/Nama Produk</th>
                                             <th>Pengukuran</th>
-                                            <th>diukur oleh</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($dataPunch as $data)
                                         <tr>
-                                            <td></td>
+                                            <td>{{ date_format($data->created_at, 'd M Y')}}</td>
                                             <td>
                                                 <div class="card"
                                                     style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
-                                                    <div class="card-body">
+                                                    <div class="card-body p-sm-0 p-md-3">
                                                         <div class="col-12">
                                                             <div class="px-8">
                                                                 <div class="row">
                                                                     <div class="col-12">
-                                                                        <div class="d-flex">
-                                                                            <div class="me-auto">
-                                                                                <h1 class="p-4 d-flex align-items-center">
+                                                                        <div class="row">
+                                                                            <div class="col-12 col-md-6 py-4">
+                                                                                <h1 class="d-flex align-items-center">
                                                                                     {{ strtoupper($data->merk)}}
                                                                                     &nbsp;
                                                                                     @if ($data->is_draft == '1')
@@ -74,28 +73,30 @@
                                                                                     @endif
                                                                                 </h1>
                                                                             </div>
-                                                                            <div class="p-2">
+                                                                            <div class="col-12 col-md-6 d-flex justify-content-end py-4">
                                                                                 @if ($data->masa_pengukuran != "-")
-                                                                                    <button class="btn btn-primary p-2" id="{{$data->id}}" onclick="buatPengukuran(this)">
-                                                                                        <i class="ki-duotone ki-add-files fs-1">
-                                                                                            <span class="path1"></span>
-                                                                                            <span class="path2"></span>
-                                                                                            <span class="path3"></span>
-                                                                                        </i>
-                                                                                        Buat Pengukuran Rutin
-                                                                                    </button>
+                                                                                <button class="btn btn-primary mx-2 create-rtn" id="{{$data->punch_id}}" onclick="opsiPengukuran(this)">
+                                                                                    <i class="ki-duotone ki-add-files fs-1">
+                                                                                        <span class="path1"></span>
+                                                                                        <span class="path2"></span>
+                                                                                        <span class="path3"></span>
+                                                                                    </i>
+                                                                                    Buat Pengukuran Rutin
+                                                                                </button>
                                                                                 @endif
-                                                                                <a href="/data/{{$jenis}}/pengukuran-awal/cek_pengukuran/{{$data->id}}">
-                                                                                    <button type="submit" class="btn btn-secondary p-2">
+                                                                                {{-- <a href="/data/{{$jenis}}/pengukuran-rutin/cek_pengukuran/{{$data->punch_id}}"> --}}
+                                                                                    @if ($data->masa_pengukuran != "-")
+                                                                                    <button type="submit" class="btn btn-secondary mx-2" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
                                                                                         <i class="ki-duotone ki-magnifier fs-1">
                                                                                             <span class="path1"></span>
                                                                                             <span class="path2"></span>
                                                                                         </i>
                                                                                         Lihat Data Pengukuran
                                                                                     </button>
-                                                                                </a>
+                                                                                    @endif
+                                                                                {{-- </a> --}}
                                                                             </div>
-                                                                            <div class="p-2">
+                                                                            {{-- <div class="p-2">
                                                                                 <!--begin::Action Button-->
                                                                                 <div class="me-0">
                                                                                     <button class="btn btn-sm btn-icon btn-light-danger  btn-active-color-white" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
@@ -105,7 +106,7 @@
                                                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 fw-semibold w-auto py-0" data-kt-menu="true">
                                                                                         <!--begin:: Delete button-->
                                                                                         <div class="menu-item rounded shadow border p-0">
-                                                                                            <a href="/data/{{$jenis}}/delete-data/{{$data->id}}" class="menu-link p-0 d-flex justify-content-center">
+                                                                                            <a href="/data/{{$jenis}}/delete-data/{{$data->punch_id}}" class="menu-link p-0 d-flex justify-content-center">
                                                                                                 <button class="btn btn-outline btn-outline-danger d-inline-flex p-3">
                                                                                                     &nbsp;<i class="ki-duotone ki-trash fs-2x">
                                                                                                         <span class="path1"></span>
@@ -122,10 +123,10 @@
                                                                                     <!--end::BUtton List-->
                                                                                 </div>
                                                                                 <!--end::Action Button-->
-                                                                            </div>
+                                                                            </div> --}}
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-6">
+                                                                    <div class="col-12 col-md-6">
                                                                         <div class="row">
                                                                             <div class="col-12">
                                                                                 <div class="table-responsive">
@@ -194,7 +195,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-6">
+                                                                    <div class="col-12 col-md-6">
                                                                         <div class="row">
                                                                             <div class="col-12">
                                                                                 <div class="table-responsive">
@@ -262,14 +263,13 @@
                                             <td>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</td>
                                             <td>{{$data->nama_mesin_cetak}}</td>
                                             <td>{{$data->kode_produk}}</td>
-                                            <td></td>
-                                            <td></td>
+                                            <td>{{ ucwords($data->masa_pengukuran) }}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-2">
+                            <div class="col-12 col-md-12 col-lg-2">
                                 <div class="card">
                                     <div class="card-body">
                                         <h4>Sort by:</h4>
@@ -548,6 +548,48 @@
 </div>
 
 
+{{-- Pilih Pengukuran untuk dilihat --}}
+<div class="modal fade" tabindex="-1" id="modal_pilih_pengukuran">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Pilih Pengukuran</h6>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+
+            <div class="modal-body">
+                <div class="col-12">
+                    <form id="form_pilih_pengukuran" method="GET" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-5">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="pilih_pengukuran" name="pilih_pengukuran" aria-label="Floating label select example">
+                                            
+                                        </select>
+                                        <label for="floatingSelect">Masa Pengukuran</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Open</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {{-- Option Pengukuran --}}
 <div class="modal fade" tabindex="-1" id="modal_option_pengukuran">
     <div class="modal-dialog modal-dialog-centered">
@@ -667,13 +709,62 @@
 
 <script src="{{asset('assets/js/date.format.js')}}"></script>
 <script>
-    function buatPengukuran(elem) {
+
+    function opsiPengukuran(elem) {
         $.ajax({
             type: "GET",
             url: '/data/<?= $jenis ?>/pengukuran-rutin/opsi/'+elem.id,
+            beforeSend: function() {
+                $('#'+elem.id).prop('disabled', true);
+            },
             success: function (data) {
-                $('#id_create_rutin').val(elem.id);
-                $('#modal_option_pengukuran').modal('show');
+                if(data.isdraft == true){
+                    if(data.status == 'awal'){
+                        Swal.fire({
+                        title: "Error",
+                        text: data.message,
+                        icon: "error"
+                        });
+                    }else{
+                        Swal.fire({
+                        title: "Draft",
+                        text: data.message,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Ya, Lanjutkan!"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location = data.url
+                            }
+                        });
+                    }
+                }else{
+                    if(data.success == false){
+                    Swal.fire({
+                        title: "Error!",
+                        text: data.message,
+                        icon: "error"
+                    });
+                    }else{
+                        $('#modal_option_pengukuran').modal('show');
+                        $('#id_create_rutin').val(elem.id);
+                    }
+                }
+            },
+            complete: function() {
+                $('.create-rtn').prop('disabled', false);
+            }
+        })
+    }
+
+    function pilihPengukuran(elem) {
+        $.ajax({
+            type: "GET",
+            url: '/data/<?= $jenis ?>/pengukuran-rutin/pilih-pengukuran/'+elem.id,
+            success: function (masa_pengukuran) {
+                $('select[id=pilih_pengukuran]').html(masa_pengukuran);
+                $('#form_pilih_pengukuran').attr('action', "/data/{{ $jenis }}/pengukuran-rutin/cek_pengukuran/"+elem.id);
+                $('#modal_pilih_pengukuran').modal('show');
             }
         })
     }
@@ -687,15 +778,15 @@
                 var tgl_pre = new Date(data.data.created_at).format("dd mmm yyyy");
                 var now = new Date().format("dd mmm yyyy");
                 
-                $('#masa_pengukuran_pre').val(data.data.masa_pengukuran);
+                $('#masa_pengukuran_pre').val(data.masa_pengukuran_pre);
                 $('#tgl_pengukuran_pre').val(tgl_pre);
                 $('#user_pre').val(data.data.nama);
-                $('#masa_pengukuran').val('pengukuran rutin 1');
+                $('#masa_pengukuran').val(data.masa_pengukuran);
                 $('#tgl_pengukuran_now').val(now);
-                $('#user').val('{{ session('nama_user')}}');
+                $('#user').val('{{ auth()->user()->nama }}');
                 $('#form_create_pengukuran').attr('action', "/data/{{ $jenis }}/pengukuran-rutin/buat_pengukuran/"+id_create_rutin);
                 $('#modal_option_pengukuran').modal('hide');
-                $('#modal_info_pengukuran').modal('show');
+                $('#modal_info_pengukuran').modal('show');  
             }
         })
     }
@@ -722,7 +813,7 @@
             );
         });
 
-        // this is the id of the form
+        
         $("#form_create_punch").submit(function (e) {
 
             e.preventDefault(); // avoid to execute the actual submit of the form.

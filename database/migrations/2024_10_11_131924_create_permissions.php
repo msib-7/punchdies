@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pengukuran_rutin_punchs', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('pengukuran_dies_id');
-            $table->string('is_cincin_berbayang');
-            $table->string('is_gompal');
-            $table->string('is_retak');
-            $table->string('is_pecah');
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->uuid('role_id');
+            $table->string('url');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengukuran_rutin_punchs');
+        Schema::dropIfExists('permissions');
     }
 };

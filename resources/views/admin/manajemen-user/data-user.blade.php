@@ -239,7 +239,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5">
                 <!--begin::Form-->
-                <form id="kt_modal_add_user_form" class="form">
+                <form id="kt_modal_add_user_form" action="{{route('admin.users.create')}}" method="POST" class="form">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll"
@@ -377,7 +377,7 @@
                         <div class="text-center pt-10">
                             <button type="reset" class="btn btn-light me-3"
                                 data-kt-users-modal-action="cancel">Discard</button>
-                            <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                            <button type="submit" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -417,7 +417,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5">
                 <!--begin::Form-->
-                <form id="kt_modal_add_user_form" action="{{url('update-user')}}" method="POST">
+                <form id="kt_modal_add_user_form" action="{{route('admin.users.update')}}" method="POST">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll"
@@ -539,7 +539,7 @@
 
         //fetch detail post with ajax
         $.ajax({
-            url: `/edit-user/${edit_id}`,
+            url: "{{route('admin.users.edit', ':id')}}".replace(':id', edit_id),
             type: "GET",
             cache: false,
             success: function (response) {
@@ -549,6 +549,9 @@
                 $('#nama_edit').val(response.data.nama);
                 $('#username_edit').val(response.data.username);
                 $('#email_edit').val(response.data.email);
+                $('#line_id_edit').val(response.data.line_id);
+                $('input[name="user_role_edit"][value="' + response.data.role_id + '"]').prop('checked', true);
+
                 //open modal
                 $('#kt_modal_edit_user').modal('show');
             }

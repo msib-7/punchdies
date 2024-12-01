@@ -10,10 +10,12 @@ class AuditController extends Controller
 {
     public function audit_trail_guest(Request $request)
     {
-        Route::getRoutes()->getRoutesByName();
-        dd(Route::getRoutes()->getRoutesByName());
-        $dataAudit = Audit_tr::leftJoin('users', 'audit_tr.user_id','=','users.id')->orderBy('logdate','desc')->get();
+        $dataAudit = Audit_tr::orderBy('created_at','desc')->get();
         $data['dataAudit'] = $dataAudit;
+        // dd($dataAudit->new_data['masa_pengukuran']);
+        // return response()->json([
+
+        // ]);
         // dd($data);
         return view("audit/audit_guest", $data);
     }

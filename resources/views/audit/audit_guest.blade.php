@@ -157,14 +157,14 @@
                                                     <td>
                                                         <div class="d-flex flex-center">
                                                             <a href=""
-                                                                class="text-gray-800 mb-1">{{ $data->logdate}}</a>
+                                                                class="text-gray-800 mb-1">{{ $data->created_at}}</a>
                                                         </div>
                                                     </td>
                                                     <td class="d-flex align-items-center">
                                                         <!--begin::User details-->
                                                         <div class="d-flex flex-center">
                                                             <a href=""
-                                                                class="text-gray-800 text-hover-primary mb-1">{{ $data->event}}</a>
+                                                                class="text-gray-800 text-hover-primary mb-1">{{ json_encode($data->new_data, JSON_PRETTY_PRINT).' '.$data->action}}</a>
                                                         </div>
                                                         <!--begin::User details-->
                                                     </td>

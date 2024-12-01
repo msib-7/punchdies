@@ -5,10 +5,12 @@ namespace App\Http\Controllers\approval;
 use App\Http\Controllers\Controller;
 use App\Models\M_ApprDisposal;
 use App\Models\M_ApprPengukuran;
-use App\Models\M_Dies;
-use App\Models\M_Pengukuran_Dies;
-use App\Models\M_Pengukuran_Punch;
-use App\Models\M_Punch;
+use App\Models\Dies;
+use App\Models\PengukuranAwalDies;
+use App\Models\PengukuranAwalPunch;
+use App\Models\PengukuranRutinDies;
+use App\Models\PengukuranRutinPunch;
+use App\Models\Punch;
 use Illuminate\Http\Request;
 
 class ApprovalController extends Controller
@@ -30,11 +32,11 @@ class ApprovalController extends Controller
         $showApproval = $request->segment(3);
 
         if ($showApproval == 'pengukuran') {
-            $dataApproval = M_ApprPengukuran::leftJoin('users', 'tbl_approval_pengukuran.user_id', '=', 'users.id')
-                                            ->leftJoin('tbl_line', 'users.line_id', '=', 'tbl_line.id')
+            $dataApproval = M_ApprPengukuran::leftJoin('users', 'approval_pengukurans.user_id', '=', 'users.id')
+                                            ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
                                             ->get();
-            $dataPunch = M_Punch::where('is_delete_punch','0')->get();
-            $dataDies = M_Dies::where('is_delete_dies','0')->get();
+            $dataPunch = Punch::where('is_delete_punch','0')->get();
+            $dataDies = Dies::where('is_delete_dies','0')->get();
 
             $data['dataApproval'] = $dataApproval;
             $data['dataPunch'] = $dataPunch;
@@ -44,11 +46,11 @@ class ApprovalController extends Controller
             return view('qa.data.approval', $data);
             
         } elseif ($showApproval == 'disposal') {
-            $dataApproval = M_ApprDisposal::leftJoin('users', 'tbl_approval_disposal.user_id', '=', 'users.id')
-                ->leftJoin('tbl_line', 'users.line_id', '=', 'tbl_line.id')
+            $dataApproval = M_ApprDisposal::leftJoin('users', 'approval_disposals.user_id', '=', 'users.id')
+                ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
                 ->get();
-            $dataPunch = M_Punch::where('is_delete_punch', '0')->get();
-            $dataDies = M_Dies::where('is_delete_dies', '0')->get();
+            $dataPunch = Punch::where('is_delete_punch', '0')->get();
+            $dataDies = Dies::where('is_delete_dies', '0')->get();
 
             $data['dataApproval'] = $dataApproval;
             $data['dataPunch'] = $dataPunch;
@@ -60,20 +62,20 @@ class ApprovalController extends Controller
     }
     public function show_history(Request $request)
     {
-        $dataApprPengukuran = M_ApprPengukuran::leftJoin('users', 'tbl_approval_pengukuran.user_id', '=', 'users.id')
-            ->leftJoin('tbl_line', 'users.line_id', '=', 'tbl_line.id')
+        $dataApprPengukuran = M_ApprPengukuran::leftJoin('users', 'approval_pengukurans.user_id', '=', 'users.id')
+            ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
             ->where('is_approved','!=', '-')
             ->where('is_rejected','!=', '-')
             ->orderBy('req_id', 'desc')
             ->get();
-        $dataApprDisposal = M_ApprDisposal::leftJoin('users', 'tbl_approval_disposal.user_id', '=', 'users.id')
-            ->leftJoin('tbl_line', 'users.line_id', '=', 'tbl_line.id')
+        $dataApprDisposal = M_ApprDisposal::leftJoin('users', 'approval_disposals.user_id', '=', 'users.id')
+            ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
             ->where('is_approved','!=', '-')
             ->where('is_rejected','!=', '-')
             ->orderBy('req_id', 'desc')
             ->get();
-        $dataPunch = M_Punch::where('is_delete_punch', '0')->get();
-        $dataDies = M_Dies::where('is_delete_dies', '0')->get();
+        $dataPunch = Punch::where('is_delete_punch', '0')->get();
+        $dataDies = Dies::where('is_delete_dies', '0')->get();
 
         $data['dataApprPengukuran'] = $dataApprPengukuran;
         $data['dataApprDisposal'] = $dataApprDisposal;
@@ -91,11 +93,20 @@ class ApprovalController extends Controller
 
         if($dataRequest->punch_id != null){
             $id = $dataRequest->punch_id;
-            $labelIdentitas = M_Punch::leftJoin('tbl_pengukuran_punch', 'tbl_punch.id', '=', 'tbl_pengukuran_punch.punch_id')
-                                ->leftJoin('users', 'tbl_pengukuran_punch.user_id', '=', 'users.id')
-                                ->where('tbl_punch.id', $id)->first();
-            $dataPengukuran = M_Pengukuran_Punch::where('punch_id', $id)->get();
-            $tglPengukuran = M_Pengukuran_Punch::where('punch_id', '=', $id)->first();
+            $dataPunch = Punch::where('punch_id', $id)->first();
+            if($dataPunch->masa_pengukuran == 'pengukuran awal'){
+                $labelIdentitas = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
+                                    ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
+                                    ->where('punchs.punch_id', $id)->first();
+                $dataPengukuran = PengukuranAwalPunch::where('punch_id', $id)->get();
+                $tglPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
+            }else{
+                $labelIdentitas = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
+                                    ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
+                                    ->where('punchs.punch_id', $id)->first();
+                $dataPengukuran = PengukuranRutinPunch::where('punch_id', $id)->get();
+                $tglPengukuran = PengukuranRutinPunch::where('punch_id', '=', $id)->first();
+            }
 
             $checkStatus = M_ApprPengukuran::where(['req_id' => $req_id])->first();
             if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
@@ -116,11 +127,23 @@ class ApprovalController extends Controller
             return view('qa.form.detail-pengukuran', $data);
         }elseif($dataRequest->dies_id != null){
             $id = $dataRequest->dies_id;
-            $labelIdentitas = M_Dies::leftJoin('tbl_pengukuran_dies', 'tbl_dies.id', '=', 'tbl_pengukuran_dies.dies_id')
-                ->leftJoin('users', 'tbl_pengukuran_dies.user_id', '=', 'users.id')
-                ->where('tbl_dies.id', $id)->first();
-            $dataPengukuran = M_Pengukuran_Dies::where('dies_id', $id)->get();
-            $tglPengukuran = M_Pengukuran_Dies::where('dies_id', '=', $id)->first();
+            $dataDies = Dies::where('dies_id', $id)->first();
+            //Periksa MasaPengukuran
+            if($dataDies->masa_pengukuran == "pengukuran awal"){ //Get LabelIdentitas Pengukuran Awal
+                $labelIdentitas = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
+                    ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
+                    ->where('diess.dies_id', $id)
+                    ->first();
+                $dataPengukuran = PengukuranAwalDies::where('dies_id', $id)->get();
+                $tglPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
+            }else{ //Get LabelIdentitas Pengukuran Rutin
+                $labelIdentitas = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
+                    ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
+                    ->where('diess.dies_id', $id)
+                    ->first();
+                $dataPengukuran = PengukuranRutinDies::where('dies_id', $id)->get();
+                $tglPengukuran = PengukuranRutinDies::where('dies_id', '=', $id)->first();
+            }
 
             $checkStatus = M_ApprPengukuran::where(['req_id' => $req_id])->first();
             if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
@@ -152,11 +175,11 @@ class ApprovalController extends Controller
 
             if ($dataRequest->punch_id != null) {
                 $id = $dataRequest->punch_id;
-                $labelIdentitas = M_Punch::leftJoin('tbl_pengukuran_punch', 'tbl_punch.id', '=', 'tbl_pengukuran_punch.punch_id')
-                    ->leftJoin('users', 'tbl_pengukuran_punch.user_id', '=', 'users.id')
-                    ->where('tbl_punch.id', $id)->first();
-                $dataPengukuran = M_Pengukuran_Punch::where('punch_id', $id)->get();
-                $tglPengukuran = M_Pengukuran_Punch::where('punch_id', '=', $id)->first();
+                $labelIdentitas = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
+                    ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
+                    ->where('punchs.punch_id', $id)->first();
+                $dataPengukuran = PengukuranAwalPunch::where('punch_id', $id)->get();
+                $tglPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
 
                 $checkStatus = M_ApprPengukuran::where(['req_id' => $req_id])->first();
                 if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
@@ -177,11 +200,11 @@ class ApprovalController extends Controller
                 return view('qa.form.detail-pengukuran', $data);
             } elseif ($dataRequest->dies_id != null) {
                 $id = $dataRequest->dies_id;
-                $labelIdentitas = M_Dies::leftJoin('tbl_pengukuran_dies', 'tbl_dies.id', '=', 'tbl_pengukuran_dies.dies_id')
-                    ->leftJoin('users', 'tbl_pengukuran_dies.user_id', '=', 'users.id')
-                    ->where('tbl_dies.id', $id)->first();
-                $dataPengukuran = M_Pengukuran_Dies::where('dies_id', $id)->get();
-                $tglPengukuran = M_Pengukuran_Dies::where('dies_id', '=', $id)->first();
+                $labelIdentitas = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
+                    ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
+                    ->where('diess.dies_id', $id)->first();
+                $dataPengukuran = PengukuranAwalDies::where('dies_id', $id)->get();
+                $tglPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
 
                 $checkStatus = M_ApprPengukuran::where(['req_id' => $req_id])->first();
                 if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
@@ -209,6 +232,7 @@ class ApprovalController extends Controller
     {
         if($request->segment(3) == 'pengukuran'){
             $ApprovalData = M_ApprPengukuran::where('req_id', $req_id)->first();
+
             if($ApprovalData->punch_id != null){
                 if ($request->segment(4) == 'approve') {
                     $setApproved = [
@@ -222,8 +246,12 @@ class ApprovalController extends Controller
                         'is_approved' => '1',
                         'is_rejected' => '0',
                     ];
-                    M_Punch::where('id', $ApprovalData->punch_id)->update($updateStatusApproved);
-                    M_Pengukuran_Punch::where('punch_id', $ApprovalData->punch_id)->update($updateStatusApproved);
+                    Punch::where(['punch_id' => $ApprovalData->punch_id, 'masa_pengukuran' => $ApprovalData->masa_pengukuran])->update($updateStatusApproved);
+                    if($ApprovalData->masa_pengukuran == 'pengukuran awal'){
+                        PengukuranAwalPunch::where('punch_id', $ApprovalData->punch_id)->update($updateStatusApproved);
+                    }else{
+                        PengukuranRutinPunch::where(['punch_id'=> $ApprovalData->punch_id, 'masa_pengukuran' => $ApprovalData->masa_pengukuran])->update($updateStatusApproved);
+                    }
                     return redirect('/data/approval/pengukuran')->with('success', 'Data Pengukuran berhasil di Approve!');
                 } elseif ($request->segment(4) == 'reject') {
                     $setRejected = [
@@ -237,8 +265,8 @@ class ApprovalController extends Controller
                         'is_approved' => '0',
                         'is_rejected' => '1',
                     ];
-                    M_Punch::where('id', $ApprovalData->punch_id)->update($updateStatusApproved);
-                    M_Pengukuran_Punch::where('punch_id', $ApprovalData->punch_id)->update($updateStatusApproved);
+                    Punch::where('punch_id', $ApprovalData->punch_id)->update($updateStatusApproved);
+                    PengukuranAwalPunch::where('punch_id', $ApprovalData->punch_id)->update($updateStatusApproved);
                     return redirect('/data/approval/pengukuran')->with('success', 'Data Pengukuran di Reject!');
                 }
             }elseif($ApprovalData->dies_id != null){
@@ -255,8 +283,8 @@ class ApprovalController extends Controller
                         'is_approved' => '1',
                         'is_rejected' => '0',
                     ];
-                    M_Dies::where('id', $ApprovalData->dies_id)->update($updateStatusApproved);
-                    M_Pengukuran_Punch::where('dies_id', $ApprovalData->dies_id)->update($updateStatusApproved);
+                    Dies::where('dies_id', $ApprovalData->dies_id)->update($updateStatusApproved);
+                    PengukuranAwalDies::where('dies_id', $ApprovalData->dies_id)->update($updateStatusApproved);
                     return redirect('/data/approval/pengukuran')->with('success', 'Data Pengukuran berhasil di Approve!');
                 } elseif ($request->segment(4) == 'reject') {
                     $setRejected = [
@@ -270,8 +298,8 @@ class ApprovalController extends Controller
                         'is_approved' => '0',
                         'is_rejected' => '1',
                     ];
-                    M_Dies::where('id', $ApprovalData->dies_id)->update($updateStatusApproved);
-                    M_Pengukuran_Punch::where('dies_id', $ApprovalData->dies_id)->update($updateStatusApproved);
+                    Dies::where('dies_id', $ApprovalData->dies_id)->update($updateStatusApproved);
+                    PengukuranAwalDies::where('dies_id', $ApprovalData->dies_id)->update($updateStatusApproved);
                     return redirect('/data/approval/pengukuran')->with('success', 'Data Pengukuran di Reject!');
                 }
             }

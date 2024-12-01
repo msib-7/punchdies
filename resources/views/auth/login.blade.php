@@ -83,7 +83,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                         <!--begin::Wrapper-->
                         <div class="d-flex flex-center flex-column flex-column-fluid pb-10 pb-lg-15">
                             <!--begin::Form-->
-                            <form class="form w-100" data-kt-redirect-url="{{url('/dashboard')}}" action="{{route('login-auth')}}" method="post">
+                            <form class="form w-100"  action="{{url('/login-auth')}}" method="post">
                                 @csrf
                                 <!--begin::Heading-->
                                 <span class="d-flex flex-center">

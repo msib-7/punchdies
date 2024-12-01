@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\AuditTrailable;
 use App\Traits\UUIDAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Lines extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, UUIDAsPrimaryKey, AuditTrailable;
 
     protected $guarded;
 }

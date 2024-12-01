@@ -47,7 +47,7 @@ class AuthController extends Controller
                         ];
             session()->put($infoLogin);
             session()->put($dataUser);
-            return redirect("/dashboard-admin")->with('success','Login Berhasil!');
+            return redirect(route('dashboard'))->with('success','Login Berhasil!');
         } else {
             return redirect('/')->with( 'error','Username dan Password tidak cocok!');
         }

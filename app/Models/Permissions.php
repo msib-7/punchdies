@@ -13,7 +13,6 @@ class Permissions extends Model
 {
     use HasFactory, Notifiable, UUIDAsPrimaryKey, AuditTrailable;
 
-    protected $table = 'permission';
 
     protected $guarded;
 }

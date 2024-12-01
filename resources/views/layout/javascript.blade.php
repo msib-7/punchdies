@@ -44,7 +44,7 @@
             ]
         });
         $('#PA_Table_List').DataTable({
-            responsive: true,
+            responsive: false,
             lengthMenu: [
                 [5, 10, 25],
                 [5, 10, 25]
@@ -83,11 +83,6 @@
                 {
                     searchable: true,  
                     target: 6,
-                    visible: false,
-                },
-                {
-                    searchable: true,  
-                    target: 7,
                     visible: false,
                 }
             ]
@@ -235,11 +230,6 @@
                         type: 'simple'
                     },
                 },
-            },
-            initComplete: function () {
-                var btns = $('.dt-button');
-                btns.removeClass('dt-button');
-                btns.removeClass('dt-button');
             },
             responsive: true,
             keys: true,

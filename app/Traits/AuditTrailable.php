@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Audit_tr;
 use Illuminate\Support\Str;
 
 trait AuditTrailable
@@ -15,7 +16,7 @@ trait AuditTrailable
             }
 
             // Simpan log saat data dibuat
-            AuditTrail::create([
+            Audit_tr::create([
                 'model' => get_class($model),
                 'model_id' => $model->id,
                 'action' => 'created',
@@ -26,7 +27,7 @@ trait AuditTrailable
 
         static::updating(function ($model) {
             // Simpan log saat data diupdate
-            AuditTrail::create([
+            Audit_tr::create([
                 'model' => get_class($model),
                 'model_id' => $model->id,
                 'action' => 'updated',
@@ -38,7 +39,7 @@ trait AuditTrailable
 
         static::deleting(function ($model) {
             // Simpan log saat data dihapus
-            AuditTrail::create([
+            Audit_tr::create([
                 'model' => get_class($model),
                 'model_id' => $model->id,
                 'action' => 'deleted',

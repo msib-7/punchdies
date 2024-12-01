@@ -14,16 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'username' => 'admin',
-            'email' => 'admin@admin.com',
-            'nama' => 'Administrator',
-            'role_id' => '1',
-            'line_id' => '1'
-        ]);
-
         $this->call([
-            LineSeed::class
+            LineSeed::class,
+            AdminSeeder::class,
+            // RoleSeed::class,
+            PermissionSeed::class
         ]);
     }
 }

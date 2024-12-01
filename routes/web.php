@@ -5,6 +5,7 @@ use App\Http\Controllers\APIContr;
 use App\Http\Controllers\approval\ApprovalController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiesController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\pengukuran\PengukuranController;
@@ -14,171 +15,170 @@ use App\Http\Controllers\Role;
 use App\Http\Controllers\Users;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest')->group(function () {
 
-    Route::get('/', [AuthController::class, 'login'])->name('login');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
 
-    Route::post('/login-auth', [AuthController::class, 'login_auth'])->name('login-auth');
+Route::redirect('/', '/login');
 
-    Route::get('/audit-trail', [AuditController::class, 'audit_trail_guest']);
+Route::post('/login-auth', [AuthController::class, 'login_auth']);
+
+Route::get('/audit-trail', [AuditController::class, 'audit_trail_guest']);
+
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['auth', 'CheckRoleUser']);
+
+Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->group(function(){
+    Route::prefix('users')->name('users.')->group(function(){
+        Route::get('users', [Users::class, 'manajemen_user'])->name('index');
+        Route::post('add-user', [Users::class, 'add_user'])->name('create');
+        Route::get('/edit-user/{id}', [Users::class, 'edit_user'])->name('edit');
+        Route::post('update-user', [Users::class, 'update_user'])->name('update');
+    });
+    Route::prefix('role')->name('role.')->group(function(){
+        Route::get('roles', [Role::class, 'manajemen_role'])->name('index');
+        Route::post('add', [Role::class, 'add_role'])->name('create');
+        Route::get('/view/{id}', [Role::class, 'view_role'])->name('view');
+        Route::get('/edit/{id}', [Role::class, 'edit_role'])->name('edit');
+        Route::post('update', [Role::class, 'update_role'])->name('update');
+        Route::get('/delete/{id}', [Role::class, 'del_role'])->name('delete');
+    });
+    Route::prefix('permission')->name('permission.')->group(function(){
+        Route::get('permissions', [Permission::class, 'manajemen_permission'])->name('index');
+        // Route::get('/save-permission', [Permission::class, 'add_permission'])->name('create');
+        // Route::get('/edit-permission/{id}', [Permission::class, 'edit_permission'])->name('edit');
+        // Route::post('/update-permission', [Permission::class, 'update_permission'])->name('update');
+        // Route::get('/delete-permission/{id}', [Permission::class, 'del_permission'])->name('delete');
+    });
+    Route::prefix('line')->name('line.')->group(function(){
+        Route::get('lines', [LineController::class, 'manajemen_line'])->name('index');
+        Route::post('create-line', [LineController::class, 'add_line'])->name('create');
+        Route::get('/edit-line/{id}', [LineController::class, 'edit_line'])->name('edit');
+        Route::post('update-line', [LineController::class, 'update_line'])->name('update');
+        Route::get('/delete-permission/{id}', [LineController::class, 'delete_line'])->name('delete');
+    });
 });
 
+Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group(function() {
+    Route::prefix('pengukuran-awal')->name('pa.')->group(function() {
+        Route::prefix('punch-atas')->name('atas.')->group(function(){
+            //Route untuk Buat Punch
+            Route::get('pa', [PunchController::class, 'show_all_punch'])->name('index');
+            Route::post('create-punch', [PunchController::class, 'create_data'])->name('create');
+            Route::get('delete-punch/{id}', [PunchController::class, 'delete_data'])->name('delete');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-
-    Route::get('/dashboard-admin', [AdminController::class, 'dashboard'])->name('dashboard');
-
-    //Manajemen User
-    Route::get('/manajemen-user', [Users::class, 'manajemen_user'])->name('user');
-    Route::post('/add-user', [Users::class, 'add_user'])->name('add-user');
-    Route::get('/edit-user/{id}', [Users::class, 'edit_user']);
-    Route::post('/update-user', [Users::class, 'update_user']);
-    
-    //Manajemen Role
-    Route::get('/manajemen-role', [Role::class, 'manajemen_role'])->name('roles');
-    Route::post('/save-role', [Role::class, 'add_role'])->name('add-role');
-    Route::get('/view-role/{id}', [Role::class, 'view_role']);
-    Route::get('/edit-role/{id}', [Role::class, 'edit_role']);
-    Route::post('/update-role', [Role::class, 'update_role']);
-    Route::get('/delete-role/{id}', [Role::class, 'del_role']);
-    
-    //Manajemen Permission
-    Route::get('/manajemen-permissions', [Permission::class, 'manajemen_permission'])->name('permissions');
-    Route::get('/save-permission', [Permission::class, 'add_permission'])->name('add-permissions');
-    Route::get('/delete-permission/{id}', [Permission::class, 'del_permission']);
-    Route::get('/edit-permission/{id}', [Permission::class, 'edit_permission']);
-    Route::post('/update-permission', [Permission::class, 'update_permission']);
-    
-    //Manajemen Line
-    Route::get('/manajemen-line', [LineController::class, 'manajemen_line'])->name('lines');
-    Route::post('/add-line', [LineController::class, 'add_line'])->name('add-line');
-    Route::get('/edit-line/{id}', [LineController::class, 'edit_line']);
-    Route::post('/update-line', [LineController::class, 'update_line']);
-    
-
-    //Data Pengukuran Awal
-    //Punch Atas
-        Route::get('/data/punch-atas', [PunchController::class, 'show_all_punch']);
-        Route::post('/data/punch-atas/create-data', [PunchController::class, 'create_data']);
-        Route::get('/data/punch-atas/delete-data/{id}', [PunchController::class, 'delete_data']);
-        Route::get('/data/punch-atas/pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal']);
-
-        Route::get('/data/punch-atas/pengukuran-awal/buat_pengukuran/{id}', [PengukuranController::class, 'buat_pengukuran']);
-        Route::get('/data/punch-atas/pengukuran-awal/cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran']);
-        Route::get('/data/punch-atas/pengukuran-awal/view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran']);
-        Route::get('/data/punch-atas/pengukuran-awal/form_pengukuran', [PengukuranController::class, 'form_pengukuran']);
-        Route::post('/data/punch-atas/pengukuran-awal/simpan', [PengukuranController::class, 'simpan_pengukuran']);
-        Route::post('/data/punch-atas/pengukuran-awal/simpan/note', [PengukuranController::class, 'add_note_pa']);
-        Route::get('/data/punch-atas/pengukuran-awal/set-status', [PengukuranController::class, 'set_draft_status']);
-    //
-
-    //Punch Bawah
-        Route::get('/data/punch-bawah', [PunchController::class, 'show_all_punch']);
-        Route::post('/data/punch-bawah/create-data', [PunchController::class, 'create_data']);
-        Route::get('/data/punch-bawah/delete-data/{id}', [PunchController::class, 'delete_data']);
-        Route::get('/data/punch-bawah/pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal']);
-        
-        Route::get('/data/punch-bawah/pengukuran-awal/buat_pengukuran/{id}', [PengukuranController::class, 'buat_pengukuran']);
-        Route::get('/data/punch-bawah/pengukuran-awal/cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran']);
-        Route::get('/data/punch-bawah/pengukuran-awal/view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran']);
-        Route::get('/data/punch-bawah/pengukuran-awal/form_pengukuran', [PengukuranController::class, 'form_pengukuran']);
-        Route::post('/data/punch-bawah/pengukuran-awal/simpan', [PengukuranController::class, 'simpan_pengukuran']);
-        Route::post('/data/punch-bawah/pengukuran-awal/simpan/note', [PengukuranController::class, 'add_note_pa']);
-        Route::get('/data/punch-bawah/pengukuran-awal/set-status', [PengukuranController::class, 'set_draft_status']);
-    //
-    
-    //Dies
-        Route::get('/data/dies', [DiesController::class, 'show_all_dies']);
-        Route::post('/data/dies/create-data', [DiesController::class, 'create_data']);
-        Route::get('/data/dies/delete-data/{id}', [DiesController::class, 'delete_data']);
-        Route::get('/data/dies/pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal']);
-        
-        Route::get('/data/dies/pengukuran-awal/buat_pengukuran/{id}', [PengukuranController::class, 'buat_pengukuran']);
-        Route::get('/data/dies/pengukuran-awal/cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran']);
-        Route::get('/data/dies/pengukuran-awal/view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran']);
-        Route::get('/data/dies/pengukuran-awal/form_pengukuran', [PengukuranController::class, 'form_pengukuran']);
-        Route::post('/data/dies/pengukuran-awal/simpan', [PengukuranController::class, 'simpan_pengukuran']);
-        Route::post('/data/dies/pengukuran-awal/simpan/note', [PengukuranController::class, 'add_note_pa']);
-        Route::get('/data/dies/pengukuran-awal/set-status', [PengukuranController::class, 'set_draft_status']);
-        //
-        
-    
-    //Data Pengukuran Rutin
-
-    Route::prefix('rutin')->name('rutin.')->middleware(['auth'])->group(function() {
-        Route::prefix('punch-atas')->name('pa.')->group(function() {
-            Route::get('', [PunchController::class, 'index'])->name('index');
+            //Route untuk buat pengukuran awal
+            Route::get('create-pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal'])->name('create-punch');
+            Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran'])->name('view');
+            Route::get('form_pengukuran', [PengukuranController::class, 'form_pengukuran'])->name('show-form');
+            Route::post('simpan', [PengukuranController::class, 'simpan_pengukuran'])->name('store');
+            Route::get('buat_pengukuran/{id}', [PengukuranController::class, 'buat_pengukuran'])->name('create-pengukuran');
+            Route::get('cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran'])->name('cek-pengukuran');
+            Route::post('simpan-note', [PengukuranController::class, 'add_note_pa'])->name('create-note');
+            Route::get('set-status', [PengukuranController::class, 'set_draft_status'])->name('draft');
         });
-        Route::prefix('punch-bawah')->name('pb.')->group(function() {
+        Route::prefix('punch-bawah')->name('bawah.')->group(function(){
+            //Route Untuk Buat Punch
             Route::get('', [PunchController::class, 'index'])->name('index');
+            Route::post('create-punch', [PunchController::class, 'create'])->name('create');
+            Route::get('delete-punch/{id}', [PunchController::class, 'delete'])->name('delete');
+            
+            //Route untuk buat pengukuran awal
+            Route::get('create-pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal'])->name('create-punch');
+            Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran'])->name('view');
+            Route::get('form_pengukuran', [PengukuranController::class, 'form_pengukuran'])->name('show-form');
+            Route::post('simpan', [PengukuranController::class, 'simpan_pengukuran'])->name('store');
+            Route::get('buat_pengukuran/{id}', [PengukuranController::class, 'buat_pengukuran'])->name('create-pengukuran');
+            Route::get('cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran'])->name('cek-pengukuran');
+            Route::post('simpan-note', [PengukuranController::class, 'add_note_pa'])->name('create-note');
+            Route::get('set-status', [PengukuranController::class, 'set_draft_status'])->name('draft');
         });
-        Route::prefix('dies')->name('dies.')->group(function() {
-            Route::get('', [PunchController::class, 'index'])->name('index');
+        Route::prefix('dies')->name('dies.')->group(function(){
+            //Route Untuk buat dies
+            Route::get('', [DiesController::class, 'show_all_dies'])->name('index');
+            Route::post('create-dies', [DiesController::class, 'create_data'])->name('create');
+            Route::get('delete-dies/{id}', [DiesController::class, 'delete_data'])->name('delete');
+
+            //route untuk buat pengukuran awal
+            Route::get('create-pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal'])->name('create-punch');
+            Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran'])->name('view');
+            Route::get('form_pengukuran', [PengukuranController::class, 'form_pengukuran'])->name('show-form');
+            Route::post('simpan', [PengukuranController::class, 'simpan_pengukuran'])->name('store');
+            Route::get('buat_pengukuran/{id}', [PengukuranController::class, 'buat_pengukuran'])->name('create-pengukuran');
+            Route::get('cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran'])->name('cek-pengukuran');
+            Route::post('simpan-note', [PengukuranController::class, 'add_note_pa'])->name('create-note');
+            Route::get('set-status', [PengukuranController::class, 'set_draft_status'])->name('draft');
         });
     });
-    //Punch Atas
-        Route::get('/data/rutin/punch-atas', [PunchController::class, 'show_all_punch']);
 
-        Route::get('/data/punch-atas/pengukuran-rutin/opsi/{id}', [PengukuranController::class, 'opsi_pengukuran']);
-        Route::get('/data/punch-atas/pengukuran-rutin/info/{id}', [PengukuranController::class, 'info_pengukuran']);
-        Route::get('/data/punch-atas/pengukuran-rutin/buat_pengukuran/{id}', [PengukuranController::class, 'create_data_pengukuran_rutin']);
-        Route::get('/data/punch-atas/pengukuran-rutin/cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran']);
-        Route::get('/data/punch-atas/pengukuran-rutin/view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran']);
-        Route::get('/data/punch-atas/pengukuran-rutin/form_pengukuran', [PengukuranController::class, 'form_pengukuran_rutin']);
-        Route::post('/data/punch-atas/pengukuran-rutin/simpan', [PengukuranController::class, 'simpan_pengukuran_rutin']);
-        Route::post('/data/punch-atas/pengukuran-rutin/save-interval', [PengukuranController::class, 'simpan_pengukuran_rutin_interval']);
-        Route::post('/data/punch-atas/pengukuran-rutin/simpan/note', [PengukuranController::class, 'add_note_pa']);
-        Route::get('/data/punch-atas/pengukuran-rutin/set-status', [PengukuranController::class, 'set_draft_status']);
-        //
-        
-        //Punch Bawah
-        Route::get('/data/rutin/punch-bawah', [PunchController::class, 'show_all_punch']);
-        Route::get('/data/punch-bawah/pengukuran-rutin', [PengukuranController::class, 'create_data_pengukuran_rutin']);
-        
-        Route::get('/data/punch-bawah/pengukuran-rutin/opsi/{id}', [PengukuranController::class, 'opsi_pengukuran']);
-        Route::get('/data/punch-bawah/pengukuran-rutin/buat_pengukuran/{id}', [PengukuranController::class, 'buat_pengukuran']);
-        Route::get('/data/punch-bawah/pengukuran-rutin/cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran']);
-        Route::get('/data/punch-bawah/pengukuran-rutin/view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran']);
-        Route::get('/data/punch-bawah/pengukuran-rutin/form_pengukuran', [PengukuranController::class, 'form_pengukuran']);
-        Route::post('/data/punch-bawah/pengukuran-rutin/simpan', [PengukuranController::class, 'simpan_pengukuran']);
-        Route::post('/data/punch-bawah/pengukuran-rutin/simpan/note', [PengukuranController::class, 'add_note_pa']);
-        Route::get('/data/punch-bawah/pengukuran-rutin/set-status', [PengukuranController::class, 'set_draft_status']);
-        //
-        
-    //Dies
-        Route::get('/data/rutin/dies', [DiesController::class, 'show_all_dies']);
-    
-        Route::get('/data/dies/pengukuran-rutin/opsi/{id}', [PengukuranController::class, 'opsi_pengukuran']);
-        Route::get('/data/dies/pengukuran-rutin', [PengukuranController::class, 'create_data_pengukuran_rutin']);
-        Route::get('/data/dies/pengukuran-rutin/buat_pengukuran/{id}', [PengukuranController::class, 'buat_pengukuran']);
-        Route::get('/data/dies/pengukuran-rutin/cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran']);
-        Route::get('/data/dies/pengukuran-rutin/view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran']);
-        Route::get('/data/dies/pengukuran-rutin/form_pengukuran', [PengukuranController::class, 'form_pengukuran']);
-        Route::post('/data/dies/pengukuran-rutin/simpan', [PengukuranController::class, 'simpan_pengukuran']);
-        Route::post('/data/dies/pengukuran-rutin/simpan/note', [PengukuranController::class, 'add_note_pa']);
-        Route::get('/data/dies/pengukuran-rutin/set-status', [PengukuranController::class, 'set_draft_status']);
-    //
+    Route::prefix('pengukuran-rutin')->name('pr.')->group(function() {
+        Route::prefix('punch-atas')->name('atas.')->group(function(){
+            Route::get('', [PunchController::class, 'show_all_punch'])->name('index');
 
+            Route::get('buat_pengukuran/{id}', [PengukuranController::class, 'create_data_pengukuran_rutin'])->name('create');
+            Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran_rutin'])->name('view');
+            Route::get('form_pengukuran', [PengukuranController::class, 'form_pengukuran_rutin'])->name('form');
+            Route::post('simpan', [PengukuranController::class, 'simpan_pengukuran_rutin'])->name('store');
+            Route::get('opsi/{id}', [PengukuranController::class, 'opsi_pengukuran'])->name('opsi');
+            Route::get('info/{id}', [PengukuranController::class, 'info_pengukuran'])->name('info');
+            Route::get('pilih-pengukuran/{id}', [PengukuranController::class, 'pilih_pengukuran'])->name('list');
+            Route::get('cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran_rutin'])->name('cek-pengukuran');
+            Route::post('simpan-note', [PengukuranController::class, 'add_note_rutin'])->name('create-note');
+            Route::get('set-status', [PengukuranController::class, 'set_draft_status_rutin'])->name('draft');
+        });
+        Route::prefix('punch-bawah')->name('bawah.')->group(function(){
+            Route::get('', [PunchController::class, 'show_all_punch'])->name('index');
 
-        
-    //QA
-    //Approval Pengukuran
-        Route::get('/data/approval/pengukuran', [ApprovalController::class, 'show_data_approval']);
-        Route::get('/data/approval/pengukuran/detail/{req_id}', [ApprovalController::class, 'detail_data_approval']);
-        Route::get('/data/approval/pengukuran/approve/{req_id}', [ApprovalController::class, 'update_approval_status']);
-        Route::get('/data/approval/pengukuran/reject/{req_id}', [ApprovalController::class, 'update_approval_status']);
-        
-        
-        //Approval Disposal
-        Route::get('/data/approval/disposal', [ApprovalController::class, 'show_data_approval']);
+            Route::get('buat_pengukuran/{id}', [PengukuranController::class, 'create_data_pengukuran_rutin'])->name('create');
+            Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran_rutin'])->name('view');
+            Route::get('form_pengukuran', [PengukuranController::class, 'form_pengukuran_rutin'])->name('form');
+            Route::post('simpan', [PengukuranController::class, 'simpan_pengukuran_rutin'])->name('store');
+            Route::get('opsi/{id}', [PengukuranController::class, 'opsi_pengukuran'])->name('opsi');
+            Route::get('info/{id}', [PengukuranController::class, 'info_pengukuran'])->name('info');
+            Route::get('pilih-pengukuran/{id}', [PengukuranController::class, 'pilih_pengukuran'])->name('list');
+            Route::get('cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran_rutin'])->name('cek-pengukuran');
+            Route::post('simpan-note', [PengukuranController::class, 'add_note_rutin'])->name('create-note');
+            Route::get('set-status', [PengukuranController::class, 'set_draft_status_rutin'])->name('draft');
+        });
+        Route::prefix('dies')->name('dies.')->group(function(){
+            Route::get('', [PunchController::class, 'show_all_punch'])->name('index');
 
-        
-        //Approval History
-        Route::get('/data/approval/history', [ApprovalController::class, 'show_history']);
-        Route::get('/data/approval/history/pengukuran/{req_id}', [ApprovalController::class, 'detail_data_history']);
+            Route::get('buat_pengukuran/{id}', [PengukuranController::class, 'create_data_pengukuran_rutin'])->name('create');
+            Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran_rutin'])->name('view');
+            Route::get('form_pengukuran', [PengukuranController::class, 'form_pengukuran_rutin'])->name('form');
+            Route::post('simpan', [PengukuranController::class, 'simpan_pengukuran_rutin'])->name('store');
+            Route::get('opsi/{id}', [PengukuranController::class, 'opsi_pengukuran'])->name('opsi');
+            Route::get('info/{id}', [PengukuranController::class, 'info_pengukuran'])->name('info');
+            Route::get('pilih-pengukuran/{id}', [PengukuranController::class, 'pilih_pengukuran'])->name('list');
+            Route::get('cek_pengukuran/{id}', [PengukuranController::class, 'cek_pengukuran_rutin'])->name('cek-pengukuran');
+            Route::post('simpan-note', [PengukuranController::class, 'add_note_rutin'])->name('create-note');
+            Route::get('set-status', [PengukuranController::class, 'set_draft_status_rutin'])->name('draft');
+        });
+    });
 
-
-    
-    //Logout
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::prefix('approval')->name('approval.')->group(function(){
+        Route::prefix('pengukuran')->name('pengukuran.')->group(function(){
+            Route::get('approval', [ApprovalController::class, 'show_data_approval'])->name('index');
+            Route::get('detail/{req_id}', [ApprovalController::class, 'detail_data_approval'])->name('view');
+            Route::get('approve/{req_id}', [ApprovalController::class, 'update_approval_status'])->name('approve');
+            Route::get('reject/{req_id}', [ApprovalController::class, 'update_approval_status'])->name('reject');
+        });
+        Route::prefix('disposal')->name('disposal.')->group(function(){
+            //Route untuk disposal
+        });
+        Route::prefix('histori')->name('histori.')->group(function(){
+            Route::get('histori', [ApprovalController::class, 'show_history'])->name('index');
+            Route::get('pengukuran/{req_id}', [ApprovalController::class, 'detail_data_history'])->name('show-detail-pengukuran');
+        });
+    });
 });
+
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     //QA
+//     //Approval Pengukuran
+        
+//         //Approval Disposal
+//         Route::get('/data/approval/disposal', [ApprovalController::class, 'show_data_approval']);
+    
+// });

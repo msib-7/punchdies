@@ -22,6 +22,7 @@
                                             <th>ID Request</th>
                                             <th>Merk</th>
                                             <th>Jenis</th>
+                                            <th>Pengukuran</th>
                                             <th>Submission Date</th>
                                             <th>Submission by</th>
                                             <th>Line</th>
@@ -37,17 +38,19 @@
                                             <td>{{$item->req_id}}</td>
                                             @if ($item->punch_id != null)
                                                 @foreach ($dataPunch as $punch)
-                                                    @if ($item->punch_id == $punch->id)
+                                                    @if ($item->punch_id == $punch->punch_id && $item->masa_pengukuran == $punch->masa_pengukuran)
                                                         <td>{{$punch->merk}}</td>
                                                         <td>{{$punch->jenis}}</td>
+                                                        <td>{{$punch->masa_pengukuran}}</td>
                                                     @endif
                                                 @endforeach
                                             @endif
                                             @if ($item->dies_id != null)
                                                 @foreach ($dataDies as $dies)
-                                                    @if ($item->dies_id == $dies->id)
+                                                    @if ($item->dies_id == $dies->dies_id && $item->masa_pengukuran == $dies->masa_pengukuran)
                                                         <td>{{$dies->merk}}</td>
                                                         <td>{{$dies->jenis}}</td>
+                                                        <td>{{$dies->masa_pengukuran}}</td>
                                                     @endif
                                                 @endforeach
                                             @endif

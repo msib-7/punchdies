@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\AuditTrailable;
 use App\Traits\UUIDAsPrimaryKey;
 use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, UUIDAsPrimaryKey, AuditTrailable;
 
     /**
      * The attributes that are mass assignable.
@@ -55,14 +56,14 @@ class User extends Authenticatable
         if($where === false){
             $builder = DB::table('users');
             $builder->select('*');
-            $builder->Join('role', 'users.role_id', '=', 'role.id');
+            $builder->Join('roles', 'users.role_id', '=', 'roles.id');
             $builder->orderBy('users.id', 'asc');
             return $query = $builder->get();
         } else {
             $builder = DB::table('users');
             $builder->select('*');
             $builder->where($where);
-            $builder->Join('role', 'users.role_id', '=', 'role.id');
+            $builder->Join('roles', 'users.role_id', '=', 'roles.id');
             $builder->orderBy('users.id', 'asc');
             return $query = $builder->get();
         }

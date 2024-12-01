@@ -2,31 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\AuditTrailable;
+use App\UUIDAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
 class M_Pengukuran_Dies extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, UUIDAsPrimaryKey, AuditTrailable;
 
-    protected $table = 'tbl_pengukuran_dies';
-
-    protected $fillable = [
-        'dies_id',
-        'user_id',
-        'outer_diameter',
-        'inner_diameter_1',
-        'inner_diameter_2',
-        'ketinggian_dies',
-        'visual',
-        'kesesuaian_dies',
-        'masa_pengukuran',
-        'note',
-        'is_draft',
-        'is_delete_pd',
-        'is_edit',
-        'is_approved',
-        'is_rejected'
-    ];
+    protected $table = 'pengukuran_awal_diess';
+    protected $guarded;
 }

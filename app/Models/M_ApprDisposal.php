@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\AuditTrailable;
+use App\UUIDAsPrimaryKey;
 use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,27 +11,10 @@ use Illuminate\Notifications\Notifiable;
 
 class M_ApprDisposal extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, UUIDAsPrimaryKey, AuditTrailable;
 
-    protected $table = 'tbl_approval_disposal';
-
-    protected $fillable = [
-        'req_id',
-        'punch_id',
-        'user_id',
-        'tgl_submit',
-        'due_date',
-        'approved_by',
-        'approved_at',
-        'approved_note',
-        'attach_1',
-        'attach_2',
-        'attach_3',
-        'attach_4',
-        'attach_5',
-        'is_approved',
-        'is_rejected',
-    ];
+    protected $table = 'approval_disposals';
+    protected $guarded;
 
     public function autonumber()
     {

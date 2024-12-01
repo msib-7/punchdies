@@ -82,22 +82,24 @@
                     <!--end::Card header-->
                     <!--begin::Card body-->
                     <div class="card-body pt-1">
+                        <?php 
+                            $role_id = $data->id;
+                            $no = 1;
+                        ?>
                         <!--begin::Users-->
-                        <div class="fw-bold text-gray-600 mb-5">Total users with this role: 546</div>
+                        <div class="fw-bold text-gray-600 mb-5">Allowed URL: {{$permissions->where('role_id', $role_id)->count()}}</div>
                         <!--end::Users-->
                         <!--begin::Permissions-->
                         <div class="d-flex flex-column text-gray-600">
-                            <?php 
-                                $role_id = $data->id;
-                                $no = 1;
-                            ?>
-                            @foreach ($permissions as $data_per)
-                                @if ($data_per->role_id == $role_id and $no <= 5) 
-                                <div class="d-flex align-items-center py-2">
-                                    <span class="bullet bg-primary me-3"></span>
-                                    {{ $data_per->name }}
-                                <?php $no++;?>
-                                </div>
+                            @foreach ($permissions as $item)
+                                @if ($item->role_id == $role_id)
+                                    @if ($no <= 5) 
+                                    <div class="d-flex align-items-center py-2">
+                                        <span class="bullet bg-primary me-3"></span>
+                                        {{ $item->url }}
+                                    <?php $no++;?>
+                                    </div>
+                                    @endif
                                 @endif
                             @endforeach
                             @if ($no>5)
@@ -114,7 +116,7 @@
                     <div class="card-footer flex-wrap pt-0">
                         <div class="row">
                             <div class="col-6 d-flex flex-center">
-                                <a href="{{ url('/view-role/'.$data->id) }}" class="btn btn-light btn-active-primary my-1 me-2">
+                                <a href="{{ route('admin.role.view',$data->id) }}" class="btn btn-light btn-active-primary my-1 me-2">
                                     View Role
                                 </a>
                             </div>
@@ -137,7 +139,7 @@
 <!--begin::Modal - Add Role-->
 <div class="modal fade" id="kt_modal_add_role" tabindex="-1" aria-hidden="true" wire:ignore.self>
     <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-750px">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable mw-1000px">
         <!--begin::Modal content-->
         <div class="modal-content">
             <!--begin::Modal header-->
@@ -154,7 +156,7 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y mx-5 my-7">
                 <!--begin::Form-->
-                <form id="kt_modal_update_role_form" class="form" action="{{ route('add-role') }}" method="POST">
+                <form id="kt_modal_update_role_form" class="form" action="{{ route('admin.role.create') }}" method="POST">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_update_role_scroll"
@@ -169,7 +171,7 @@
                             </label>
                             <!--end::Label-->
                             <!--begin::Input-->
-                            <input class="form-control form-control-solid" placeholder="Enter a role name"
+                            <input class="form-control form-control-solid" id="roleName" placeholder="Enter a role name"
                                 name="role_name" />
                             <!--end::Input-->
                             @error('name')
@@ -179,70 +181,304 @@
                         <!--begin::Permissions-->
                         <div class="fv-row">
                             <!--begin::Label-->
-                            <label class="fs-5 fw-bold form-label mb-2">Role Permissions</label>
-                            <!--end::Label-->
-                            <!--begin::Table wrapper-->
-                            <div class="table-responsive">
-                                <!--begin::Table-->
-                                <table class="table align-middle table-row-dashed fs-6 gy-5">
-                                    <!--begin::Table body-->
-                                    <tbody class="text-gray-600 fw-semibold">
-                                        <!--begin::Table row-->
-                                        <tr>
-                                            <td class="text-gray-800">Administrator Access
-                                                <span class="ms-1" data-bs-toggle="tooltip"
-                                                    title="Allows a full access to the system">
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <!--begin::Checkbox-->
-                                                <label
-                                                    class="form-check form-check-sm form-check-custom form-check-solid me-9">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        id="kt_roles_select_all" wire:model.defer="check_all"
-                                                        wire:change="checkAll" />
-                                                    <span class="form-check-label" for="kt_roles_select_all">Select
-                                                        all</span>
-                                                </label>
-                                                <!--end::Checkbox-->
-                                            </td>
-                                        </tr>
-                                        <!--end::Table row-->
-                                        @foreach($permissions_by_group as $group => $permissions)
-                                        <!--begin::Table row-->
-                                        <tr>
-                                            <!--begin::Label-->
-                                            <td class="text-gray-800">{{ ucwords($group) }}</td>
-                                            <!--end::Label-->
-                                            <!--begin::Input group-->
-                                            @foreach($permissions as $permission)
-                                            <td>
-                                                <!--begin::Wrapper-->
-                                                <div class="d-flex">
-                                                    <!--begin::Checkbox-->
-                                                    <label
-                                                        class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-20">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="permission_value[]" value="{{ $permission->id }}" />
-                                                        <span
-                                                            class="form-check-label">{{ ucwords(Str::before($permission->name, ' ')) }}</span>
-                                                    </label>
-                                                    <!--end::Checkbox-->
+                            <label class="fs-5 fw-bold form-label mb-2">Permissions</label>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        @foreach ($routes as $routeName => $route)
+                                            @if (str_starts_with($routeName, 'log'))
+                                                <div class="col-12 pb-2">
+                                                    <div class="form-check">
+                                                        <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                            class="form-check-input" checked id="route_{{ $loop->index }}">
+                                                        <label class=""
+                                                            for="route_{{ $loop->index }}">{{ $routeName }}
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                                <!--end::Wrapper-->
-                                            </td>
-                                            @endforeach
-                                            <!--end::Input group-->
-                                        </tr>
-                                        <!--end::Table row-->
+                                            @endif
                                         @endforeach
-                                        <!--begin::Table row-->
-                                    </tbody>
-                                    <!--end::Table body-->
-                                </table>
-                                <!--end::Table-->
+                                        @foreach ($routes as $routeName => $route)
+                                            @if (str_starts_with($routeName, 'dashboard'))
+                                                <div class="col-12 pb-2">
+                                                    <div class="form-check">
+                                                        <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                            class="form-check-input" checked id="route_{{ $loop->index }}">
+                                                        <label class=""
+                                                            for="route_{{ $loop->index }}">{{ $routeName }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
-                            <!--end::Table wrapper-->
+                            <div class="row">
+                                <div class="col-12 col-md-4 mb-3">
+                                    <label class="fs-5 fw-semibold" for="checkAll">
+                                        Administrator
+                                    </label>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" id="checkAll" class="form-check-input">
+                                        <label class="fs-5 fw-semibold" for="checkAll">Check All</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Label-->
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label class="fs-4 fw-bold my-3">User Management</label>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'admin.'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-check mt-3">
+                                            <input type="checkbox" id="checkPA" class="form-check-input route-checkbox">
+                                            <label class="fs-4 fw-bold" for="checkPA">
+                                                Pengukuran Awal
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    Punch Atas
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'pnd.pa.atas'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-pa" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    Punch Bawah
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'pnd.pa.bawah'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-pa" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    Dies
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'pnd.pa.dies'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-pa" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-check mt-3">
+                                            <input type="checkbox" id="checkPR" class="form-check-input route-checkbox">
+                                            <label class="fs-4 fw-bold" for="checkPR">
+                                                Pengukuran Rutin
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    Punch Atas
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'pnd.pr.atas'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-pr" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    Punch Bawah
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'pnd.pr.bawah'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-pr" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    Dies
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'pnd.pr.dies'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-pr" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-check mt-3">
+                                            <input type="checkbox" id="checkApproval" class="form-check-input route-checkbox">
+                                            <label class="fs-4 fw-bold" for="checkApproval">
+                                                Approval
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    Pengukuran
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'pnd.approval.pengukuran'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-approval" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    Disposal
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'pnd.approval.disposal'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-approval" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    History
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'pnd.approval.histori'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-approval" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- @foreach ($routes as $routeName => $route)
+                                    <div class="col-md-4 col-sm-6 pb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
+                                                class="form-check-input" id="route_{{ $loop->index }}">
+                                            <label class=""
+                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach --}}
+                            </div>
                         </div>
                         <!--end::Permissions-->
                     </div>
@@ -290,7 +526,7 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y mx-5 my-7">
                 <!--begin::Form-->
-                <form id="kt_modal_update_role_form" action="{{url('update-role')}}" method="POST">
+                <form id="kt_modal_update_role_form" action="{{route('admin.role.update')}}" method="POST">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_update_role_scroll"
@@ -342,7 +578,7 @@
                                             </td>
                                         </tr>
                                         <!--end::Table row-->
-                                        @foreach($permissions_by_group as $group => $permissions)
+                                        {{-- @foreach($permissions_by_group as $group => $permissions)
                                         <!--begin::Table row-->
                                         <tr>
                                             <!--begin::Label-->
@@ -369,7 +605,7 @@
                                             <!--end::Input group-->
                                         </tr>
                                         <!--end::Table row-->
-                                        @endforeach
+                                        @endforeach --}}
                                         <!--begin::Table row-->
                                     </tbody>
                                     <!--end::Table body-->
@@ -405,6 +641,22 @@
 </div>
 <!--end::Modal - Edit Role-->
 <script>
+    $(document).ready(function() {
+        $('#checkAll').change(function() {
+            $('.route-checkbox').prop('checked', this.checked);
+        });
+        $('#checkPA').change(function() {
+            $('.route-pa').prop('checked', this.checked);
+        });
+        $('#checkPR').change(function() {
+            $('.route-pr').prop('checked', this.checked);
+        });
+        $('#checkApproval').change(function() {
+            $('.route-approval').prop('checked', this.checked);
+        });
+    });
+</script>
+<script>
     //button create post event
     $('body').on('click', '#btn-edit', function () {
 
@@ -412,7 +664,7 @@
 
         //fetch detail post with ajax
         $.ajax({
-            url: `/edit-role/${edit_id}`,
+            url: "{{route('admin.role.edit', ':id')}}".replace(':id', edit_id),
             type: "GET",
             cache: false,
             success: function (response) {

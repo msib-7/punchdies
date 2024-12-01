@@ -169,7 +169,7 @@
                             </div>
                             <div class="col-12 mt-5">
                                 <div class="card">
-                                    <form action="{{ url('data/'.$jenis.'/pengukuran-awal/simpan') }}" method="POST" enctype="multipart/form-data" id="form_data_pengukuran">
+                                    <form action="{{ url('data/'.$jenis.'/pengukuran-rutin/simpan') }}" method="POST" enctype="multipart/form-data" id="form_data_pengukuran">
                                         @csrf
                                         <div class="card-header">
                                             <h3 class="card-title">Insert New Data</h3>
@@ -185,14 +185,11 @@
                                                 <thead id="table_head">
                                                     <tr>
                                                         <td>No</td>
-                                                        <td>Head Outer Diameter</td>
-                                                        <td>Neck Diameter</td>
-                                                        <td>Barrel</td>
                                                         <td>Overall Length</td>
-                                                        <td>Tip Diameter 1</td>
-                                                        <td>Tip Diameter 2</td>
+                                                        <td>Working Length <br> <b>(AWAL)</b></td>
+                                                        <td>Working Length <br> <b>(RUTIN)</b></td>
                                                         <td>Cup Depth</td>
-                                                        <td>Working Length</td>
+                                                        <td>Head Configuration</td>
                                                         <td></td>
                                                     </tr>
                                                 </thead>
@@ -256,7 +253,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <form action="{{url('data/'. $jenis .'/pengukuran-awal/simpan/note')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{url('data/'. $jenis .'/pengukuran-rutin/simpan/note')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-12">
@@ -281,6 +278,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
         // alert({{session('jumlah_ukur')}}); 
@@ -303,63 +301,6 @@
             document.getElementById("table_body").appendChild(tr);
         //
 
-        //Head Outer Diameter
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("type", "text");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("maxlength", "4");
-                x.setAttribute("id", "hdo");
-                x.setAttribute("name", "hdo[]");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['head_outer_diameter']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-                <?php 
-            }
-            ?>
-        //
-            
-        //Neck Diameter
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("type", "text");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("name", "ned[]");
-                x.setAttribute("id", "ned<?=$no?>");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("maxlength", "4");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['neck_diameter']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
-
-        //Barrel
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("type", "text");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("name", "bar[]");
-                x.setAttribute("id", "bar<?=$no?>");
-                x.setAttribute("maxlength", "4");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['barrel']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
-
         //Overall Length
             var td = tr.appendChild(document.createElement('td'));
             <?php
@@ -369,7 +310,6 @@
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "ovl[]");
-                x.setAttribute("id", "ovl<?=$no?>");
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['overall_length']; ?>");
@@ -379,26 +319,33 @@
             ?>
         //
 
-        //Tip Diameter 1
+        //Working Length Awal
             var td = tr.appendChild(document.createElement('td'));
             <?php
             $no = 0;
-            foreach($draftPengukuran as $data){ ?>
+            foreach($draftPengukuran as $data){ 
+                $wkl = $draftPengukuranPre[$no]['working_length'];
+                ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("name", "tip1[]");
-                x.setAttribute("id", "tip1<?=$no?>");
+                x.setAttribute("name", "wkl_awal[]");
                 x.setAttribute("maxlength", "4");
+                x.setAttribute("readonly", "readonly");
                 x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['tip_diameter_1']; ?>");
+                <?php
+                if($wkl == null){ ?>
+                    x.setAttribute("value", "<?= $draftPengukuranPre[$no]['working_length_awal']; ?>");
+                <?php }else{ ?>
+                    x.setAttribute("value", "<?= $draftPengukuranPre[$no]['working_length']; ?>");
+                <?php } $no++; ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
             ?>
         //
 
-        //Tip Diameter 2
+        //Working Length Rutin
             var td = tr.appendChild(document.createElement('td'));
             <?php
             $no = 0;
@@ -406,11 +353,10 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("name", "tip2[]");
-                x.setAttribute("id", "tip2<?=$no?>");
+                x.setAttribute("name", "wkl_rutin[]");
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['tip_diameter_2']; ?>");
+                x.setAttribute("value", "<?= $draftPengukuran[$no++]['working_length_rutin']; ?>");
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -426,7 +372,6 @@
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "cup[]");
-                x.setAttribute("id", "cup<?=$no?>");
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['cup_depth']; ?>");
@@ -436,21 +381,30 @@
             ?>
         //
 
-        //Working Length
+        //Head Configuration
             var td = tr.appendChild(document.createElement('td'));
             <?php
             $no = 0;
             foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("type", "text");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("name", "wkl[]");
-                x.setAttribute("id", "wkl<?=$no?>");
-                x.setAttribute("maxlength", "4");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['working_length']; ?>");
+                var select = td.appendChild(document.createElement('select'));
+                select.setAttribute('class', 'form-select text-center');
+                select.setAttribute('id', 'select_ok');
+                select.setAttribute('name', 'hcf[]');
+                select.setAttribute("value", "<?= $draftPengukuran[$no++]['kesesuaian_dies']; ?>");
+                var option_null = document.createElement('option');
+                var option_ok = document.createElement('option');
+                var option_nok = document.createElement('option');
+                option_null.text = '-';
+                option_null.setAttribute('value', '-')
+                option_ok.text = 'OK';
+                option_ok.setAttribute('value', 'OK')
+                option_nok.text = 'NOK';
+                option_nok.setAttribute('value', 'NOK')
+                select.appendChild(option_null);
+                select.appendChild(option_ok);
+                select.appendChild(option_nok);
                 document.getElementById("table_body").appendChild(tr);
-            <?php 
+                <?php 
             }
             ?>
         //
@@ -492,7 +446,7 @@
             btn_next.setAttribute("class", "btn btn-primary btn-small");
             btn_next.setAttribute("type", "submit");
             if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
-                btn_next.setAttribute("onclick", "saveData()");
+                btn_next.setAttribute("onclick", "saveDataRutin()");
                 btn_next.setAttribute("type", "button");
                 btn_next.setAttribute("data-bs-toggle", "modal");
                 btn_next.setAttribute("data-bs-target", "#modal_confirm_pengukuran");
@@ -509,11 +463,14 @@
         });
     });
 
-    function saveData() {
+    function saveDataRutin() {
             $.ajax({
-                url: "/data/<?= $jenis ?>/pengukuran-awal/simpan",
+                url: "/data/<?= $jenis ?>/pengukuran-rutin/simpan",
                 type: "POST",
                 data: $('#form_data_pengukuran').serialize(),
+                error: function() {
+                    8
+                }
             })
     }
 </script>

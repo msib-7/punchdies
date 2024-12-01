@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('approval_pengukurans', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('req_id');
-            $table->bigInteger('punch_id')->nullable();
-            $table->bigInteger('dies_id')->nullable();
-            $table->bigInteger('user_id');
+            $table->string('punch_id')->nullable();
+            $table->string('dies_id')->nullable();
+            $table->string('masa_pengukuran')->nullable();
+            $table->uuid('user_id');
             $table->dateTime('tgl_submit');
             $table->dateTime('due_date');
             $table->string('approved_by')->nullable();

@@ -69,20 +69,16 @@
                     <!--begin::Card body-->
                     <div class="card-body pt-1">
                         <!--begin::Users-->
-                        <div class="fw-bold text-gray-600 mb-5">Total users with this role: 546</div>
+                        <div class="fw-bold text-gray-600 mb-5">Total users with this role: {{count($users)}}</div>
+                        <div class="fw-bold text-gray-600 mb-5">Allowed url: {{count($permissions)}}</div>
                         <!--end::Users-->
                         <!--begin::Permissions-->
                         <div class="d-flex flex-column text-gray-600">
-                            <?php 
-                                $role_id = $roles->id;
-                            ?>
-                            @foreach ($permissions as $data_per)
-                            @if ($data_per->role_id == $role_id)
-                            <div class="d-flex align-items-center py-2">
-                                <span class="bullet bg-primary me-3"></span>
-                                {{ $data_per->name }}
-                            </div>
-                            @endif
+                            @foreach ($permissions as $item)
+                                <div class="d-flex align-items-center py-2">
+                                    <span class="bullet bg-primary me-3"></span>
+                                    {{ $item->url }}
+                                </div>
                             @endforeach
                         </div>
                         <!--end::Permissions-->
@@ -117,7 +113,6 @@
                             <thead>
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                     <th class="text-center w-100px">No</th>
-                                    <th class="min-w-130px text-center">UserID</th>
                                     <th class="min-w-130px">Username</th>
                                     <th class="min-w-100px">Created at</th>
                                     <th class="w-50px">Actions</th>
@@ -125,37 +120,45 @@
                             </thead>
                             <tbody>
                                 <?php $no=1?>
-                                @foreach ($dataUser as $data)
-                                <tr>
-                                    <td class="text-center">{{$no++}}</td>
-                                    <td class="text-center">{{$data->id}}</td>
-                                    <td>{{$data->username}}</td>
-                                    <td>{{$data->created_at}}</td>
-                                    <td class="text-center">
-                                        <a href="#"
-                                            class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"
-                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                            <i class="ki-duotone ki-down fs-5 ms-1"></i></a>
-                                        <!--begin::Menu-->
-                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                            data-kt-menu="true">
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <a href="../../demo1/dist/apps/user-management/users/view.html"
-                                                    class="menu-link px-3">Edit</a>
+                                @if($users->isEmpty())
+                                    <tr>
+                                        <td colspan="4" class="text-center">No users found for this role.</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                @else
+                                    @foreach ($users as $data)
+                                    <tr>
+                                        <td class="text-center">{{$no++}}</td>
+                                        <td>{{$data->username}}</td>
+                                        <td>{{$data->created_at}}</td>
+                                        <td class="text-center">
+                                            <a href="#"
+                                                class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"
+                                                data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                                <i class="ki-duotone ki-down fs-5 ms-1"></i></a>
+                                            <!--begin::Menu-->
+                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                                data-kt-menu="true">
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="../../demo1/dist/apps/user-management/users/view.html"
+                                                        class="menu-link px-3">Edit</a>
+                                                </div>
+                                                <!--end::Menu item-->
+                                                <!--begin::Menu item-->
+                                                <div class="menu-item px-3">
+                                                    <a href="#" class="menu-link px-3"
+                                                        data-kt-users-table-filter="delete_row">Delete</a>
+                                                </div>
+                                                <!--end::Menu item-->
                                             </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <a href="#" class="menu-link px-3"
-                                                    data-kt-users-table-filter="delete_row">Delete</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                        </div>
-                                        <!--end::Menu-->
-                                    </td>
-                                </tr>
-                                @endforeach
+                                            <!--end::Menu-->
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -172,7 +175,7 @@
 <!--begin::Modal - Edit Role-->
 <div class="modal fade" id="kt_modal_edit_role" tabindex="-1" aria-hidden="true" wire:ignore.self>
     <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-750px">
+    <div class="modal-dialog modal-dialog-centered mw-1000px">
         <!--begin::Modal content-->
         <div class="modal-content">
             <!--begin::Modal header-->
@@ -244,7 +247,7 @@
                                             </td>
                                         </tr>
                                         <!--end::Table row-->
-                                        @foreach($permissions_by_group as $group => $permissions)
+                                        {{-- @foreach($permissions_by_group as $group => $permissions)
                                         <!--begin::Table row-->
                                         <tr>
                                             <!--begin::Label-->
@@ -271,7 +274,7 @@
                                             <!--end::Input group-->
                                         </tr>
                                         <!--end::Table row-->
-                                        @endforeach
+                                        @endforeach --}}
                                         <!--begin::Table row-->
                                     </tbody>
                                     <!--end::Table body-->

@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Lines;
 use App\Models\Roles;
 use App\Models\User;
+use DB;
 use Illuminate\Http\Request;
+use Log;
+use Validator;
 
 class Users extends Controller
 {
@@ -24,27 +27,63 @@ class Users extends Controller
     }
     public function add_user(Request $request)
     {
-        $nama = $request->nama;
-        $email = $request->email;
-        $username = ucwords($request->username);
-        $password = $request->password;
-        $role = $request->user_role;
-        $line = $request->line_id;
-        $cekUsername = User::where('username', '=', $username)->first();
-        if (!$cekUsername) {
-            $saveUser = [
-                'nama' => $nama,
-                'username' => $username,
-                'email' => $email,
-                'password' => $password,
-                'role_id' => $role,
-                'line_id' => $line,
-                'last_login_at' => null,
-            ];
-            User::create($saveUser);
-            return redirect(route('user'))->with('success', 'User ' . $username . ' berhasil dibuat!');
+        // $request->validate([
+        //     'nama' => 'required',
+        //     'email' => 'required',
+        //     'username' => 'required',
+        //     'password' => 'required',
+        //     'role' => 'required',
+        //     'line' => 'required',
+        // ]);
+
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required',
+            'email' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+            'user_role' => 'required',
+            'line_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect(route('admin.users.index'))->with('error', 'Field cannot be empty!');
         } else {
-            return redirect(route('user'))->with('error', 'Username sudah ada!');
+            $nama = $request->nama;
+            $email = $request->email;
+            $username = ucwords($request->username);
+            $password = $request->password;
+            $role = $request->user_role;
+            $line = $request->line_id;
+
+            $cekUsername = User::where('username', '=', $username)->exists();
+
+            if (!$cekUsername) {
+                try {
+                    DB::beginTransaction();
+
+                    User::create([
+                        'nama' => $nama,
+                        'username' => $username,
+                        'email' => $email,
+                        'password' => $password,
+                        'role_id' => $role,
+                        'line_id' => $line,
+                        'last_login_at' => null,
+                    ]);
+
+                    DB::commit();
+
+                    return redirect(route('admin.users.index'))->with('success', 'User ' . $username . ' berhasil dibuat!');
+                } catch (\Throwable $th) {
+                    DB::rollBack();
+                    // Log error untuk debugging
+                    Log::error('Error Create User : ' . $th->getMessage());
+
+                    return redirect(route('admin.users.index'))->with('error', 'something went wrong!');
+                }
+            } else {
+                return redirect(route('admin.users.index'))->with('error', 'Username sudah ada!');
+            }
         }
     }
     public function edit_user(Request $request, $usn)
@@ -71,6 +110,6 @@ class Users extends Controller
             'line_id' => $line,
         ];
         User::where('username', '=', $usn)->update($dataUpdate);
-        return redirect(route('user'))->with('success', 'User berhasil diUpdate!');
+        return redirect(route('admin.users.index'))->with('success', 'User berhasil diUpdate!');
     }
 }

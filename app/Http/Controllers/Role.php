@@ -6,7 +6,10 @@ use App\Models\Permissions;
 use App\Models\Roles;
 use App\Models\RolesPermission;
 use App\Models\User;
+use DB;
 use Illuminate\Http\Request;
+use Log;
+use Route;
 use Str;
 
 class Role extends Controller
@@ -17,82 +20,47 @@ class Role extends Controller
         $modelRole = new Roles();
 
         $dataRoles = Roles::orderBy('role_name', 'asc')->get();
-        $data['dataRoles'] = $dataRoles;
 
-        $dataRolePermission = $modelRole->getRoleJoinPermission()->all();
-        $data['permissions'] = $dataRolePermission;
+        $permissions = Permissions::all(); 
 
+        $routes = Route::getRoutes()->getRoutesByName();
 
-        // dd($dataRoles);
-        $dataPermissions = Permissions::all();
-        $permissions_by_group = [];
-        foreach ($dataPermissions ?? [] as $permission) {
-            $ability = Str::after($permission->name, ' ');
-            $permissions_by_group[$ability][] = $permission;
-        }
-        $data['permissions_by_group'] = $permissions_by_group;
-        // dd(compact('permissions_by_group'));
-
-        return view("admin/manajemen-role/data-role", $data);
+        return view("admin/manajemen-role/data-role", compact('dataRoles', 'permissions', 'routes'));
     }
     public function add_role(Request $request)
     {
-        $role_name = ucwords($request->role_name);
-        $permission_value = $request->permission_value;
+        $request->validate([
+            'urls' => 'required|array',
+            'role_name' => 'required|string',
+        ]);
+        
+        DB::beginTransaction();
 
-        $saveRole = [
-            'role_name' => $role_name,
-        ];
+        $role = Roles::create([
+            'role_name' => $request->input('role_name'),
+        ]);
 
-        $cekRole = Roles::whereLike('role_name', $role_name)->first();
-        // dd(isset($cekPermission));
-        if (!isset($cekRole)) {
-            Roles::create($saveRole);
-        } else {
-            return redirect(route('roles'))->with('error', 'Role sudah ada!');
+        foreach ($request->input('urls', []) as $url) {
+            $role->permission()->create(['url' => $url]);
         }
 
-        $dataRoles = Roles::where('role_name', '=', $role_name)
-            ->orderBy('created_at', 'desc')
-            ->first();
-        $role_id = $dataRoles['id'];
+        DB::commit();
 
-        if ($permission_value != '') {
-            $count = count($permission_value);
-            for ($i = 0; $i < $count; $i++) {
-                $saveRolePermission = [
-                    'permission_id' => $permission_value[$i],
-                    'role_id' => $role_id,
-                ];
-                RolesPermission::create($saveRolePermission);
-            }
-        }
-
-        return redirect(route('roles'))->with('success', 'Role berhasil diBuat!');
+        return redirect()->route('admin.role.index')->with('success', 'Role & Permissions created successfully.');
     }
     public function view_role($id)
     {
         $modelRole = new Roles();
-        $modelUser = new User();
+        $roles = Roles::where('id', $id)->first();
 
-        $dataRolePermission = Roles::where('id', $id)->first();
-        $data['roles'] = $dataRolePermission;
+        // Retrieve all users with the specified role ID
+        $users = User::where('role_id', $id)->get(); // Change this line
 
-        $dataRolePermission = $modelRole->getRoleJoinPermission()->all();
-        $data['permissions'] = $dataRolePermission;
+        $permissions = Permissions::where('role_id', $id)->get();
 
-        $dataUser = $modelUser->getUserRole(['role_id' => $id])->all();
-        $data['dataUser'] = $dataUser;
+        $routes = Route::getRoutes()->getRoutesByName();
 
-        $dataPermissions = Permissions::all();
-        $permissions_by_group = [];
-        foreach ($dataPermissions ?? [] as $permission) {
-            $ability = Str::after($permission->name, ' ');
-            $permissions_by_group[$ability][] = $permission;
-        }
-        $data['permissions_by_group'] = $permissions_by_group;
-
-        return view("admin/manajemen-role/view-role", $data);
+        return view("admin/manajemen-role/view-role", compact('roles', 'users', 'permissions' , 'routes'));
     }
     public function edit_role(Request $request, $id)
     {

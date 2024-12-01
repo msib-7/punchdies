@@ -56,7 +56,6 @@
                                             <th>Nama Mesin</th>
                                             <th>Kode/Nama Produk</th>
                                             <th>Pengukuran</th>
-                                            <th>diukur oleh</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -64,7 +63,7 @@
                                         <tr>
                                             <td></td>
                                             <td>
-                                                <div class="card"
+                                                <div class="card shadow-lg border-3 rounded-2"
                                                     style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
                                                     <div class="card-body">
                                                     {{-- <div class="card-body ribbon ribbon-end ribbon-clip">
@@ -99,7 +98,7 @@
                                                                             </div>
                                                                             <div class="p-2">
                                                                                 @if ($data->masa_pengukuran == "-")
-                                                                                    <button class="btn btn-primary p-2" id="{{$data->id}}" onclick="buatPengukuran(this)">
+                                                                                    <button class="btn btn-primary p-2 create-awl" id="{{$data->punch_id}}" onclick="buatPengukuran(this)">
                                                                                         <i class="ki-duotone ki-add-files fs-1">
                                                                                             <span class="path1"></span>
                                                                                             <span class="path2"></span>
@@ -108,7 +107,7 @@
                                                                                         Buat Pengukuran
                                                                                     </button>
                                                                                 @endif
-                                                                                <a href="/data/{{$jenis}}/pengukuran-awal/cek_pengukuran/{{$data->id}}">
+                                                                                <a href="/data/{{$jenis}}/pengukuran-awal/cek_pengukuran/{{$data->punch_id}}">
                                                                                     <button type="submit" class="btn btn-secondary p-2">
                                                                                         <i class="ki-duotone ki-magnifier fs-1">
                                                                                             <span class="path1"></span>
@@ -128,7 +127,7 @@
                                                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 fw-semibold w-auto py-0" data-kt-menu="true">
                                                                                         <!--begin:: Delete button-->
                                                                                         <div class="menu-item rounded shadow border p-0">
-                                                                                            <a href="/data/{{$jenis}}/delete-data/{{$data->id}}" class="menu-link p-0 d-flex justify-content-center">
+                                                                                            <a href="/data/{{$jenis}}/delete-data/{{$data->punch_id}}" class="menu-link p-0 d-flex justify-content-center">
                                                                                                 <button class="btn btn-outline btn-outline-danger d-inline-flex p-3">
                                                                                                     &nbsp;<i class="ki-duotone ki-trash fs-2x">
                                                                                                         <span class="path1"></span>
@@ -251,7 +250,7 @@
                                                                                             </tr>
                                                                                             <tr style="border: none; height: 30px;">
                                                                                                 <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
+                                                                                                    class="fs-3 px-4 my-4"> 
                                                                                                     Status
                                                                                                 </td>
                                                                                                 <td style="border: none;"
@@ -285,7 +284,6 @@
                                             <td>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</td>
                                             <td>{{$data->nama_mesin_cetak}}</td>
                                             <td>{{$data->kode_produk}}</td>
-                                            <td></td>
                                             <td></td>
                                         </tr>
                                         @endforeach
@@ -449,7 +447,9 @@
                                     </label>
                                     <select class="form-select" aria-label="Select example" name="line_id">
                                         <option>Open this select menu</option>
-                                        <option value="1">Line 8A</option>
+                                        @foreach ($DataLine as $item)
+                                        <option value="{{$item->id}}">{{$item->nama_line}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -555,6 +555,7 @@
                                 <div class="required position-absolute top-0"></div>
                                 <input type="number" class="form-control form-control-solid required text-center"
                                     placeholder="Jumlah Punch" name="jumlah_data_punch" />
+                                <input type="hidden" name="create_id" id="create_id"/>
                             </div>
                         </div>
                     </div>
@@ -575,8 +576,15 @@
         $.ajax({
             type: "GET",
             url: '/data/<?= $jenis ?>/pengukuran-awal/buat_pengukuran/'+elem.id,
-            success: function () {
-               $('#modal_buat_pengukuran_1').modal('show');
+            beforeSend: function (){
+                $('#'+elem.id).prop('disabled', true);
+            },
+            success: function (data) {
+                $('#create_id').val(elem.id);
+                $('#modal_buat_pengukuran_1').modal('show');
+            },
+            complete: function() {
+                $('#'+elem.id).prop('disabled', false);
             }
         })
     }
