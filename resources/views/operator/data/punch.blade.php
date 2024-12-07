@@ -53,7 +53,7 @@
                                         <tr>
                                             <td>{{ date_format($data->created_at, 'd M Y')}}</td>
                                             <td>
-                                                <div class="card"
+                                                <div class="card shadow-lg"
                                                     style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
                                                     <div class="card-body p-sm-0 p-md-3">
                                                         <div class="col-12">
@@ -81,7 +81,7 @@
                                                                                         <span class="path2"></span>
                                                                                         <span class="path3"></span>
                                                                                     </i>
-                                                                                    Buat Pengukuran Rutin
+                                                                                    Pengukuran
                                                                                 </button>
                                                                                 @endif
                                                                                 {{-- <a href="/data/{{$jenis}}/pengukuran-rutin/cek_pengukuran/{{$data->punch_id}}"> --}}
@@ -607,7 +607,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-6">
-                        <a href="/data/<?= $jenis ?>/pengukuran-rutin/edit_pengukuran/{{session('create_id')}}">
+                        <a href="#">
                             <div class="card">
                                 <div class="card-body text-center shadow">
                                     <button class="btn btn-secondary w-100" style="height: 10vh">
@@ -625,7 +625,7 @@
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <input type="hidden" id="id_create_rutin">
-                                <button class="btn btn-secondary w-100" style="height: 10vh" onclick="showInfoPengukuran(this)">
+                                <button class="btn btn-secondary w-100" style="height: 10vh" onclick="getInfoPengukuran(this)">
                                     <i class="ki-duotone ki-plus-square fs-1">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
@@ -695,7 +695,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="text-center pt-10">
-                        <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit" id="confirm_pengukuran" onclick="confirmPengukuran()">
+                        <button type="submit" class="btn btn-primary" id="confirm_pengukuran">
                             <span class="indicator-label">Confirm</span>
                             <span class="indicator-progress">Please wait...
                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -711,9 +711,10 @@
 <script>
 
     function opsiPengukuran(elem) {
+        var id = elem.id;
         $.ajax({
             type: "GET",
-            url: '/data/<?= $jenis ?>/pengukuran-rutin/opsi/'+elem.id,
+            url: "{{route('pnd.pr.'.$route.'.opsi', ':id')}}".replace(':id', id),
             beforeSend: function() {
                 $('#'+elem.id).prop('disabled', true);
             },
@@ -760,20 +761,20 @@
     function pilihPengukuran(elem) {
         $.ajax({
             type: "GET",
-            url: '/data/<?= $jenis ?>/pengukuran-rutin/pilih-pengukuran/'+elem.id,
+            url: "{{route('pnd.pr.'.$route.'.list', ':id')}}".replace(':id', elem.id),
             success: function (masa_pengukuran) {
                 $('select[id=pilih_pengukuran]').html(masa_pengukuran);
-                $('#form_pilih_pengukuran').attr('action', "/data/{{ $jenis }}/pengukuran-rutin/cek_pengukuran/"+elem.id);
+                $('#form_pilih_pengukuran').attr('action', "{{route('pnd.pr.'.$route.'.cek-pengukuran', ':id')}}".replace(':id', elem.id));
                 $('#modal_pilih_pengukuran').modal('show');
             }
         })
     }
     
-    function showInfoPengukuran(elem) {
+    function getInfoPengukuran(elem) {
         var id_create_rutin = document.getElementById("id_create_rutin").value;
         $.ajax({
             type: "GET",
-            url: '/data/<?= $jenis ?>/pengukuran-rutin/info/'+id_create_rutin,
+            url: "{{route('pnd.pr.'.$route.'.info', ':id')}}".replace(':id', id_create_rutin),
             success: function (data) {
                 var tgl_pre = new Date(data.data.created_at).format("dd mmm yyyy");
                 var now = new Date().format("dd mmm yyyy");
@@ -784,7 +785,7 @@
                 $('#masa_pengukuran').val(data.masa_pengukuran);
                 $('#tgl_pengukuran_now').val(now);
                 $('#user').val('{{ auth()->user()->nama }}');
-                $('#form_create_pengukuran').attr('action', "/data/{{ $jenis }}/pengukuran-rutin/buat_pengukuran/"+id_create_rutin);
+                $('#form_create_pengukuran').attr('action', "{{route('pnd.pr.'.$route.'.create', ':id')}}".replace(':id', id_create_rutin));
                 $('#modal_option_pengukuran').modal('hide');
                 $('#modal_info_pengukuran').modal('show');  
             }

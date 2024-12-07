@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('audit_trails', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            // $table->id();
             $table->string('model'); // Nama model yang diubah
-            $table->string('model_id'); // UUID dari record yang diubah
+            $table->uuid('model_id'); // UUID dari record yang diubah
             $table->string('action'); // Tipe operasi: created, updated, deleted
             $table->json('old_data')->nullable(); // Data sebelum perubahan
             $table->json('new_data')->nullable(); // Data setelah perubahan

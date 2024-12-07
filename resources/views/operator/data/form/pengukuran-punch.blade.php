@@ -169,7 +169,7 @@
                             </div>
                             <div class="col-12 mt-5">
                                 <div class="card">
-                                    <form action="{{ url('data/'.$jenis.'/pengukuran-rutin/simpan') }}" method="POST" enctype="multipart/form-data" id="form_data_pengukuran">
+                                    <form action="{{ route('pnd.pr.'.$route.'.store') }}" method="POST" enctype="multipart/form-data" id="form_data_pengukuran">
                                         @csrf
                                         <div class="card-header">
                                             <h3 class="card-title">Insert New Data</h3>
@@ -253,7 +253,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <form action="{{url('data/'. $jenis .'/pengukuran-rutin/simpan/note')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('pnd.pr.'.$route.'.create-note')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-12">
@@ -324,7 +324,7 @@
             <?php
             $no = 0;
             foreach($draftPengukuran as $data){ 
-                $wkl = $draftPengukuranPre[$no]['working_length'];
+                $wklRutin = $draftPengukuranPre[$no]['working_length_rutin'];
                 ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
@@ -334,10 +334,10 @@
                 x.setAttribute("readonly", "readonly");
                 x.setAttribute("placeholder", "00.00");
                 <?php
-                if($wkl == null){ ?>
-                    x.setAttribute("value", "<?= $draftPengukuranPre[$no]['working_length_awal']; ?>");
-                <?php }else{ ?>
+                if($wklRutin == null){ ?>
                     x.setAttribute("value", "<?= $draftPengukuranPre[$no]['working_length']; ?>");
+                <?php }else{ ?>
+                    x.setAttribute("value", "<?= $draftPengukuranPre[$no]['working_length_rutin']; ?>");
                 <?php } $no++; ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
@@ -387,7 +387,7 @@
             $no = 0;
             foreach($draftPengukuran as $data){ ?>
                 var select = td.appendChild(document.createElement('select'));
-                select.setAttribute('class', 'form-select text-center');
+                select.setAttribute('class', 'form-select text-center mb-2');
                 select.setAttribute('id', 'select_ok');
                 select.setAttribute('name', 'hcf[]');
                 select.setAttribute("value", "<?= $draftPengukuran[$no++]['kesesuaian_dies']; ?>");
@@ -417,7 +417,7 @@
                 var a = td.appendChild(document.createElement('INPUT'));
                     a.setAttribute("type", "hidden");
                     a.setAttribute("name", "update_id[]");
-                    a.setAttribute("value", "<?= $draftPengukuran[$no++]['id']; ?>");
+                    a.setAttribute("value", "<?= $draftPengukuran[$no++]['no']; ?>");
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -428,7 +428,7 @@
             var last_id = td.appendChild(document.createElement('INPUT'));
             last_id.setAttribute("type", "hidden");
             last_id.setAttribute("name", "last_id");
-            last_id.setAttribute("value", "<?= $draftPengukuran[$no-1]['id']; ?>");
+            last_id.setAttribute("value", "<?= $draftPengukuran[$no-1]['no']; ?>");
             document.getElementById("last_id").appendChild(last_id);
         //    
 
@@ -460,12 +460,36 @@
             if (this.value.length == this.maxLength) {
                 $(this).next('.inputs').focus();
             }
+        }); 
+
+        // Add event listener for Overall Length and Working Length Rutin inputs
+        $(document).on('input', 'input[name="ovl[]"], input[name="wkl_rutin[]"]', function () {
+            // Get the current row
+            var currentRow = $(this).closest('tr');
+
+            // Get the values of Overall Length and Working Length (Rutin)
+            var overallLength = parseFloat(currentRow.find('input[name="ovl[]"]').val()) || 0;
+            var workingLengthRutin = parseFloat(currentRow.find('input[name="wkl_rutin[]"]').val()) || 0;
+
+            // Check if both fields are filled
+            if (overallLength > 0 && workingLengthRutin > 0) {
+                // Calculate the Cup Depth
+                var cupDepth = overallLength - workingLengthRutin;
+
+                // Set the calculated Cup Depth value in the corresponding input field
+                currentRow.find('input[name="cup[]"]').val(cupDepth.toFixed(2)); // Adjust the precision as needed
+            } else {
+                // Clear the Cup Depth field if either field is empty
+                currentRow.find('input[name="cup[]"]').val('');
+            }
         });
+
+        
     });
 
     function saveDataRutin() {
             $.ajax({
-                url: "/data/<?= $jenis ?>/pengukuran-rutin/simpan",
+                url: "{{route('pnd.pr.'.$route.'.store')}}",
                 type: "POST",
                 data: $('#form_data_pengukuran').serialize(),
                 error: function() {

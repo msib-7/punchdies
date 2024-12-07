@@ -13,8 +13,16 @@ class LineSeed extends Seeder
      */
     public function run(): void
     {
+        $Line = [1,2,3,4,5,6,6,7,8,9];
+
+        foreach ($Line as $no) {
+            Lines::factory()->create([
+                'nama_line' => 'LINE '.$no
+            ]);
+        }
+
         Lines::factory()->create([
-            'nama_line' => 'LINE 9'
+            'nama_line' => 'All Line'
         ]);
     }
 }

@@ -18,7 +18,9 @@ class DatabaseSeeder extends Seeder
             LineSeed::class,
             AdminSeeder::class,
             // RoleSeed::class,
-            PermissionSeed::class
+            PermissionSeed::class,
+            PunchSeeder::class,
+            PengukuranAwalPunchSeeder::class,
         ]);
     }
 }

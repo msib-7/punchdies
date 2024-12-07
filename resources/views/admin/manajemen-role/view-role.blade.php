@@ -88,11 +88,11 @@
                     <div class="card-footer flex-wrap pt-0">
                         <div class="row">
                             <div class="col-6">
-                                <button type="button" class="btn btn-light btn-active-light-primary my-1" id="btn-edit"
-                                    data-id="{{ $roles->id }}">Edit Role</button>
+                                {{-- <button type="button" class="btn btn-light btn-active-light-primary my-1" id="btn-edit"
+                                    data-id="{{ $roles->id }}">Edit Role</button> --}}
                             </div>
                             <div class="col-6" style="text-align: right;">
-                                <a href='{{ url("delete-role/".$roles->id) }}'
+                                <a href='{{ route('admin.role.delete',$roles->id) }}'
                                     class="btn btn-light btn-active-light-danger my-1">
                                     <i class="ki-solid ki-trash fs-3"></i>
                                 </a>

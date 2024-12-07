@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 class ApprovalController extends Controller
 {
-    public function dashboard_approval(Request $request)
+    public function index(Request $request)
     {
         $showApproval = $request->segment(3);
 

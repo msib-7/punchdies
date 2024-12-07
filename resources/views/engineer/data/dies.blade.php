@@ -94,15 +94,15 @@
                                                                                     Buat Pengukuran
                                                                                 </button>
                                                                             @endif
-                                                                            <a href="/data/{{$jenis}}/pengukuran-awal/cek_pengukuran/{{$data->dies_id}}">
-                                                                                <button type="submit" class="btn btn-secondary p-2">
+                                                                            @if ($data->masa_pengukuran != "-")
+                                                                                <button type="submit" class="btn btn-secondary p-2" id="{{$data->dies_id}}" onclick="pilihPengukuran(this)">
                                                                                     <i class="ki-duotone ki-magnifier fs-1">
                                                                                         <span class="path1"></span>
                                                                                         <span class="path2"></span>
                                                                                     </i>
                                                                                     Lihat Data Pengukuran
                                                                                 </button>
-                                                                            </a>
+                                                                            @endif
                                                                         </div>
                                                                         <div class="p-2">
                                                                             <!--begin::Action Button-->
@@ -114,7 +114,7 @@
                                                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 fw-semibold w-auto py-0" data-kt-menu="true">
                                                                                     <!--begin:: Delete button-->
                                                                                     <div class="menu-item rounded shadow border p-0">
-                                                                                        <a href="/data/{{$jenis}}/delete-data/{{$data->dies_id}}" class="menu-link p-0 d-flex justify-content-center">
+                                                                                        <a href="{{route('pnd.pa.dies.delete', $data->dies_id)}}" class="menu-link p-0 d-flex justify-content-center">
                                                                                             <button class="btn btn-outline btn-outline-danger d-inline-flex p-3">
                                                                                                 &nbsp;<i class="ki-duotone ki-trash fs-2x">
                                                                                                     <span class="path1"></span>
@@ -376,17 +376,23 @@
                                     <div class="col-6">
                                         <select class="form-select" aria-label="Select example" name="bulan_pembuatan">
                                             <option>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
+                                            <option value="1">Januari</option>
+                                            <option value="2">Februari</option>
+                                            <option value="3">Maret</option>
+                                            <option value="4">April</option>
+                                            <option value="5">Mei</option>
+                                            <option value="6">Juni</option>
+                                            <option value="7">Juli</option>
+                                            <option value="8">Agustus</option>
+                                            <option value="9">September</option>
+                                            <option value="10">Oktober</option>
+                                            <option value="11">November</option>
+                                            <option value="12">Desember</option>
                                         </select>
                                     </div>
                                     <div class="col-6">
-                                        <select class="form-select" aria-label="Select example" name="tahun_pembuatan">
-                                            <option>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
+                                        <select class="form-select" aria-label="Select example" name="tahun_pembuatan" id="tahun_buat">
+                                            <option>Open this select menu</option>\
                                         </select>
                                     </div>
                                 </div>
@@ -424,11 +430,13 @@
                             <div class="col-12">
                                 <div class="">
                                     <label for="exampleFormControlInput1" class="required form-label">
-                                        Pilih Line untuk Dies
+                                        Pilih Line untuk Punch
                                     </label>
                                     <select class="form-select" aria-label="Select example" name="line_id">
                                         <option>Open this select menu</option>
-                                        <option value="1">Line 8A</option>
+                                        @foreach ($DataLine as $item)
+                                        <option value="{{$item->id}}">{{$item->nama_line}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -438,7 +446,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-primary create-button">Save changes</button>
             </div>
             </form>
         </div>
@@ -472,6 +480,48 @@
                         data-bs-stacked-modal="#modal_buat_pengukuran_1">Pengukuran</button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+{{-- Pilih Pengukuran untuk dilihat --}}
+<div class="modal fade" tabindex="-1" id="modal_pilih_pengukuran">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Pilih Pengukuran</h6>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+
+            <div class="modal-body">
+                <div class="col-12">
+                    <form id="form_pilih_pengukuran" method="GET" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-5">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="pilih_pengukuran" name="pilih_pengukuran" aria-label="Floating label select example">
+                                            
+                                        </select>
+                                        <label for="floatingSelect">Masa Pengukuran</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Open</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -524,7 +574,7 @@
                 <!--end::Close-->
             </div>
 
-            <form action="{{url('/data/'.$jenis.'/pengukuran-awal')}}">
+            <form action="{{route('pnd.pa.dies.create-dies')}}">
                 @csrf
                 <div class="modal-body">
                     <div class="d-flex flex-column justify-content-center">
@@ -551,17 +601,68 @@
 
 <script>
     function buatPengukuran(elem) {
+        var id = elem.id;
         $.ajax({
             type: "GET",
-            url: '/data/<?= $jenis ?>/pengukuran-awal/buat_pengukuran/'+elem.id,
-            success: function () {
-               $('#modal_buat_pengukuran_1').modal('show');
+            url: "{{route('pnd.pa.dies.create-pengukuran', ':id')}}".replace(':id', id),
+            beforeSend: function (){
+                $('#'+elem.id).prop('disabled', true);
+            },
+            success: function (data) {
+                if(data.success == false){
+                    Swal.fire({
+                        icon: "error",
+                        title: "Access Forbidden",
+                        text: data.message,
+                    });
+                }else{
+                    $('#create_id').val(elem.id);
+                    $('#modal_buat_pengukuran_1').modal('show');
+                }
+            },
+            error: function () {
+                alert('Error! Something went wrong!');
+            },
+            complete: function() {
+                $('#'+elem.id).prop('disabled', false);
+            }
+        })
+    }
+
+    function pilihPengukuran(elem) {
+        $.ajax({
+            type: "GET",
+            url: "{{route('pnd.pr.dies.list', ':id')}}".replace(':id', elem.id),
+            success: function (masa_pengukuran) {
+                $('select[id=pilih_pengukuran]').html(masa_pengukuran);
+                $('#form_pilih_pengukuran').attr('action', "{{route('pnd.pa.dies.cek-pengukuran', ':id')}}".replace(':id', elem.id));
+                $('#modal_pilih_pengukuran').modal('show');
             }
         })
     }
 
     $(document).ready(function () {
-        // alert('ok');
+        var start = 2010;
+        var now = new Date().getFullYear();
+        var options = "";
+
+        for (var year = now; year >= start; year--) {
+            options += `<option value='${year}'>${year}</option>`;
+        }
+        document.getElementById("tahun_buat").innerHTML = options;
+
+        $('#submit').on('click', function (e) {
+            e.preventDefault();
+
+            var data = table.$('input, select').serialize();
+
+            alert(
+                'The following data would have been submitted to the server: \n\n' +
+                data.substr(0, 120) +
+                '...'
+            );
+        });
+
         // this is the id of the form
         $("#form_create_dies").submit(function (e) {
 
@@ -571,13 +672,22 @@
 
             $.ajax({
                 type: "POST",
-                url: '/data/<?= $jenis ?>/create-data',
+                url: "{{route('pnd.pa.dies.create')}}",
                 data: form.serialize(), // serializes the form's elements.
+                beforeSend: function (){
+                    $('.create-button').prop('disabled', true);
+                },
                 success: function (data) {
                     // console.log('oke');
                     $('#modal_create_data_dies').modal('hide');
                     $('#modal_buat_pengukuran_1').modal('show');
                     // show response from the php script.
+                },
+                error: function () {
+                    alert('Error! Something went wrong!');
+                },
+                complete: function() {
+                    $('.create-button').prop('disabled', false);
                 }
             });
 

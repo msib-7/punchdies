@@ -19,4 +19,8 @@ class Audit_tr extends Model
         'old_data' => 'array',
         'new_data' => 'array',
     ];
+
+    public function users(){
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

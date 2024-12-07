@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pengukuran_rutin_diess', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->increments('no');
             $table->string('dies_id');
             $table->uuid('user_id');
             $table->string('is_cincin_berbayang')->nullable();

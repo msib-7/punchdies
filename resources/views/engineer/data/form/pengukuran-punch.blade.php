@@ -169,7 +169,7 @@
                             </div>
                             <div class="col-12 mt-5">
                                 <div class="card">
-                                    <form action="{{ url('data/'.$jenis.'/pengukuran-awal/simpan') }}" method="POST" enctype="multipart/form-data" id="form_data_pengukuran">
+                                    <form action="{{ route('pnd.pa.'.$route.'.store') }}" method="POST" enctype="multipart/form-data" id="form_data_pengukuran">
                                         @csrf
                                         <div class="card-header">
                                             <h3 class="card-title">Insert New Data</h3>
@@ -220,6 +220,14 @@
                                                 <div class="col text-end" id="btn-next">
                                                 </div>
                                             </div>
+                                            <div class="col-12 mt-10">
+                                                <div class="form-check form-switch form-check-custom form-check-solid">
+                                                    <input class="form-check-input" name="draft" type="checkbox" value="enabled" id="flexSwitch" checked='checked'/>
+                                                    <label class="form-check-label" for="flexSwitch">
+                                                        Simpan Draft untuk saat ini
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -256,7 +264,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <form action="{{url('data/'. $jenis .'/pengukuran-awal/simpan/note')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('pnd.pa.'.$route.'.create-note')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-12">
@@ -498,7 +506,7 @@
                 var a = td.appendChild(document.createElement('INPUT'));
                     a.setAttribute("type", "hidden");
                     a.setAttribute("name", "update_id[]");
-                    a.setAttribute("value", "<?= $draftPengukuran[$no++]['id']; ?>");
+                    a.setAttribute("value", "<?= $draftPengukuran[$no++]['no']; ?>");
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -509,7 +517,7 @@
             var last_id = td.appendChild(document.createElement('INPUT'));
             last_id.setAttribute("type", "hidden");
             last_id.setAttribute("name", "last_id");
-            last_id.setAttribute("value", "<?= $draftPengukuran[$no-1]['id']; ?>");
+            last_id.setAttribute("value", "<?= $draftPengukuran[$no-1]['no']; ?>");
             document.getElementById("last_id").appendChild(last_id);
         //    
 
@@ -548,7 +556,7 @@
 
     function saveData() {
             $.ajax({
-                url: "/data/<?= $jenis ?>/pengukuran-awal/simpan",
+                url: "{{route('pnd.pa.'.$route.'.store')}}",
                 type: "POST",
                 data: $('#form_data_pengukuran').serialize(),
             })

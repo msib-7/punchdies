@@ -51,6 +51,19 @@ class User extends Authenticatable
         ];
     }
 
+    public function roles()
+    {
+        return $this->belongsTo(Roles::class, 'role_id', 'id');
+    }
+    public function permissions()
+    {
+        return $this->hasMany(Permissions::class, 'role_id', 'role_id');
+    }
+    public function lines()
+    {
+        return $this->belongsTo(Lines::class, 'line_id', 'id');
+    }
+
     public function getUserRole($where = false)
     {
         if($where === false){

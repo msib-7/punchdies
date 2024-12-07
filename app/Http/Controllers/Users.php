@@ -112,4 +112,9 @@ class Users extends Controller
         User::where('username', '=', $usn)->update($dataUpdate);
         return redirect(route('admin.users.index'))->with('success', 'User berhasil diUpdate!');
     }
+    public function delete_user($id)
+    {
+        User::where('id', '=', $id)->delete();
+        return redirect(route('admin.users.index'))->with('success', 'User deleted successfully');
+    }
 }

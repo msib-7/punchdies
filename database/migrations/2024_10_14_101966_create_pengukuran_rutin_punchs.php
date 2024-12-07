@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pengukuran_rutin_punchs', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->increments('no');
             $table->string('punch_id');
             $table->uuid('user_id');
             $table->double('overall_length')->nullable();

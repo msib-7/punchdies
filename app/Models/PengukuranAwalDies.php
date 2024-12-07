@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class PengukuranAwalDies extends Model
 {
-    use HasFactory, Notifiable, AuditTrailable;
+    use HasFactory, Notifiable, AuditTrailable, UUIDAsPrimaryKey;
 
     protected $table = 'pengukuran_awal_diess';
     protected $guarded;

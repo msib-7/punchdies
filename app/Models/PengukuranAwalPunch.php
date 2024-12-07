@@ -10,11 +10,8 @@ use Illuminate\Notifications\Notifiable;
 
 class PengukuranAwalPunch extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, AuditTrailable, UUIDAsPrimaryKey;
 
     protected $table = "pengukuran_awal_punchs";
-    // protected $fillable = [
-    //     'punch_id', 'user_id', 'head_outer_diameter', 'neck_diameter', 'barrel', 'overall_length', 'tip_diameter_1', 'tip_diameter_2', 'cup_depth', 'working_length', 'head_configuration', 'masa_pengukuran','note', 'is_draft'
-    // ];
     protected $guarded;
 }

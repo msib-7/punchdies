@@ -39,7 +39,7 @@ class CheckRoleUser
                     'message' => 'Anda Tidak Memiliki Akses Pada Action ini',
                 ]);
             } else {
-                return response()->view('layouts.forbidden');
+                return response()->view('layout.forbidden');
             }
         }
         return $next($request);

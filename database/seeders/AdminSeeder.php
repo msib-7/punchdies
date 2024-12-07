@@ -22,16 +22,15 @@ class AdminSeeder extends Seeder
             'role_name' => 'Administrator',
         ]);
 
-        $Line = Lines::all();
-        foreach($Line as $data){
-            User::factory()->create([
-                'username' => 'admin',
-                'email' => 'admin@admin.com',
-                'nama' => 'Administrator',
-                'role_id' => $adminRole->id,
-                'line_id' => $data->id,
-            ]);
-        }
+        $Line = Lines::latest()->first();
+
+        User::factory()->create([
+            'username' => 'admin',
+            'email' => 'admin@admin.com',
+            'nama' => 'Administrator',
+            'role_id' => $adminRole->id,
+            'line_id' => $Line->id,
+        ]);
 
         $routes = Route::getRoutes()->getRoutesByName();
 

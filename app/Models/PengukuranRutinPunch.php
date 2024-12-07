@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class PengukuranRutinPunch extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, AuditTrailable, UUIDAsPrimaryKey;
 
     protected $table = "pengukuran_rutin_punchs";
     protected $guarded;

@@ -3,6 +3,9 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\APIContr;
 use App\Http\Controllers\approval\ApprovalController;
+use App\Http\Controllers\approval\ApprovalDisposalController;
+use App\Http\Controllers\approval\ApprovalPengukuranAwalController;
+use App\Http\Controllers\approval\ApprovalPengukuranRutinController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -35,13 +38,14 @@ Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
         Route::post('add-user', [Users::class, 'add_user'])->name('create');
         Route::get('/edit-user/{id}', [Users::class, 'edit_user'])->name('edit');
         Route::post('update-user', [Users::class, 'update_user'])->name('update');
+        Route::get('/delete-user/{id}', [Users::class, 'delete_user'])->name('delete');
     });
     Route::prefix('role')->name('role.')->group(function(){
         Route::get('roles', [Role::class, 'manajemen_role'])->name('index');
         Route::post('add', [Role::class, 'add_role'])->name('create');
         Route::get('/view/{id}', [Role::class, 'view_role'])->name('view');
         Route::get('/edit/{id}', [Role::class, 'edit_role'])->name('edit');
-        Route::post('update', [Role::class, 'update_role'])->name('update');
+        Route::post('/update/{id}', [Role::class, 'update_role'])->name('update');
         Route::get('/delete/{id}', [Role::class, 'del_role'])->name('delete');
     });
     Route::prefix('permission')->name('permission.')->group(function(){
@@ -64,11 +68,12 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
     Route::prefix('pengukuran-awal')->name('pa.')->group(function() {
         Route::prefix('punch-atas')->name('atas.')->group(function(){
             //Route untuk Buat Punch
-            Route::get('pa', [PunchController::class, 'show_all_punch'])->name('index');
-            Route::post('create-punch', [PunchController::class, 'create_data'])->name('create');
+            Route::get('', [PunchController::class, 'show_all_punch'])->name('index');
+            Route::post('create', [PunchController::class, 'create_data'])->name('create');
             Route::get('delete-punch/{id}', [PunchController::class, 'delete_data'])->name('delete');
 
             //Route untuk buat pengukuran awal
+            Route::get('pilih-pengukuran/{id}', [PengukuranController::class, 'pilih_pengukuran'])->name('list');
             Route::get('create-pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal'])->name('create-punch');
             Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran'])->name('view');
             Route::get('form_pengukuran', [PengukuranController::class, 'form_pengukuran'])->name('show-form');
@@ -80,11 +85,12 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
         });
         Route::prefix('punch-bawah')->name('bawah.')->group(function(){
             //Route Untuk Buat Punch
-            Route::get('', [PunchController::class, 'index'])->name('index');
-            Route::post('create-punch', [PunchController::class, 'create'])->name('create');
-            Route::get('delete-punch/{id}', [PunchController::class, 'delete'])->name('delete');
+            Route::get('', [PunchController::class, 'show_all_punch'])->name('index');
+            Route::post('create', [PunchController::class, 'create_data'])->name('create');
+            Route::get('delete-punch/{id}', [PunchController::class, 'delete_data'])->name('delete');
             
             //Route untuk buat pengukuran awal
+            Route::get('pilih-pengukuran/{id}', [PengukuranController::class, 'pilih_pengukuran'])->name('list');
             Route::get('create-pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal'])->name('create-punch');
             Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran'])->name('view');
             Route::get('form_pengukuran', [PengukuranController::class, 'form_pengukuran'])->name('show-form');
@@ -97,11 +103,12 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
         Route::prefix('dies')->name('dies.')->group(function(){
             //Route Untuk buat dies
             Route::get('', [DiesController::class, 'show_all_dies'])->name('index');
-            Route::post('create-dies', [DiesController::class, 'create_data'])->name('create');
+            Route::post('create', [DiesController::class, 'create_data'])->name('create');
             Route::get('delete-dies/{id}', [DiesController::class, 'delete_data'])->name('delete');
 
             //route untuk buat pengukuran awal
-            Route::get('create-pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal'])->name('create-punch');
+            Route::get('pilih-pengukuran/{id}', [PengukuranController::class, 'pilih_pengukuran'])->name('list');
+            Route::get('create-pengukuran-awal', [PengukuranController::class, 'create_data_pengukuran_awal'])->name('create-dies');
             Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran'])->name('view');
             Route::get('form_pengukuran', [PengukuranController::class, 'form_pengukuran'])->name('show-form');
             Route::post('simpan', [PengukuranController::class, 'simpan_pengukuran'])->name('store');
@@ -158,18 +165,25 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
     });
 
     Route::prefix('approval')->name('approval.')->group(function(){
-        Route::prefix('pengukuran')->name('pengukuran.')->group(function(){
-            Route::get('approval', [ApprovalController::class, 'show_data_approval'])->name('index');
-            Route::get('detail/{req_id}', [ApprovalController::class, 'detail_data_approval'])->name('view');
-            Route::get('approve/{req_id}', [ApprovalController::class, 'update_approval_status'])->name('approve');
-            Route::get('reject/{req_id}', [ApprovalController::class, 'update_approval_status'])->name('reject');
+        Route::prefix('pengukuran-awal')->name('pa.')->group(function(){
+            Route::get('', [ApprovalPengukuranAwalController::class, 'index'])->name('index');
+            Route::get('show/{id}', [ApprovalPengukuranAwalController::class, 'show'])->name('show');
+            Route::get('approve/{id}', [ApprovalPengukuranAwalController::class, 'approve'])->name('approve');
         });
-        Route::prefix('disposal')->name('disposal.')->group(function(){
-            //Route untuk disposal
+        Route::prefix('pengukuran-rutin')->name('pr.')->group(function(){
+            Route::get('', [ApprovalPengukuranRutinController::class, 'index'])->name('index');
+            Route::get('show/{id}', [ApprovalPengukuranRutinController::class, 'show'])->name('show');
+            Route::get('approve/{id}', [ApprovalPengukuranRutinController::class, 'approve'])->name('approve');
         });
+        Route::prefix('disposal')->name('dis.')->group(function(){
+            Route::get('', [ApprovalDisposalController::class, 'index'])->name('index');
+            Route::get('show/{id}', [ApprovalDisposalController::class, 'show'])->name('show');
+            Route::get('approve/{id}', [ApprovalDisposalController::class, 'approve'])->name('approve');
+        });
+
         Route::prefix('histori')->name('histori.')->group(function(){
             Route::get('histori', [ApprovalController::class, 'show_history'])->name('index');
-            Route::get('pengukuran/{req_id}', [ApprovalController::class, 'detail_data_history'])->name('show-detail-pengukuran');
+            Route::get('pengukuran/{id}', [ApprovalController::class, 'detail_data_history'])->name('show-detail-pengukuran');
         });
     });
 });

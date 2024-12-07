@@ -143,42 +143,88 @@
                                             style="width:100%">
                                             <thead>
                                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                                    <th></th>
                                                     <th>Log date</th>
                                                     <th>Event</th>
                                                     <th>User</th>
                                                     <th>Line</th>
-                                                    <th>Category</th>
-                                                    <th>Event Detail</th>
+                                                    {{-- <th>Category</th> --}}
+                                                    <th>Detail</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($dataAudit as $data)
                                                 <tr>
+                                                    <td></td>
                                                     <td>
                                                         <div class="d-flex flex-center">
-                                                            <a href=""
-                                                                class="text-gray-800 mb-1">{{ $data->created_at}}</a>
+                                                            <a href="" class="text-gray-800 mb-1">{{ $data->created_at->format('d M Y H:i') }}</a>
                                                         </div>
                                                     </td>
                                                     <td class="d-flex align-items-center">
-                                                        <!--begin::User details-->
                                                         <div class="d-flex flex-center">
-                                                            <a href=""
-                                                                class="text-gray-800 text-hover-primary mb-1">{{ json_encode($data->new_data, JSON_PRETTY_PRINT).' '.$data->action}}</a>
+                                                            <a href="" class="text-gray-800 text-hover-primary mb-1">
+                                                                {{ ucwords($data->action) . ' ' . str_replace('App\Models\\', '', $data->model) }}
+                                                            </a>
                                                         </div>
-                                                        <!--begin::User details-->
                                                     </td>
                                                     <td>
-                                                        <div class="text-gray-800">{{ ucwords($data->username)}}</div>
+                                                        <div class="text-gray-800">{{ ucwords(optional($data->users)->nama) }}</div>
                                                     </td>
                                                     <td>
-                                                        <div class="text-gray-800">{{ $data->line}}</div>
+                                                        <div class="text-gray-800">{{ ucwords(optional(optional($data->users)->lines)->nama_line) }}</div>
                                                     </td>
                                                     <td>
-                                                        <div class="text-gray-800">{{ $data->category}}</div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-gray-800">{{ $data->detail}}</div>
+                                                        <div class="text-gray-800">
+                                                            @if (isset($allChanges[$data->id]))
+                                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalChanges{{ $data->id }}">
+                                                                    <i class="fas fa-history me-2"></i> Lihat Perubahan
+                                                                </button>
+
+                                                                <!-- Modal -->
+                                                                <div class="modal fade" id="modalChanges{{ $data->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $data->id }}" aria-hidden="true">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="modalLabel{{ $data->id }}">Perubahan untuk {{ ucwords($data->action) }}</h5>
+                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <p class="text-muted">Keterangan: <span class="badge bg-success">New Data</span> = Data Baru, <span class="badge bg-danger">Old Data</span> = Data Lama</p>
+                                                                                <div class="list-group">
+                                                                                    @foreach ($allChanges[$data->id] as $key => $change)
+                                                                                        @if (!empty($change['old']) || !empty($change['new'])) <!-- Only show if either value is not null or empty -->
+                                                                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                                <div>
+                                                                                                    <strong>{{ ucwords($key) }}:</strong>
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    @if (!empty($change['old'])) <!-- Only show the old badge if it's not null or empty -->
+                                                                                                        <span class="badge bg-danger me-2" data-bs-toggle="tooltip" title="Old Value">
+                                                                                                            <i class="fas fa-arrow-left me-1"></i> {{ $change['old'] }}
+                                                                                                        </span>
+                                                                                                    @endif
+                                                                                                    @if (!empty($change['new'])) <!-- Only show the new badge if it's not null or empty -->
+                                                                                                        <span class="badge bg-success" data-bs-toggle="tooltip" title="New Value">
+                                                                                                            <i class="fas fa-arrow-right me-1"></i> {{ $change['new'] }}
+                                                                                                        </span>
+                                                                                                    @endif
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @else
+                                                                <div class="text-muted">Tidak ada perubahan</div>
+                                                            @endif
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -211,6 +257,12 @@
     </div>
     <!--end::Scrolltop-->
 
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    </script>
     <!--begin::Javascript-->
     @include('layout.javascript')
     <!--end::Javascript-->

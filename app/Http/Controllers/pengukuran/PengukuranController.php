@@ -13,6 +13,8 @@ use App\Models\PengukuranRutinDies;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
 use App\Services\GetRumusPengukuranAwal;
+use App\Services\GetRumusPengukuranAwalDies;
+use DB;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Constraint\IsNull;
 
@@ -22,8 +24,14 @@ class PengukuranController extends Controller
     public function create_data_pengukuran_awal(Request $request)
     {
         //Buat Data Pengukuran Untuk Punch
-        
-        if($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah'){
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
+
+        if($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah'){
+            
             $jmlPunch = $request->jumlah_data_punch;
 
             session()->put('jumlah_punch', $jmlPunch);
@@ -77,14 +85,19 @@ class PengukuranController extends Controller
             session()->remove('count_num');
             session()->remove('start_count');
 
-            return redirect('/data/'.$request->segment(2).'/pengukuran-awal/form_pengukuran');
+            return redirect(route('pnd.pa.'.$route.'.show-form'));
 
-        }elseif($request->segment(2) == 'dies'){        //Buat Data Pengukuran Untuk Dies
+        }elseif($request->segment(3) == 'dies'){        
+            //Buat Data Pengukuran Untuk Dies
             $jmlDies = $request->jumlah_data_dies;
 
             session()->put('jumlah_dies', $jmlDies);
 
-            $create_id = session('create_id');
+            if (session('create_id') === null) {
+                $create_id = $request->create_id;
+            } else {
+                $create_id = session('create_id');
+            }
 
             if ($create_id == null) {
                 $dataDies = Dies::where([
@@ -127,7 +140,7 @@ class PengukuranController extends Controller
             session()->remove('count_num');
             session()->remove('start_count');
 
-            return redirect('/data/' . $request->segment(2) . '/pengukuran-awal/form_pengukuran');
+            return redirect(route('pnd.pa.dies.show-form'));
         }
     }
     public function buat_pengukuran($id)
@@ -135,6 +148,7 @@ class PengukuranController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data Punch',
+
         ]);
         // session()->remove('create_id');
         
@@ -143,39 +157,52 @@ class PengukuranController extends Controller
     }
     public function cek_pengukuran(Request $request, $id)
     {
-        if($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah'){
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
+
+        if($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah'){
             $showPengukuranAll = PengukuranAwalPunch::where('punch_id', '=', $id)->get();
 
             if (count($showPengukuranAll) == 0) {
-                return redirect('/data/' . $request->segment(2) . '')->with('error', 'Data Pengukuran Tidak ditemukan silahkan Buat Pengukuran!');
+                return redirect(route('pnd.pa.'.$route.'.index'))->with('error', 'Data Pengukuran Tidak ditemukan silahkan Buat Pengukuran!');
             } else {
                 session()->remove('count_num');
                 session()->put('punch_id', $request->segment(5));
-                return redirect('/data/' . $request->segment(2) . '/pengukuran-awal/view_pengukuran/' . session('punch_id'));
+                return redirect(route('pnd.pa.'.$route.'.view', session('punch_id')));
             }
-        }elseif($request->segment(2) == 'dies'){
+        }elseif($request->segment(3) == 'dies'){
             $showPengukuranAll = PengukuranAwalDies::where('dies_id', '=', $id)->get();
 
             if (count($showPengukuranAll) == 0) {
-                return redirect('/data/' . $request->segment(2) . '')->with('error', 'Data Pengukuran Tidak ditemukan silahkan Buat Pengukuran!');
+                return redirect(route('pnd.pa.dies.index'))->with('error', 'Data Pengukuran Tidak ditemukan silahkan Buat Pengukuran!');
             } else {
                 session()->remove('count_num');
                 session()->put('dies_id', $request->segment(5));
-                return redirect('/data/' . $request->segment(2) . '/pengukuran-awal/view_pengukuran/' . session('dies_id'));
+                return redirect(route('pnd.pa.dies.view', session('dies_id')));
             }
         }
     }
 
     public function view_pengukuran(Request $request, $id)
     {
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
         session()->remove('create_id');
-        if($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah'){
-            if ($request->segment(2) == 'punch-atas') {
+        if($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah'){
+            if ($request->segment(3) == 'punch-atas') {
                 $data['jenisPunch'] = 'Punch Atas';
                 $data['jenis'] = 'punch-atas';
-            } elseif ($request->segment(2) == 'punch-bawah') {
+                $data['route'] = 'atas';
+            } elseif ($request->segment(3) == 'punch-bawah') {
                 $data['jenisPunch'] = 'Punch Bawah';
                 $data['jenis'] = 'punch-bawah';
+                $data['route'] = 'bawah';
             }
 
             $cekDraft = Punch::where('punch_id', '=', $id)->first();
@@ -191,7 +218,7 @@ class PengukuranController extends Controller
                 $jumlahPunch = PengukuranAwalPunch::where('punch_id','=',$id)->count();
                 session()->put('jumlah_punch', $jumlahPunch);
 
-                return redirect('/data/'.$request->segment(2).'/pengukuran-awal/form_pengukuran');
+                return redirect(route('pnd.pa.'.$route.'.show-form'));
             }else{
                 // session()->remove('count');
                 $LabelPunch = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
@@ -221,9 +248,8 @@ class PengukuranController extends Controller
                 $data['dataPengukuran'] = $showPengukuranAll;
                 return view('engineer.data.view.pengukuran-punch', $data);
             }
-        }elseif($request->segment(2) == 'dies'){
-            $data['jenis'] = 'dies';
 
+        }elseif($request->segment(3) == 'dies'){
             $cekDraft = Dies::where('dies_id', '=', $id)->first();
             if($cekDraft->is_draft == '1'){
                 session()->remove('jumlah_dies');
@@ -234,10 +260,10 @@ class PengukuranController extends Controller
                 session()->put('first_id', 0);
                 session()->put('dies_id', $id);
                 
-                $jumlahDies = M_Pengukuran_Dies::where('dies_id','=',$id)->count();
+                $jumlahDies = PengukuranAwalDies::where('dies_id','=',$id)->count();
                 session()->put('jumlah_dies', $jumlahDies);
 
-                return redirect('/data/'.$request->segment(2).'/pengukuran-awal/form_pengukuran');
+                return redirect(route('pnd.pa.dies.show-form'));
             }else{
                 // session()->remove('count');
                 $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
@@ -262,7 +288,7 @@ class PengukuranController extends Controller
                 }else{
                     $start_id = session('show_id');
                 }
-                $showPengukuranAll = PEngukuranAwalDies::where('dies_id','=', $id)->get();
+                $showPengukuranAll = PengukuranAwalDies::where('dies_id','=', $id)->get();
 
                 $data['dataPengukuran'] = $showPengukuranAll;
                 return view('engineer.data.view.pengukuran-dies', $data);
@@ -271,8 +297,13 @@ class PengukuranController extends Controller
     }
     public function form_pengukuran(Request $request)
     {
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
         session()->remove('create_id');
-        if($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah'){
+        if($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah'){
             $LabelPunch = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
                 ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
                 ->where('punchs.punch_id', session('punch_id'))->first();
@@ -281,12 +312,14 @@ class PengukuranController extends Controller
             $dataPengukuran = PengukuranAwalPunch::where('punch_id', '=', session('punch_id'))->first();
             $data['tglPengukuran'] = $dataPengukuran;
 
-            if ($request->segment(2) == 'punch-atas') {
+            if ($request->segment(3) == 'punch-atas') {
                 $data['jenisPunch'] = 'Punch Atas';
                 $data['jenis'] = 'punch-atas';
-            } elseif ($request->segment(2) == 'punch-bawah') {
+                $data['route'] = 'atas';
+            } elseif ($request->segment(3) == 'punch-bawah') {
                 $data['jenisPunch'] = 'Punch Bawah';
                 $data['jenis'] = 'punch-bawah';
+                $data['route'] = 'bawah';
             }
 
             $checkStatus = PengukuranAwalPunch::where(['punch_id' => session('punch_id'), 'is_draft' => '1'])->count();
@@ -305,7 +338,8 @@ class PengukuranController extends Controller
 
             $queryPengukuran = PengukuranAwalPunch::query()
                                 ->where('punch_id', session('punch_id'))
-                                ->where('id','>', $start_id)
+                                ->where('no','>', $start_id)
+                                ->orderBy('no', 'asc')
                                 ->limit(10);
             $draftPengukuran = $queryPengukuran->get();
             $masa_pengukuran = $queryPengukuran->latest()->first()->masa_pengukuran;
@@ -328,18 +362,19 @@ class PengukuranController extends Controller
 
             return view('engineer.data.form.pengukuran-punch', $data);
 
-        }elseif($request->segment(2) == 'dies'){
+        }elseif($request->segment(3) == 'dies'){
             $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
                 ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
                 ->where('diess.dies_id', session('dies_id'))->first();
             $data['labelDies'] = $LabelDies;
 
-            $dataPengukuran = M_Pengukuran_Dies::where('dies_id', '=', session('dies_id'))->first();
+            $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', session('dies_id'))->first();
             $data['tglPengukuran'] = $dataPengukuran;
 
             $data['jenis'] = 'dies';
+            $data['route'] = 'dies';
 
-            $checkStatus = M_Pengukuran_Dies::where(['dies_id' => session('dies_id'), 'is_draft' => '1'])->count();
+            $checkStatus = PengukuranAwalDies::where(['dies_id' => session('dies_id'), 'is_draft' => '1'])->count();
             if ($checkStatus != 0) {
                 $status = "<span class='badge badge-light-warning fs-3'>Draft</span>";
             } else {
@@ -352,16 +387,18 @@ class PengukuranController extends Controller
             } else {
                 $start_id = session('show_id');
             }
-            $showPengukuranAll = M_Pengukuran_Dies::query()
+            $queryPengukuran = PengukuranAwalDies::query()
                                 ->where('dies_id', session('dies_id'))
-                                ->where('id', '>', $start_id)
-                                ->orderBy('id')
-                                ->limit(10)
-                                ->get();
+                                ->where('no', '>', $start_id)
+                                ->orderBy('no', 'asc')
+                                ->limit(10);
                                 // ->whereRaw('dies_id = ' . session('dies_id') . ' AND id > ' . $start_id)->orderBy('id')->limit(10)->get();
-            $data['draftPengukuran'] = $showPengukuranAll;
-            $data['count'] = count($showPengukuranAll);
-            $count = count($showPengukuranAll) + session('count');
+            $draftPengukuran = $queryPengukuran->get();
+            $masa_pengukuran = $queryPengukuran->latest()->first()->masa_pengukuran;
+            session()->put('masa_pengukuran', $masa_pengukuran);
+            $data['draftPengukuran'] = $draftPengukuran;
+            $data['count'] = count($draftPengukuran);
+            $count = count($draftPengukuran) + session('count');
             $data['page'] = $count;
             session()->put('page', $count);
             if (session('count_num') == '' or session('count_num') == null) {
@@ -381,25 +418,26 @@ class PengukuranController extends Controller
 
     public function simpan_pengukuran(Request $request)
     {
-        if($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah'){
-            if ($request->segment(2) == 'punch-atas') {
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
+        if($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah'){
+            if ($request->segment(3) == 'punch-atas') {
                 $data['jenisPunch'] = 'Punch Atas';
                 $data['jenis'] = 'punch-atas';
-            } elseif ($request->segment(2) == 'punch-bawah') {
+            } elseif ($request->segment(3) == 'punch-bawah') {
                 $data['jenisPunch'] = 'Punch Bawah';
                 $data['jenis'] = 'punch-bawah';
             }
             session()->remove('count');
             session()->remove('show_id');
             session()->remove('count_num');
-            if(session('jumlah_punch')<=session('page'))
+            if(session('jumlah_punch') <= session('page'))
             {
                 session()->remove('show_id');
                 session()->put('show_id', session('first_id'));
-                // dd(session('show_id'));
-                // $count = session('start_count') + session('count');
-                // $count = session('count');
-                // session()->put('count', $count);
 
                 $update_id = $request->update_id;
                 $hdo = $request->hdo;
@@ -424,20 +462,17 @@ class PengukuranController extends Controller
                         'cup_depth' => $cup[$i],
                         'working_length' => $wkl[$i],
                     ];
-                    PengukuranAwalPunch::where('id', $update_id[$i])->update($createDraftPengukuran);
+                    PengukuranAwalPunch::updateOrCreate(['no' => $update_id[$i]],$createDraftPengukuran);
+                    // PengukuranAwalPunch::where('no', $update_id[$i])->update($createDraftPengukuran);
                     $i++;
                 };
 
                 return (new GetRumusPengukuranAwal)->handle($update_id);                
 
-            }elseif(session('jumlah_punch') > session('page'))
-            {
+            }elseif(session('jumlah_punch') > session('page')) {
                 $last_id = $request->last_id;
-                // dd($last_id);
                 $count_num = $request->count_num;
-                // session()->remove('start_count');
                 session()->put('first_id', $request->update_id[0]-1);
-                // dd(session('first_id'));
                 session()->put('count_num', $count_num + 1);
                 session()->put('show_id', $last_id);
                 $count = session('start_count') + session('count');
@@ -455,8 +490,8 @@ class PengukuranController extends Controller
 
                 $i = 0;
                 while ($i < count($update_id)) {
-                    // dd(count($hdo));
-                    $createDraftPengukuran = [
+                    PengukuranAwalPunch::updateOrCreate(['no' => $update_id[$i]], 
+                    [
                         'head_outer_diameter' => $hdo[$i],
                         'neck_diameter' => $ned[$i],
                         'barrel' => $bar[$i],
@@ -465,28 +500,18 @@ class PengukuranController extends Controller
                         'tip_diameter_2' => $tip2[$i],
                         'cup_depth' => $cup[$i],
                         'working_length' => $wkl[$i],
-                    ];
-                    PengukuranAwalPunch::where('id', $update_id[$i])->update($createDraftPengukuran);
+                    ]);
                     $i++;
                 }
-                return redirect('/data/'.$request->segment(2).'/pengukuran-awal/form_pengukuran');
+                return redirect(route('pnd.pa.'.$route.'.show-form'));
             }
-        }elseif($request->segment(2) == 'dies'){
-            $data['jenis'] = 'dies';
-
+        }elseif($request->segment(3) == 'dies'){
             session()->remove('count');
             session()->remove('show_id');
             session()->remove('count_num');
             if (session('jumlah_dies') <= session('page')) {
-                // $last_id = $request->last_id;
-                // $count_num = $request->count_num;
-                // session()->put('count_num', $count_num + 1);
                 session()->remove('show_id');
                 session()->put('show_id', session('first_id'));
-                // dd(session('show_id'));
-                // $count = session('start_count') + session('count');
-                // $count = session('count');
-                // session()->put('count', $count);
 
                 $update_id = $request->update_id;
                 $otd = $request->otd;
@@ -506,18 +531,16 @@ class PengukuranController extends Controller
                         'visual' => $vis[$i],
                         'kesesuaian_dies' => $ksd[$i],
                     ];
-                    M_Pengukuran_Dies::where('id', $update_id[$i])->update($createDraftPengukuran);
+                    PengukuranAwalDies::where('no', $update_id[$i])->update($createDraftPengukuran);
                     $i++;
                 }
-                // return redirect('/data/'.$request->segment(2).'')->with('success', 'Pengukuran Awal Selesai Dilakukan!');
+
+                return (new GetRumusPengukuranAwalDies)->handle($update_id);    
 
             } elseif (session('jumlah_dies') > session('page')) {
                 $last_id = $request->last_id;
-                // dd($last_id);
                 $count_num = $request->count_num;
-                // session()->remove('start_count');
                 session()->put('first_id', $request->update_id[0] - 1);
-                // dd(session('first_id'));
                 session()->put('count_num', $count_num + 1);
                 session()->put('show_id', $last_id);
                 $count = session('start_count') + session('count');
@@ -541,66 +564,89 @@ class PengukuranController extends Controller
                         'visual' => $vis[$i],
                         'kesesuaian_dies' => $ksd[$i],
                     ];
-                    M_Pengukuran_Dies::where('id', $update_id[$i])->update($createDraftPengukuran);
+                    PengukuranAwalDies::updateOrCreate(['no' => $update_id[$i]], 
+                    [
+                        'outer_diameter' => $otd[$i],
+                        'inner_diameter_1' => $inn1[$i],
+                        'inner_diameter_2' => $inn2[$i],
+                        'ketinggian_dies' => $ktd[$i],
+                        'visual' => $vis[$i],
+                        'kesesuaian_dies' => $ksd[$i],
+                    ]);
+                    // PengukuranAwalDies::where('no', $update_id[$i])->update($createDraftPengukuran);
                     $i++;
                 }
-                return redirect('/data/' . $request->segment(2) . '/pengukuran-awal/form_pengukuran');
+                return redirect(route('pnd.pa.dies.show-form'));
             }
         }
     }
 
     public function add_note_pa(Request $request)
     {
-        if($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah'){
-            if ($request->segment(2) == 'punch-atas') {
-                $data['jenisPunch'] = 'Punch Atas';
-                $data['jenis'] = 'punch-atas';
-            } elseif ($request->segment(2) == 'punch-bawah') {
-                $data['jenisPunch'] = 'Punch Bawah';
-                $data['jenis'] = 'punch-bawah';
-            }
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
+        if($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah'){
             session()->remove('show_id');
             session()->remove('count');
             session()->remove('count_num');
             $note = $request->note;
-            $createDraftPengukuran = [
-                'note' => $note,
-            ];
-            PengukuranAwalPunch::where([
+            // $createDraftPengukuran = [
+            //     'note' => $note,
+            // ];
+            // PengukuranAwalPunch::where([
+            //     'punch_id' => session('punch_id'),
+            //     'masa_pengukuran' => 'pengukuran awal'
+            // ])->update($createDraftPengukuran);
+
+            PengukuranAwalPunch::updateOrCreate([
                 'punch_id' => session('punch_id'),
                 'masa_pengukuran' => 'pengukuran awal'
-            ])->update($createDraftPengukuran);
+            ], [
+                'note' => $note,
+            ]);
 
-            return redirect('/data/' . $request->segment(2) . '/pengukuran-awal/set-status');
-        }elseif($request->segment(2) == 'dies'){
-            $data['jenis'] = 'dies';
+            return redirect(route('pnd.pa.'.$route.'.draft'));
+        }elseif($request->segment(3) == 'dies'){
 
             session()->remove('show_id');
             session()->remove('count');
             session()->remove('count_num');
             $note = $request->note;
-            $createDraftPengukuran = [
-                'note' => $note,
-            ];
-            PengukuranAwalDies::where([
+            // $createDraftPengukuran = [
+            //     'note' => $note,
+            // ];
+            // PengukuranAwalDies::where([
+            //     'dies_id' => session('dies_id'),
+            //     'masa_pengukuran' => 'pengukuran awal'
+            // ])->update($createDraftPengukuran);
+
+            PengukuranAwalDies::updateOrCreate([
                 'dies_id' => session('dies_id'),
                 'masa_pengukuran' => 'pengukuran awal'
-            ])->update($createDraftPengukuran);
+            ], [
+                'note' => $note,
+            ]);
 
-            return redirect('/data/' . $request->segment(2) . '/pengukuran-awal/set-status');
+            return redirect(route('pnd.pa.dies.draft'));
         }
     }
 
     public function set_draft_status(Request $request)
     {
-        $M_ApprPengukuran = new M_ApprPengukuran();
-
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
         session()->remove('first_id');
         $updateDraftStatus = [
             'is_draft' => 0,
         ];
-        if($request->segment(3) == 'pengukuran-awal'){
-            if($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah'){
+        if($request->segment(2) == 'pengukuran-awal'){
+            if($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah'){
                 $getData = PengukuranAwalPunch::where([
                     'punch_id' => session('punch_id'),
                     'masa_pengukuran' => 'pengukuran awal',
@@ -629,22 +675,27 @@ class PengukuranController extends Controller
                     $alert = 'success';
                     $msg = 'Pengukuran Awal Selesai Dilakukan! Menunggu Approval dari Manager QA';
 
-                    $updateStatus = [
+                    // $updateStatus = [
+                    //     'is_draft' => 0
+                    // ];
+                    // Punch::where(['punch_id' => session('punch_id'), 'masa_pengukuran' => 'pengukuran awal'])->update($updateStatus);
+
+                    Punch::updateorCreate([
+                        'punch_id' => session('punch_id'),
+                        'masa_pengukuran' => 'pengukuran awal'
+                    ], [
                         'is_draft' => 0
-                    ];
+                    ]);
 
-                    Punch::where(['punch_id' => session('punch_id'), 'masa_pengukuran' => 'pengukuran awal'])->update($updateStatus);
-                    $this->send_to_approval($request->segment(2));
+                    $this->send_to_approval($request->segment(3));
                 }
-                // dd($cekStatus);
 
-                return redirect('/data/' . $request->segment(2))->with($alert, $msg);
+                return redirect(route('pnd.pa.'.$route.'.index'))->with($alert, $msg);
 
-            }elseif($request->segment(2) == 'dies'){
-                $getData = PengukuranAwalDies::where([
-                    'dies_id' => session('dies_id'),
-                    'masa_pengukuran' => 'pengukuran awal',
-                ])
+            }elseif($request->segment(3) == 'dies'){
+                $getData = PengukuranAwalDies::query()
+                    ->where('dies_id', session('dies_id'))
+                    ->where('masa_pengukuran', 'pengukuran awal')
                     ->where('outer_diameter', '!=', '0')
                     ->where('inner_diameter_1', '!=', '0')
                     ->where('inner_diameter_2', '!=', '0')
@@ -667,19 +718,25 @@ class PengukuranController extends Controller
                     $alert = 'success';
                     $msg = 'Pengukuran Awal Selesai Dilakukan! Menunggu Approval dari Manager QA';
 
-                    $updateStatus = [
+                    // $updateStatus = [
+                    //     'is_draft' => 0
+                    // ];
+                    // Dies::where(['dies_id'=> session('dies_id'), 'masa_pengukuran' => 'pengukuran awal'])->update($updateStatus);
+                    
+                    Dies::updateorCreate([
+                        'dies_id' => session('dies_id'), 
+                        'masa_pengukuran' => 'pengukuran awal'
+                    ], [
                         'is_draft' => 0
-                    ];
+                    ]);
 
-                    Dies::where(['dies_id'=> session('dies_id'), 'masa_pengukuran' => 'pengukuran awal'])->update($updateStatus);
-                    $this->send_to_approval($request->segment(2));
+                    $this->send_to_approval($request->segment(3));
                 }
-                // dd($cekStatus);
 
-                return redirect('/data/' . $request->segment(2))->with($alert, $msg);
+                return redirect(route('pnd.pa.dies.index'))->with($alert, $msg);
             }
-        }elseif($request->segment(3) == 'pengukuran-rutin'){
-            if ($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah') {
+        }elseif($request->segment(2) == 'pengukuran-rutin'){
+            if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
                 $getData = PengukuranRutinPunch::where([
                     'punch_id' => session('punch_id'),
                     'masa_pengukuran' => session('masa_pengukuran'),
@@ -706,18 +763,23 @@ class PengukuranController extends Controller
                     $alert = 'success';
                     $msg = session('masa_pengukuran').' Selesai Dilakukan! Menunggu Approval dari Manager QA';
 
-                    $updateStatus = [
+                    // $updateStatus = [
+                    //     'is_draft' => 0
+                    // ];
+                    // Punch::where(['punch_id' => session('punch_id'), 'masa_pengukuran' => session('masa_pengukuran')])->update($updateStatus);
+
+                    Punch::updateOrCreate([
+                        'punch_id' => session('punch_id'),
+                        'masa_pengukuran' => 'pengukuran awal'
+                    ], [
                         'is_draft' => 0
-                    ];
-
-                    Punch::where(['punch_id' => session('punch_id'), 'masa_pengukuran' => session('masa_pengukuran')])->update($updateStatus);
-                    $this->send_to_approval($request->segment(2));
+                    ]);
+                    $this->send_to_approval($request->segment(3));
                 }
-                // dd($cekStatus);
 
-                return redirect('/data/' . $request->segment(2))->with($alert, $msg);
+                return redirect(route('pnd.pr.'.$route.'.index'))->with($alert, $msg);
 
-            } elseif ($request->segment(2) == 'dies') {
+            } elseif ($request->segment(3) == 'dies') {
                 $getData = PengukuranAwalDies::where([
                     'dies_id' => session('dies_id'),
                     'masa_pengukuran' => 'pengukuran awal',
@@ -731,9 +793,9 @@ class PengukuranController extends Controller
 
                 $getData->update($updateDraftStatus);
 
-                $cekStatus = PengukuranAwalDies::where([
+                $cekStatus = PengukuranRutinDies::where([
                     'dies_id' => session('dies_id'),
-                    'masa_pengukuran' => 'pengukuran awal',
+                    'masa_pengukuran' => session('masa_pengukuran'),
                     'is_draft' => '1'
                 ])->count();
 
@@ -742,18 +804,24 @@ class PengukuranController extends Controller
                     $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
                 } else {
                     $alert = 'success';
-                    $msg = 'Pengukuran Awal Selesai Dilakukan! Menunggu Approval dari Manager QA';
+                    $msg = session('masa_pengukuran') . ' Selesai Dilakukan! Menunggu Approval dari Manager QA';
 
-                    $updateStatus = [
+                    // $updateStatus = [
+                    //     'is_draft' => 0
+                    // ];
+                    // Dies::where(['dies_id' => session('dies_id'), 'masa_pengukuran' => 'pengukuran awal'])->update($updateStatus);
+
+                    Dies::updateOrCreate([
+                        'dies_id' => session('dies_id'), 
+                        'masa_pengukuran' => 'pengukuran awal'
+                    ],[
                         'is_draft' => 0
-                    ];
+                    ]);
 
-                    Dies::where(['dies_id' => session('dies_id'), 'masa_pengukuran' => 'pengukuran awal'])->update($updateStatus);
-                    $this->send_to_approval($request->segment(2));
+                    $this->send_to_approval($request->segment(3));
                 }
-                // dd($cekStatus);
 
-                return redirect('/data/' . $request->segment(2))->with($alert, $msg);
+                return redirect(route('pnd.pr.dies.index'))->with($alert, $msg);
             }
         }
     }
@@ -796,7 +864,7 @@ class PengukuranController extends Controller
         }elseif($jenis == 'dies'){
            //Approval Data
                 //AutoNumber for Request ID Approval
-                $autonum = $M_ApprDisposal->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
+                $autonum = $M_ApprPengukuran->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
                 if (!$autonum) {
                     $id = "RDI" . date("ymd") . "0001";
                 } else {
@@ -812,9 +880,10 @@ class PengukuranController extends Controller
                     'req_id' => $id,
                     'punch_id' => null,
                     'dies_id' => session('dies_id'),
+                    'masa_pengukuran' => session('masa_pengukuran'),
                     'user_id' => session('user_id'),
                     'tgl_submit' => $dateNow,
-                'due_date' => date('Y-m-d H:i:s', strtotime(date('Y-m-d 23:59:59') . " +6 days")),
+                    'due_date' => date('Y-m-d H:i:s', strtotime(date('Y-m-d 23:59:59') . " +6 days")),
                     'approved_by' => '-',
                     'approved_at' => null,  
                     'is_approved' => '-',
@@ -829,15 +898,21 @@ class PengukuranController extends Controller
     //Pengukuran Rutin
     public function cek_pengukuran_rutin(Request $request, $id)
     {
-        $pengukuran = $request->pilih_pengukuran;
-        if($pengukuran == null){
-            $dataPunch = Punch:: where('punch_id', $id)->latest()->first();
-            $masa_pengukuran = $dataPunch->masa_pengukuran;
-        }else{
-            $masa_pengukuran = $pengukuran;
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
         }
 
-        if ($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah') {
+        $pengukuran = $request->pilih_pengukuran;
+
+        if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
+            if ($pengukuran == null) {
+                $dataPunch = Punch::where('punch_id', $id)->latest()->first();
+                $masa_pengukuran = $dataPunch->masa_pengukuran;
+            } else {
+                $masa_pengukuran = $pengukuran;
+            }
             $cekPengukuran = PengukuranRutinPunch::
                                                 where('punch_id', $id)
                                                 ->where('masa_pengukuran', $masa_pengukuran)
@@ -854,7 +929,7 @@ class PengukuranController extends Controller
                     ->where('masa_pengukuran', $masa_pengukuran)
                     ->get();
                 }else{
-                    return redirect('/data/rutin/' . $request->segment(2) . '')->with('error', 'Data Pengukuran Awal Belum Selesai!');
+                    return redirect(route('pnd.pr.'.$route.'.index'))->with('error', 'Data Pengukuran Awal Belum Selesai!');
                 }
             }else{
                 $showPengukuranAll = PengukuranRutinPunch::query()
@@ -862,80 +937,163 @@ class PengukuranController extends Controller
                                                     ->where('masa_pengukuran', $masa_pengukuran)
                                                     ->get();
             }
-            // dd($showPengukuranAll);
 
             if (count($showPengukuranAll) == 0) {
-                return redirect('/data/rutin/' . $request->segment(2) . '')->with('error', 'Data Pengukuran Tidak ditemukan silahkan Buat Pengukuran!');
+                return redirect(route('pnd.pr.'.$route.'.index'))->with('error', 'Data Pengukuran Tidak ditemukan silahkan Buat Pengukuran!');
             } else {
                 session()->remove('count_num');
                 session()->put('punch_id', $id);
-                return redirect('/data/' . $request->segment(2) . '/pengukuran-rutin/view_pengukuran/' . session('punch_id'))->with('masa_pengukuran_view', $masa_pengukuran);
+                return redirect(route('pnd.pr.'.$route.'.view', session('punch_id')))->with('masa_pengukuran_view', $masa_pengukuran);
             }
-        } elseif ($request->segment(2) == 'dies') {
-            $showPengukuranAll = PengukuranRutinDies::where('dies_id', '=', $id)->get();
+        } elseif ($request->segment(3) == 'dies') {
+            if ($pengukuran == null) {
+                $dataDies = Dies::where('dies_id', $id)->latest()->first();
+                $masa_pengukuran = $dataDies->masa_pengukuran;
+            } else {
+                $masa_pengukuran = $pengukuran;
+            }
+            $cekPengukuran = PengukuranRutinDies::
+                where('dies_id', $id)
+                ->where('masa_pengukuran', $masa_pengukuran)
+                ->exists();
+            if (!$cekPengukuran) {
+                $is_draft = Dies::query()
+                    ->where('dies_id', $id)
+                    ->where('masa_pengukuran', $masa_pengukuran)
+                    ->where('is_draft', '1')
+                    ->exists();
+                if (!$is_draft) {
+                    $showPengukuranAll = PengukuranAwalDies::query()
+                        ->where('dies_id', '=', $id)
+                        ->where('masa_pengukuran', $masa_pengukuran)
+                        ->get();
+                } else {
+                    return redirect(route('pnd.pr.dies.index'))->with('error', 'Data Pengukuran Awal Belum Selesai!');
+                }
+            } else {
+                $showPengukuranAll = PengukuranRutinDies::query()
+                    ->where('dies_id', '=', $id)
+                    ->where('masa_pengukuran', $masa_pengukuran)
+                    ->get();
+            }
 
             if (count($showPengukuranAll) == 0) {
-                return redirect('/data/rutin/' . $request->segment(2) . '')->with('error', 'Data Pengukuran Tidak ditemukan silahkan Buat Pengukuran!');
+                return redirect('pnd.pr.dies.index')->with('error', 'Data Pengukuran Tidak ditemukan silahkan Buat Pengukuran!');
             } else {
                 session()->remove('count_num');
-                session()->put('dies_id', $request->segment(5));
-                return redirect('/data/' . $request->segment(2) . '/pengukuran-rutin/view_pengukuran/' . session('dies_id'));
+                session()->put('dies_id', $id);
+                return redirect('pnd.pr.dies.view', session('dies_id'));
             }
         }
     }
     public function opsi_pengukuran(Request $request,$id)
     {
-        $dataPunch = Punch::where(['punch_id'=> $id, 'is_draft' => '1'])->latest()->first();
-        // dd($dataPunch);
-        if($dataPunch == null){
-            $query = M_ApprPengukuran::query()->where('punch_id', $id);
-            //Cek Data Approval ada / tidak
-            $cekApproval = $query->exists();
-            if ($cekApproval) {
-                //Get Data Approval 
-                $dataApproval = $query->latest()->first();
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
 
-                if ($dataApproval->is_approved == '-') { // Jika Data Pengukuran Belum diapprove tidak bisa buat pengukuran baru
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Data Pengukuran belum di Approve!',
-                    ]);
-                } elseif ($dataApproval->is_approved == '0') {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Pengukuran Tidak Dapat Dilakukan Karena Data Gagal diApprove!',
-                    ]);
-                }else{
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Data Pengukuran Baru',
-                    ]);
+        if($request->segment(3) == 'punch-atas' || $request->segment(3) == 'punch-bawah'){
+            $dataPunch = Punch::where(['punch_id' => $id, 'is_draft' => '1'])->latest()->first();
+            // dd($dataPunch);
+            if ($dataPunch == null) {
+                $query = M_ApprPengukuran::query()->where('punch_id', $id);
+                //Cek Data Approval ada / tidak
+                $cekApproval = $query->exists();
+                if ($cekApproval) {
+                    //Get Data Approval 
+                    $dataApproval = $query->latest()->first();
+
+                    if ($dataApproval->is_approved == '-') { // Jika Data Pengukuran Belum diapprove tidak bisa buat pengukuran baru
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Data Pengukuran belum di Approve!',
+                        ]);
+                    } elseif ($dataApproval->is_approved == '0') {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Pengukuran Tidak Dapat Dilakukan Karena Data Gagal diApprove!',
+                        ]);
+                    } else {
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Data Pengukuran Baru',
+                        ]);
+                    }
                 }
-            }
-        }else{
-            if ($dataPunch->masa_pengukuran == 'pengukuran awal') {
-                return response()->json([
-                    'isdraft' => true,
-                    'status' => 'awal',
-                    'success' => false,
-                    'message' => 'Pengukuran Awal Belum Selesai!',
-                ]);
-            }else{
-                if ($dataPunch != null) {
+            } else {
+                if ($dataPunch->masa_pengukuran == 'pengukuran awal') {
                     return response()->json([
                         'isdraft' => true,
-                        'status' => 'rutin',
+                        'status' => 'awal',
                         'success' => false,
-                        'message' => 'Pengukuran Sebelumnya belum diselesaikan! lanjutkan pengukuran?',
-                        'url' => '/data/' . $request->segment(2) . '/pengukuran-rutin/cek_pengukuran/' . $id
+                        'message' => 'Pengukuran Awal Belum Selesai!',
                     ]);
+                } else {
+                    if ($dataPunch != null) {
+                        return response()->json([
+                            'isdraft' => true,
+                            'status' => 'rutin',
+                            'success' => false,
+                            'message' => 'Pengukuran Sebelumnya belum diselesaikan! lanjutkan pengukuran?',
+                            'url' => route('pnd.pr.' . $route . '.cek-pengukuran', $id),
+                        ]);
+                    }
+                }
+            }
+        }elseif($request->segment(3) == 'dies'){
+            $dataDies = Dies::where(['dies_id' => $id, 'is_draft' => '1'])->latest()->first();
+            if ($dataDies == null) {
+                $query = M_ApprPengukuran::query()->where('dies_id', $id);
+                //Cek Data Approval ada / tidak
+                $cekApproval = $query->exists();
+                if ($cekApproval) {
+                    //Get Data Approval 
+                    $dataApproval = $query->latest()->first();
+
+                    if ($dataApproval->is_approved == '-') { // Jika Data Pengukuran Belum diapprove tidak bisa buat pengukuran baru
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Data Pengukuran belum di Approve!',
+                        ]);
+                    } elseif ($dataApproval->is_approved == '0') {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Pengukuran Tidak Dapat Dilakukan Karena Data Gagal diApprove!',
+                        ]);
+                    } else {
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Data Pengukuran Baru',
+                        ]);
+                    }
+                }
+            } else {
+                if ($dataDies->masa_pengukuran == 'pengukuran awal') {
+                    return response()->json([
+                        'isdraft' => true,
+                        'status' => 'awal',
+                        'success' => false,
+                        'message' => 'Pengukuran Awal Belum Selesai!',
+                    ]);
+                } else {
+                    if ($dataDies != null) {
+                        return response()->json([
+                            'isdraft' => true,
+                            'status' => 'rutin',
+                            'success' => false,
+                            'message' => 'Pengukuran Sebelumnya belum diselesaikan! lanjutkan pengukuran?',
+                            'url' => route('pnd.pr.dies.cek-pengukuran', $id),
+                        ]);
+                    }
                 }
             }
         }
     }
     public function info_pengukuran(Request $request,$id)
     {
-        if($request->segment(2) == 'punch-atas' or $request->segment(2) =='punch-bawah'){
+        if($request->segment(3) == 'punch-atas' or $request->segment(3) =='punch-bawah'){
             $dataPunch = Punch::where('punch_id', $id)->latest()->first();
             $pengukuran = $dataPunch->masa_pengukuran;
             if($dataPunch->masa_pengukuran == "pengukuran awal"){
@@ -967,13 +1125,42 @@ class PengukuranController extends Controller
                 'masa_pengukuran' => $masa_pengukuran,
                 'data' => $dataPengukuran
             ]);
-        }elseif($request->segment(2) == 'dies'){
-
+        }elseif($request->segment(3) == 'dies'){
+            $dataDies = Dies::where('dies_id', $id)->latest()->first();
+            $pengukuran = $dataDies->masa_pengukuran;
+            if ($dataDies->masa_pengukuran == "pengukuran awal") {
+                $dataPengukuran = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.diess_id')
+                    ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
+                    ->where('diess.dies_id', $id)
+                    ->orderby('pengukuran_awal_diess.diess_id', 'desc')
+                    ->first();
+            } else {
+                $dataPengukuran = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
+                    ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
+                    ->where('diess.dies_id', $id)
+                    ->orderby('diess.dies_id', 'desc')
+                    ->orderBy('diess.id', 'desc')
+                    ->first();
+            }
+            if ($pengukuran == "pengukuran awal") {
+                $masa_pengukuran = "pengukuran rutin 1";
+            } else {
+                $noUrut = (int) substr($pengukuran, 17);
+                $masa_pengukuran = 'pengukuran rutin ' . $noUrut + 1;
+            }
+            // dd($dataPengukuran);
+            return response()->json([
+                'success' => true,
+                'message' => 'Punch Data',
+                'masa_pengukuran_pre' => $pengukuran,
+                'masa_pengukuran' => $masa_pengukuran,
+                'data' => $dataPengukuran
+            ]);
         }
     }
     public function pilih_pengukuran(Request $request, $id) 
     {
-        if($request->segment(2) == 'punch-atas' or $request->segment(2) =='punch-bawah'){
+        if($request->segment(3) == 'punch-atas' or $request->segment(3) =='punch-bawah'){
             $dataPunch = Punch::where('punch_id', $id)->get();
             
             $arrayData = json_decode($dataPunch, true);
@@ -981,29 +1168,41 @@ class PengukuranController extends Controller
                 // dd($data['masa_pengukuran']);
                 echo '<option value="'.$data['masa_pengukuran'].'">'.$data['masa_pengukuran'].'</option>';
             }
-        }elseif($request->segment(2) == 'dies'){
+        }elseif($request->segment(3) == 'dies'){
+            $dataDies = Dies::where('dies_id', $id)->get();
 
+            $arrayData = json_decode($dataDies, true);
+            foreach ($arrayData as $data) {
+                // dd($data['masa_pengukuran']);
+                echo '<option value="' . $data['masa_pengukuran'] . '">' . $data['masa_pengukuran'] . '</option>';
+            }
         }
     }
     public function view_pengukuran_rutin(Request $request, $id)
     {
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
+
         session()->remove('create_id');
         session()->remove('masa_pengukuran_pre');
-        if ($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah') {
-            if ($request->segment(2) == 'punch-atas') {
+        if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
+            if ($request->segment(3) == 'punch-atas') {
                 $data['jenisPunch'] = 'Punch Atas';
                 $data['jenis'] = 'punch-atas';
-            } elseif ($request->segment(2) == 'punch-bawah') {
+                $data['route'] = 'atas';
+            } elseif ($request->segment(3) == 'punch-bawah') {
                 $data['jenisPunch'] = 'Punch Bawah';
                 $data['jenis'] = 'punch-bawah';
+                $data['route'] = 'bawah';
             }
 
             $cekDraft = Punch::where('punch_id', '=', $id)
                         ->where('masa_pengukuran', session('masa_pengukuran_view'))
                         ->first();
-            // dd($cekDraft);
             $pengukuran = $cekDraft->masa_pengukuran;
-            // dd($pengukuran);
             if($pengukuran == "pengukuran rutin 1"){
                 $masa_pengukuran_pre = "pengukuran awal";
                 $masa_pengukuran = $pengukuran;
@@ -1012,7 +1211,6 @@ class PengukuranController extends Controller
                 $masa_pengukuran_pre = 'pengukuran rutin ' . $noUrut - 1;
                 $masa_pengukuran = $pengukuran;
             }
-            // dd($masa_pengukuran_pre);
             if ($cekDraft->is_draft == '1') {
                 session()->remove('jumlah_punch');
                 session()->remove('punch_id');
@@ -1027,7 +1225,7 @@ class PengukuranController extends Controller
                 session()->put('masa_pengukuran_pre', $masa_pengukuran_pre);
                 session()->put('masa_pengukuran', $masa_pengukuran);
 
-                return redirect('/data/' . $request->segment(2) . '/pengukuran-rutin/form_pengukuran');
+                return redirect(route('pnd.pr.'.$route.'.form'));
             } else {
                 if($pengukuran == 'pengukuran awal'){
                     $LabelPunch = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
@@ -1039,7 +1237,7 @@ class PengukuranController extends Controller
                     $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
                         ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
                         ->where('punchs.punch_id', $id)
-                        ->where('punchs.masa_pengukuran', session('masa_pengukuran_view'))
+                        ->where('pengukuran_rutin_punchs.masa_pengukuran', session('masa_pengukuran_view'))
                         ->first();
                     $data['labelPunch'] = $LabelPunch;
                 }
@@ -1079,25 +1277,24 @@ class PengukuranController extends Controller
 
                     return view('operator.data.view.pengukuran-punch', $data);
                 }
-
-                // if (!$cekPengukuran) {
-                //     $dataPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
-                //     $data['tglPengukuran'] = $dataPengukuran;
-                //     $showPengukuranAll = PengukuranAwalPunch::where('punch_id', '=', $id)->get();
-                //     $data['dataPengukuran'] = $showPengukuranAll;
-                // } else {
-                //     $dataPengukuran = PengukuranRutinPunch::where('punch_id', '=', $id)->first();
-                //     $data['tglPengukuran'] = $dataPengukuran;
-                //     $showPengukuranAll = PengukuranRutinPunch::where('punch_id', '=', $id)->get();
-                //     $data['dataPengukuran'] = $showPengukuranAll;
-                // }
             }
-        } elseif ($request->segment(2) == 'dies') {
+        } elseif ($request->segment(3) == 'dies') {
             $data['jenis'] = 'dies';
 
-            $cekDraft = Dies::where('id', '=', $id)->first();
+            $cekDraft = Dies::where('dies_id', '=', $id)
+                ->where('masa_pengukuran', session('masa_pengukuran_view'))
+                ->first();
+            $pengukuran = $cekDraft->masa_pengukuran;
+            if ($pengukuran == "pengukuran rutin 1") {
+                $masa_pengukuran_pre = "pengukuran awal";
+                $masa_pengukuran = $pengukuran;
+            } else {
+                $noUrut = (int) substr($pengukuran, 17);
+                $masa_pengukuran_pre = 'pengukuran rutin ' . $noUrut - 1;
+                $masa_pengukuran = $pengukuran;
+            }
             if ($cekDraft->is_draft == '1') {
-                session()->remove('jumlah_dies');
+                session()->remove('jumlah_punch');
                 session()->remove('dies_id');
                 session()->remove('count');
                 session()->remove('show_id');
@@ -1105,21 +1302,29 @@ class PengukuranController extends Controller
                 session()->put('first_id', 0);
                 session()->put('dies_id', $id);
 
-                $jumlahDies = M_Pengukuran_Dies::where('dies_id', '=', $id)->count();
-                session()->put('jumlah_dies', $jumlahDies);
+                $jumlahPunch = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
+                session()->put('jumlah_punch', $jumlahPunch);
+                session()->put('masa_pengukuran_pre', $masa_pengukuran_pre);
+                session()->put('masa_pengukuran', $masa_pengukuran);
 
-                return redirect('/data/' . $request->segment(2) . '/pengukuran-awal/form_pengukuran');
+                return redirect(route('pnd.pr.dies.form'));
             } else {
-                // session()->remove('count');
-                $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
-                    ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
-                    ->where('diess.dies_id', $id)->first();
-                $data['labelDies'] = $LabelDies;
+                if ($pengukuran == 'pengukuran awal') {
+                    $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.punch_id')
+                        ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
+                        ->where('diess.dies_id', $id)
+                        ->first();
+                    $data['labelDies'] = $LabelDies;
+                } else {
+                    $LabelDies = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
+                        ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
+                        ->where('diess.dies_id', $id)
+                        ->where('pengukuran_rutin_diess.masa_pengukuran', session('masa_pengukuran_view'))
+                        ->first();
+                    $data['labelDies'] = $LabelDies;
+                }
 
-                $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
-                $data['tglPengukuran'] = $dataPengukuran;
-
-                $checkStatus = PengukuranAwalDies::where(['dies_id' => $id, 'is_draft' => '1'])->count();
+                $checkStatus = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view'), 'is_draft' => '1'])->count();
                 if ($checkStatus != 0) {
                     $status = "<span class='badge badge-light-warning fs-3'>Draft</span>";
                 } else {
@@ -1132,17 +1337,39 @@ class PengukuranController extends Controller
                 } else {
                     $start_id = session('show_id');
                 }
-                $showPengukuranAll = PEngukuranAwalDies::where('dies_id', '=', $id)->get();
 
-                $data['dataPengukuran'] = $showPengukuranAll;
-                return view('engineer.data.view.pengukuran-dies', $data);
+                $cekPengukuran = PengukuranRutinDies::query()
+                    ->where('dies_id', $id)
+                    ->where('masa_pengukuran', '=', session('masa_pengukuran_view'))
+                    ->exists();
+
+                if (!$cekPengukuran) {
+                    $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
+                    $data['tglPengukuran'] = $dataPengukuran;
+                    $showPengukuranAll = PengukuranAwalDies::where('dies_id', '=', $id)->get();
+                    $data['dataPengukuran'] = $showPengukuranAll;
+
+                    return view('engineer.data.view.pengukuran-dies', $data);
+                } else {
+                    $dataPengukuran = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->first();
+                    $data['tglPengukuran'] = $dataPengukuran;
+                    $showPengukuranAll = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->get();
+                    $data['dataPengukuran'] = $showPengukuranAll;
+
+                    return view('operator.data.view.pengukuran-dies', $data);
+                }
             }
         }
     }
     public function create_data_pengukuran_rutin(Request $request, $id)
     {
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
         //Buat Data Pengukuran Untuk Punch
-        if ($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah') {
+        if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
             $dataPunch = Punch::where('punch_id', $id)->latest()->first();
             $pengukuran = $dataPunch->masa_pengukuran;
             if($dataPunch->masa_pengukuran == "pengukuran awal"){
@@ -1187,16 +1414,6 @@ class PengukuranController extends Controller
                 'is_approved' => '-',
                 'is_rejected' => '-',
             ];
-            //Data Audit
-            // $logdate = date('Y-m-d H:i:s');
-            // $dataAudit = [
-            //     'event' => 'Punch Created',
-            //     'logdate' => $logdate,
-            //     'user_id' => session('user_id'),
-            //     'line' => session('line_user'),
-            //     'category' => 'Create',
-            //     'detail' => 'User ' . session('username') . ', Create Punch "' . $merk . '", ' . $logdate,
-            // ];
             session()->put('punch_id', $dataPunch->punch_id);
             Punch::create($createData);
 
@@ -1233,46 +1450,69 @@ class PengukuranController extends Controller
             session()->remove('count_num');
             session()->remove('start_count');
 
-            return redirect('/data/' . $request->segment(2) . '/pengukuran-rutin/form_pengukuran');
+            return redirect(route('pnd.pr.'.$route.'.form'));
 
-        } elseif ($request->segment(2) == 'dies') {        //Buat Data Pengukuran Untuk Dies
-            $jmlDies = $request->jumlah_data_dies;
+        } elseif ($request->segment(3) == 'dies') {  
+            //Buat Data Pengukuran Untuk Dies
+            $dataDies = Dies::where('dies_id', $id)->latest()->first();
+            $pengukuran = $dataDies->masa_pengukuran;
+            if ($dataDies->masa_pengukuran == "pengukuran awal") {
+                $jmlDies = PengukuranAwalDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
+            } else {
+                $jmlDies = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
+            }
 
             session()->put('jumlah_dies', $jmlDies);
 
-            $create_id = session('create_id');
+            if ($pengukuran == "pengukuran awal") {
+                $masa_pengukuran_pre = "pengukuran awal";
 
-            if ($create_id == null) {
-                $dataDies = Dies::where([
-                    'merk' => session('merk'),
-                    'bulan_pembuatan' => session('bulan_pembuatan'),
-                    'tahun_pembuatan' => session('tahun_pembuatan'),
-                    'nama_mesin_cetak' => session('nama_mesin_cetak'),
-                    'nama_produk' => session('nama_produk'),
-                    'kode_produk' => session('kode_produk'),
-                    'line_id' => session('line_id'),
-                    'jenis' => session('jenis'),
-                ])->first();
+                $masa_pengukuran = "pengukuran rutin 1";
+                $updateMasaPengukuran = [
+                    'masa_pengukuran' => $masa_pengukuran,
+                ];
             } else {
-                $dataDies = Dies::where('id', '=', $create_id)->first();
+                $noUrut = (int) substr($pengukuran, 17);
+                $masa_pengukuran_pre = $pengukuran;
+                $masa_pengukuran = 'pengukuran rutin ' . $noUrut + 1;
+                $updateMasaPengukuran = [
+                    'masa_pengukuran' => $masa_pengukuran,
+                ];
             }
 
-            $updateMasaPengukuran = [
-                'masa_pengukuran' => 'pengukuran awal'
+            $createData = [
+                'dies_id' => $dataDies->punch_id,
+                'merk' => $dataDies->merk,
+                'bulan_pembuatan' => $dataDies->bulan_pembuatan,
+                'tahun_pembuatan' => $dataDies->tahun_pembuatan,
+                'nama_mesin_cetak' => $dataDies->nama_mesin_cetak,
+                'nama_produk' => $dataDies->nama_produk,
+                'kode_produk' => $dataDies->kode_produk,
+                'line_id' => $dataDies->line_id,
+                'jenis' => $dataDies->jenis,
+                'masa_pengukuran' => $masa_pengukuran,
+                'is_draft' => '1',
+                'is_delete_punch' => '0',
+                'is_edit' => '0',
+                'is_approved' => '-',
+                'is_rejected' => '-',
             ];
-            Dies::where('id', '=', $dataDies->dies_id)->update($updateMasaPengukuran);
+            session()->put('dies_id', $dataDies->punch_id);
+            Dies::create($createData);
+
+            $dies_id = Dies::latest()->first()->dies_id;
 
             for ($i = 1; $i <= $jmlDies; $i++) {
                 $createDraftPengukuran = [
                     'dies_id' => $dataDies->dies_id,
-                    'user_id' => session('user_id'),
-                    'outer_diameter' => 0,
-                    'inner_diameter_1' => 0,
-                    'inner_diameter_2' => 0,
-                    'ketinggian_dies' => 0,
+                    'user_id' => auth()->user()->id,
+                    'outer_diameter' => null,
+                    'inner_diameter_1' => null,
+                    'inner_diameter_2' => null,
+                    'ketinggian_dies' => null,
                     'visual' => '-',
                     'kesesuaian_dies' => '-',
-                    'masa_pengukuran' => 'pengukuran awal',
+                    'masa_pengukuran' => $masa_pengukuran,
                     'note' => '',
                     'is_draft' => '1',
                     'is_delete_pd' => '0',
@@ -1280,27 +1520,34 @@ class PengukuranController extends Controller
                     'is_approved' => '-',
                     'is_rejected' => '-',
                 ];
-                M_Pengukuran_Dies::create($createDraftPengukuran);
+                PengukuranRutinDies::create($createDraftPengukuran);
             }
 
-            session()->put('dies_id', $dataDies->dies_id);
+            session()->put('dies_id', $dies_id);
             session()->put('first_id', 0);
+            session()->put('masa_pengukuran', $masa_pengukuran);
+            session()->put('masa_pengukuran_pre', $masa_pengukuran_pre);
             session()->remove('show_id');
             session()->remove('count');
             session()->remove('count_num');
             session()->remove('start_count');
 
-            return redirect('/data/' . $request->segment(2) . '/pengukuran-awal/form_pengukuran');
+            return redirect(route('pnd.pr.dies.form'));
         }
     }
     public function form_pengukuran_rutin(Request $request)
     {
-        $id = session('punch_id');
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
         $pengukuran_pre = session('masa_pengukuran_pre');
         $pengukuran = session('masa_pengukuran');
         // dd($pengukuran_pre);
         session()->remove('create_id');
-        if ($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah') {
+        if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
+            $id = session('punch_id');
             $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
                 ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
                 ->select('punchs.*', 'pengukuran_rutin_punchs.*', 'users.*',
@@ -1314,12 +1561,14 @@ class PengukuranController extends Controller
 
             $data['tglPengukuran'] = PengukuranRutinPunch::where('punch_id', $id)->latest()->first();
 
-            if ($request->segment(2) == 'punch-atas') {
+            if ($request->segment(3) == 'punch-atas') {
                 $data['jenisPunch'] = 'Punch Atas';
                 $data['jenis'] = 'punch-atas';
-            } elseif ($request->segment(2) == 'punch-bawah') {
+                $data['route'] = 'atas';
+            } elseif ($request->segment(3) == 'punch-bawah') {
                 $data['jenisPunch'] = 'Punch Bawah';
                 $data['jenis'] = 'punch-bawah';
+                $data['route'] = 'bawah';
             }
 
             $checkStatus = PengukuranRutinPunch::where(['punch_id' => $id, 'is_draft' => '1'])->count();
@@ -1339,7 +1588,7 @@ class PengukuranController extends Controller
             //menampilkan hasil pengukuran sebelumnya
             if($pengukuran_pre == "pengukuran awal"){
                 $showPengukuranPre = PengukuranAwalPunch::where("punch_id",$id)
-                    ->orderBy('id')
+                    ->orderBy('no')
                     ->limit(10)
                     ->get();
                 $data['draftPengukuranPre'] = $showPengukuranPre;
@@ -1347,22 +1596,21 @@ class PengukuranController extends Controller
                 $showPengukuranPre = PengukuranRutinPunch::query()
                     ->where('punch_id', $id)
                     ->where('masa_pengukuran', $pengukuran_pre)
-                    ->where('id','>', $start_id)
+                    ->where('no','>', $start_id)
                     // ->whereRaw("punch_id = " . $id . " AND masa_pengukuran = '" . $pengukuran_pre . "'" . " AND id > " . $start_id)
-                ->orderBy('id')
+                ->orderBy('no')
                 ->limit(10)
                 ->get();
                 $data['draftPengukuranPre'] = $showPengukuranPre;
             }
-            // dd($showPengukuranPre[0]);
             
             //menampilkan form pengukuran yang akan dibuat
             $showPengukuranAll = PengukuranRutinPunch::query()
                                                 ->where('punch_id', session('punch_id'))
                                                 ->where('masa_pengukuran', session('masa_pengukuran'))
-                                                ->where('id','>', $start_id)
+                                                ->where('no','>', $start_id)
                                                 // ->whereRaw("punch_id = " . session('punch_id') . " AND masa_pengukuran = '".session('masa_pengukuran')."'". " AND id > " . $start_id)
-                                                ->orderBy('id')
+                                                ->orderBy('no')
                                                 ->limit(10)
                                                 ->get();
             $data['draftPengukuran'] = $showPengukuranAll;
@@ -1384,18 +1632,27 @@ class PengukuranController extends Controller
 
             return view('operator.data.form.pengukuran-punch', $data);
 
-        } elseif ($request->segment(2) == 'dies') {
-            $LabelDies = Dies::leftJoin('tbl_pengukuran_dies', 'diess.dies_id', '=', 'tbl_pengukuran_dies.dies_id')
-                ->leftJoin('users', 'tbl_pengukuran_dies.user_id', '=', 'users.id')
-                ->where('diess.dies_id', session('dies_id'))->first();
+        } elseif ($request->segment(3) == 'dies') {
+            $id = session('punch_id');
+            $LabelDies = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.punch_id')
+                ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
+                ->select(
+                    'punchs.*',
+                    'pengukuran_rutin_diess.*',
+                    'users.*',
+                    'punchs.masa_pengukuran AS punch_masa_pengukuran'
+                )
+                ->where('diess.dies_id', $id)
+                ->where('pengukuran_rutin_diess.masa_pengukuran', $pengukuran)
+                ->orderBy('diess.created_at', 'desc')
+                ->first();
             $data['labelDies'] = $LabelDies;
 
-            $dataPengukuran = M_Pengukuran_Dies::where('dies_id', '=', session('dies_id'))->first();
-            $data['tglPengukuran'] = $dataPengukuran;
+            $data['tglPengukuran'] = PengukuranRutinDies::where('dies_id', $id)->latest()->first();
 
             $data['jenis'] = 'dies';
 
-            $checkStatus = M_Pengukuran_Dies::where(['dies_id' => session('dies_id'), 'is_draft' => '1'])->count();
+            $checkStatus = PengukuranRutinDies::where(['dies_id' => $id, 'is_draft' => '1'])->count();
             if ($checkStatus != 0) {
                 $status = "<span class='badge badge-light-warning fs-3'>Draft</span>";
             } else {
@@ -1408,8 +1665,18 @@ class PengukuranController extends Controller
             } else {
                 $start_id = session('show_id');
             }
-            $showPengukuranAll = M_Pengukuran_Dies::whereRaw('dies_id = ' . session('dies_id') . ' AND id > ' . $start_id)->orderBy('id')->limit(10)->get();
+
+            //menampilkan form pengukuran yang akan dibuat
+            $showPengukuranAll = PengukuranRutinDies::query()
+                ->where('punch_id', session('dies_id'))
+                ->where('masa_pengukuran', session('masa_pengukuran'))
+                ->where('no', '>', $start_id)
+                // ->whereRaw("punch_id = " . session('punch_id') . " AND masa_pengukuran = '".session('masa_pengukuran')."'". " AND id > " . $start_id)
+                ->orderBy('no')
+                ->limit(10)
+                ->get();
             $data['draftPengukuran'] = $showPengukuranAll;
+
             $data['count'] = count($showPengukuranAll);
             $count = count($showPengukuranAll) + session('count');
             $data['page'] = $count;
@@ -1425,17 +1692,22 @@ class PengukuranController extends Controller
             session()->remove('start_count');
             session()->put('start_count', $count);
 
-            return view('engineer.data.form.pengukuran-dies', $data);
+            return view('operator.data.form.pengukuran-dies', $data);
         }
     }
 
     public function simpan_pengukuran_rutin(Request $request)
     {
-        if ($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah') {
-            if ($request->segment(2) == 'punch-atas') {
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
+        if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
+            if ($request->segment(3) == 'punch-atas') {
                 $data['jenisPunch'] = 'Punch Atas';
                 $data['jenis'] = 'punch-atas';
-            } elseif ($request->segment(2) == 'punch-bawah') {
+            } elseif ($request->segment(3) == 'punch-bawah') {
                 $data['jenisPunch'] = 'Punch Bawah';
                 $data['jenis'] = 'punch-bawah';
             }
@@ -1444,15 +1716,8 @@ class PengukuranController extends Controller
             session()->remove('show_id');
             session()->remove('count_num');
             if (session('jumlah_punch') <= session('page')) {
-                // $last_id = $request->last_id;
-                // $count_num = $request->count_num;
-                // session()->put('count_num', $count_num + 1);
                 session()->remove('show_id');
                 session()->put('show_id', session('first_id'));
-                // dd(session('show_id'));
-                // $count = session('start_count') + session('count');
-                // $count = session('count');
-                // session()->put('count', $count);
 
                 $update_id = $request->update_id;
                 $ovl = $request->ovl;
@@ -1470,7 +1735,7 @@ class PengukuranController extends Controller
                         'cup_depth' => $cup[$i],
                         'head_configuration' => $hcf[$i],
                     ];
-                    PengukuranRutinPunch::where('id', $update_id[$i])->latest()->update($createDraftPengukuran);
+                    PengukuranRutinPunch::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
                     $i++;
                 }
 
@@ -1503,27 +1768,20 @@ class PengukuranController extends Controller
                         'cup_depth' => $cup[$i],
                         'head_configuration' => $hcf[$i],
                     ];
-                    PengukuranRutinPunch::where('id', $update_id[$i])->latest()->update($createDraftPengukuran);
+                    PengukuranRutinPunch::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
                     $i++;
                 }
-                return redirect('/data/' . $request->segment(2) . '/pengukuran-rutin/form_pengukuran');
+                return redirect(route('pnd.pr.' . $route . '.show-form'));
             }
-        } elseif ($request->segment(2) == 'dies') {
+        } elseif ($request->segment(3) == 'dies') {
             $data['jenis'] = 'dies';
 
             session()->remove('count');
             session()->remove('show_id');
             session()->remove('count_num');
             if (session('jumlah_dies') <= session('page')) {
-                // $last_id = $request->last_id;
-                // $count_num = $request->count_num;
-                // session()->put('count_num', $count_num + 1);
                 session()->remove('show_id');
                 session()->put('show_id', session('first_id'));
-                // dd(session('show_id'));
-                // $count = session('start_count') + session('count');
-                // $count = session('count');
-                // session()->put('count', $count);
 
                 $update_id = $request->update_id;
                 $otd = $request->otd;
@@ -1543,10 +1801,10 @@ class PengukuranController extends Controller
                         'visual' => $vis[$i],
                         'kesesuaian_dies' => $ksd[$i],
                     ];
-                    M_Pengukuran_Dies::where('id', $update_id[$i])->update($createDraftPengukuran);
+                    PengukuranRutinDies::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
                     $i++;
                 }
-                // return redirect('/data/'.$request->segment(2).'')->with('success', 'Pengukuran Awal Selesai Dilakukan!');
+                // return redirect('/data/'.$request->segment(3).'')->with('success', 'Pengukuran Awal Selesai Dilakukan!');
 
             } elseif (session('jumlah_dies') > session('page')) {
                 $last_id = $request->last_id;
@@ -1578,10 +1836,10 @@ class PengukuranController extends Controller
                         'visual' => $vis[$i],
                         'kesesuaian_dies' => $ksd[$i],
                     ];
-                    M_Pengukuran_Dies::where('id', $update_id[$i])->update($createDraftPengukuran);
+                    PengukuranRutinDies::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
                     $i++;
                 }
-                return redirect('/data/' . $request->segment(2) . '/pengukuran-awal/form_pengukuran');
+                return redirect(route('pnd.pr.dies.show-form'));
             }
         }
     }
@@ -1612,11 +1870,16 @@ class PengukuranController extends Controller
 
     public function add_note_rutin(Request $request)
     {
-        if ($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah') {
-            if ($request->segment(2) == 'punch-atas') {
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
+        if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
+            if ($request->segment(3) == 'punch-atas') {
                 $data['jenisPunch'] = 'Punch Atas';
                 $data['jenis'] = 'punch-atas';
-            } elseif ($request->segment(2) == 'punch-bawah') {
+            } elseif ($request->segment(3) == 'punch-bawah') {
                 $data['jenisPunch'] = 'Punch Bawah';
                 $data['jenis'] = 'punch-bawah';
             }
@@ -1624,42 +1887,64 @@ class PengukuranController extends Controller
             session()->remove('count');
             session()->remove('count_num');
             $note = $request->note;
-            $createDraftPengukuran = [
-                'note' => $note,
-            ];
-            PengukuranRutinPunch::where([
-                'punch_id' => session('punch_id'),
-                'masa_pengukuran' => session('masa_pengukuran')
-            ])->update($createDraftPengukuran);
+            // $createDraftPengukuran = [
+            //     'note' => $note,
+            // ];
+            // PengukuranRutinPunch::where([
+            //     'punch_id' => session('punch_id'),
+            //     'masa_pengukuran' => session('masa_pengukuran')
+            // ])->update($createDraftPengukuran);
 
-            return redirect('/data/' . $request->segment(2) . '/pengukuran-rutin/set-status');
-        } elseif ($request->segment(2) == 'dies') {
+            PengukuranRutinPunch::updateOrCreate(
+                [
+                    'punch_id' => session('punch_id'),
+                    'masa_pengukuran' => session('masa_pengukuran')
+                ],
+                [
+                    'note' => $note,
+                ]
+            );
+
+            return redirect(route('pnd.pr.' . $route . '.draft'));
+        } elseif ($request->segment(3) == 'dies') {
             $data['jenis'] = 'dies';
 
             session()->remove('show_id');
             session()->remove('count');
             session()->remove('count_num');
             $note = $request->note;
-            $createDraftPengukuran = [
-                'note' => $note,
-            ];
-            PengukuranRutinDies::where([
+            // $createDraftPengukuran = [
+            //     'note' => $note,
+            // ];
+            // PengukuranRutinDies::where([
+            //     'dies_id' => session('dies_id'),
+            //     'masa_pengukuran' => session('masa_pengukuran')
+            // ])->update($createDraftPengukuran);
+            PengukuranRutinDies::updateOrCreate([
                 'dies_id' => session('dies_id'),
-                'masa_pengukuran' => session('masa_pengukuran')
-            ])->update($createDraftPengukuran);
+                'masa_pengukuran' => session('masa_pengukuran')],
+                [
+                    'note' => $note,
+                ]);
 
-            return redirect('/data/' . $request->segment(2) . '/pengukuran-rutin/set-status');
+            return redirect(route('pnd.pr.dies.draft'));
         }
     }
     public function set_draft_status_rutin(Request $request)
     {
+
+        if ($request->segment(3) == 'punch-atas') {
+            $route = 'atas';
+        } elseif ($request->segment(3) == 'punch-bawah') {
+            $route = 'bawah';
+        }
 
         session()->remove('first_id');
         $updateDraftStatus = [
             'is_draft' => 0,
         ];
 
-        if ($request->segment(2) == 'punch-atas' or $request->segment(2) == 'punch-bawah') {
+        if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
             $getData = PengukuranRutinPunch::where([
                 'punch_id' => session('punch_id'),
                 'masa_pengukuran' => session('masa_pengukuran'),
@@ -1681,36 +1966,36 @@ class PengukuranController extends Controller
                 $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
             } else {
                 $alert = 'success';
-                $msg = 'Pengukuran Awal Selesai Dilakukan! Menunggu Approval dari Manager QA';
+                $msg = 'Pengukuran Awal Selesai Dilakukan! Menunggu Approve';
 
                 $updateStatus = [
                     'is_draft' => 0
                 ];
 
                 Punch::where('punch_id', '=', session('punch_id'))->update($updateStatus);
-                $this->send_to_approval_rutin($request->segment(2));
+                $this->send_to_approval_rutin($request->segment(3));
             }
             // dd($cekStatus);
 
-            return redirect('/data/rutin/' . $request->segment(2))->with($alert, $msg);
+            return redirect(route('pnd.pr.'.$route.'.index'))->with($alert, $msg);
 
-        } elseif ($request->segment(2) == 'dies') {
-            $getData = M_Pengukuran_Dies::where([
+        } elseif ($request->segment(3) == 'dies') {
+            $getData = PengukuranRutinDies::where([
                 'dies_id' => session('dies_id'),
-                'masa_pengukuran' => 'pengukuran awal',
+                'masa_pengukuran' => session('masa_pengukuran'),
             ])
-                ->where('outer_diameter', '!=', '0')
-                ->where('inner_diameter_1', '!=', '0')
-                ->where('inner_diameter_2', '!=', '0')
-                ->where('ketinggian_dies', '!=', '0')
+                ->where('outer_diameter', '!=', null)
+                ->where('inner_diameter_1', '!=', null)
+                ->where('inner_diameter_2', '!=', null)
+                ->where('ketinggian_dies', '!=', null)
                 ->where('visual', '!=', '-')
                 ->where('kesesuaian_dies', '!=', '-');
 
             $getData->update($updateDraftStatus);
 
-            $cekStatus = M_Pengukuran_Dies::where([
+            $cekStatus = PengukuranRutinDies::where([
                 'dies_id' => session('dies_id'),
-                'masa_pengukuran' => 'pengukuran awal',
+                'masa_pengukuran' => session('masa_pengukuran'),
                 'is_draft' => '1'
             ])->count();
 
@@ -1719,18 +2004,18 @@ class PengukuranController extends Controller
                 $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
             } else {
                 $alert = 'success';
-                $msg = 'Pengukuran Awal Selesai Dilakukan! Menunggu Approval dari Manager QA';
+                $msg = 'Pengukuran Awal Selesai Dilakukan! Menunggu Approve';
 
                 $updateStatus = [
                     'is_draft' => 0
                 ];
 
                 Dies::where('dies_id', '=', session('dies_id'))->update($updateStatus);
-                $this->send_to_approval($request->segment(2));
+                $this->send_to_approval($request->segment(3));
             }
             // dd($cekStatus);
 
-            return redirect('/data/' . $request->segment(2))->with($alert, $msg);
+            return redirect(route('pnd.pr.dies.index'))->with($alert, $msg);
         }
     }
 
@@ -1751,14 +2036,13 @@ class PengukuranController extends Controller
                 $noUrut++;
                 $id = "RPU" . date("ymd") . sprintf("%04s", $noUrut);
             }
-
             //Send Data To Approval
             $dateNow = date('Y-m-d H:i:s');
             $dataApproval = [
                 'req_id' => $id,
                 'punch_id' => session('punch_id'),
                 'dies_id' => null,
-                // 'masa_pengukuran' => ,
+                'masa_pengukuran' => session('masa_pengukuran'),
                 'user_id' => session('user_id'),
                 'tgl_submit' => $dateNow,
                 'due_date' => date('Y-m-d H:i:s', strtotime(date('Y-m-d 23:59:59') . " +6 days")),
@@ -1781,13 +2065,13 @@ class PengukuranController extends Controller
                 $noUrut++;
                 $id = "RDI" . date("ymd") . sprintf("%04s", $noUrut);
             }
-
             //Send Data To Approval
             $dateNow = date('Y-m-d H:i:s');
             $dataApproval = [
                 'req_id' => $id,
                 'punch_id' => null,
                 'dies_id' => session('dies_id'),
+                'masa_pengukuran' => session('masa_pengukuran'),
                 'user_id' => session('user_id'),
                 'tgl_submit' => $dateNow,
                 'due_date' => date('Y-m-d H:i:s', strtotime(date('Y-m-d 23:59:59') . " +6 days")),

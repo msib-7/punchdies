@@ -64,51 +64,46 @@ class Role extends Controller
     }
     public function edit_role(Request $request, $id)
     {
-        $data = Roles::where('id', '=', $id)->first();
+        // $data = Roles::where('id', '=', $id)->first();
         $request->session()->put('id', $id);
+
+        $role = Roles::with('permission')->find($id);
+        
         return response()->json([
             'success' => true,
             'message' => 'Detail Data Post',
-            'data' => $data
+            'data' => $role
         ]);
     }
-    public function update_role(Request $request)
+    public function update_role(Request $request, $id)
     {
-        $id = session()->get('id');
-        $role_name = ucwords($request->role_name_edit);
-        $permission_value = $request->permission_value;
 
-        if ($permission_value == '') {
-            $dataUpdateRole = [
-                'role_name' => $role_name,
-            ];
-            Roles::where('id', '=', $id)->update($dataUpdateRole);
-            return redirect(route('roles'))->with('success', 'Role berhasil diUpdate!');
-        } else {
-            $dataUpdateRole = [
-                'role_name' => $role_name,
-            ];
-            Roles::where('id', '=', $id)->update($dataUpdateRole);
+        $role = Roles::findOrFail($id);
 
-            RolesPermission::where('role_id', '=', $id)->delete();
+        // Delete old permissions if any
+        $role->permission()->delete();
 
-            $count = count($permission_value);
-            for ($i = 0; $i < $count; $i++) {
-                $saveRolePermission = [
-                    'permission_id' => $permission_value[$i],
-                    'role_id' => $id,
-                ];
-                RolesPermission::create($saveRolePermission);
-            }
-            return redirect(route('roles'))->with('success', 'Role berhasil diUpdate!');
+        // Update permissions based on selected URLs
+        foreach ($request->input('eurls', []) as $url) {
+            $role->permission()->create(['url' => $url]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Success Update',
+            'redirect' => route('admin.role.index') // Ensure this route exists
+        ]);
 
     }
     public function del_role($id)
     {
-        RolesPermission::where('role_id', '=', $id)->delete();
+        $role = Roles::findOrFail($id);
+
+        // Delete old permissions if any
+        $role->permission()->delete();
+
         Roles::where('id', '=', $id)->delete();
 
-        return redirect(route('roles'))->with('success', 'Role has been deleted!');
+        return redirect(route('admin.role.index'))->with('success', 'Role has been deleted!');
     }
 }

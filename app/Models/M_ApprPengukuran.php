@@ -16,6 +16,13 @@ class M_ApprPengukuran extends Model
     protected $table = 'approval_pengukurans';
 
     protected $guarded;
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    
+
     public function autonumber()
     {
         $builder = DB::table($this->table);
