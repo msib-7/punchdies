@@ -35,7 +35,7 @@ class PunchFactory extends Factory
             'kode_produk' => $this->faker->word,
             'line_id' => Lines::all()->random()->id, // Assuming you want to create a new line for each punch
             'jenis' => $this->faker->randomElement(['punch-atas','punch-bawah']),
-            'masa_pengukuran' => $this->faker->randomElement(['pengukuran awal']), // Randomly select between the two values,
+            'masa_pengukuran' => 'pengukuran awal', // Randomly select between the two values,
             'is_draft' => '1',
             'is_delete_punch' => '0',
             'is_edit' => '0',

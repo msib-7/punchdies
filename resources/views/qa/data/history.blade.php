@@ -9,7 +9,7 @@
             <div class="col-12">
                 <div class="card mb-5">
                     <div class="card-header">
-                        <h3 class="card-title fs-1 fw-bold">Log History Approved and Rejected</h3>
+                        <h3 class="card-title fs-1 fw-bold">Log History Approval</h3>
                     </div>
                 </div>
                 
@@ -41,21 +41,21 @@
                                             <td>{{$no++}}</td>
                                             @if ($item->punch_id != null)
                                                 @foreach ($dataPunch as $punch)
-                                                    @if ($item->punch_id == $punch->punch_id)
-                                                    <td>{{$punch->merk}}</td>
-                                                    <td>{{$punch->jenis}}</td>
+                                                    @if ($item->punch_id == $punch->punch_id && $item->masa_pengukuran == $punch->masa_pengukuran)
+                                                        <td>{{$punch->merk}}</td>
+                                                        <td>{{$punch->jenis}}</td>
                                                     @endif
                                                 @endforeach
                                             @endif
                                             @if ($item->dies_id != null)
                                                 @foreach ($dataDies as $dies)
-                                                    @if ($item->dies_id == $dies->dies_id)
+                                                    @if ($item->dies_id == $dies->dies_id && $item->masa_pengukuran == $dies->masa_pengukuran)
                                                         <td>{{$dies->merk}}</td>
                                                         <td>{{$dies->jenis}}</td>
                                                     @endif
                                                 @endforeach
                                             @endif
-                                            <td>{{$item->username}}</td>
+                                            <td>{{$item->nama}}</td>
                                             <td>{{$item->tgl_submit}}</td>
                                             @if ($item->is_approved == '1' and $item->is_rejected == '0')
                                                 <td class="text-center">
@@ -71,10 +71,11 @@
                                                     </button>
                                                 </td>
                                             @endif
-                                            <td>{{$item->approved_by}}</td>
+                                            {{-- <td>{{$item->approved_by}}</td> --}}
+                                            <td>Supervisor Engineering</td>
                                             <td>{{$item->approved_at}}</td>
                                             <td class="text-center">
-                                                <a href="/data/approval/history/pengukuran/{{$item->req_id}}">
+                                                <a href="{{route('pnd.approval.histori.show-detail-pengukuran', $item->req_id)}}">
                                                     <button class="btn btn-secondary btn-sm fw-bold">
                                                         <i class="lab la-sistrix fs-2"></i>
                                                         open

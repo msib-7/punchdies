@@ -210,7 +210,7 @@
                                                         <td class="text-center">{{ $item->tip_diameter_2 }}</td>
                                                         <td class="text-center">{{ $item->cup_depth }}</td>
                                                         <td class="text-center">{{ $item->working_length }}</td>
-                                                        <td class="text-center"></td>
+                                                        <td class="text-center">OK</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>

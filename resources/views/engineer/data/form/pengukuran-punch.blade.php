@@ -197,16 +197,6 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="table_body">
-                                                    {{-- <tr>
-                                                        <td>
-                                                            <input type="text" class="form-control" readonly value="Punch 1">
-                                                            <input type="text" class="form-control" readonly value="Punch 2">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" class="inputs form-control text-center mb-2" maxlength="4">
-                                                            <input type="text" class="inputs form-control text-center mb-2" maxlength="4">
-                                                        </td>
-                                                    </tr> --}}
                                                 </tbody>
                                             </table>
                                         </div>

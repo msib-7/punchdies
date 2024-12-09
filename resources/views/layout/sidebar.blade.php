@@ -272,7 +272,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="{{url('/data/approval/history')}}">
+                                <a class="menu-link" href="{{route('pnd.approval.histori.index')}}">
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-archive fs-2"></i>
                                     </span>

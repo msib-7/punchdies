@@ -99,23 +99,25 @@ class PunchController extends Controller
             }
 
             return view('operator.data.punch', $data);
-        }elseif($request->segment(2) != 'pengukuran-rutin'){
+        }elseif($request->segment(2) == 'pengukuran-awal'){
             if(auth()->user()->lines->nama_line == 'All Line'){
                 $dataPunch = Punch::query()
-                    ->where('jenis', $request->segment(3))
                     ->where('masa_pengukuran', 'pengukuran awal')
+                    ->where('jenis', $request->segment(3))
                     ->where('is_delete_punch', '0')
                     ->orWhere('masa_pengukuran', '-')
+                    ->where('jenis', $request->segment(3))
                     ->where('is_delete_punch', '0')
                     ->orderBy('created_at', "desc")
                     ->get();
             }else{
                 $dataPunch = Punch::query()
-                    ->where('jenis', $request->segment(3))
                     ->where('masa_pengukuran', 'pengukuran awal')
+                    ->where('jenis', $request->segment(3))
                     ->where('line_id', auth()->user()->line_id)
                     ->where('is_delete_punch', '0')
                     ->orWhere('masa_pengukuran', '-')
+                    ->where('jenis', $request->segment(3))
                     ->where('line_id', auth()->user()->line_id)
                     ->where('is_delete_punch', '0')
                     ->orderBy('created_at', "desc")

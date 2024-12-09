@@ -9,18 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRoleUser
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
 
         //Cek Apakah User sudah login dan memiliki Role
         if (!$user || !$user->role_id) {
-            return redirect('/')->with('error', 'Silakan login untuk melanjutkan.');
+            return redirect('/')->with('error', 
+            'Silakan login untuk melanjutkan.');
         }
 
         //Dapatkan Route Saat ini
