@@ -33,7 +33,8 @@
 <!--end::Head-->
 <!--begin::Body-->
 
-<body id="kt_body" class="app-blank bgi-size-cover bgi-attachment-fixed bgi-position-center">
+<body id="kt_body" class="app-blank bgi-size-cover bgi-attachment-fixed bgi-position-center"
+style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repeat-y;">
     <!--begin::Theme mode setup on page load-->
     <script>
         var defaultThemeMode = "light";
@@ -82,7 +83,7 @@
                         <!--begin::Wrapper-->
                         <div class="d-flex flex-center flex-column flex-column-fluid pb-10 pb-lg-15">
                             <!--begin::Form-->
-                            <form class="form w-100" data-kt-redirect-url="{{url('/dashboard')}}" action="{{route('login-auth')}}" method="post">
+                            <form class="form w-100"  action="{{url('/login-auth')}}" method="post">
                                 @csrf
                                 <!--begin::Heading-->
                                 <span class="d-flex flex-center">
@@ -145,7 +146,7 @@
                                 <!--begin::Input group=-->
                                 <div class="fv-row mb-8">
                                     <!--begin::Email-->
-                                    <input type="text" placeholder="Email" name="email" autocomplete="off"
+                                    <input type="text" placeholder="Username" name="username" autocomplete="off"
                                         class="form-control bg-transparent" />
                                     <!--end::Email-->
                                 </div>
@@ -189,7 +190,7 @@
                         <div class="d-grid mb-5">
                             <!--begin::Links-->
                             <div class="d-grid fw-semibold text-primary fs-base gap-5">
-                                <a href="#" class="btn btn-outline btn-outline-dashed btn-outline" style="width: auto;">
+                                <a href="{{url('audit-trail')}}" class="btn btn-outline btn-outline-dashed btn-outline" style="width: auto;">
                                     <i class="ki-duotone ki-graph-3 fs-1"><span class="path1"></span><span
                                             class="path2"></span></i>
                                     Audit Trail

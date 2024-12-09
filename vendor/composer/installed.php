@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-        'pretty_version' => 'v11.2.0',
-        'version' => '11.2.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'f1e25bfe2d12bac2de3e5515c2352755d9bc9857',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -386,9 +386,9 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'v11.2.0',
-            'version' => '11.2.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'f1e25bfe2d12bac2de3e5515c2352755d9bc9857',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1246,6 +1246,15 @@
             'install_path' => __DIR__ . '/../tijsverkoyen/css-to-inline-styles',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'timwassenburg/laravel-service-generator' => array(
+            'pretty_version' => 'v1.0.5',
+            'version' => '1.0.5.0',
+            'reference' => '9fcd0e48d418f36c94efcb1917062fa9ea7a0fcc',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../timwassenburg/laravel-service-generator',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'vlucas/phpdotenv' => array(
             'pretty_version' => 'v5.6.1',
