@@ -12,6 +12,52 @@ use Illuminate\Http\Request;
 
 class PunchController extends Controller
 {
+    public function index($segment)
+    {
+        if (auth()->user()->lines->nama_line == 'All Line') {
+            $dataPunch = Punch::query()
+                ->where('masa_pengukuran', 'pengukuran awal')
+                ->where('jenis', $segment)
+                ->where('is_delete_punch', '0')
+                ->orWhere('masa_pengukuran', '-')
+                ->where('jenis', $segment)
+                ->where('is_delete_punch', '0')
+                ->orderBy('created_at', "desc")
+                ->get();
+        } else {
+            $dataPunch = Punch::query()
+                ->where('masa_pengukuran', 'pengukuran awal')
+                ->where('jenis', $segment)
+                ->where('line_id', auth()->user()->line_id)
+                ->where('is_delete_punch', '0')
+                ->orWhere('masa_pengukuran', '-')
+                ->where('jenis', $segment)
+                ->where('line_id', auth()->user()->line_id)
+                ->where('is_delete_punch', '0')
+                ->orderBy('created_at', "desc")
+                ->get();
+        }
+
+        $data['dataPunch'] = $dataPunch;
+
+        $ttlPunch = $dataPunch->count();
+        $data['ttlPunch'] = $ttlPunch;
+
+        $Dataline = Lines::all();
+        $data['DataLine'] = $Dataline;
+
+        if ($segment == 'punch-atas') {
+            $data['jenisPunch'] = 'Punch Atas';
+            $data['jenis'] = 'punch-atas';
+            $data['route'] = 'atas';
+        } elseif ($segment == 'punch-bawah') {
+            $data['jenisPunch'] = 'Punch Bawah';
+            $data['jenis'] = 'punch-bawah';
+            $data['route'] = 'bawah';
+        }
+
+        return view('engineer.data.punch', $data);
+    }
     public function show_all_punch(Request $request)
     {
         if($request->segment(2) == 'pengukuran-rutin'){
@@ -149,6 +195,7 @@ class PunchController extends Controller
                 $data['route'] = 'bawah';
             }
 
+
             return view('engineer.data.punch', $data);
         }
     }
@@ -188,6 +235,7 @@ class PunchController extends Controller
             'line_id' => $line_id,
             'jenis' => $jenis,
         ])->first();
+        
         if (!$cekDataPunch) {
             $createData = [
                 'punch_id' => $id,
@@ -206,19 +254,8 @@ class PunchController extends Controller
                 'is_approved' => '-',
                 'is_rejected' => '-',
             ];
-            //Data Audit
-            $logdate = date('Y-m-d H:i:s');
-            // $dataAudit = [
-            //     'event' => 'Punch Created',
-            //     'logdate' => $logdate,
-            //     'user_id' => session('user_id'),
-            //     'line' => session('line_user'),
-            //     'category' => 'Create',
-            //     'detail' => 'User ' . session('username') . ', Create Punch "' . $merk . '", ' . $logdate,
-            // ];
             session()->put('punch_id', $id);
             Punch::create($createData);
-            // Audit_tr::create($dataAudit);
         } else {
             //Data Audit
             $logdate = date('Y-m-d H:i:s');

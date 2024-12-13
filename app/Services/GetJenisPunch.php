@@ -9,14 +9,18 @@ use Request;
  */
 class GetJenisPunch
 {
-    public function handle(Request $request)
+    public function handle($jenis)
     {
-        if ($request->segment(2) == 'punch-atas') {
+        if ($jenis == 'punch-atas') {
             $data['jenisPunch'] = 'Punch Atas';
             $data['jenis'] = 'punch-atas';
-        } elseif ($request->segment(2) == 'punch-bawah') {
+            $data['route'] = 'atas';
+        } elseif ($jenis == 'punch-bawah') {
             $data['jenisPunch'] = 'Punch Bawah';
             $data['jenis'] = 'punch-bawah';
+            $data['route'] = 'bawah';
         }
+
+        return $data;                                           
     }
 }

@@ -212,7 +212,7 @@
                                             </div>
                                             <div class="col-12 mt-10">
                                                 <div class="form-check form-switch form-check-custom form-check-solid">
-                                                    <input class="form-check-input" name="draft" type="checkbox" value="enabled" id="flexSwitch" checked='checked'/>
+                                                    <input class="form-check-input" name="CheckBoxDraft" type="checkbox" value="enabled" id="flexSwitch" checked='checked'/>
                                                     <label class="form-check-label" for="flexSwitch">
                                                         Simpan Draft untuk saat ini
                                                     </label>
@@ -222,6 +222,85 @@
                                     </form>
                                 </div>
                             </div>
+                            {{-- @if ($page == session('jumlah_punch'))
+                                <div class="col-12 mt-5">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="d-flex flex-column mx-2">
+                                                        <label for="" class="required  form-label">Referensi Drawing</label>
+                                                        <input type="text" class="form-control" placeholder="Insert Reference Drawing"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-12 mt-3">
+                                                            <div class="d-flex flex-column mx-2">
+                                                                <label for="" class="required form-label">Catatan</label>
+                                                                <textarea class="form-control @error('permasalahan') is-invalid @enderror" id="permasalahan" name="permasalahan"
+                                                                    rows="3" placeholder="Insert Your Message"></textarea>
+                                                                @error('permasalahan')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 mt-3">
+                                                            <div class="d-flex flex-column mx-2">
+                                                                <label for="" class="required form-label">Kesimpulan</label>
+                                                                <textarea class="form-control @error('permasalahan') is-invalid @enderror" id="permasalahan" name="permasalahan"
+                                                                    rows="3" placeholder="Insert Your Message"></textarea>
+                                                                @error('permasalahan')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <div class="d-flex flex-column mt-5">
+                                                        <label for="" class="required form-label">Kalibrasi Tools</label>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-rounded table-bordered">
+                                                                <thead>
+                                                                    <tr class="fw-bold fs-6 text-gray-800">
+                                                                        <th>Tools</th>
+                                                                        <th>Tgl Kalibrasi</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>Micrometer Digital</td>
+                                                                        <td>
+                                                                            <input type="date" name="" id="" class="form-control">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Caliper Digital</td>
+                                                                        <td>
+                                                                            <input type="date" name="" id="" class="form-control">
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Dial Indicator Digital</td>
+                                                                        <td>
+                                                                            <input type="date" name="" id="" class="form-control">
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif --}}
                         </div>
                     </div>
                 </div>
@@ -232,9 +311,9 @@
     <!--end::Content container-->
 </div>
 
-{{-- Create Data Punch Modal --}}
+{{-- Confirm Data Pengukuran --}}
 <div class="modal fade" tabindex="-1" id="modal_confirm_pengukuran">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title">Konfirmasi</h6>
@@ -253,6 +332,83 @@
                         Yakin Data Sudah Benar?
                     </div>
                 </div>
+                {{-- <div class="col-12 mt-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="d-flex flex-column mx-2">
+                                        <label for="" class="required  form-label">Referensi Drawing</label>
+                                        <input type="text" class="form-control" placeholder="Insert Reference Drawing"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="row">
+                                        <div class="col-12 mt-3">
+                                            <div class="d-flex flex-column mx-2">
+                                                <label for="" class="required form-label">Catatan</label>
+                                                <textarea class="form-control @error('permasalahan') is-invalid @enderror" id="permasalahan" name="permasalahan"
+                                                    rows="3" placeholder="Insert Your Message"></textarea>
+                                                @error('permasalahan')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-12 mt-3">
+                                            <div class="d-flex flex-column mx-2">
+                                                <label for="" class="required form-label">Kesimpulan</label>
+                                                <textarea class="form-control @error('permasalahan') is-invalid @enderror" id="permasalahan" name="permasalahan"
+                                                    rows="3" placeholder="Insert Your Message"></textarea>
+                                                @error('permasalahan')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="d-flex flex-column mt-5">
+                                        <label for="" class="required form-label">Kalibrasi Tools</label>
+                                        <div class="table-responsive">
+                                            <table class="table table-rounded table-bordered">
+                                                <thead>
+                                                    <tr class="fw-bold fs-6 text-gray-800">
+                                                        <th>Tools</th>
+                                                        <th>Tgl Kalibrasi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Micrometer Digital</td>
+                                                        <td>
+                                                            <input type="date" name="" id="" class="form-control">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Caliper Digital</td>
+                                                        <td>
+                                                            <input type="date" name="" id="" class="form-control">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Dial Indicator Digital</td>
+                                                        <td>
+                                                            <input type="date" name="" id="" class="form-control">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
                 <div class="col-12">
                     <form action="{{route('pnd.pa.'.$route.'.create-note')}}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -279,10 +435,9 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
-        // alert({{session('jumlah_ukur')}}); 
-
         //Table Body
         
         var tr = document.createElement('tr');
@@ -313,7 +468,7 @@
                 x.setAttribute("maxlength", "6");
                 x.setAttribute("id", "hdo");
                 x.setAttribute("name", "hdo[]");
-                x.setAttribute("placeholder", "00.00");
+                // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['head_outer_diameter']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
@@ -336,7 +491,7 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "ned[]");
                 x.setAttribute("id", "ned<?=$no?>");
-                x.setAttribute("placeholder", "00.00");
+                // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['neck_diameter']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
@@ -361,7 +516,7 @@
                 x.setAttribute("name", "bar[]");
                 x.setAttribute("id", "bar<?=$no?>");
                 x.setAttribute("maxlength", "4");
-                x.setAttribute("placeholder", "00.00");
+                // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['barrel']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 <?php if($no == 10){ ?>
@@ -384,7 +539,7 @@
                 x.setAttribute("name", "ovl[]");
                 x.setAttribute("id", "ovl<?=$no?>");
                 x.setAttribute("maxlength", "4");
-                x.setAttribute("placeholder", "00.00");
+                // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['overall_length']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 <?php if($no == 10){ ?>
@@ -407,7 +562,7 @@
                 x.setAttribute("name", "tip1[]");
                 x.setAttribute("id", "tip1<?=$no?>");
                 x.setAttribute("maxlength", "4");
-                x.setAttribute("placeholder", "00.00");
+                // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['tip_diameter_1']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 <?php if($no == 10){ ?>
@@ -430,7 +585,7 @@
                 x.setAttribute("name", "tip2[]");
                 x.setAttribute("id", "tip2<?=$no?>");
                 x.setAttribute("maxlength", "4");
-                x.setAttribute("placeholder", "00.00");
+                // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['tip_diameter_2']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 <?php if($no == 10){ ?>
@@ -453,7 +608,7 @@
                 x.setAttribute("name", "cup[]");
                 x.setAttribute("id", "cup<?=$no?>");
                 x.setAttribute("maxlength", "4");
-                x.setAttribute("placeholder", "00.00");
+                // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['cup_depth']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 <?php if($no == 10){ ?>
@@ -476,7 +631,7 @@
                 x.setAttribute("name", "wkl[]");
                 x.setAttribute("id", "wkl<?=$no?>");
                 x.setAttribute("maxlength", "6");
-                x.setAttribute("placeholder", "00.00");
+                // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['working_length']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 <?php if($no == 10){ ?>

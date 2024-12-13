@@ -40,11 +40,20 @@
                 <div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_app_sidebar_menu"
                     data-kt-menu="true" data-kt-menu-expand="false">
 
+                    <!--begin:Menu item-->
+                    <div class="menu-item pt-5">
+                        <!--begin:Menu content-->
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">Navigation</span>
+                        </div>
+                        <!--end:Menu content-->
+                    </div>
+                    <!--end:Menu item-->
                     {{-- Dashboard --}}
                     <!--begin:Menu item-->
                     <div class="menu-item">
                         <!--begin:Menu link-->
-                        <a class="menu-link " href="{{ route('dashboard') }}">
+                        <a class="menu-link {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                             <span class="menu-icon">
                                 <i class="ki-outline ki-element-11 fs-2"></i>
                             </span>
@@ -54,12 +63,21 @@
                     </div>
                     <!--end:Menu item-->
 
+                    <!--begin:Menu item-->
+                    <div class="menu-item pt-5">
+                        <!--begin:Menu content-->
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">Form Pengukuran</span>
+                        </div>
+                        <!--end:Menu content-->
+                    </div>
+                    <!--end:Menu item-->
                     @foreach (auth()->user()->permissions as $item)
                         {{-- {{ $item->url }} --}}
                         @if (str_starts_with($item->url, 'pnd.pa'))
                             {{-- Data Pengukuran Awal--}}
                             <!--begin:Menu item-->
-                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/pengukuran-awal*') ? 'here show' : '' }}">
                                 <!--begin:Menu link-->
                                 <span class="menu-link">
                                     <span class="menu-icon">
@@ -72,7 +90,7 @@
                                 <!--begin:Menu sub-->
                                 <div class="menu-sub menu-sub-accordion">
                                     <!--begin:Menu item-->
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/pengukuran-awal/punch*') ? 'here show' : '' }}">
                                         <!--begin:Menu link-->
                                         <span class="menu-link">
                                             <span class="menu-bullet">
@@ -87,7 +105,7 @@
                                             <!--begin:Menu item-->
                                             <div class="menu-item">
                                                 <!--begin:Menu link-->
-                                                <a class="menu-link" href="{{route('pnd.pa.atas.index')}}">
+                                                <a class="menu-link {{ request()->is('pnd/pengukuran-awal/punch-atas*') ? 'active' : '' }}" href="{{route('pnd.pa.atas.index')}}">
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
@@ -99,7 +117,7 @@
                                             <!--begin:Menu item-->
                                             <div class="menu-item">
                                                 <!--begin:Menu link-->
-                                                <a class="menu-link" href="{{route('pnd.pa.bawah.index')}}">
+                                                <a class="menu-link {{ request()->is('pnd/pengukuran-awal/punch-bawah*') ? 'active' : '' }}" href="{{route('pnd.pa.bawah.index')}}">
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
@@ -115,7 +133,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link" href="{{route('pnd.pa.dies.index')}}">
+                                        <a class="menu-link {{ request()->is('pnd/pengukuran-awal/dies*') ? 'active' : '' }}" href="{{route('pnd.pa.dies.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -137,7 +155,7 @@
                         @if (str_starts_with($item->url, 'pnd.pr'))
                             {{-- Data Pengukuran Rutin--}}
                             <!--begin:Menu item-->
-                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/pengukuran-rutin*') ? 'here show' : '' }}">
                                 <!--begin:Menu link-->
                                 <span class="menu-link">
                                     <span class="menu-icon">
@@ -150,7 +168,7 @@
                                 <!--begin:Menu sub-->
                                 <div class="menu-sub menu-sub-accordion">
                                     <!--begin:Menu item-->
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/pengukuran-rutin/punch*') ? 'here show' : '' }}">
                                         <!--begin:Menu link-->
                                         <span class="menu-link">
                                             <span class="menu-bullet">
@@ -165,7 +183,7 @@
                                             <!--begin:Menu item-->
                                             <div class="menu-item">
                                                 <!--begin:Menu link-->
-                                                <a class="menu-link" href="{{route('pnd.pr.atas.index')}}">
+                                                <a class="menu-link  {{ request()->is('pnd/pengukuran-rutin/punch-atas*') ? 'active' : '' }}" href="{{route('pnd.pr.atas.index')}}">
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
@@ -177,7 +195,7 @@
                                             <!--begin:Menu item-->
                                             <div class="menu-item">
                                                 <!--begin:Menu link-->
-                                                <a class="menu-link" href="{{route('pnd.pr.bawah.index')}}">
+                                                <a class="menu-link  {{ request()->is('pnd/pengukuran-rutin/punch-bawah*') ? 'active' : '' }}" href="{{route('pnd.pr.bawah.index')}}">
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
@@ -193,7 +211,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link" href="{{route('pnd.pr.dies.index')}}">
+                                        <a class="menu-link  {{ request()->is('pnd/pengukuran-rutin/dies*') ? 'active' : '' }}" href="{{route('pnd.pr.dies.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -210,12 +228,21 @@
                         @endif
                     @endforeach
 
+                    <!--begin:Menu item-->
+                    <div class="menu-item pt-5">
+                        <!--begin:Menu content-->
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">Approval Menu</span>
+                        </div>
+                        <!--end:Menu content-->
+                    </div>
+                    <!--end:Menu item-->
                     @foreach (auth()->user()->permissions as $item)
                         {{-- {{ $item->url }} --}}
                         @if (str_starts_with($item->url, 'pnd.approval'))
                             {{-- Waiting List Approval --}}
                             <!--begin:Menu item-->
-                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/approval*') ? 'here show' : '' }}">
                                 <!--begin:Menu link-->
                                 <span class="menu-link">
                                     <span class="menu-icon">
@@ -230,7 +257,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link" href="{{route('pnd.approval.pa.index')}}">
+                                        <a class="menu-link {{ request()->is('pnd/approval/pengukuran-awal*') ? 'active' : '' }}" href="{{route('pnd.approval.pa.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -242,7 +269,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link" href="{{route('pnd.approval.pr.index')}}">
+                                        <a class="menu-link {{ request()->is('pnd/approval/pengukuran-rutin*') ? 'active' : '' }}" href="{{route('pnd.approval.pr.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -254,7 +281,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link" href="{{route('pnd.approval.dis.index')}}">
+                                        <a class="menu-link {{ request()->is('pnd/approval/disposal*') ? 'active' : '' }}" href="{{route('pnd.approval.dis.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -276,7 +303,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-archive fs-2"></i>
                                     </span>
-                                    <span class="menu-title">Approval History</span>
+                                    <span class="menu-title">History</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -285,11 +312,34 @@
                         @endif
                     @endforeach
 
+                    <!--begin:Menu item-->
+                    <div class="menu-item pt-5">
+                        <!--begin:Menu content-->
+                        <div class="menu-content">
+                            <span class="menu-heading fw-bold text-uppercase fs-7">Admin Tools</span>
+                        </div>
+                        <!--end:Menu content-->
+                    </div>
+                    <!--end:Menu item-->
                     @foreach (auth()->user()->permissions as $item)
                         @if (str_starts_with($item->url, 'admin.'))
+                            {{-- Master Machine --}}
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                {{-- <a class="menu-link " href="{{ route('admin.mesin.index') }}"> --}}
+                                <a class="menu-link " href="#">
+                                    <span class="menu-icon">
+                                        <i class="ki-outline ki-technology-4 fs-2"></i>
+                                    </span>
+                                    <span class="menu-title">Master Mesin</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
                             {{-- Manajemen User --}}
                             <!--begin:Menu item-->
-                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('Admin*') ? 'here show' : '' }}">
                                 <!--begin:Menu link-->
                                 <span class="menu-link">
                                     <span class="menu-icon">
@@ -304,7 +354,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link" href="{{route('admin.users.index')}}">
+                                        <a class="menu-link {{ request()->is('Admin/users*') ? 'active' : '' }}" href="{{route('admin.users.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -316,7 +366,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link" href="{{route('admin.line.index')}}">
+                                        <a class="menu-link {{ request()->is('Admin/line*') ? 'active' : '' }}" href="{{route('admin.line.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -328,7 +378,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link" href="{{route('admin.role.index')}}">
+                                        <a class="menu-link {{ request()->is('Admin/role*') ? 'active' : '' }}" href="{{route('admin.role.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -340,7 +390,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link" href="{{route('admin.permission.index')}}">
+                                        <a class="menu-link {{ request()->is('Admin/permission*') ? 'active' : '' }}" href="{{route('admin.permission.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>

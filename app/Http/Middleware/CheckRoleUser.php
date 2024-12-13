@@ -22,7 +22,7 @@ class CheckRoleUser
         //Dapatkan Route Saat ini
         $currentRoute = $request->route()->getName();
 
-        // Cek apakah permission untuk jobLvl dan URL saat ini ada di database
+        // Cek apakah permission untuk Role dan URL saat ini ada di database
         $hasPermission = Permissions::where('role_id', $user->role_id)
             ->where('url', $currentRoute)
             ->exists();
