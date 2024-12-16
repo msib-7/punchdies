@@ -85,20 +85,26 @@ class PunchController extends Controller
                         $query->where('jenis', $request->segment(3))
                             ->where('is_delete_punch', '0')
                             ->where(function ($query) {
-                                $query->where(function ($query) {
+                                $query
+                                ->where(function ($query) {
                                     $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
                                     ->where('is_approved', '=', '-');
                                 })
-                                    ->orWhere(function ($query) {
-                                        $query->whereLike('masa_pengukuran',  'pengukuran rutin%')
-                                            ->where('is_draft', '1')
-                                            ->where('is_approved', '=', '-');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                            ->where('is_draft', '0')
-                                            ->where('is_approved', '=', '1');
-                                    });
+                                ->Where(function ($query) {
+                                    $query->whereLike('masa_pengukuran',  'pengukuran rutin%')
+                                        ->where('is_draft', '1')
+                                        ->where('is_approved', '=', '-');
+                                })
+                                ->orWhere(function ($query) {
+                                    $query->whereLike('masa_pengukuran',  'pengukuran rutin%')
+                                        ->where('is_draft', '0')
+                                        ->where('is_approved', '=', '-');
+                                })
+                                ->Where(function ($query) {
+                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                        ->where('is_draft', '0')
+                                        ->where('is_approved', '=', '1');
+                                });
                             })
                             ->where(function ($query) {
                                 $query->where(function ($query) {
@@ -124,7 +130,7 @@ class PunchController extends Controller
                     ->groupBy('punch_id')
                     ->get();
 
-                                    dd($dataPunch);
+                                    // dd($dataPunch);
             }else{
                 $dataPunch = Punch::query()
                     ->select(

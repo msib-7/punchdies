@@ -467,11 +467,11 @@
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['cup_depth']; ?>");
-                x.addEventListener('input', function() {
-                    if (this.value) {
-                        saveDataRutin();
-                    }
-                });
+                // x.addEventListener('input', function() {
+                //     if (this.value) {
+                //         saveDataRutin();
+                //     }
+                // });
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
