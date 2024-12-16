@@ -9,14 +9,14 @@ use App\Models\PengukuranRutinPunch;
  */
 class GetRumusPengukuranRutinPunch
 {
-    public function handle($update_id) {
+    public function handle($update_id, $wkl_awal) {
         //Get punch_id dari Pengukuran
         $punch = PengukuranRutinPunch::select('punch_id')->where('no', $update_id)->first();
 
         // Definisikan nilai working length
         $workingLengthMax = PengukuranRutinPunch::where('punch_id', $punch->punch_id)->max('working_length_rutin'); // Contoh nilai maksimum
         $workingLengthMin = PengukuranRutinPunch::where('punch_id', $punch->punch_id)->min('working_length_rutin'); // Contoh nilai minimum
-        $workingLengthInitial = array(1.22, 1.23, 1.21, 1.24); // Contoh array nilai pengukuran awal
+        $workingLengthInitial = $wkl_awal; // Contoh array nilai pengukuran awal
 
         // Hitung selisih
         $selisihMaxMin = $workingLengthMax - $workingLengthMin;

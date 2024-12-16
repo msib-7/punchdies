@@ -1486,7 +1486,7 @@ class PengukuranController extends Controller
                     PengukuranRutinPunch::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
                     $i++;
                 }
-                return (new GetRumusPengukuranRutinPunch)->handle($update_id);
+                return (new GetRumusPengukuranRutinPunch)->handle($update_id, $wkl_awal);
 
 
             } elseif (session('jumlah_punch') > session('page')) {
@@ -1808,48 +1808,52 @@ class PengukuranController extends Controller
     {
         if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
             $checkStatus = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view'), 'is_draft' => '1'])->count();
-            if ($checkStatus != 0) {
-                $status = "<span class='badge badge-light-warning fs-3'>Draft</span>";
-            } else {
-                $status = '';
-            }
+            $status = $checkStatus != 0 ? "<span class='badge badge-light-warning fs-3'>Draft</span>" : '';
+
             $data['statusPengukuran'] = $status;
-            if($request->segment(2) == 'pengukuran-awal'){
+
+            if ($request->segment(2) == 'pengukuran-awal') {
                 $LabelPunch = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
                     ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
                     ->where('punchs.punch_id', $id)
                     ->first();
                 $data['labelPunch'] = $LabelPunch;
+
                 $dataPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
                 $data['tglPengukuran'] = $dataPengukuran;
+
                 $showPengukuranAll = PengukuranAwalPunch::where('punch_id', '=', $id)->get();
                 $data['dataPengukuran'] = $showPengukuranAll;
 
-                $pdf = Pdf::loadView('partials.pdf.punch.pengukuranAwalPDF', $data);
+                // Load the view and set the paper size to A4
+                $pdf = Pdf::loadView('partials.pdf.punch.pengukuranAwalPDF', $data)
+                    ->setPaper('A4', 'landscape'); // Set paper size and orientation
 
-                $pdf->render();
-                return $pdf->stream();
-            }elseif($request->segment(2) == 'pengukuran-rutin'){
+                return $pdf->stream('pengukuran_awal.pdf');
+            } elseif ($request->segment(2) == 'pengukuran-rutin') {
                 $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
-                ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
-                ->where('punchs.punch_id', $id)
-                ->where('pengukuran_rutin_punchs.masa_pengukuran', session('masa_pengukuran_view'))
-                ->first();
+                    ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
+                    ->where('punchs.punch_id', $id)
+                    ->where('pengukuran_rutin_punchs.masa_pengukuran', session('masa_pengukuran_view'))
+                    ->first();
                 $data['labelPunch'] = $LabelPunch;
+
                 $dataPengukuran = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->first();
                 $data['tglPengukuran'] = $dataPengukuran;
+
                 $showPengukuranAll = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->get();
                 $data['dataPengukuran'] = $showPengukuranAll;
 
-                $pdf = Pdf::loadView('partials.pdf.punch.pengukuranAwalPDF', $data);
-                return $pdf->download('testt.pdf');
+                // Load the view and set the paper size to A4
+                $pdf = Pdf::loadView('partials.pdf.punch.pengukuranRutinPDF', $data)
+                    ->setPaper('A4', 'portrait'); // Set paper size and orientation
+
+                return $pdf->download('pengukuran_rutin.pdf');
             }
         } elseif ($request->segment(3) == 'dies') {
             $dataDies = Dies::where('dies_id', $id)->get();
-
             $arrayData = json_decode($dataDies, true);
             foreach ($arrayData as $data) {
-                // dd($data['masa_pengukuran']);
                 echo '<option value="' . $data['masa_pengukuran'] . '">' . $data['masa_pengukuran'] . '</option>';
             }
         }
