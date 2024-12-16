@@ -1505,8 +1505,14 @@ class PengukuranController extends Controller
                 $ovl = $request->ovl;
                 $cup = $request->cup;
                 $wkl_awal = $request->wkl_awal;
-                $wkl_rutin = $request->wkl_rutin;
+                // $wkl_rutin = $request->wkl_rutin;
+                $wkl_rutin = [];
                 $hcf = $request->hcf;
+
+                for ($i = 0; $i < count($ovl); $i++) {
+                    // Calculate working_length_rutin for each index
+                    $wkl_rutin[$i] = $ovl[$i] - $cup[$i];
+                }
 
                 $i = 0;
                 while ($i < count($update_id)) {
