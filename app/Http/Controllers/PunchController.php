@@ -43,7 +43,7 @@ class PunchController extends Controller
         $ttlPunch = $dataPunch->count();
         $data['ttlPunch'] = $ttlPunch;
 
-        $Dataline = Lines::all();
+        $Dataline = Lines::where('nama_line', '!=', 'All Line')->get();
         $data['DataLine'] = $Dataline;
 
         if ($segment == 'punch-atas') {
@@ -63,33 +63,42 @@ class PunchController extends Controller
         if($request->segment(2) == 'pengukuran-rutin'){
             if(auth()->user()->lines->nama_line == 'All Line'){
                 $dataPunch = Punch::query()
-                                ->select('punch_id',
-                                    DB::raw('MAX(merk) as merk'), 
-                                    DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'), 
-                                    DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'), 
-                                    DB::raw('MAX(nama_mesin_cetak) as nama_mesin_cetak'), 
-                                    DB::raw('MAX(nama_produk) as nama_produk'), 
-                                    DB::raw('MAX(kode_produk) as kode_produk'), 
-                                    DB::raw('MAX(jenis) as jenis'), 
-                                    DB::raw('MAX(masa_pengukuran) as masa_pengukuran'), 
-                                    DB::raw('MAX(is_delete_punch) as is_delete_punch'),
-                                    DB::raw('MAX(is_draft) as is_draft'),
-                                    DB::raw('MAX(is_edit) as is_edit'),
-                                    DB::raw('MAX(is_approved) as is_approved'),
-                                    DB::raw('MAX(is_rejected) as is_rejected'),
-                                    DB::raw('MAX(created_at) as created_at')
-                                    )
-                                ->where('jenis', $request->segment(3))
-                                ->where('masa_pengukuran', '!=', 'pengukuran awal')
-                                ->where('masa_pengukuran', '!=', '-')
-                                ->where('is_delete_punch', '0')
-                                ->orWhere('jenis', $request->segment(3))
-                                ->where('masa_pengukuran', 'pengukuran awal')
-                                ->where('is_draft', '0')
-                                ->where('is_delete_punch', '0')
-                                ->groupBy('punch_id')
-                                ->orderBy('created_at', "desc")
-                                ->get();
+                    ->select(
+                        'punch_id',
+                        DB::raw('MAX(merk) as merk'),
+                        DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'),
+                        DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'),
+                        DB::raw('MAX(nama_mesin_cetak) as nama_mesin_cetak'),
+                        DB::raw('MAX(nama_produk) as nama_produk'),
+                        DB::raw('MAX(kode_produk) as kode_produk'),
+                        DB::raw('MAX(line_id) as line_id'),
+                        DB::raw('MAX(jenis) as jenis'),
+                        DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
+                        DB::raw('MAX(is_delete_punch) as is_delete_punch'),
+                        DB::raw('MAX(is_draft) as is_draft'),
+                        DB::raw('MAX(is_edit) as is_edit'),
+                        DB::raw('MAX(is_approved) as is_approved'),
+                        DB::raw('MAX(is_rejected) as is_rejected'),
+                        DB::raw('MAX(created_at) as created_at')
+                    )
+                    ->where(function ($query) use ($request) {
+                        $query->where('jenis', $request->segment(3))
+                            ->where('is_delete_punch', '0')
+                            ->where(function ($query) {
+                                $query->where(function ($query) {
+                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%');
+                                })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran',  'pengukuran awal')
+                                            ->where('is_approved', '!=', '-')
+                                            ->orWhere('is_approved', '!=', '0');
+                                    });
+                            });
+                    })
+                    ->groupBy('punch_id')
+                    ->get();
+
+                                    dd($dataPunch);
             }else{
                 $dataPunch = Punch::query()
                     ->select(
@@ -100,6 +109,7 @@ class PunchController extends Controller
                         DB::raw('MAX(nama_mesin_cetak) as nama_mesin_cetak'),
                         DB::raw('MAX(nama_produk) as nama_produk'),
                         DB::raw('MAX(kode_produk) as kode_produk'),
+                        DB::raw('MAX(line_id) as line_id'),
                         DB::raw('MAX(jenis) as jenis'),
                         DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
                         DB::raw('MAX(is_delete_punch) as is_delete_punch'),
@@ -109,18 +119,40 @@ class PunchController extends Controller
                         DB::raw('MAX(is_rejected) as is_rejected'),
                         DB::raw('MAX(created_at) as created_at')
                     )
-                    ->where('jenis', $request->segment(3))
-                    ->where('masa_pengukuran', '!=', 'pengukuran awal')
-                    ->where('masa_pengukuran', '!=', '-')
-                    ->where('line_id', auth()->user()->line_id)
-                    ->where('is_delete_punch', '0')
-                    ->orWhere('jenis', $request->segment(3))
-                    ->where('masa_pengukuran', 'pengukuran awal')
-                    ->where('is_draft', '0')
-                    ->where('line_id', auth()->user()->line_id)
-                    ->where('is_delete_punch', '0')
+                    ->where(function ($query) use ($request) {
+                        $query->where('jenis', $request->segment(3))
+                            ->where('line_id', auth()->user()->line_id)
+                            ->where('is_delete_punch', '0')
+                            ->where(function ($query) {
+                                $query->where(function ($query) {
+                                    $query->where('masa_pengukuran', '!=', 'pengukuran awal')
+                                        ->where('is_approved', '=', '-');
+                                })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '=', 'pengukuran awal')
+                                            ->where('is_draft', '0')
+                                            ->where('is_approved', '=', '1');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '=', 'pengukuran awal')
+                                            ->where('is_draft', '0')
+                                            ->where('is_approved', '=', '0');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '!=', 'pengukuran awal')
+                                            ->where('is_draft', '0')
+                                            ->where('is_approved', '=', '1');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '!=', 'pengukuran awal')
+                                            ->where('is_draft', '1')
+                                            ->where('is_approved', '=', '-');
+                                    });
+                            });
+                    })
                     ->groupBy('punch_id')
                     ->orderBy('created_at', "desc")
+                    ->latest()
                     ->get();
             }
             $data['dataPunch'] = $dataPunch;
@@ -131,7 +163,7 @@ class PunchController extends Controller
                 ->count();
             $data['ttlPunch'] = $ttlPunch;
 
-            $Dataline = Lines::all();
+            $Dataline = Lines::where('nama_line', '!=', 'All Line')->get();
             $data['DataLine'] = $Dataline;
 
             if ($request->segment(3) == 'punch-atas') {
@@ -171,18 +203,12 @@ class PunchController extends Controller
             }
             
             $data['dataPunch'] = $dataPunch;
-
-            // $ttlPunch = Punch::query()
-            //     ->select('punch_id')
-            //     ->where('jenis', $request->segment(3))
-            //     ->where('is_delete_punch', '0')
-            //     ->groupBy('punch_id')
-            //     ->count();
+            
             $ttlPunch = $dataPunch->count();
             $data['ttlPunch'] = $ttlPunch;
             // dd($ttlPunch);
 
-            $Dataline = Lines::all();
+            $Dataline = Lines::where('nama_line', '!=', 'All Line')->get();
             $data['DataLine'] = $Dataline;
 
             if ($request->segment(3) == 'punch-atas') {
@@ -195,13 +221,22 @@ class PunchController extends Controller
                 $data['route'] = 'bawah';
             }
 
-
             return view('engineer.data.punch', $data);
         }
     }
 
     public function create_data(Request $request)
     {
+        $request->validate([
+            'merk' => 'required|string|max:255',
+            'bulan_pembuatan' => 'required',
+            'tahun_pembuatan' => 'required',
+            'nama_mesin_cetak' => 'required',
+            'nama_produk' => 'required',
+            'kode_produk' => 'required',
+            'line_id' => 'required',
+        ]);
+
         $Punch = new Punch();
         $merk = $request->merk;
         $bulan_pembuatan = $request->bulan_pembuatan;
@@ -257,17 +292,6 @@ class PunchController extends Controller
             session()->put('punch_id', $id);
             Punch::create($createData);
         } else {
-            //Data Audit
-            $logdate = date('Y-m-d H:i:s');
-            // $dataAudit = [
-            //     'event' => 'Punch Created',
-            //     'logdate' => $logdate,
-            //     'user_id' => session('user_id'),
-            //     'line' => session('line_user'),
-            //     'category' => 'Create',
-            //     'detail' => 'User ' . session('username') . ',Failed to Create Punch "' . $merk . '", ' . $logdate,
-            // ];
-            // Audit_tr::create($dataAudit);
         }
     }
 

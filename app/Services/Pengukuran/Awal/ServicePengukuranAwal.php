@@ -18,16 +18,16 @@ use Request;
  */
 class ServicePengukuranAwal
 {
-    public function addNote($note, $jenis, $route)
+    public function addNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital)
     {
         // $route = $this->getRoute($route);
         if (in_array($route, ['punch-atas', 'punch-bawah', 'dies'])) {
             $this->removeSessionVariables();
 
             if (in_array($route, ['punch-atas', 'punch-bawah'])) {
-                $this->updatePunchNote($note, $jenis, $route);
+                $this->updatePunchNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital);
             } elseif ($route == 'dies') {
-                $this->updateDiesNote($note, $jenis, $route);
+                $this->updateDiesNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital);
             }
         }
 
@@ -50,24 +50,34 @@ class ServicePengukuranAwal
         session()->remove('count_num');
     }
 
-    private function updatePunchNote($note, $jenis, $route)
+    private function updatePunchNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital)
     {
-        PengukuranAwalPunch::updateOrCreate([
+        Punch::updateOrCreate([
             'punch_id' => session('punch_id'),
             'masa_pengukuran' => 'pengukuran awal'
         ], [
-            'note' => $note,
+            'referensi_drawing' => $referensi_drawing,
+            'catatan' => $catatan,
+            'kesimpulan' => $kesimpulan,
+            'kalibrasi_micrometer' => $micrometer_digital,
+            'kalibrasi_caliper' => $caliper_digital,
+            'kalibrasi_dial_indicator' => $dial_indicator_digital,
         ]);
         return (new SetDraftStatusService)->handle($jenis, $route);
     }
 
-    private function updateDiesNote($note, $jenis, $route)
+    private function updateDiesNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital)
     {
-        PengukuranAwalDies::updateOrCreate([
+        Dies::updateOrCreate([
             'dies_id' => session('dies_id'),
             'masa_pengukuran' => 'pengukuran awal'
         ], [
-            'note' => $note,
+            'referensi_drawing' => $referensi_drawing,
+            'catatan' => $catatan,
+            'kesimpulan' => $kesimpulan,
+            'kalibrasi_micrometer' => $micrometer_digital,
+            'kalibrasi_caliper' => $caliper_digital,
+            'kalibrasi_dial_indicator' => $dial_indicator_digital,
         ]);
         return (new SetDraftStatusService)->handle($jenis, $route);
     }

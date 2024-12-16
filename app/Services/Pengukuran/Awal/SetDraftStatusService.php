@@ -106,12 +106,8 @@ class SetDraftStatusService
                 'is_draft' => 0
             ]);
 
-            $this->sendToApproval('punch');
+            $this->sendToApproval($this->getSegment($route));
         }
-        
-        // return (new PunchController)->index($this->getSegment($route));
-        // return redirect(route('pnd.pa.' . $route . '.index'))->with($alert, $msg);
-        
     }
 
     private function updateDiesDraftStatus($updateDraftStatus)
@@ -239,7 +235,6 @@ class SetDraftStatusService
     private function sendToApproval($jenis)
     {
         $M_ApprPengukuran = new M_ApprPengukuran();
-        $M_ApprDisposal = new M_ApprDisposal();
 
         if (in_array($jenis, ['punch-atas', 'punch-bawah'])) {
             $this->createApprovalRequest($M_ApprPengukuran, 'RPU', session('punch_id'), null);
@@ -261,8 +256,8 @@ class SetDraftStatusService
             'user_id' => session('user_id'),
             'tgl_submit' => date('Y-m-d H:i:s'),
             'due_date' => date('Y-m-d H:i:s', strtotime(date('Y-m-d 23:59:59') . " +6 days")),
-            'approved_by' => '-',
-            'approved_at' => null,
+            'by' => '-',
+            'at' => null,
             'is_approved' => '-',
             'is_rejected' => '-',
         ];

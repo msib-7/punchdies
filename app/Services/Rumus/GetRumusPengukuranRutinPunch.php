@@ -38,12 +38,20 @@ class GetRumusPengukuranRutinPunch
             }
             
             if ($diterima) {
-                echo "Hasil pengukuran diterima.";
+                $status = [
+                    'status' => 'OK',
+                ];
             } else {
-                echo "Hasil pengukuran tidak diterima.";
+                $status = [
+                    'status' => 'NOK',
+                ];
             }
         } else {
-            echo "Hasil pengukuran tidak diterima.";
+            $status = [
+                'status' => 'NOK',
+            ];
         }
+
+        PengukuranRutinPunch::where('punch_id', $punch->punch_id)->update($status);
     }
 }

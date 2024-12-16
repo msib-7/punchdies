@@ -67,11 +67,13 @@
                                             @endif
                                             <td>{{$item->tgl_submit}}</td>
                                             <td>{{$item->users->nama}}</td>
-                                            <td>{{$item->nama_line}}</td>
+                                            <td>{{$item->users->lines->nama_line}}</td>
                                             <td>{{$item->due_date}}</td>
                                             <td class="text-center">
-                                                @if ($item->is_approved == '1')
+                                                @if ($item->is_approved == '1' && $item->is_rejected == '0')
                                                     <i>approved</i>
+                                                @elseif ($item->is_rejected == '1' && $item->is_approved == '0')
+                                                    <i>rejected</i>
                                                 @else
                                                     <a href="{{route('pnd.approval.pa.show', $item->id)}}">
                                                         <button class="btn btn-sm btn-primary">

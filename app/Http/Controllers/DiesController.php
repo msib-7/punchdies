@@ -118,17 +118,18 @@ class DiesController extends Controller
 
             $data['dataDies'] = $dataDies;
 
-            // $ttlDies = Dies::query()
-            //     ->select('dies_id')
-            //     ->where('jenis', $request->segment(3))
-            //     ->where('is_delete_dies', '0')
-            //     ->groupBy('dies_id')
-            //     ->count();
+            $hasPengukuranAwal = Dies::where('masa_pengukuran', 'pengukuran awal')
+                ->where('jenis', $request->segment(3))
+                ->where('is_delete_dies', '0')
+                ->exists(); // This will return true or false
+
+            $data['hasPengukuranAwal'] = !$hasPengukuranAwal; // Invert the value to show button if no data
+
             $ttlDies = $dataDies->count();
             $data['ttlDies'] = $ttlDies;
             // dd($ttlDies);
 
-            $Dataline = Lines::all();
+            $Dataline = Lines::where('nama_line', '!=', 'All Line')->get();
             $data['DataLine'] = $Dataline;
 
             $data['jenis'] = 'dies';

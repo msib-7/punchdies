@@ -60,8 +60,8 @@ class ApprovalPengukuranAwalController extends Controller
         $update = [
             'is_approved' => '1',
             'is_rejected' => '0',
-            'approved_by' => auth()->user()->nama,
-            'approved_at' => date('Y-m-d H:i:s'),
+            'by' => auth()->user()->nama,
+            'at' => date('Y-m-d H:i:s'),
         ];
         M_ApprPengukuran::where('req_id', $data->req_id)->update($update);
 
@@ -73,5 +73,25 @@ class ApprovalPengukuranAwalController extends Controller
         PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
         
         return redirect(route('pnd.approval.pa.index'))->with('success', 'Data Approved Successfully! by '.auth()->user()->nama);
+    }
+    public function reject($id) {
+        $data = M_ApprPengukuran::find($id);
+
+        $update = [
+            'is_approved' => '0',
+            'is_rejected' => '1',
+            'by' => auth()->user()->nama,
+            'at' => date('Y-m-d H:i:s'),
+        ];
+        M_ApprPengukuran::where('req_id', $data->req_id)->update($update);
+
+        $updateStatusApproved = [
+            'is_approved' => '0',
+            'is_rejected' => '1',
+        ];
+        Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+        PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+        
+        return redirect(route('pnd.approval.pa.index'))->with('success', 'Data Rejected! by '.auth()->user()->nama);
     }
 }

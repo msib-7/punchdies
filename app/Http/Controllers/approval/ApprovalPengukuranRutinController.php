@@ -70,8 +70,8 @@ class ApprovalPengukuranRutinController extends Controller
             $update = [
                 'is_approved' => '1',
                 'is_rejected' => '0',
-                'approved_by' => auth()->user()->nama,
-                'approved_at' => date('Y-m-d H:i:s'),
+                'by' => auth()->user()->nama,
+                'at' => date('Y-m-d H:i:s'),
             ];
             // M_ApprPengukuran::where('req_id', $data->req_id)->update($update);
             M_ApprPengukuran::updateOrCreate(['req_id' => $data->req_id], $update);
@@ -88,6 +88,40 @@ class ApprovalPengukuranRutinController extends Controller
             DB::commit();
 
             return redirect(route('pnd.approval.pr.index'))->with('success', 'Data Approved Successfully! by '.auth()->user()->nama);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error('Error Approving Data : ' . $th->getMessage());
+            return redirect(route('pnd.approval.pr.index'))->with('error', 'Error Approving Data!');
+        }
+
+    }
+    public function reject($id)
+    {
+        $data = M_ApprPengukuran::find($id);
+
+        try {
+            DB::beginTransaction();
+            $update = [
+                'is_approved' => '0',
+                'is_rejected' => '1',
+                'by' => auth()->user()->nama,
+                'at' => date('Y-m-d H:i:s'),
+            ];
+            // M_ApprPengukuran::where('req_id', $data->req_id)->update($update);
+            M_ApprPengukuran::updateOrCreate(['req_id' => $data->req_id], $update);
+
+            $updateStatusApproved = [
+                'is_approved' => '0',
+                'is_rejected' => '1',
+            ];
+            // Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+            // PengukuranRutinPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+            Punch::updateOrCreate(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran], $updateStatusApproved);
+            PengukuranRutinPunch::updateOrCreate(['punch_id' => $data->punch_id], $updateStatusApproved);
+
+            DB::commit();
+
+            return redirect(route('pnd.approval.pr.index'))->with('success', 'Data Approved Successfully! by ' . auth()->user()->nama);
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error('Error Approving Data : ' . $th->getMessage());

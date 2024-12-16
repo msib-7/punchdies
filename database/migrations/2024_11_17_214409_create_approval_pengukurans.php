@@ -20,10 +20,10 @@ return new class extends Migration
             $table->uuid('user_id');
             $table->dateTime('tgl_submit');
             $table->dateTime('due_date');
-            $table->string('approved_by')->nullable();
-            $table->timestamp('approved_at')->nullable();
             $table->string('is_approved');
             $table->string('is_rejected');
+            $table->string('by')->nullable();
+            $table->timestamp('at')->nullable();
             $table->timestamps();
         });
     }

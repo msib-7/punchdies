@@ -22,6 +22,7 @@ return new class extends Migration
             $table->double('ketinggian_dies')->nullable();
             $table->string('visual')->nullable();
             $table->string('kesesuaian_dies')->nullable();
+            $table->string('status')->nullable();
             $table->string('masa_pengukuran');
             $table->string('note')->nullable();
             $table->string('is_draft');

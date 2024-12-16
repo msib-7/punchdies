@@ -23,6 +23,12 @@ return new class extends Migration
             $table->string('line_id');
             $table->string('jenis');
             $table->string('masa_pengukuran');
+            $table->string('referensi_drawing')->nullable();
+            $table->string('catatan')->nullable();
+            $table->string('kesimpulan')->nullable();
+            $table->date('kalibrasi_micrometer')->nullable();
+            $table->date('kalibrasi_caliper')->nullable();
+            $table->date('kalibrasi_dial_indicator')->nullable();
             $table->string('is_draft');
             $table->string('is_delete_dies');
             $table->string('is_edit');

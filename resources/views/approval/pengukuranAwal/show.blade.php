@@ -156,11 +156,18 @@
                                                     <div class="col-12 col-md-3">
                                                         <div class="row">
                                                             <div class="col-12 d-flex align-items-center justify-content-center border border-3 rounded-3 h-100 d-inline-block">
-                                                                @if ($data->is_approved != 1)
+                                                                @if ($data->is_approved != 1 || $data->is_rejected != 1)
                                                                     <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
                                                                         <a href="{{route('pnd.approval.pa.approve', $data->id)}}">
                                                                             <button class="btn btn-success btn-lg w-100" style="height: 100%; min-height: 5vh; max-height: 8vh;">
                                                                                 Approve
+                                                                            </button>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
+                                                                        <a href="{{route('pnd.approval.pa.reject', $data->id)}}">
+                                                                            <button class="btn btn-danger btn-lg w-100" style="height: 100%; min-height: 5vh; max-height: 8vh;">
+                                                                                Rejected
                                                                             </button>
                                                                         </a>
                                                                     </div>
@@ -221,8 +228,7 @@
                                                             <td class="text-center">{{ $item->tip_diameter_2 }}</td>
                                                             <td class="text-center">{{ $item->cup_depth }}</td>
                                                             <td class="text-center">{{ $item->working_length }}</td>
-                                                            {{-- <td class="text-center">{{ $item->status }}</td> --}}
-                                                            <td class="text-center">OK</td>
+                                                            <td class="text-center">{{ $item->status }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>

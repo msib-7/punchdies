@@ -2,551 +2,170 @@
 @section('main-content')
 <!--begin::Toolbar-->
 <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
-    <!--begin::Toolbar container-->
     <div id="kt_app_toolbar_container" class="app-container container-fluid d-flex flex-stack">
-        <!--begin::Page title-->
         <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-            <!--begin::Title-->
             <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                Data {{$jenisPunch}}</h1>
-            <!--end::Title-->
-            <!--begin::Breadcrumb-->
+                Data {{$jenisPunch}}
+            </h1>
             <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                <!--begin::Item-->
                 <li class="breadcrumb-item text-muted">
                     <span class="text-muted text-hover-primary">Total Punch: <b>{{ $ttlPunch }}</b></span>
                 </li>
             </ul>
-            <!--end::Breadcrumb-->
         </div>
-        <!--end::Page title-->
+        <div class="d-flex align-items-center gap-2 gap-lg-3">
+            <button class="btn btn-sm fw-bold btn-primary" id="createPunch" data-bs-toggle="modal" data-bs-target="#modal_create_data_punch">
+                Create Data Punch
+            </button>
+        </div>
     </div>
-    <!--end::Toolbar container-->
 </div>
 <!--end::Toolbar-->
 
-<!--begin::Content-->
-<div id="kt_app_content" class="app-content flex-column-fluid">
-    <!--begin::Content container-->
-    <div id="kt_app_content_container" class="app-container container-fluid">
-        <!--begin::Row-->
-        <div class="row g-5 gx-xl-10 mb-5 mb-xl-10">
-            <div class="card">
-                <div class="card-body">
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-12 col-md-12 col-lg-10">
-                                <table id="PA_Table_List" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Tgl Pengukuran</th>
-                                            <th>Data Punch</th>
-                                            <th>Merk</th>
-                                            <th>Bulan/Tahun</th>
-                                            <th>Nama Mesin</th>
-                                            <th>Kode/Nama Produk</th>
-                                            <th>Pengukuran</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($dataPunch as $data)
-                                        <tr>
-                                            <td>{{ date_format($data->created_at, 'd M Y')}}</td>
-                                            <td>
-                                                <div class="card shadow-lg"
-                                                    style="border: 1px solid #E2E2E9;width: -webkit-fill-available; text-align: left">
-                                                    <div class="card-body p-sm-0 p-md-3">
-                                                        <div class="col-12">
-                                                            <div class="px-8">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        <div class="row">
-                                                                            <div class="col-12 col-md-6 py-4">
-                                                                                <h1 class="d-flex align-items-center">
-                                                                                    {{ strtoupper($data->merk)}}
-                                                                                    &nbsp;
-                                                                                    @if ($data->is_draft == '1')
-                                                                                        <span class="badge badge-square badge-outline badge-dark fs-3">Draft</span>
-                                                                                    @endif
-                                                                                    @if ($data->is_draft == '0')
-                                                                                        <span class="badge badge-square badge-outline badge-warning fs-3">Waiting</span>
-                                                                                    @endif
-                                                                                </h1>
-                                                                            </div>
-                                                                            <div class="col-12 col-md-6 d-flex justify-content-end py-4">
-                                                                                @if ($data->masa_pengukuran != "-")
-                                                                                <button class="btn btn-primary mx-2 create-rtn" id="{{$data->punch_id}}" onclick="opsiPengukuran(this)">
-                                                                                    <i class="ki-duotone ki-add-files fs-1">
-                                                                                        <span class="path1"></span>
-                                                                                        <span class="path2"></span>
-                                                                                        <span class="path3"></span>
-                                                                                    </i>
-                                                                                    Pengukuran
-                                                                                </button>
-                                                                                @endif
-                                                                                {{-- <a href="/data/{{$jenis}}/pengukuran-rutin/cek_pengukuran/{{$data->punch_id}}"> --}}
-                                                                                    @if ($data->masa_pengukuran != "-")
-                                                                                    <button type="submit" class="btn btn-secondary mx-2" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
-                                                                                        <i class="ki-duotone ki-magnifier fs-1">
-                                                                                            <span class="path1"></span>
-                                                                                            <span class="path2"></span>
-                                                                                        </i>
-                                                                                        Lihat Data Pengukuran
-                                                                                    </button>
-                                                                                    @endif
-                                                                                {{-- </a> --}}
-                                                                            </div>
-                                                                            {{-- <div class="p-2">
-                                                                                <!--begin::Action Button-->
-                                                                                <div class="me-0">
-                                                                                    <button class="btn btn-sm btn-icon btn-light-danger  btn-active-color-white" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                                                        <i class="ki-solid ki-dots-horizontal fs-2x"></i>
-                                                                                    </button>
-                                                                                    <!--begin:: Button List-->
-                                                                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 fw-semibold w-auto py-0" data-kt-menu="true">
-                                                                                        <!--begin:: Delete button-->
-                                                                                        <div class="menu-item rounded shadow border p-0">
-                                                                                            <a href="/data/{{$jenis}}/delete-data/{{$data->punch_id}}" class="menu-link p-0 d-flex justify-content-center">
-                                                                                                <button class="btn btn-outline btn-outline-danger d-inline-flex p-3">
-                                                                                                    &nbsp;<i class="ki-duotone ki-trash fs-2x">
-                                                                                                        <span class="path1"></span>
-                                                                                                        <span class="path2"></span>
-                                                                                                        <span class="path3"></span>
-                                                                                                        <span class="path4"></span>
-                                                                                                        <span class="path5"></span>
-                                                                                                    </i>
-                                                                                                </button>
-                                                                                            </a>
-                                                                                        </div>
-                                                                                        <!--end::Delete Button-->
-                                                                                    </div>
-                                                                                    <!--end::BUtton List-->
-                                                                                </div>
-                                                                                <!--end::Action Button-->
-                                                                            </div> --}}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 col-md-6">
-                                                                        <div class="row">
-                                                                            <div class="col-12">
-                                                                                <div class="table-responsive">
-                                                                                    <table style="border: none;">
-                                                                                        <tbody>
-                                                                                            <tr
-                                                                                                style="border: none; height: 30px;">
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    Bulan/Tahun Pembuatan
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">:
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    {{$data->bulan_pembuatan}}
-                                                                                                    {{$data->tahun_pembuatan}}
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                            <tr
-                                                                                                style="border: none; height: 30px;">
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    Nama Mesin Cetak
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">:
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    {{ strtoupper($data->nama_mesin_cetak)}}
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                            <tr
-                                                                                                style="border: none; height: 30px;">
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    Kode Produk
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">:
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                        {{ strtoupper($data->kode_produk)}}
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                            <tr
-                                                                                                style="border: none; height: 30px;">
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    Nama Produk
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">:
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                        {{ strtoupper($data->nama_produk) }}
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 col-md-6">
-                                                                        <div class="row">
-                                                                            <div class="col-12">
-                                                                                <div class="table-responsive">
-                                                                                    <table style="border: none;">
-                                                                                        <tbody>
-                                                                                            <tr
-                                                                                                style="border: none; height: 30px;">
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    Pengukuran Terakhir
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">:
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    {{ ucwords($data->masa_pengukuran) }}</td>
-                                                                                            </tr>
-                                                                                            <tr
-                                                                                                style="border: none; height: 30px;">
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    Tanggal Pengukuran
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">:
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    {{ date_format($data->created_at, 'd M Y')}}</td>
-                                                                                            </tr>
-                                                                                            <tr style="border: none; height: 30px;">
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    Status
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">:
-                                                                                                </td>
-                                                                                                <td style="border: none;"
-                                                                                                    class="fs-3 px-4 my-4">
-                                                                                                    @if ($data->is_draft == '1')
-                                                                                                        <span class="badge badge-square badge-outline badge-light-dark fs-3">Draft</span>
-                                                                                                    @endif
-                                                                                                    @if ($data->is_draft == '0')
-                                                                                                        <span class="badge badge-square badge-outline badge-light-warning fs-4">
-                                                                                                            Waiting For Approval
-                                                                                                        </span>
-                                                                                                    @endif
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>{{$data->merk}}</td>
-                                            <td>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</td>
-                                            <td>{{$data->nama_mesin_cetak}}</td>
-                                            <td>{{$data->kode_produk}}</td>
-                                            <td>{{ ucwords($data->masa_pengukuran) }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-12 col-md-12 col-lg-2">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4>Sort by:</h4>
-                                        <div class="row mt-5">
-                                            <div class="col-12 mb-3">
-                                                <div class="form-check form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="radio" value="" name='pa_sort'
-                                                        id="tgl_pengukuran" checked />
-                                                    <label class="form-check-label" for="tgl_pengukuran">
-                                                        Tanggal Pengukuran
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <div class="form-check form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="radio" value="" name='pa_sort'
-                                                        id="flexRadioDefault" />
-                                                    <label class="form-check-label" for="flexRadioDefault">
-                                                        Default radio
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <div class="form-check form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="radio" value="" name='pa_sort'
-                                                        id="flexRadioDefault" />
-                                                    <label class="form-check-label" for="flexRadioDefault">
-                                                        Default radio
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="separator my-3"></div>
-                                            <div class="col-12 mb-3 d-flex flex-center">
-                                                <div class="form-check form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="radio" value=""
-                                                        name='pa_order' id="asc" checked />
-                                                    <label class="form-check-label" for="asc">
-                                                        ASC
-                                                    </label>
-                                                    <div class="mx-5"></div>
-                                                    <input class="form-check-input" type="radio" value=""
-                                                        name='pa_order' id="desc" />
-                                                    <label class="form-check-label" for="desc">
-                                                        DESC
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<!--begin::Accordion for Filters-->
+<div class="accordion mb-4 mx-10" id="filterAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Filter Options
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#filterAccordion">
+            <div class="accordion-body">
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <label for="searchInput" class="form-label">Search</label>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="filterCards()" title="Search by any keyword">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label for="statusFilter" class="form-label">Status</label>
+                        <select id="statusFilter" class="form-select" onchange="filterCards()" title="Filter by status">
+                            <option value="">All Statuses</option>
+                            <option value="draft">Draft</option>
+                            <option value="waiting">Waiting</option>
+                            <option value="approved">Approved</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label for="merkFilter" class="form-label">Merk</label>
+                        <input type="text" id="merkFilter" class="form-control" placeholder="Merk..." onkeyup="filterCards()" title="Filter by merk">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label for="tanggalPengukuranFilter" class="form-label">Measurement Date</label>
+                        <input type="date" id="tanggalPengukuranFilter" class="form-control" onchange="filterCards()" title="Select the measurement date">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label for="namaMesinFilter" class="form-label">Machine Name</label>
+                        <input type="text" id="namaMesinFilter" class="form-control" placeholder="Nama Mesin..." onkeyup="filterCards()" title="Filter by machine name">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label for="bulanFilter" class="form-label">Month</label>
+                        <select id="bulanFilter" class="form-select" onchange="filterCards()" title="Filter by month of production">
+                            <option value="">All Months</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March </option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label for="tahunFilter" class="form-label">Year</label>
+                        <input type="number" id="tahunFilter" class="form-control" placeholder="Tahun..." onkeyup="filterCards()" title="Filter by year of production">
+                    </div>
+                    <div class="col-6 col-md-2">
+                        <label for="lineFilter" class="form-label">Line</label>
+                        <select id="lineFilter" class="form-select" onchange="filterCards()" title="Filter by line">
+                            <option value="">All Lines</option>
+                            @foreach ($DataLine as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama_line }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end::Accordion -->
+
+<!--begin Content-->
+<div class="mb-4 mx-10">
+    <div class="row g-5 gx-xl-10" id="cardContainer">
+        @foreach ($dataPunch as $data)
+            <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
+                data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_rejected == '1' ? 'rejected' : ($data->is_draft == '1' ? 'draft' : 'waiting')) }}" 
+                data-merk="{{ strtolower($data->merk) }}" 
+                data-nama-mesin="{{ strtolower($data->nama_mesin_cetak) }}" 
+                data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
+                data-bulan="{{ $data->bulan_pembuatan }}" 
+                data-tahun="{{ $data->tahun_pembuatan }}"
+                data-line="{{ $data->line_id }}">
+                <div class="card shadow-sm border-0 rounded-3 h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ strtoupper($data->merk) }}
+                            {{-- @if ($data->is_draft == '1')
+                                <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                            @elseif($data->is_draft == '0')
+                                <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                            @elseif ($data->is_approved == '1')
+                                @if ($data->is_approved == '1' && $data->is_draft == '0')
+                                    <span class="badge badge-square badge-outline badge-success">Approved</span>
+                                @elseif ($data->is_approved == '1' && $data->is_draft == '1')
+                                    <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                @endif
+                            @endif --}}
+
+
+                            @if ($data->is_approved == '1' && $data->is_draft == '0')
+                                <span class="badge badge-square badge-outline badge-success">Approved</span>
+                            @elseif ($data->is_rejected == '1') <!-- Check for rejection -->
+                                <span class="badge badge-square badge-outline badge-danger">Rejected</span>
+                            @else
+                                @if ($data->is_draft == '1')
+                                    <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                @elseif ($data->is_draft == '0')
+                                    <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                                @endif
+                            @endif
+                        </h5>
+                        <div class="separator border-info border-3 my-4"></div>
+                        <p class="card-text">Bulan/Tahun Pembuatan: <strong>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</strong></p>
+                        <p class="card-text">Nama Mesin: <strong>{{ strtoupper($data->nama_mesin_cetak) }}</strong></p>
+                        <p class="card-text">Kode Produk: <strong>{{ strtoupper($data->kode_produk) }}</strong></p>
+                        <p class="card-text">Nama Produk: <strong>{{ strtoupper($data->nama_produk) }}</strong></p>
+                        <p class="card-text">Pengukuran Terakhir: <strong>{{ ucwords($data->masa_pengukuran) }}</strong></p>
+                        <p class="card-text">Tanggal Pengukuran: <strong>{{ date_format($data->created_at, 'd M Y')}}</strong></p>
+                        <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
+                            @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal and not rejected -->
+                                <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->punch_id}}" onclick="opsiPengukuran(this)">
+                                    <span class="fs-7">Pengukuran</span>
+                                </button>
+                            @endif
+                            <button class="btn btn-secondary" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
+                                <i class="ki-solid ki-eye fs-2"></i>
+                                <span class="fs-8">Lihat Data Pengukuran</span>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-
-        </div>
-        <!--end::Row-->
+        @endforeach
     </div>
-    <!--end::Content container-->
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-4">
+        <ul class="pagination"></ul>
+    </div>
 </div>
 <!--end::Content-->
-
-{{-- Create Data Punch Modal --}}
-<div class="modal fade" tabindex="-1" id="modal_create_data_punch">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Create Data {{$jenisPunch}}</h3>
-
-                <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                    aria-label="Close">
-                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                </div>
-                <!--end::Close-->
-            </div>
-
-            <div class="modal-body">
-                <div class="col-12">
-                    <form id="form_create_punch">
-                        @csrf
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="mb-5">
-                                    <label for="exampleFormControlInput1" class="required form-label">
-                                        Merk Punch</label>
-                                    <input type="text" class="form-control form-control-solid"
-                                        placeholder="Masukkan Merk Punch" name="merk" />
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="row">
-                                    <label for="exampleFormControlInput1" class="required form-label">
-                                        Bulan & Tahun Pembuatan</label>
-                                    <div class="col-6">
-                                        <select class="form-select" aria-label="Select example" name="bulan_pembuatan">
-                                            <option>Open this select menu</option>
-                                            <option value="1">Januari</option>
-                                            <option value="2">Februari</option>
-                                            <option value="3">Maret</option>
-                                            <option value="4">April</option>
-                                            <option value="5">Mei</option>
-                                            <option value="6">Juni</option>
-                                            <option value="7">Juli</option>
-                                            <option value="8">Agustus</option>
-                                            <option value="9">September</option>
-                                            <option value="10">Oktober</option>
-                                            <option value="11">November</option>
-                                            <option value="12">Desember</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-6">
-                                        <select class="form-select" aria-label="Select example" name="tahun_pembuatan" id="tahun_buat">
-                                            <option>Open this select menu</option>\
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="separator my-10"></div>
-                            <div class="col-12">
-                                <div class="mb-5">
-                                    <label for="exampleFormControlInput1" class="required form-label">
-                                        Nama Mesin Cetak
-                                    </label>
-                                    <input type="text" class="form-control form-control-solid"
-                                        placeholder="Masukkan Nama Mesin" name="nama_mesin_cetak" />
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="mb-5">
-                                            <label for="exampleFormControlInput1" class="required form-label">
-                                                Nama Produk</label>
-                                            <input type="text" class="form-control form-control-solid"
-                                                placeholder="Masukkan Nama Produk" name="nama_produk" />
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="mb-5">
-                                            <label for="exampleFormControlInput1" class="required form-label">
-                                                Kode Produk</label>
-                                            <input type="text" class="form-control form-control-solid"
-                                                placeholder="Masukkan Kode Produk" name="kode_produk" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="">
-                                    <label for="exampleFormControlInput1" class="required form-label">
-                                        Pilih Line untuk Punch
-                                    </label>
-                                    <select class="form-select" aria-label="Select example" name="line_id">
-                                        <option>Open this select menu</option>
-                                        <option value="1">Line 8A</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-{{-- Konfirmasi Lanjut Pegukuran --}}
-<div class="modal fade" tabindex="-1" id="modal_lanjut_pengukuran">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Detail Data</h4>
-
-                <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                    aria-label="Close">
-                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                </div>
-                <!--end::Close-->
-            </div>
-
-            <div class="modal-body">
-                <div class="d-flex flex-column justify-content-center">
-                    <p class="text-center fs-4">Data Punch Berhasil Dibuat!</p>
-                    <p class="text-center fs-4">Lanjutkan Pengukuran</p>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <div class="p-2">
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                        data-bs-stacked-modal="#modal_buat_pengukuran_1">Pengukuran</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- Kondisi Pengukuran tidak Ditemukan! --}}
-<div class="modal fade" tabindex="-1" id="modal_cek_pengukuran">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Detail Data</h4>
-
-                <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                    aria-label="Close">
-                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                </div>
-                <!--end::Close-->
-            </div>
-
-            <div class="modal-body">
-                <div class="d-flex flex-column justify-content-center">
-                    <p class="text-center fs-4">Data Pengukuran Tidak Ditemukan!</p>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <div class="me-auto">
-                    <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close</button>
-                </div>
-                <div class="p-2">
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                        data-bs-stacked-modal="#modal_buat_pengukuran_1">Buat Pengukuran Awal</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- Buat Data Pengukuran --}}
-<div class="modal fade" tabindex="-1" id="modal_buat_pengukuran_1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Buat Data Pengukuran</h4>
-
-                <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                    aria-label="Close">
-                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                </div>
-                <!--end::Close-->
-            </div>
-
-            <form action="{{url('/data/'.$jenis.'/pengukuran-awal')}}">
-                @csrf
-                <div class="modal-body">
-                    <div class="d-flex flex-column justify-content-center">
-                        <p class="text-center fs-4">Masukkan Jumlah Punch</p>
-                        <div class="mb-10">
-                            <div class="position-relative">
-                                <div class="required position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid required text-center"
-                                    placeholder="Jumlah Punch" name="jumlah_data_punch" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <div class="p-2">
-                        <button type="submit" class="btn btn-sm btn-primary">Confirm</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 
 {{-- Pilih Pengukuran untuk dilihat --}}
 <div class="modal fade" tabindex="-1" id="modal_pilih_pengukuran">
@@ -708,7 +327,110 @@
 </div>
 
 <script src="{{asset('assets/js/date.format.js')}}"></script>
+{{-- Filter Tools --}}
 <script>
+    let currentPage = 1;
+    const itemsPerPage = 9;
+
+    function filterCards() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const status = document.getElementById('statusFilter').value.toLowerCase();
+        const merk = document.getElementById('merkFilter').value.toLowerCase();
+        const tanggalPengukuran = document.getElementById('tanggalPengukuranFilter').value;
+        const namaMesin = document.getElementById('namaMesinFilter').value.toLowerCase();
+        const bulan = document.getElementById('bulanFilter').value;
+        const tahun = document.getElementById('tahunFilter').value;
+        const line = document.getElementById('lineFilter').value;
+        const cards = document.querySelectorAll('.card-item');
+
+        // Hide all cards initially
+        cards.forEach(card => {
+            card.style.display = 'none';
+        });
+
+        const visibleCards = Array.from(cards).filter(card => {
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+            const bodyText = card.querySelector('.card-text').textContent.toLowerCase();
+            const cardStatus = card.getAttribute('data-status');
+            const cardMerk = card.getAttribute('data-merk');
+            const cardNamaMesin = card.getAttribute('data-nama-mesin');
+            const cardTanggalPengukuran = card.getAttribute('data-tanggal-pengukuran');
+            const cardBulan = card.getAttribute('data-bulan');
+            const cardTahun = card.getAttribute('data-tahun');
+            const cardLine = card.getAttribute('data-line');
+
+            const matchesSearch = title.includes(input) || bodyText.includes(input);
+            const matchesStatus = status === '' || cardStatus === status;
+            const matchesMerk = cardMerk.includes(merk);
+            const matchesNamaMesin = cardNamaMesin.includes(namaMesin);
+            const matchesTanggal = tanggalPengukuran === '' || cardTanggalPengukuran === tanggalPengukuran;
+            const matchesBulan = bulan === '' || cardBulan === bulan;
+            const matchesTahun = tahun === '' || cardTahun === tahun;
+            const matchesLine = line === '' || cardLine === line;
+
+            return matchesSearch && matchesStatus && matchesMerk && matchesNamaMesin && matchesTanggal && matchesBulan && matchesTahun && matchesLine;
+        });
+
+        // Show only the visible cards
+        visibleCards.forEach(card => {
+            card.style.display = '';
+        });
+
+        setupPagination(visibleCards);
+        showPage(currentPage, visibleCards);
+    }
+
+    function setupPagination(visibleCards) {
+        const totalPages = Math.ceil(visibleCards.length / itemsPerPage);
+        const paginationLinks = document.querySelector('.pagination');
+        paginationLinks.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const link = document.createElement('a');
+            link.textContent = i;
+            link.className = 'page-link';
+            link.href = '#';
+            link.onclick = (e) => {
+                e.preventDefault();
+                currentPage = i;
+                showPage(currentPage, visibleCards);
+            };
+            const listItem = document.createElement('li');
+            listItem.className = 'page-item';
+            listItem.appendChild(link);
+            paginationLinks.appendChild(listItem);
+        }
+    }
+
+    function showPage(page, visibleCards) {
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+
+        visibleCards.forEach((card, index) => {
+            card.style.display = (index >= start && index < end) ? '' : 'none';
+        });
+    }
+
+    window.onload = () => {
+        filterCards(); // Initial filter to show all cards
+    };
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const createButton = document.getElementById('createPunch');
+        const modal = document.getElementById('modal_create_data_punch');
+
+        // Disable the button when clicked
+        createButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default action
+            createButton.disabled = true; // Disable the button
+        });
+
+        // Enable the button when the modal is closed
+        modal.addEventListener('hidden.bs.modal', function () {
+            createButton.disabled = false; // Enable the button
+        });
+    });
 
     function opsiPengukuran(elem) {
         var id = elem.id;
@@ -716,7 +438,6 @@
             type: "GET",
             url: "{{route('pnd.pr.'.$route.'.opsi', ':id')}}".replace(':id', id),
             beforeSend: function() {
-                $('#'+elem.id).prop('disabled', true);
             },
             success: function (data) {
                 if(data.isdraft == true){
@@ -747,6 +468,7 @@
                         icon: "error"
                     });
                     }else{
+                        $('.create-rtn').prop('disabled', false);
                         $('#modal_option_pengukuran').modal('show');
                         $('#id_create_rutin').val(elem.id);
                     }
