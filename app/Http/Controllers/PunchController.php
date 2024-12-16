@@ -86,19 +86,19 @@ class PunchController extends Controller
                             ->where('is_delete_punch', '0')
                             ->where(function ($query) {
                                 $query->where(function ($query) {
-                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%');
+                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                    ->where('is_approved', '=', '-');
                                 })
                                     ->orWhere(function ($query) {
                                         $query->where('masa_pengukuran',  'pengukuran awal')
-                                            ->where('is_approved', '!=', '-')
-                                            ->orWhere('is_approved', '!=', '0');
+                                            ->where('is_approved', '=', '1');
                                     });
                             });
                     })
                     ->groupBy('punch_id')
                     ->get();
 
-                                    dd($dataPunch);
+                                    // dd($dataPunch);
             }else{
                 $dataPunch = Punch::query()
                     ->select(
@@ -188,7 +188,7 @@ class PunchController extends Controller
                     ->where('is_delete_punch', '0')
                     ->orderBy('created_at', "desc")
                     ->get();
-            }else{
+            }else{  
                 $dataPunch = Punch::query()
                     ->where('masa_pengukuran', 'pengukuran awal')
                     ->where('jenis', $request->segment(3))
