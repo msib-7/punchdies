@@ -381,6 +381,7 @@ class PengukuranController extends Controller
                 ->where('no', '>', $start_id)
                 ->orderBy('no', 'asc')
                 ->limit(10);
+                
             $draftPengukuran = $queryPengukuran->get();
             $masa_pengukuran = $draftPengukuran->last()->masa_pengukuran;
             session()->put('masa_pengukuran', $masa_pengukuran);

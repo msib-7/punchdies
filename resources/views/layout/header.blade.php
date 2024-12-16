@@ -352,11 +352,18 @@
 
                 <!--begin::User menu-->
                 <div class="app-navbar-item ms-1 ms-md-4" id="kt_header_user_menu_toggle">
+                    <div class="d-flex flex-column px-2 align-items-end">
+                            <div class="d-flex fs-6">
+                                {{auth()->user()->nama}}
+                            </div>
+                            <div class="d-flex fs-8 fw-semibold">
+                                ({{auth()->user()->lines->nama_line}})
+                            </div>
+                        </div>
                     <!--begin::Menu wrapper-->
                     <div class="cursor-pointer symbol symbol-35px"
                         data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
-                        {{session('nama_user')}}
                         <img src="/assets/media/avatars/blank.png" class="rounded-3" alt="user" />
                     </div>
                     <!--begin::User account menu-->
@@ -372,8 +379,9 @@
                                 <!--end::Avatar-->
                                 <!--begin::Username-->
                                 <div class="d-flex flex-column">
-                                    <div class="fw-bold d-flex align-items-center fs-5">{{session('nama_user')}}
-                                        <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">{{ session('role_name') }}</span>
+                                    <div class="fw-bold d-flex align-items-center fs-5">
+                                        {{auth()->user()->nama}}
+                                        <small class="badge badge-light-success fw-bold fs-9 px-2 py-1 ms-2">{{ auth()->user()->roles->role_name }}</small>
                                     </div>
                                     <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{session('email_user')}}</a>
                                 </div>
