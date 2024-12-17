@@ -650,7 +650,7 @@ class PengukuranController extends Controller
 
         if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
             if ($pengukuran == null) {
-                $dataPunch = Punch::where('punch_id', $id)->latest()->first();
+                $dataPunch = Punch::where('punch_id', $id)->latest('created_at')->first();
                 $masa_pengukuran = $dataPunch->masa_pengukuran;
             } else {
                 $masa_pengukuran = $pengukuran;
@@ -945,7 +945,7 @@ class PengukuranController extends Controller
             $cekDraft = Punch::where('punch_id', '=', $id)
                         ->where('masa_pengukuran', session('masa_pengukuran_view'))
                         ->first();
-            $pengukuran = $cekDraft->masa_pengukuran;
+            $pengukuran = session('masa_pengukuran_view');
             if($pengukuran == "pengukuran rutin 1"){
                 $masa_pengukuran_pre = "pengukuran awal";
                 $masa_pengukuran = $pengukuran;
@@ -974,6 +974,7 @@ class PengukuranController extends Controller
                     $LabelPunch = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
                         ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
                         ->where('punchs.punch_id', $id)
+                        ->orderBy('punchs.created_at', 'desc')
                         ->first();
                     $data['labelPunch'] = $LabelPunch;
                 }else{
@@ -981,9 +982,11 @@ class PengukuranController extends Controller
                         ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
                         ->where('punchs.punch_id', $id)
                         ->where('pengukuran_rutin_punchs.masa_pengukuran', session('masa_pengukuran_view'))
+                        ->orderBy('punchs.created_at', 'desc')
                         ->first();
                     $data['labelPunch'] = $LabelPunch;
                 }
+                // dd($LabelPunch);
                 // session()->remove('count');
 
                 $checkStatus = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view'), 'is_draft' => '1'])->count();
@@ -1304,7 +1307,7 @@ class PengukuranController extends Controller
             $data['labelPunch'] = $LabelPunch;
             // dd($LabelPunch);
 
-            $data['tglPengukuran'] = PengukuranRutinPunch::where('punch_id', $id)->latest()->first();
+            $data['tglPengukuran'] = PengukuranRutinPunch::where('punch_id', $id)->first();
 
             if ($request->segment(3) == 'punch-atas') {
                 $data['jenisPunch'] = 'Punch Atas';
@@ -1330,6 +1333,7 @@ class PengukuranController extends Controller
                 $start_id = session('show_id');
             }
 
+
             //menampilkan hasil pengukuran sebelumnya
             if($pengukuran_pre == "pengukuran awal"){
                 $showPengukuranPre = PengukuranAwalPunch::where("punch_id",$id)
@@ -1348,6 +1352,9 @@ class PengukuranController extends Controller
                 ->get();
                 $data['draftPengukuranPre'] = $showPengukuranPre;
             }
+
+            // dd(session('show_id'));
+            // dd($showPengukuranPre);
             
             //menampilkan form pengukuran yang akan dibuat
             $showPengukuranAll = PengukuranRutinPunch::query()
@@ -1372,6 +1379,7 @@ class PengukuranController extends Controller
             }
             $data['count_header'] = $count_num;
 
+            dd($count_num);
             session()->remove('start_count');
             session()->put('start_count', $count);
 
@@ -1450,7 +1458,13 @@ class PengukuranController extends Controller
         }
         if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
             //Get Jenis Punch Berdasarkan Url
-            (new GetJenisPunch())->handle($request->segment(3));
+            if ($request->segment(3) == 'punch-atas') {
+                $data['jenisPunch'] = 'Punch Atas';
+                $data['jenis'] = 'punch-atas';
+            } elseif ($request->segment(3) == 'punch-bawah') {
+                $data['jenisPunch'] = 'Punch Bawah';
+                $data['jenis'] = 'punch-bawah';
+            }
 
             session()->remove('count');
             session()->remove('show_id');
@@ -1461,16 +1475,21 @@ class PengukuranController extends Controller
                 session()->remove('count_num');
                 session()->put('show_id', session('first_id'));
 
-                $update_id = $request->update_id;
-                $ovl = $request->ovl;
-                $cup = $request->cup;
-                $wkl_awal = $request->wkl_awal;
-                // $wkl_rutin = $request->wkl_rutin;
-                $wkl_rutin = [];
-                $hcf = $request->hcf;
+                // Check if the required request parameters are present
+                $update_id = $request->update_id ?? [];
+                $ovl = $request->ovl ?? [];
+                $cup = $request->cup ?? [];
+                $wkl_awal = $request->wkl_awal ?? [];
+                $hcf = $request->hcf ?? [];
 
+                // Check if any of the arrays are empty
+                if (empty($update_id) || empty($ovl) || empty($cup) || empty($wkl_awal) || empty($hcf)) {
+                    return redirect()->back()->withErrors('One or more required fields are empty.');
+                }
+
+                // Calculate working_length_rutin for each index
+                $wkl_rutin = [];
                 for ($i = 0; $i < count($ovl); $i++) {
-                    // Calculate working_length_rutin for each index
                     $wkl_rutin[$i] = $ovl[$i] - $cup[$i];
                 }
 
@@ -1491,11 +1510,8 @@ class PengukuranController extends Controller
 
             } elseif (session('jumlah_punch') > session('page')) {
                 $last_id = $request->last_id;
-                // dd($last_id);
                 $count_num = $request->count_num;
-                // session()->remove('start_count');
-                session()->put('first_id', $request->update_id[0] - 1);
-                // dd(session('first_id'));
+                session()->put('first_id', $request->update_id[0]);
                 session()->put('count_num', $count_num + 1);
                 session()->put('show_id', $last_id);
                 $count = session('start_count') + session('count');
@@ -1506,8 +1522,10 @@ class PengukuranController extends Controller
                 $cup = $request->cup;
                 $wkl_awal = $request->wkl_awal;
                 // $wkl_rutin = $request->wkl_rutin;
-                $wkl_rutin = [];
                 $hcf = $request->hcf;
+
+                // dd($update_id);
+                $wkl_rutin = [];
 
                 for ($i = 0; $i < count($ovl); $i++) {
                     // Calculate working_length_rutin for each index
@@ -1516,15 +1534,16 @@ class PengukuranController extends Controller
 
                 $i = 0;
                 while ($i < count($update_id)) {
-                    // dd(count($hdo));
-                    $createDraftPengukuran = [
-                        'overall_length' => $ovl[$i],
-                        'working_length_awal' => $wkl_awal[$i],
-                        'working_length_rutin' => $wkl_rutin[$i],
-                        'cup_depth' => $cup[$i],
-                        'head_configuration' => $hcf[$i],
-                    ];
-                    PengukuranRutinPunch::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
+                    PengukuranRutinPunch::updateOrCreate(
+                        ['no' => $update_id[$i]],
+                        [
+                            'overall_length' => $ovl[$i],
+                            'working_length_awal' => $wkl_awal[$i],
+                            'working_length_rutin' => $wkl_rutin[$i],
+                            'cup_depth' => $cup[$i],
+                            'head_configuration' => $hcf[$i],
+                        ]
+                    );
                     $i++;
                 }
                 return redirect(route('pnd.pr.' . $route . '.form'));
@@ -1607,6 +1626,14 @@ class PengukuranController extends Controller
         } elseif ($request->segment(3) == 'punch-bawah') {
             $route = 'bawah';
         }
+
+        $referensi_drawing = $request->referensi_drawing;
+        $catatan = $request->catatan;
+        $kesimpulan = $request->kesimpulan;
+        $micrometer_digital = $request->micrometer_digital;
+        $caliper_digital = $request->caliper_digital;
+        $dial_indicator_digital = $request->dial_indicator_digital;
+
         if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
             if ($request->segment(3) == 'punch-atas') {
                 $data['jenisPunch'] = 'Punch Atas';
@@ -1620,13 +1647,18 @@ class PengukuranController extends Controller
             session()->remove('count_num');
             $note = $request->note;
 
-            PengukuranRutinPunch::updateOrCreate(
+            Punch::updateOrCreate(
                 [
                     'punch_id' => session('punch_id'),
                     'masa_pengukuran' => session('masa_pengukuran')
                 ],
                 [
-                    'note' => $note,
+                    'referensi_drawing' => $referensi_drawing,
+                    'catatan' => $catatan,
+                    'kesimpulan' => $kesimpulan,
+                    'kalibrasi_micrometer' => $micrometer_digital,
+                    'kalibrasi_caliper' => $caliper_digital,
+                    'kalibrasi_dial_indicator' => $dial_indicator_digital,
                 ]
             );
 
@@ -1645,11 +1677,16 @@ class PengukuranController extends Controller
             //     'dies_id' => session('dies_id'),
             //     'masa_pengukuran' => session('masa_pengukuran')
             // ])->update($createDraftPengukuran);
-            PengukuranRutinDies::updateOrCreate([
+            Dies::updateOrCreate([
                 'dies_id' => session('dies_id'),
                 'masa_pengukuran' => session('masa_pengukuran')],
                 [
-                    'note' => $note,
+                    'referensi_drawing' => $referensi_drawing,
+                    'catatan' => $catatan,
+                    'kesimpulan' => $kesimpulan,
+                    'kalibrasi_micrometer' => $micrometer_digital,
+                    'kalibrasi_caliper' => $caliper_digital,
+                    'kalibrasi_dial_indicator' => $dial_indicator_digital,
                 ]);
 
             return redirect(route('pnd.pr.dies.draft'));

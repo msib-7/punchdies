@@ -90,7 +90,7 @@ class PunchController extends Controller
                                     $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
                                     ->where('is_approved', '=', '-');
                                 })
-                                ->Where(function ($query) {
+                                ->orWhere(function ($query) {
                                     $query->whereLike('masa_pengukuran',  'pengukuran rutin%')
                                         ->where('is_draft', '1')
                                         ->where('is_approved', '=', '-');
@@ -100,7 +100,7 @@ class PunchController extends Controller
                                         ->where('is_draft', '0')
                                         ->where('is_approved', '=', '-');
                                 })
-                                ->Where(function ($query) {
+                                ->orWhere(function ($query) {
                                     $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
                                         ->where('is_draft', '0')
                                         ->where('is_approved', '=', '1');

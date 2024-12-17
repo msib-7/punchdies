@@ -523,18 +523,19 @@
                 var a = td.appendChild(document.createElement('INPUT'));
                     a.setAttribute("type", "hidden");
                     a.setAttribute("name", "update_id[]");
-                    a.setAttribute("value", "<?= $draftPengukuran[$no++]['no']; ?>");
+                    a.setAttribute("value", "<?= $draftPengukuran[$no]['no']; ?>");
                 document.getElementById("table_body").appendChild(tr);
             <?php 
+            $no++;
             }
             ?>
         //
 
         //Get Last Id per page
             var last_id = td.appendChild(document.createElement('INPUT'));
-            last_id.setAttribute("type", "hidden");
+            last_id.setAttribute("type", "text");
             last_id.setAttribute("name", "last_id");
-            last_id.setAttribute("value", "<?= $draftPengukuran[$no-1]['no']; ?>");
+            last_id.setAttribute("value", "<?= $draftPengukuranPre[$no-1]['no']; ?>");
             document.getElementById("last_id").appendChild(last_id);
         //    
 
