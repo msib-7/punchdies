@@ -154,7 +154,7 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
             Route::get('print/{id}', [PengukuranController::class, 'print'])->name('print');
         });
         Route::prefix('dies')->name('dies.')->group(function(){
-            Route::get('', [DiesController::class, 'show_all_dies   '])->name('index');
+            Route::get('', [DiesController::class, 'show_all_dies'])->name('index');
             
             Route::get('buat_pengukuran/{id}', [PengukuranController::class, 'create_data_pengukuran_rutin'])->name('create');
             Route::get('view_pengukuran/{id}', [PengukuranController::class, 'view_pengukuran_rutin'])->name('view');
