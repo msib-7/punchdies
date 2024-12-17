@@ -91,6 +91,11 @@ class PunchController extends Controller
                                     ->where('is_approved', '=', '-');
                                 })
                                 ->orWhere(function ($query) {
+                                    $query->where('masa_pengukuran', '=', 'pengukuran awal')
+                                        ->where('is_draft', '=', '0')
+                                        ->where('is_approved', '=', '0');
+                                })
+                                ->orWhere(function ($query) {
                                     $query->whereLike('masa_pengukuran',  'pengukuran rutin%')
                                         ->where('is_draft', '1')
                                         ->where('is_approved', '=', '-');
