@@ -1615,7 +1615,7 @@ class PengukuranController extends Controller
                     PengukuranRutinDies::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
                     $i++;
                 }
-                return redirect(route('pnd.pr.dies.show-form'));
+                return redirect(route('pnd.pr.dies.form'));
             }
         }
     }
