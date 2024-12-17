@@ -37,6 +37,7 @@ class PunchFactory extends Factory
             'jenis' => $this->faker->randomElement(['punch-atas','punch-bawah']),
             'masa_pengukuran' => 'pengukuran awal', // Randomly select between the two values,
             'is_draft' => '1',
+            'is_waiting' => '0',
             'is_delete_punch' => '0',
             'is_edit' => '0',
             'is_approved' => '0',
