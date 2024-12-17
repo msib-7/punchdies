@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lines;
-use App\Models\M_Pengukuran_Punch;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
@@ -107,6 +106,8 @@ class PunchController extends Controller
                                         ->where('is_approved', '=', '1');
                                 });
                             })
+                            ->orWhere('jenis', $request->segment(3))
+                            ->where('is_delete_punch', '0')
                             ->where(function ($query) {
                                 $query->where(function ($query) {
                                     $query->whereLike('masa_pengukuran', 'pengukuran rutin%')

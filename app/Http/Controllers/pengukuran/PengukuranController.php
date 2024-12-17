@@ -872,10 +872,10 @@ class PengukuranController extends Controller
             $dataDies = Dies::where('dies_id', $id)->latest()->first();
             $pengukuran = $dataDies->masa_pengukuran;
             if ($dataDies->masa_pengukuran == "pengukuran awal") {
-                $dataPengukuran = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.diess_id')
+                $dataPengukuran = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
                     ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
                     ->where('diess.dies_id', $id)
-                    ->orderby('pengukuran_awal_diess.diess_id', 'desc')
+                    ->orderby('pengukuran_awal_diess.dies_id', 'desc')
                     ->first();
             } else {
                 $dataPengukuran = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
@@ -894,7 +894,7 @@ class PengukuranController extends Controller
             // dd($dataPengukuran);
             return response()->json([
                 'success' => true,
-                'message' => 'Punch Data',
+                'message' => 'Dies Data',
                 'masa_pengukuran_pre' => $pengukuran,
                 'masa_pengukuran' => $masa_pengukuran,
                 'data' => $dataPengukuran
@@ -1163,7 +1163,7 @@ class PengukuranController extends Controller
                 'is_rejected' => '-',
             ];
             session()->put('punch_id', $dataPunch->punch_id);
-            Punch::create($createData);
+            Punch::updateOrCreate($createData);
 
             // Punch::where('id', '=', $dataPunch->punch_id)->update($updateMasaPengukuran);
             
@@ -1204,11 +1204,7 @@ class PengukuranController extends Controller
             //Buat Data Pengukuran Untuk Dies
             $dataDies = Dies::where('dies_id', $id)->latest()->first();
             $pengukuran = $dataDies->masa_pengukuran;
-            if ($dataDies->masa_pengukuran == "pengukuran awal") {
-                $jmlDies = PengukuranAwalDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
-            } else {
-                $jmlDies = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
-            }
+            $jmlDies = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
 
             session()->put('jumlah_dies', $jmlDies);
 
@@ -1229,7 +1225,7 @@ class PengukuranController extends Controller
             }
 
             $createData = [
-                'dies_id' => $dataDies->punch_id,
+                'dies_id' => $dataDies->dies_id,
                 'merk' => $dataDies->merk,
                 'bulan_pembuatan' => $dataDies->bulan_pembuatan,
                 'tahun_pembuatan' => $dataDies->tahun_pembuatan,
@@ -1245,8 +1241,8 @@ class PengukuranController extends Controller
                 'is_approved' => '-',
                 'is_rejected' => '-',
             ];
-            session()->put('dies_id', $dataDies->punch_id);
-            Dies::create($createData);
+            session()->put('dies_id', $dataDies->dies_id);
+            Dies::UpdateOrCreate($createData);
 
             $dies_id = Dies::latest()->first()->dies_id;
 
@@ -1545,12 +1541,8 @@ class PengukuranController extends Controller
         } elseif ($request->segment(3) == 'dies') {
             $data['jenis'] = 'dies';
 
-            session()->remove('count');
-            session()->remove('show_id');
-            session()->remove('count_num');
+            
             if (session('jumlah_dies') <= session('page')) {
-                session()->remove('show_id');
-                session()->put('show_id', session('first_id'));
 
                 $update_id = $request->update_id;
                 $otd = $request->otd;
@@ -1576,12 +1568,13 @@ class PengukuranController extends Controller
                 // return redirect('/data/'.$request->segment(3).'')->with('success', 'Pengukuran Awal Selesai Dilakukan!');
 
             } elseif (session('jumlah_dies') > session('page')) {
+                session()->remove('count');
+                session()->remove('show_id');
+                session()->remove('count_num');
+
                 $last_id = $request->last_id;
-                // dd($last_id);
                 $count_num = $request->count_num;
-                // session()->remove('start_count');
                 session()->put('first_id', $request->update_id[0] - 1);
-                // dd(session('first_id'));
                 session()->put('count_num', $count_num + 1);
                 session()->put('show_id', $last_id);
                 $count = session('start_count') + session('count');

@@ -13,11 +13,6 @@
                 </li>
             </ul>
         </div>
-        <div class="d-flex align-items-center gap-2 gap-lg-3">
-            <button class="btn btn-sm fw-bold btn-primary" id="createDies" data-bs-toggle="modal" data-bs-target="#modal_create_data_dies">
-                Create Data Dies
-            </button>
-        </div>
     </div>
 </div>
 <!--end::Toolbar-->
@@ -129,9 +124,11 @@
                     <p class="card-text">Pengukuran Terakhir: <strong>{{ ucwords($data->masa_pengukuran) }}</strong></p>
                     <p class="card-text">Tanggal Pengukuran: <strong>{{ date_format($data->created_at, 'd M Y')}}</strong></p>
                     <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
-                        @if($hasPengukuranAwal) <!-- Check if there's no pengukuran awal -->
-                        <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="buatPengukuran(this)">Buat Pengukuran</button>
-                        @endif
+                        @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal and not rejected -->
+                                <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="opsiPengukuran(this)">
+                                    <span class="fs-7">Pengukuran</span>
+                                </button>
+                            @endif
                         <button class="btn btn-secondary" id="{{$data->dies_id}}" onclick="pilihPengukuran(this)">
                             <i class="ki-outline ki-eye fs-2"></i>
                             Lihat Data Pengukuran
@@ -149,137 +146,6 @@
     </div>
 </div>
 <!--end::Content-->
-
-{{-- Create Data Punch Modal --}}
-<div class="modal fade" tabindex="-1" id="modal_create_data_dies">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Create Data Dies</h3>
-                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="col-12">
-                    <form id="form_create_dies">
-                        @csrf
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="mb-5">
-                                    <label for="exampleFormControlInput1" class="required form-label">Merk Dies</label>
-                                    <input type="text" class="form-control @error('merk') is-invalid @enderror" placeholder="Masukkan Merk Dies" name="merk" />
-                                    @error('merk')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label for="exampleFormControlInput1" class="required form-label">Bulan Pembuatan</label>
-                                        <select class="required form-select" aria-label="Select example" name="bulan_pembuatan">
-                                            <option value="" disabled selected> - </option>
-                                            <option value="1">Januari</option>
-                                            <option value="2">Februari</option>
-                                            <option value="3">Maret</option>
-                                            <option value="4">April</option>
-                                            <option value="5">Mei</option>
-                                            <option value="6">Juni</option>
-                                            <option value="7">Juli</option>
-                                            <option value="8">Agustus</option>
-                                            <option value="9">September</option>
-                                            <option value="10">Oktober</option>
-                                            <option value="11">November</option>
-                                            <option value="12">Desember</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="exampleFormControlInput1" class="required form-label">Tahun Pembuatan</label>
-                                        <select class="required form-select" aria-label="Select example" name="tahun_pembuatan" id="tahun_buat">
-                                            <option disabled selected> - </option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="separator my-10"></div>
-                            <div class="col-12">
-                                <div class="mb-5">
-                                    <label for="exampleFormControlInput1" class="required form-label">Nama Mesin Cetak</label>
-                                    <input type="text" class="form-control" placeholder="Masukkan Nama Mesin" name="nama_mesin_cetak" />
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="mb-5">
-                                            <label for="exampleFormControlInput1" class="required form-label">Nama Produk</label>
-                                            <input type="text" class="form-control" placeholder="Masukkan Nama Produk" name="nama_produk" />
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="mb-5">
-                                            <label for="exampleFormControlInput1" class="required form-label">Kode Produk</label>
-                                            <input type="text" class="form-control" placeholder="Masukkan Kode Produk" name="kode_produk" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="">
-                                    <label for="exampleFormControlInput1" class="required form-label">Pilih Line untuk Dies</label>
-                                    <select class="form-select" aria-label="Select example" name="line_id">
-                                        <option disabled selected> - </option>
-                                        @foreach ($DataLine as $item)
-                                        <option value="{{$item->id}}">{{$item->nama_line}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</ button>
-                <button type="submit" class="btn btn-primary btn-create">Create Punch</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div>
-{{-- Konfirmasi Lanjut Pegukuran --}}
-<div class="modal fade" tabindex="-1" id="modal_lanjut_pengukuran">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Detail Data</h4>
-
-                <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                    aria-label="Close">
-                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                </div>
-                <!--end::Close-->
-            </div>
-
-            <div class="modal-body">
-                <div class="d-flex flex-column justify-content-center">
-                    <p class="text-center fs-4">Data Dies Berhasil Dibuat!</p>
-                    <p class="text-center fs-4">Lanjutkan Pengukuran</p>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <div class="p-2">
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                        data-bs-stacked-modal="#modal_buat_pengukuran_1">Pengukuran</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 {{-- Pilih Pengukuran untuk dilihat --}}
 <div class="modal fade" tabindex="-1" id="modal_pilih_pengukuran">
@@ -318,6 +184,123 @@
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Open</button>
             </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Option Pengukuran --}}
+<div class="modal fade" tabindex="-1" id="modal_option_pengukuran">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Action</h4>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <a href="#">
+                            <div class="card">
+                                <div class="card-body text-center shadow">
+                                    <button class="btn btn-secondary w-100" style="height: 10vh">
+                                        <i class="ki-duotone ki-notepad-edit fs-1">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </button>
+                                    <div class="fs-5 fw-bold pt-3">Edit Data Pengukuran</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-body text-center shadow">
+                                <input type="hidden" id="id_create_rutin">
+                                <button class="btn btn-secondary w-100" style="height: 10vh" onclick="getInfoPengukuran(this)">
+                                    <i class="ki-duotone ki-plus-square fs-1">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                    </i>
+                                </button>
+                                <div class="fs-6 fw-bold pt-3">Buat Pengukuran Rutin</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Info Pengukuran --}}
+<div class="modal fade" tabindex="-1" id="modal_info_pengukuran">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Konfirmasi</h4>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+            <form id="form_create_pengukuran">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <span class="fs-5">Pengukuran Sebelumnya:</span>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <input type="text" class="form-control" id="masa_pengukuran_pre" readonly>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <input type="text" class="form-control" id="tgl_pengukuran_pre" readonly>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <input type="text" class="form-control" id="user_pre" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <span class="fs-5">Pengukuran Saat ini:</span>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <input type="text" class="form-control" id="masa_pengukuran" readonly>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <input type="text" class="form-control" id="tgl_pengukuran_now" readonly>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <input type="text" class="form-control" id="user" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center pt-10">
+                        <button type="submit" class="btn btn-primary" id="confirm_pengukuran">
+                            <span class="indicator-label">Confirm</span>
+                            <span class="indicator-progress">Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -397,6 +380,7 @@
     </div>
 </div>
 
+<script src="{{asset('assets/js/date.format.js')}}"></script>
 {{-- Filter Tools --}}
 <script>
     let currentPage = 1;
@@ -485,6 +469,7 @@
         filterCards(); // Initial filter to show all cards
     };
 </script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const createButton = document.getElementById('createDies');
@@ -502,28 +487,72 @@
         });
     });
 
-    function buatPengukuran(elem) {
+    function opsiPengukuran(elem) {
         var id = elem.id;
         $.ajax({
             type: "GET",
-            url: "{{route('pnd.pa.dies.create-pengukuran', ':id')}}".replace(':id', id),
-            beforeSend: function (){
-                $('#'+elem.id).prop('disabled', true);
+            url: "{{route('pnd.pr.dies.opsi', ':id')}}".replace(':id', id),
+            beforeSend: function() {
             },
             success: function (data) {
-                if(data.success == false){
-                    Swal.fire({
-                        icon: "error",
-                        title: "Access Forbidden",
+                if(data.isdraft == true){
+                    if(data.status == 'awal'){
+                        Swal.fire({
+                        title: "Error",
                         text: data.message,
-                    });
+                        icon: "error"
+                        });
+                    }else{
+                        Swal.fire({
+                        title: "Draft",
+                        text: data.message,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Ya, Lanjutkan!"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location = data.url
+                            }
+                        });
+                    }
                 }else{
-                    $('#create_id').val(elem.id);
-                    $('#modal_buat_pengukuran_1').modal('show');
+                    if(data.success == false){
+                    Swal.fire({
+                        title: "Error!",
+                        text: data.message,
+                        icon: "error"
+                    });
+                    }else{
+                        $('.create-rtn').prop('disabled', false);
+                        $('#modal_option_pengukuran').modal('show');
+                        $('#id_create_rutin').val(elem.id);
+                    }
                 }
             },
             complete: function() {
-                $('#'+elem.id).prop('disabled', false);
+                $('.create-rtn').prop('disabled', false);
+            }
+        })
+    }
+
+    function getInfoPengukuran(elem) {
+        var id_create_rutin = document.getElementById("id_create_rutin").value;
+        $.ajax({
+            type: "GET",
+            url: "{{route('pnd.pr.dies.info', ':id')}}".replace(':id', id_create_rutin),
+            success: function (data) {
+                var tgl_pre = new Date(data.data.created_at).format("dd mmm yyyy");
+                var now = new Date().format("dd mmm yyyy");
+                
+                $('#masa_pengukuran_pre').val(data.masa_pengukuran_pre);
+                $('#tgl_pengukuran_pre').val(tgl_pre);
+                $('#user_pre').val(data.data.nama);
+                $('#masa_pengukuran').val(data.masa_pengukuran);
+                $('#tgl_pengukuran_now').val(now);
+                $('#user').val('{{ auth()->user()->nama }}');
+                $('#form_create_pengukuran').attr('action', "{{route('pnd.pr.dies.create', ':id')}}".replace(':id', id_create_rutin));
+                $('#modal_option_pengukuran').modal('hide');
+                $('#modal_info_pengukuran').modal('show');  
             }
         })
     }

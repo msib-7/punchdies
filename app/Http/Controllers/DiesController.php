@@ -19,7 +19,7 @@ class DiesController extends Controller
             if (auth()->user()->lines->nama_line == 'All Line') {
                 $dataDies = Dies::query()
                     ->select(
-                        'punch_id',
+                        'dies_id',
                         DB::raw('MAX(merk) as merk'),
                         DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'),
                         DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'),
@@ -28,7 +28,7 @@ class DiesController extends Controller
                         DB::raw('MAX(kode_produk) as kode_produk'),
                         DB::raw('MAX(jenis) as jenis'),
                         DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
-                        DB::raw('MAX(is_delete_punch) as is_delete_punch'),
+                        DB::raw('MAX(is_delete_dies) as is_delete_dies'),
                         DB::raw('MAX(is_draft) as is_draft'),
                         DB::raw('MAX(is_edit) as is_edit'),
                         DB::raw('MAX(is_approved) as is_approved'),
@@ -38,18 +38,18 @@ class DiesController extends Controller
                     ->where('jenis', $request->segment(3))
                     ->where('masa_pengukuran', '!=', 'pengukuran awal')
                     ->where('masa_pengukuran', '!=', '-')
-                    ->where('is_delete_punch', '0')
+                    ->where('is_delete_dies', '0')
                     ->orWhere('jenis', $request->segment(3))
                     ->where('masa_pengukuran', 'pengukuran awal')
                     ->where('is_draft', '0')
-                    ->where('is_delete_punch', '0')
-                    ->groupBy('punch_id')
+                    ->where('is_delete_dies', '0')
+                    ->groupBy('dies_id')
                     ->orderBy('created_at', "desc")
                     ->get();
             } else {
                 $dataDies = Dies::query()
                     ->select(
-                        'punch_id',
+                        'dies_id',
                         DB::raw('MAX(merk) as merk'),
                         DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'),
                         DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'),
@@ -58,7 +58,7 @@ class DiesController extends Controller
                         DB::raw('MAX(kode_produk) as kode_produk'),
                         DB::raw('MAX(jenis) as jenis'),
                         DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
-                        DB::raw('MAX(is_delete_punch) as is_delete_punch'),
+                        DB::raw('MAX(is_delete_dies) as is_delete_dies'),
                         DB::raw('MAX(is_draft) as is_draft'),
                         DB::raw('MAX(is_edit) as is_edit'),
                         DB::raw('MAX(is_approved) as is_approved'),
@@ -69,13 +69,13 @@ class DiesController extends Controller
                     ->where('masa_pengukuran', '!=', 'pengukuran awal')
                     ->where('masa_pengukuran', '!=', '-')
                     ->where('line_id', auth()->user()->line_id)
-                    ->where('is_delete_punch', '0')
+                    ->where('is_delete_dies', '0')
                     ->orWhere('jenis', $request->segment(3))
                     ->where('masa_pengukuran', 'pengukuran awal')
                     ->where('is_draft', '0')
                     ->where('line_id', auth()->user()->line_id)
-                    ->where('is_delete_punch', '0')
-                    ->groupBy('punch_id')
+                    ->where('is_delete_dies', '0')
+                    ->groupBy('dies_id')
                     ->orderBy('created_at', "desc")
                     ->get();
             }
