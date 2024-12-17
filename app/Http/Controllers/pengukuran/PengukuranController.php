@@ -690,7 +690,7 @@ class PengukuranController extends Controller
             }
         } elseif ($request->segment(3) == 'dies') {
             if ($pengukuran == null) {
-                $dataDies = Dies::where('dies_id', $id)->latest()->first();
+                $dataDies = Dies::where('dies_id', $id)->latest('created_at')->first();
                 $masa_pengukuran = $dataDies->masa_pengukuran;
             } else {
                 $masa_pengukuran = $pengukuran;
@@ -699,6 +699,7 @@ class PengukuranController extends Controller
                 where('dies_id', $id)
                 ->where('masa_pengukuran', $masa_pengukuran)
                 ->exists();
+
             if (!$cekPengukuran) {
                 $is_draft = Dies::query()
                     ->where('dies_id', $id)
@@ -725,7 +726,8 @@ class PengukuranController extends Controller
             } else {
                 session()->remove('count_num');
                 session()->put('dies_id', $id);
-                return redirect('pnd.pr.dies.view', session('dies_id'));
+                session()->put('masa_pengukuran_view', $masa_pengukuran);
+                return redirect(route('pnd.pr.dies.view', session('dies_id')));
             }
         }
     }
@@ -1032,7 +1034,7 @@ class PengukuranController extends Controller
             $cekDraft = Dies::where('dies_id', '=', $id)
                 ->where('masa_pengukuran', session('masa_pengukuran_view'))
                 ->first();
-            $pengukuran = $cekDraft->masa_pengukuran;
+            $pengukuran = session('masa_pengukuran_view');
             if ($pengukuran == "pengukuran rutin 1") {
                 $masa_pengukuran_pre = "pengukuran awal";
                 $masa_pengukuran = $pengukuran;
@@ -1058,7 +1060,7 @@ class PengukuranController extends Controller
                 return redirect(route('pnd.pr.dies.form'));
             } else {
                 if ($pengukuran == 'pengukuran awal') {
-                    $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.punch_id')
+                    $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
                         ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
                         ->where('diess.dies_id', $id)
                         ->first();
@@ -1204,8 +1206,13 @@ class PengukuranController extends Controller
             //Buat Data Pengukuran Untuk Dies
             $dataDies = Dies::where('dies_id', $id)->latest()->first();
             $pengukuran = $dataDies->masa_pengukuran;
-            $jmlDies = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
+            if ($dataDies->masa_pengukuran == "pengukuran awal") {
+                $jmlDies = PengukuranAwalDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
+            } else {
+                $jmlDies = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
+            }
 
+            // dd($jmlDies);
             session()->put('jumlah_dies', $jmlDies);
 
             if ($pengukuran == "pengukuran awal") {
@@ -1224,47 +1231,55 @@ class PengukuranController extends Controller
                 ];
             }
 
-            $createData = [
-                'dies_id' => $dataDies->dies_id,
-                'merk' => $dataDies->merk,
-                'bulan_pembuatan' => $dataDies->bulan_pembuatan,
-                'tahun_pembuatan' => $dataDies->tahun_pembuatan,
-                'nama_mesin_cetak' => $dataDies->nama_mesin_cetak,
-                'nama_produk' => $dataDies->nama_produk,
-                'kode_produk' => $dataDies->kode_produk,
-                'line_id' => $dataDies->line_id,
-                'jenis' => $dataDies->jenis,
-                'masa_pengukuran' => $masa_pengukuran,
-                'is_draft' => '1',
-                'is_delete_punch' => '0',
-                'is_edit' => '0',
-                'is_approved' => '-',
-                'is_rejected' => '-',
-            ];
-            session()->put('dies_id', $dataDies->dies_id);
-            Dies::UpdateOrCreate($createData);
+            try {
+                DB::beginTransaction();
 
-            $dies_id = Dies::latest()->first()->dies_id;
-
-            for ($i = 1; $i <= $jmlDies; $i++) {
-                $createDraftPengukuran = [
+                $createData = [
                     'dies_id' => $dataDies->dies_id,
-                    'user_id' => auth()->user()->id,
-                    'outer_diameter' => null,
-                    'inner_diameter_1' => null,
-                    'inner_diameter_2' => null,
-                    'ketinggian_dies' => null,
-                    'visual' => '-',
-                    'kesesuaian_dies' => '-',
+                    'merk' => $dataDies->merk,
+                    'bulan_pembuatan' => $dataDies->bulan_pembuatan,
+                    'tahun_pembuatan' => $dataDies->tahun_pembuatan,
+                    'nama_mesin_cetak' => $dataDies->nama_mesin_cetak,
+                    'nama_produk' => $dataDies->nama_produk,
+                    'kode_produk' => $dataDies->kode_produk,
+                    'line_id' => $dataDies->line_id,
+                    'jenis' => $dataDies->jenis,
                     'masa_pengukuran' => $masa_pengukuran,
-                    'note' => '',
                     'is_draft' => '1',
-                    'is_delete_pd' => '0',
+                    'is_delete_dies' => '0',
                     'is_edit' => '0',
                     'is_approved' => '-',
                     'is_rejected' => '-',
                 ];
-                PengukuranRutinDies::create($createDraftPengukuran);
+                session()->put('dies_id', $dataDies->dies_id);
+                Dies::UpdateOrCreate($createData);
+
+                $dies_id = Dies::latest()->first()->dies_id;
+
+                // dd($dies_id);
+                for ($i = 1; $i <= $jmlDies; $i++) {
+                    $createDraftPengukuran = [
+                        'dies_id' => $dataDies->dies_id,
+                        'user_id' => auth()->user()->id,
+                        'is_cincin_berbayang' => '-',
+                        'is_gompal' => '-',
+                        'is_retak' => '-',
+                        'is_pecah' => '-',
+                        'masa_pengukuran' => $masa_pengukuran,
+                        'note' => '',
+                        'is_draft' => '1',
+                        'is_delete_pd' => '0',
+                        'is_edit' => '0',
+                        'is_approved' => '-',
+                        'is_rejected' => '-',
+                    ];
+                    PengukuranRutinDies::create($createDraftPengukuran);
+                }
+
+                DB::commit();
+
+            } catch (\Throwable $th) {
+                DB::rollBack();
             }
 
             session()->put('dies_id', $dies_id);
@@ -1294,8 +1309,12 @@ class PengukuranController extends Controller
             $id = session('punch_id');
             $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
                 ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
-                ->select('punchs.*', 'pengukuran_rutin_punchs.*', 'users.*',
-                        'punchs.masa_pengukuran AS punch_masa_pengukuran')
+                ->select(
+                    'punchs.*',
+                    'pengukuran_rutin_punchs.*', 
+                    'users.*',
+                    'punchs.masa_pengukuran AS punch_masa_pengukuran'
+                )
                 ->where('punchs.punch_id', $id)
                 ->where('pengukuran_rutin_punchs.masa_pengukuran', $pengukuran)
                 ->orderBy('punchs.created_at', 'desc')
@@ -1386,20 +1405,22 @@ class PengukuranController extends Controller
             return view('operator.data.form.pengukuran-punch', $data);
 
         } elseif ($request->segment(3) == 'dies') {
-            $id = session('punch_id');
-            $LabelDies = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.punch_id')
+            $id = session('dies_id');
+            $LabelDies = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
                 ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
                 ->select(
-                    'punchs.*',
+                    'diess.*',
                     'pengukuran_rutin_diess.*',
                     'users.*',
-                    'punchs.masa_pengukuran AS punch_masa_pengukuran'
+                    'diess.masa_pengukuran AS dies_masa_pengukuran'
                 )
                 ->where('diess.dies_id', $id)
                 ->where('pengukuran_rutin_diess.masa_pengukuran', $pengukuran)
                 ->orderBy('diess.created_at', 'desc')
                 ->first();
             $data['labelDies'] = $LabelDies;
+
+            // dd($LabelDies);
 
             $data['tglPengukuran'] = PengukuranRutinDies::where('dies_id', $id)->latest()->first();
 
@@ -1421,7 +1442,7 @@ class PengukuranController extends Controller
 
             //menampilkan form pengukuran yang akan dibuat
             $showPengukuranAll = PengukuranRutinDies::query()
-                ->where('punch_id', session('dies_id'))
+                ->where('dies_id', session('dies_id'))
                 ->where('masa_pengukuran', session('masa_pengukuran'))
                 ->where('no', '>', $start_id)
                 // ->whereRaw("punch_id = " . session('punch_id') . " AND masa_pengukuran = '".session('masa_pengukuran')."'". " AND id > " . $start_id)

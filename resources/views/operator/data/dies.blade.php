@@ -563,7 +563,7 @@
             url: "{{route('pnd.pr.dies.list', ':id')}}".replace(':id', elem.id),
             success: function (masa_pengukuran) {
                 $('select[id=pilih_pengukuran]').html(masa_pengukuran);
-                $('#form_pilih_pengukuran').attr('action', "{{route('pnd.pa.dies.cek-pengukuran', ':id')}}".replace(':id', elem.id));
+                $('#form_pilih_pengukuran').attr('action', "{{route('pnd.pr.dies.cek-pengukuran', ':id')}}".replace(':id', elem.id));
                 $('#modal_pilih_pengukuran').modal('show');
             }
         })
