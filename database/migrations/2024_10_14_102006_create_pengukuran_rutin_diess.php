@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('is_gompal')->nullable();
             $table->string('is_retak')->nullable();
             $table->string('is_pecah')->nullable();
+            $table->string('visual_dies')->nullable();
+            $table->string('status')->nullable();
             $table->string('masa_pengukuran');
             $table->string('note')->nullable();
             $table->string('is_draft');

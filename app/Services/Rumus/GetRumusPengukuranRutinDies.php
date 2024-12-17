@@ -7,5 +7,5 @@ namespace App\Services\Rumus;
  */
 class GetRumusPengukuranRutinDies
 {
-
+    
 }
