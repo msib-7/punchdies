@@ -143,6 +143,7 @@
                         <p class="card-text">Nama Produk: <strong>{{ strtoupper($data->nama_produk) }}</strong></p>
                         <p class="card-text">Pengukuran Terakhir: <strong>{{ ucwords($data->masa_pengukuran) }}</strong></p>
                         <p class="card-text">Tanggal Pengukuran: <strong>{{ date_format($data->created_at, 'd M Y')}}</strong></p>
+                        <p class="card-text">Tanggal Terakhir Diperbarui: <strong>{{ date_format($data->updated_at, 'd M Y')}}</strong></p>
                         <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
                             @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal and not rejected -->
                                 <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->punch_id}}" onclick="opsiPengukuran(this)">

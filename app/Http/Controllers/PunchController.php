@@ -79,7 +79,8 @@ class PunchController extends Controller
                         DB::raw('MAX(is_edit) as is_edit'),
                         DB::raw('MAX(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
-                        DB::raw('MAX(created_at) as created_at')
+                        DB::raw('MAX(created_at) as created_at'),
+                        DB::raw('MAX(updated_at) as updated_at')
                     )
                     ->where(function ($query) use ($request) {
                         $query->where('jenis', $request->segment(3))
@@ -149,7 +150,8 @@ class PunchController extends Controller
                         DB::raw('MAX(is_edit) as is_edit'),
                         DB::raw('MAX(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
-                        DB::raw('MAX(created_at) as created_at')
+                        DB::raw('MAX(created_at) as created_at'),
+                        DB::raw('MAX(updated_at) as updated_at')
                     )
                     ->where(function ($query) use ($request) {
                         $query->where('jenis', $request->segment(3))
