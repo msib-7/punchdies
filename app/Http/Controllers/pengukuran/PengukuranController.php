@@ -1070,6 +1070,7 @@ class PengukuranController extends Controller
                         ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
                         ->where('diess.dies_id', $id)
                         ->where('pengukuran_rutin_diess.masa_pengukuran', session('masa_pengukuran_view'))
+                        ->latest('diess')
                         ->first();
                     $data['labelDies'] = $LabelDies;
                 }
@@ -1566,22 +1567,18 @@ class PengukuranController extends Controller
             if (session('jumlah_dies') <= session('page')) {
 
                 $update_id = $request->update_id;
-                $otd = $request->otd;
-                $inn1 = $request->inn1;
-                $inn2 = $request->inn2;
-                $ktd = $request->ktd;
-                $vis = $request->vis;
-                $ksd = $request->ksd;
+                $icb = $request->icb;
+                $igp = $request->igp;
+                $irt = $request->irt;
+                $ipc = $request->ipc;
 
                 $i = 0;
                 while ($i < count($update_id)) {
                     $createDraftPengukuran = [
-                        'outer_diameter' => $otd[$i],
-                        'inner_diameter_1' => $inn1[$i],
-                        'inner_diameter_2' => $inn2[$i],
-                        'ketinggian_dies' => $ktd[$i],
-                        'visual' => $vis[$i],
-                        'kesesuaian_dies' => $ksd[$i],
+                        'is_cincin_berbayang' => $icb[$i],
+                        'is_gompal' => $igp[$i],
+                        'is_retak' => $irt[$i],
+                        'is_pecah' => $ipc[$i],
                     ];
                     PengukuranRutinDies::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
                     $i++;
@@ -1602,22 +1599,18 @@ class PengukuranController extends Controller
                 session()->put('count', $count);
 
                 $update_id = $request->update_id;
-                $otd = $request->otd;
-                $inn1 = $request->inn1;
-                $inn2 = $request->inn2;
-                $ktd = $request->ktd;
-                $vis = $request->vis;
-                $ksd = $request->ksd;
+                $icb = $request->icb;
+                $igp = $request->igp;
+                $irt = $request->irt;
+                $ipc = $request->ipc;
 
                 $i = 0;
                 while ($i < count($update_id)) {
                     $createDraftPengukuran = [
-                        'outer_diameter' => $otd[$i],
-                        'inner_diameter_1' => $inn1[$i],
-                        'inner_diameter_2' => $inn2[$i],
-                        'ketinggian_dies' => $ktd[$i],
-                        'visual' => $vis[$i],
-                        'kesesuaian_dies' => $ksd[$i],
+                        'is_cincin_berbayang' => $icb[$i],
+                        'is_gompal' => $igp[$i],
+                        'is_retak' => $irt[$i],
+                        'is_pecah' => $ipc[$i],
                     ];
                     PengukuranRutinDies::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
                     $i++;
@@ -1755,12 +1748,10 @@ class PengukuranController extends Controller
                 'dies_id' => session('dies_id'),
                 'masa_pengukuran' => session('masa_pengukuran'),
             ])
-                ->where('outer_diameter', '!=', null)
-                ->where('inner_diameter_1', '!=', null)
-                ->where('inner_diameter_2', '!=', null)
-                ->where('ketinggian_dies', '!=', null)
-                ->where('visual', '!=', '-')
-                ->where('kesesuaian_dies', '!=', '-');
+                ->where('is_cincin_berbayang', '!=', '-')
+                ->where('is_gompal', '!=', '-')
+                ->where('is_retak', '!=', '-')
+                ->where('is_pecah', '!=', '-');
 
             $getData->update($updateDraftStatus);
 
@@ -1782,7 +1773,7 @@ class PengukuranController extends Controller
                 ];
 
                 Dies::where('dies_id', '=', session('dies_id'))->update($updateStatus);
-                $this->send_to_approval($request->segment(3));
+                $this->send_to_approval_rutin($request->segment(3));
             }
             // dd($cekStatus);
 

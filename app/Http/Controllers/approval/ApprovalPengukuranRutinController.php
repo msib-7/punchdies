@@ -39,7 +39,7 @@ class ApprovalPengukuranRutinController extends Controller
                 ->get();
             $tglPengukuran = PengukuranRutinPunch::where('punch_id', $data->punch_id)->first();
         } else {
-            $query = Punch::query()
+            $query = Dies::query()
                 ->leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
                 ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
                 ->where('pengukuran_rutin_diess.masa_pengukuran', $data->masa_pengukuran)

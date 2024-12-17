@@ -292,9 +292,5 @@
     </div>
     <!--end::Content container-->
 </div>
-
-{{-- Modal Konfirmasi Data Pengukuran --}}
-<script>
-</script>
 <!--end::Content-->
 @endsection
