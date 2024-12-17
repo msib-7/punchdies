@@ -1329,8 +1329,10 @@ class PengukuranController extends Controller
 
             if (session('show_id') === null) {
                 $start_id = session('first_id');
+                $start_id_pre = session('first_id');
             } else {
                 $start_id = session('show_id');
+                $start_id_pre = session('show_id_pre');
             }
 
 
@@ -1345,7 +1347,7 @@ class PengukuranController extends Controller
                 $showPengukuranPre = PengukuranRutinPunch::query()
                     ->where('punch_id', $id)
                     ->where('masa_pengukuran', $pengukuran_pre)
-                    ->where('no','>', $start_id)
+                    ->where('no','>', $start_id_pre)
                     // ->whereRaw("punch_id = " . $id . " AND masa_pengukuran = '" . $pengukuran_pre . "'" . " AND id > " . $start_id)
                 ->orderBy('no')
                 ->limit(10)
@@ -1353,6 +1355,7 @@ class PengukuranController extends Controller
                 $data['draftPengukuranPre'] = $showPengukuranPre;
             }
 
+            // dd($start_id_pre . ''. $start_id);
             // dd(session('show_id'));
             // dd($showPengukuranPre);
             
@@ -1379,7 +1382,8 @@ class PengukuranController extends Controller
             }
             $data['count_header'] = $count_num;
 
-            dd($count_num);
+            // dd($count_num);
+            // dd($start_id);
             session()->remove('start_count');
             session()->put('start_count', $count);
 
@@ -1466,26 +1470,14 @@ class PengukuranController extends Controller
                 $data['jenis'] = 'punch-bawah';
             }
 
-            session()->remove('count');
-            session()->remove('show_id');
-            session()->remove('count_num');
             if (session('jumlah_punch') <= session('page')) {
-                session()->remove('show_id');
-                session()->remove('count');
-                session()->remove('count_num');
-                session()->put('show_id', session('first_id'));
 
                 // Check if the required request parameters are present
-                $update_id = $request->update_id ?? [];
-                $ovl = $request->ovl ?? [];
-                $cup = $request->cup ?? [];
-                $wkl_awal = $request->wkl_awal ?? [];
-                $hcf = $request->hcf ?? [];
-
-                // Check if any of the arrays are empty
-                if (empty($update_id) || empty($ovl) || empty($cup) || empty($wkl_awal) || empty($hcf)) {
-                    return redirect()->back()->withErrors('One or more required fields are empty.');
-                }
+                $update_id = $request->update_id;
+                $ovl = $request->ovl;
+                $cup = $request->cup;
+                $wkl_awal = $request->wkl_awal;
+                $hcf = $request->hcf;
 
                 // Calculate working_length_rutin for each index
                 $wkl_rutin = [];
@@ -1509,11 +1501,17 @@ class PengukuranController extends Controller
 
 
             } elseif (session('jumlah_punch') > session('page')) {
+                session()->remove('count');
+                session()->remove('show_id');
+                session()->remove('count_num');
+
                 $last_id = $request->last_id;
+                $last_id_pre = $request->last_id_pre;
                 $count_num = $request->count_num;
                 session()->put('first_id', $request->update_id[0]);
-                session()->put('count_num', $count_num + 1);
+                session()->put('count_num', $count_num+1);
                 session()->put('show_id', $last_id);
+                session()->put('show_id_pre', $last_id_pre);
                 $count = session('start_count') + session('count');
                 session()->put('count', $count);
 
@@ -1521,16 +1519,8 @@ class PengukuranController extends Controller
                 $ovl = $request->ovl;
                 $cup = $request->cup;
                 $wkl_awal = $request->wkl_awal;
-                // $wkl_rutin = $request->wkl_rutin;
+                $wkl_rutin = $request->wkl_rutin;
                 $hcf = $request->hcf;
-
-                // dd($update_id);
-                $wkl_rutin = [];
-
-                for ($i = 0; $i < count($ovl); $i++) {
-                    // Calculate working_length_rutin for each index
-                    $wkl_rutin[$i] = $ovl[$i] - $cup[$i];
-                }
 
                 $i = 0;
                 while ($i < count($update_id)) {

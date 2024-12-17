@@ -427,10 +427,10 @@
                 x.setAttribute("placeholder", "00.00");
                 <?php
                 if($wklRutin == null){ ?>
-                    x.setAttribute("value", "<?= $draftPengukuranPre[$no]['working_length']; ?>");
+                    x.setAttribute("value", "<?= $draftPengukuranPre[$no++]['working_length']; ?>");
                 <?php }else{ ?>
-                    x.setAttribute("value", "<?= $draftPengukuranPre[$no]['working_length_rutin']; ?>");
-                <?php } $no++; ?>
+                    x.setAttribute("value", "<?= $draftPengukuranPre[$no++]['working_length_rutin']; ?>");
+                <?php } ?>
                 document.getElementById("table_body").appendChild(tr);
             <?php 
             }
@@ -523,18 +523,24 @@
                 var a = td.appendChild(document.createElement('INPUT'));
                     a.setAttribute("type", "hidden");
                     a.setAttribute("name", "update_id[]");
-                    a.setAttribute("value", "<?= $draftPengukuran[$no]['no']; ?>");
+                    a.setAttribute("value", "<?= $draftPengukuran[$no++]['no']; ?>");
                 document.getElementById("table_body").appendChild(tr);
             <?php 
-            $no++;
             }
             ?>
         //
 
         //Get Last Id per page
             var last_id = td.appendChild(document.createElement('INPUT'));
-            last_id.setAttribute("type", "text");
+            last_id.setAttribute("type", "hidden");
             last_id.setAttribute("name", "last_id");
+            last_id.setAttribute("value", "<?= $draftPengukuran[$no-1]['no']; ?>");
+            document.getElementById("last_id").appendChild(last_id);
+        //    
+        //Get Last Id per page
+            var last_id = td.appendChild(document.createElement('INPUT'));
+            last_id.setAttribute("type", "hidden");
+            last_id.setAttribute("name", "last_id_pre");
             last_id.setAttribute("value", "<?= $draftPengukuranPre[$no-1]['no']; ?>");
             document.getElementById("last_id").appendChild(last_id);
         //    
@@ -549,9 +555,12 @@
         //
 
         //Create Button Next
+            form = document.getElementById('form_data_pengukuran');
+
             var btn_next = document.createElement("BUTTON");
             btn_next.setAttribute("class", "btn btn-primary btn-small");
-            btn_next.setAttribute("type", "submit");
+            btn_next.setAttribute("type", "button");
+            btn_next.setAttribute("onclick", "this.disabled=true; this.innerHTML ='Processing...'; form.submit();");
             if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
                 btn_next.setAttribute("onclick", "saveDataRutin()");
                 btn_next.setAttribute("type", "button");
@@ -587,22 +596,6 @@
             }
         });
     }
-
-    $('#Table_pengukuran').DataTable({
-        ajax: {
-            url: "{{ route('pnd.pr.'.$route.'.form') }}", // Adjust this route to fetch data
-            type: "GET",
-            dataSrc: ""
-        },
-        columns: [
-            { data: "No" },
-            { data: "OverallLength" },
-            { data: "WorkingLengthAwal" },
-            { data: "WorkingLengthRutin" },
-            { data: "CupDepth" },
-            { data: "HeadConfiguration" },
-        ]
-    });
 </script>
 <!--end::Content-->
 @endsection
