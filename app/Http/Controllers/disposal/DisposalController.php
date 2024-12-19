@@ -7,5 +7,7 @@ use Illuminate\Http\Request;
 
 class DisposalController extends Controller
 {
-    //
+    public function index(){
+        
+    }
 }

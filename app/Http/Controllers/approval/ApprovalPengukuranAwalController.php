@@ -45,7 +45,7 @@ class ApprovalPengukuranAwalController extends Controller
         }
 
         $checkStatus = M_ApprPengukuran::where(['req_id' => $data->req_id])->first();
-        if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
+        if ($checkStatus->is_approved == '0' and $checkStatus->is_rejected == '0') {
             $status = '<span class="badge badge-square badge-outline badge-light-warning fs-4">Waiting For Approval</span>';
         } elseif ($checkStatus->is_approved == '1' and $checkStatus->is_rejected == '0') {
             $status = "<span class='badge badge-light-success fs-3'>Approved</span>";
@@ -57,6 +57,15 @@ class ApprovalPengukuranAwalController extends Controller
     public function approve($id) {
         $data = M_ApprPengukuran::find($id);
 
+        //Set Status to approved
+        $updateStatusApproved = [
+            'is_draft' => '0',
+            'is_waiting' => '0',
+            'is_approved' => '1',
+            'is_rejected' => '0',
+        ];
+
+        //Update status Approved pada table Approval
         $update = [
             'is_approved' => '1',
             'is_rejected' => '0',
@@ -65,18 +74,32 @@ class ApprovalPengukuranAwalController extends Controller
         ];
         M_ApprPengukuran::where('req_id', $data->req_id)->update($update);
 
-        $updateStatusApproved = [
-            'is_approved' => '1',
-            'is_rejected' => '0',
-        ];
-        Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
-        PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+        //periksa apakah punch_id kosong/null
+        $isNullPunchId = is_null($data->punch_id);
+
+        //periksa apakah dies_id kosong/null
+        $isNullDiesId = is_null($data->dies_id);
+
+        if(!$isNullPunchId){ //JIka Tidak Kosong update status approved pada table punch
+            Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+            PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+        }elseif(!$isNullDiesId){ //JIka Tidak Kosong update status approved pada table diess
+            Dies::where(['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+            PengukuranAwalDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
+        }
         
         return redirect(route('pnd.approval.pa.index'))->with('success', 'Data Approved Successfully! by '.auth()->user()->nama);
     }
     public function reject($id) {
         $data = M_ApprPengukuran::find($id);
 
+        $updateStatusApproved = [
+            'is_draft' => '0',
+            'is_waiting' => '0',
+            'is_approved' => '0',
+            'is_rejected' => '1',
+        ];
+
         $update = [
             'is_approved' => '0',
             'is_rejected' => '1',
@@ -85,12 +108,19 @@ class ApprovalPengukuranAwalController extends Controller
         ];
         M_ApprPengukuran::where('req_id', $data->req_id)->update($update);
 
-        $updateStatusApproved = [
-            'is_approved' => '0',
-            'is_rejected' => '1',
-        ];
-        Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
-        PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+        //periksa apakah punch_id kosong/null
+        $isNullPunchId = is_null($data->punch_id);
+
+        //periksa apakah dies_id kosong/null
+        $isNullDiesId = is_null($data->dies_id);
+
+        if (!$isNullPunchId) { //JIka Tidak Kosong update status approved pada table punch
+            Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+            PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+        } elseif (!$isNullDiesId) { //JIka Tidak Kosong update status approved pada table diess
+            Dies::where(['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+            PengukuranAwalDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
+        }
         
         return redirect(route('pnd.approval.pa.index'))->with('success', 'Data Rejected! by '.auth()->user()->nama);
     }

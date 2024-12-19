@@ -2,21 +2,18 @@
 
 namespace App\Services\Pengukuran\Awal;
 
-use App\Http\Controllers\PunchController;
 use App\Models\Dies;
-use App\Models\M_ApprDisposal;
 use App\Models\M_ApprPengukuran;
 use App\Models\PengukuranAwalDies;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinDies;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
-use Request;
 
 /**
  * Class SetDraftStatusService.
  */
-class SetDraftStatusService
+class SetDraftStatusServiceAwal
 {
     public function handle($jenis, $route)
     {
@@ -25,6 +22,7 @@ class SetDraftStatusService
 
         $updateDraftStatus = [
             'is_draft' => 0,
+            'is_waiting' => 1,
         ];
 
         if ($jenis == 'pengukuran-awal') {
@@ -32,12 +30,6 @@ class SetDraftStatusService
                 $this->updatePunchDraftStatus($updateDraftStatus, $this->getRoute($route));
             } elseif ($route == 'dies') {
                 $this->updateDiesDraftStatus($updateDraftStatus);
-            }
-        } elseif ($jenis == 'pengukuran-rutin') {
-            if (in_array($route, ['punch-atas', 'punch-bawah'])) {
-                $this->updatePunchRutinDraftStatus($updateDraftStatus, $this->getRoute($route));
-            } elseif ($route == 'dies') {
-                $this->updateDiesRutinDraftStatus($updateDraftStatus);
             }
         }
     }
@@ -97,17 +89,20 @@ class SetDraftStatusService
             $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
         } else {
             $alert = 'success';
-            $msg = 'Pengukuran Awal Selesai Dilakukan! Menunggu Approval dari Manager QA'; 
+            $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval'; 
 
             Punch::updateOrCreate([
                 'punch_id' => session('punch_id'),
                 'masa_pengukuran' => 'pengukuran awal'
             ], [
-                'is_draft' => 0
+                'is_draft' => 0,
+                'is_waiting' => 1
             ]);
 
             $this->sendToApproval($this->getSegment($route));
         }
+
+        return redirect(route('pnd.pa.'.$route.'.index'))->with($alert, $msg);
     }
 
     private function updateDiesDraftStatus($updateDraftStatus)
@@ -135,101 +130,20 @@ class SetDraftStatusService
             $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
         } else {
             $alert = 'success';
-            $msg = 'Pengukuran Awal Selesai Dilakukan! Menunggu Approval dari Manager QA';
+            $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
 
             Dies::updateOrCreate([
                 'dies_id' => session('dies_id'), 
                 'masa_pengukuran' => 'pengukuran awal'
             ], [
-                'is_draft' => 0
+                'is_draft' => 0,
+                'is_waiting' => 1,
             ]);
 
             $this->sendToApproval('dies');
         }
 
         return redirect(route('pnd.pa.dies.index'))->with($alert, $msg);
-    }
-
-    private function updatePunchRutinDraftStatus($updateDraftStatus, $route)
-    {
-        $getData = PengukuranRutinPunch::where([
-            'punch_id' => session('punch_id'),
-            'masa_pengukuran' => session('masa_pengukuran'),
-        ])
-            ->where('overall_length', '!=', '0')
-            ->orWhere('overall_length', '!=', null)
-            ->where('cup_depth', '!=', '0')
-            ->orWhere('cup_depth', '!=', null)
-            ->where('working_length_rutin', '!=', '0')
-            ->orWhere('working_length_rutin', '!=', null);
-
-        $getData->update($updateDraftStatus);
-
-        $cekStatus = PengukuranRutinPunch::where([
-            'punch_id' => session('punch_id'),
-            'masa_pengukuran' => session('masa_pengukuran'),
-            'is_draft' => '1'
-        ])->count();
-
-        if ($cekStatus > 0) {
-            $alert = 'warning';
-            $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
-        } else {
-            $alert = 'success';
-            $msg = session('masa_pengukuran') . ' Selesai Dilakukan! Menunggu Approval dari Manager QA';
-
-            Punch::updateOrCreate([
-                'punch_id' => session('punch_id'),
-                'masa_pengukuran' => 'pengukuran awal'
-            ], [
-                'is_draft' => 0
-            ]);
-
-            $this->sendToApproval('punch');
-        }
-
-        return redirect(route('pnd.pr.' . $route . '.index'))->with($alert, $msg);
-    }
-
-    private function updateDiesRutinDraftStatus($updateDraftStatus)
-    {
-        $getData = PengukuranRutinDies::where([
-            'dies_id' => session('dies_id'),
-            'masa_pengukuran' => session('masa_pengukuran'),
-        ])
-            ->where('outer_diameter', '!=', '0')
-            ->where('inner_diameter_1', '!=', '0')
-            ->where('inner_diameter_2', '!=', '0')
-            ->where('ketinggian_dies', '!=', '0')
-            ->where('visual', '!=', '-')
-            ->where('kesesuaian_dies', '!=', '-');
-
-        $getData->update($updateDraftStatus);
-
-        $cekStatus = PengukuranRutinDies::where([
-            'dies_id' => session('dies_id'),
-            'masa_pengukuran' => session('masa_pengukuran'),
-            'is_draft' => '1'
-        ])->count();
-
-        if ($cekStatus > 0) {
-            $alert = 'warning';
-            $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
-        } else {
-            $alert = 'success';
-            $msg = session('masa_pengukuran') . ' Selesai Dilakukan! Menunggu Approval dari Manager QA';
-
-            Dies::updateOrCreate([
-                'dies_id' => session('dies_id'), 
-                'masa_pengukuran' => 'pengukuran awal'
-            ], [
-                'is_draft' => 0
-            ]);
-
-            $this->sendToApproval('dies');
-        }
-
-        return redirect(route('pnd.pr.dies.index'))->with($alert, $msg);
     }
 
     private function sendToApproval($jenis)
@@ -258,8 +172,8 @@ class SetDraftStatusService
             'due_date' => date('Y-m-d H:i:s', strtotime(date('Y-m-d 23:59:59') . " +6 days")),
             'by' => '-',
             'at' => null,
-            'is_approved' => '-',
-            'is_rejected' => '-',
+            'is_approved' => '0',
+            'is_rejected' => '0',
         ];
         $model::create($dataApproval);
     }

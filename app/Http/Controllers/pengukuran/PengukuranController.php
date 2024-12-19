@@ -13,8 +13,10 @@ use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
 use App\Services\GetJenisPunch;
 use App\Services\Pengukuran\Awal\ServicePengukuranAwal;
+use App\Services\Pengukuran\Rutin\ServicePengukuranRutin;
 use App\Services\Rumus\GetRumusPengukuranAwalDies;
 use App\Services\Rumus\GetRumusPengukuranAwalPunch;
+use App\Services\Rumus\GetRumusPengukuranRutinDies;
 use App\Services\Rumus\GetRumusPengukuranRutinPunch;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
@@ -75,8 +77,8 @@ class PengukuranController extends Controller
                     'is_draft' => '1',
                     'is_delete_pp' => '0',
                     'is_edit' => '0',
-                    'is_approved' => '-',
-                    'is_rejected' => '-',
+                    'is_approved' => '0',
+                    'is_rejected' => '0',
                 ];
                 PengukuranAwalPunch::create($createDraftPengukuran);
             }
@@ -130,8 +132,8 @@ class PengukuranController extends Controller
                     'is_draft' => '1',
                     'is_delete_pd' => '0',
                     'is_edit' => '0',
-                    'is_approved' => '-',
-                    'is_rejected' => '-',
+                    'is_approved' => '0',
+                    'is_rejected' => '0',
                 ];
                 PengukuranAwalDies::create($createDraftPengukuran);
             }
@@ -750,12 +752,12 @@ class PengukuranController extends Controller
                     //Get Data Approval 
                     $dataApproval = $query->latest()->first();
 
-                    if ($dataApproval->is_approved == '-') { // Jika Data Pengukuran Belum diapprove tidak bisa buat pengukuran baru
+                    if ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '0') { // Jika Data Pengukuran Belum diapprove tidak bisa buat pengukuran baru
                         return response()->json([
                             'success' => false,
                             'message' => 'Data Pengukuran belum di Approve!',
                         ]);
-                    } elseif ($dataApproval->is_approved == '0') {
+                    } elseif ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '1') {
                         return response()->json([
                             'success' => false,
                             'message' => 'Pengukuran Tidak Dapat Dilakukan Karena Data Gagal diApprove!',
@@ -797,12 +799,12 @@ class PengukuranController extends Controller
                     //Get Data Approval 
                     $dataApproval = $query->latest()->first();
 
-                    if ($dataApproval->is_approved == '-') { // Jika Data Pengukuran Belum diapprove tidak bisa buat pengukuran baru
+                    if ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '0') { // Jika Data Pengukuran Belum diapprove tidak bisa buat pengukuran baru
                         return response()->json([
                             'success' => false,
                             'message' => 'Data Pengukuran belum di Approve!',
                         ]);
-                    } elseif ($dataApproval->is_approved == '0') {
+                    } elseif ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '1') {
                         return response()->json([
                             'success' => false,
                             'message' => 'Pengukuran Tidak Dapat Dilakukan Karena Data Gagal diApprove!',
@@ -1070,7 +1072,8 @@ class PengukuranController extends Controller
                         ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
                         ->where('diess.dies_id', $id)
                         ->where('pengukuran_rutin_diess.masa_pengukuran', session('masa_pengukuran_view'))
-                        ->latest('diess')
+                        ->orderBy('diess.created_at', 'desc')
+                        // ->latest('diess')
                         ->first();
                     $data['labelDies'] = $LabelDies;
                 }
@@ -1162,8 +1165,8 @@ class PengukuranController extends Controller
                 'is_draft' => '1',
                 'is_delete_punch' => '0',
                 'is_edit' => '0',
-                'is_approved' => '-',
-                'is_rejected' => '-',
+                'is_approved' => '0',
+                'is_rejected' => '0',
             ];
             session()->put('punch_id', $dataPunch->punch_id);
             Punch::updateOrCreate($createData);
@@ -1186,8 +1189,8 @@ class PengukuranController extends Controller
                     'is_draft' => '1',
                     'is_delete_pp' => '0',
                     'is_edit' => '0',
-                    'is_approved' => '-',
-                    'is_rejected' => '-',
+                    'is_approved' => '0',
+                    'is_rejected' => '0',
                 ];
                 PengukuranRutinPunch::create($createDraftPengukuran);
             }
@@ -1563,7 +1566,6 @@ class PengukuranController extends Controller
         } elseif ($request->segment(3) == 'dies') {
             $data['jenis'] = 'dies';
 
-            
             if (session('jumlah_dies') <= session('page')) {
 
                 $update_id = $request->update_id;
@@ -1572,18 +1574,7 @@ class PengukuranController extends Controller
                 $irt = $request->irt;
                 $ipc = $request->ipc;
 
-                $i = 0;
-                while ($i < count($update_id)) {
-                    $createDraftPengukuran = [
-                        'is_cincin_berbayang' => $icb[$i],
-                        'is_gompal' => $igp[$i],
-                        'is_retak' => $irt[$i],
-                        'is_pecah' => $ipc[$i],
-                    ];
-                    PengukuranRutinDies::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
-                    $i++;
-                }
-                // return redirect('/data/'.$request->segment(3).'')->with('success', 'Pengukuran Awal Selesai Dilakukan!');
+                return (new GetRumusPengukuranRutinDies)->handle($update_id, $icb, $igp, $irt, $ipc);
 
             } elseif (session('jumlah_dies') > session('page')) {
                 session()->remove('count');
@@ -1604,6 +1595,8 @@ class PengukuranController extends Controller
                 $irt = $request->irt;
                 $ipc = $request->ipc;
 
+                // (new GetRumusPengukuranRutinDies)->handle($update_id, $icb, $igp, $irt, $ipc);
+
                 $i = 0;
                 while ($i < count($update_id)) {
                     $createDraftPengukuran = [
@@ -1612,6 +1605,8 @@ class PengukuranController extends Controller
                         'is_retak' => $irt[$i],
                         'is_pecah' => $ipc[$i],
                     ];
+
+                    // Update the PengukuranRutinDies record
                     PengukuranRutinDies::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
                     $i++;
                 }
@@ -1622,76 +1617,82 @@ class PengukuranController extends Controller
 
     public function add_note_rutin(Request $request)
     {
-        if ($request->segment(3) == 'punch-atas') {
-            $route = 'atas';
-        } elseif ($request->segment(3) == 'punch-bawah') {
-            $route = 'bawah';
-        }
-
+        $note = $request->note;
+        $jenis = $request->segment(2);
+        $route = $request->segment(3);
         $referensi_drawing = $request->referensi_drawing;
         $catatan = $request->catatan;
         $kesimpulan = $request->kesimpulan;
         $micrometer_digital = $request->micrometer_digital;
         $caliper_digital = $request->caliper_digital;
         $dial_indicator_digital = $request->dial_indicator_digital;
+        $masa_pengukuran = session('masa_pengukuran');
 
-        if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
-            if ($request->segment(3) == 'punch-atas') {
-                $data['jenisPunch'] = 'Punch Atas';
-                $data['jenis'] = 'punch-atas';
-            } elseif ($request->segment(3) == 'punch-bawah') {
-                $data['jenisPunch'] = 'Punch Bawah';
-                $data['jenis'] = 'punch-bawah';
-            }
-            session()->remove('show_id');
-            session()->remove('count');
-            session()->remove('count_num');
-            $note = $request->note;
+        return (new ServicePengukuranRutin)->addNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital, $masa_pengukuran);
 
-            Punch::updateOrCreate(
-                [
-                    'punch_id' => session('punch_id'),
-                    'masa_pengukuran' => session('masa_pengukuran')
-                ],
-                [
-                    'referensi_drawing' => $referensi_drawing,
-                    'catatan' => $catatan,
-                    'kesimpulan' => $kesimpulan,
-                    'kalibrasi_micrometer' => $micrometer_digital,
-                    'kalibrasi_caliper' => $caliper_digital,
-                    'kalibrasi_dial_indicator' => $dial_indicator_digital,
-                ]
-            );
+        // if ($request->segment(3) == 'punch-atas') {
+        //     $route = 'atas';
+        // } elseif ($request->segment(3) == 'punch-bawah') {
+        //     $route = 'bawah';
+        // }
 
-            return redirect(route('pnd.pr.' . $route . '.draft'));
-        } elseif ($request->segment(3) == 'dies') {
-            $data['jenis'] = 'dies';
+        // $referensi_drawing = $request->referensi_drawing;
+        // $catatan = $request->catatan;
+        // $kesimpulan = $request->kesimpulan;
+        // $micrometer_digital = $request->micrometer_digital;
+        // $caliper_digital = $request->caliper_digital;
+        // $dial_indicator_digital = $request->dial_indicator_digital;
 
-            session()->remove('show_id');
-            session()->remove('count');
-            session()->remove('count_num');
-            $note = $request->note;
-            // $createDraftPengukuran = [
-            //     'note' => $note,
-            // ];
-            // PengukuranRutinDies::where([
-            //     'dies_id' => session('dies_id'),
-            //     'masa_pengukuran' => session('masa_pengukuran')
-            // ])->update($createDraftPengukuran);
-            Dies::updateOrCreate([
-                'dies_id' => session('dies_id'),
-                'masa_pengukuran' => session('masa_pengukuran')],
-                [
-                    'referensi_drawing' => $referensi_drawing,
-                    'catatan' => $catatan,
-                    'kesimpulan' => $kesimpulan,
-                    'kalibrasi_micrometer' => $micrometer_digital,
-                    'kalibrasi_caliper' => $caliper_digital,
-                    'kalibrasi_dial_indicator' => $dial_indicator_digital,
-                ]);
+        // if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
+        //     if ($request->segment(3) == 'punch-atas') {
+        //         $data['jenisPunch'] = 'Punch Atas';
+        //         $data['jenis'] = 'punch-atas';
+        //     } elseif ($request->segment(3) == 'punch-bawah') {
+        //         $data['jenisPunch'] = 'Punch Bawah';
+        //         $data['jenis'] = 'punch-bawah';
+        //     }
+        //     session()->remove('show_id');
+        //     session()->remove('count');
+        //     session()->remove('count_num');
+        //     $note = $request->note;
 
-            return redirect(route('pnd.pr.dies.draft'));
-        }
+        //     Punch::updateOrCreate(
+        //         [
+        //             'punch_id' => session('punch_id'),
+        //             'masa_pengukuran' => session('masa_pengukuran')
+        //         ],
+        //         [
+        //             'referensi_drawing' => $referensi_drawing,
+        //             'catatan' => $catatan,
+        //             'kesimpulan' => $kesimpulan,
+        //             'kalibrasi_micrometer' => $micrometer_digital,
+        //             'kalibrasi_caliper' => $caliper_digital,
+        //             'kalibrasi_dial_indicator' => $dial_indicator_digital,
+        //         ]
+        //     );
+
+        //     return redirect(route('pnd.pr.' . $route . '.draft'));
+        // } elseif ($request->segment(3) == 'dies') {
+        //     $data['jenis'] = 'dies';
+
+        //     session()->remove('show_id');
+        //     session()->remove('count');
+        //     session()->remove('count_num');
+        //     $note = $request->note;
+        //     Dies::updateOrCreate([
+        //         'dies_id' => session('dies_id'),
+        //         'masa_pengukuran' => session('masa_pengukuran')],
+        //         [
+        //             'referensi_drawing' => $referensi_drawing,
+        //             'catatan' => $catatan,
+        //             'kesimpulan' => $kesimpulan,
+        //             'kalibrasi_micrometer' => $micrometer_digital,
+        //             'kalibrasi_caliper' => $caliper_digital,
+        //             'kalibrasi_dial_indicator' => $dial_indicator_digital,
+        //         ]);
+
+        //     return redirect(route('pnd.pr.dies.draft'));
+        // }
     }
     public function set_draft_status_rutin(Request $request)
     {

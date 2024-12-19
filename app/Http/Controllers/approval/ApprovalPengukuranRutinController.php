@@ -79,13 +79,24 @@ class ApprovalPengukuranRutinController extends Controller
             M_ApprPengukuran::updateOrCreate(['req_id' => $data->req_id], $update);
 
             $updateStatusApproved = [
+                'is_draft' => '0',
+                'is_waiting' => '0',
                 'is_approved' => '1',
                 'is_rejected' => '0',
             ];
-            // Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
-            // PengukuranRutinPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
-            Punch::updateOrCreate(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran], $updateStatusApproved);
-            PengukuranRutinPunch::updateOrCreate(['punch_id' => $data->punch_id], $updateStatusApproved);
+            //periksa apakah punch_id kosong/null
+            $isNullPunchId = is_null($data->punch_id);
+
+            //periksa apakah dies_id kosong/null
+            $isNullDiesId = is_null($data->dies_id);
+
+            if(!$isNullPunchId){ //JIka Tidak Kosong update status approved pada table punch
+                Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+                PengukuranRutinPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+            }elseif(!$isNullDiesId){ //JIka Tidak Kosong update status approved pada table diess
+                Dies::where(['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+                PengukuranRutinDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
+            }
 
             DB::commit();
 
@@ -113,13 +124,23 @@ class ApprovalPengukuranRutinController extends Controller
             M_ApprPengukuran::updateOrCreate(['req_id' => $data->req_id], $update);
 
             $updateStatusApproved = [
+                'is_draft' => '0',
+                'is_waiting' => '0',
                 'is_approved' => '0',
                 'is_rejected' => '1',
             ];
-            // Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
-            // PengukuranRutinPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
-            Punch::updateOrCreate(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran], $updateStatusApproved);
-            PengukuranRutinPunch::updateOrCreate(['punch_id' => $data->punch_id], $updateStatusApproved);
+            $isNullPunchId = is_null($data->punch_id);
+
+            //periksa apakah dies_id kosong/null
+            $isNullDiesId = is_null($data->dies_id);
+
+            if (!$isNullPunchId) { //JIka Tidak Kosong update status approved pada table punch
+                Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+                PengukuranRutinPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+            } elseif (!$isNullDiesId) { //JIka Tidak Kosong update status approved pada table diess
+                Dies::where(['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
+                PengukuranRutinDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
+            }
 
             DB::commit();
 

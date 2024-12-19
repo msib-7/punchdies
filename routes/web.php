@@ -10,6 +10,7 @@ use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiesController;
+use App\Http\Controllers\disposal\DisposalController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\pengukuran\PengukuranController;
 use App\Http\Controllers\Permission;
@@ -197,6 +198,8 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
     });
 });
 
+
+Route::get('disposal', [DisposalController::class, 'index'])->name('index');
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     //QA
 //     //Approval Pengukuran

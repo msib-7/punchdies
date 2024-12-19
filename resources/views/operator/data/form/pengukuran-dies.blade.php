@@ -309,7 +309,7 @@
                                         <div class="col-12 mt-3">
                                             <div class="d-flex flex-column mx-2">
                                                 <label for="kesimpulan" class="required form-label">Kesimpulan</label>
-                                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" rows="3" placeholder="Insert Your Message" required></textarea>
+                                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" rows="5" placeholder="Insert Your Message" required></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -363,6 +363,8 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
     // Function to check orientation and update display
     function checkOrientation() {
@@ -649,8 +651,6 @@
             btn_next.setAttribute("onclick", "this.disabled=true; this.innerHTML ='Processing...'; form.submit();");
             if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
                 btn_next.setAttribute("onclick", "saveData()");
-                btn_next.setAttribute("data-bs-toggle", "modal");
-                btn_next.setAttribute("data-bs-target", "#modal_confirm_pengukuran");
             }
             var title2 = document.createTextNode("Next");
             btn_next.appendChild(title2);
@@ -674,7 +674,10 @@
             type: "POST",
             data: $('#form_data_pengukuran').serialize(),
             success: function(response) {
-                // Handle success (e.g., show a success message, redirect, etc.)
+                $('#kesimpulan').val(response.kesimpulan);
+                $('#modal_confirm_pengukuran').modal('show');
+                // console.log(response.kesimpulan);
+                
             },
             error: function(xhr, status, error) {
                 // Handle error (e.g., show an error message)

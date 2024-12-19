@@ -30,6 +30,7 @@ class DiesController extends Controller
                         DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
                         DB::raw('MAX(is_delete_dies) as is_delete_dies'),
                         DB::raw('MAX(is_draft) as is_draft'),
+                        DB::raw('MAX(is_waiting) as is_waiting'),
                         DB::raw('MAX(is_edit) as is_edit'),
                         DB::raw('MAX(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
@@ -60,6 +61,7 @@ class DiesController extends Controller
                         DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
                         DB::raw('MAX(is_delete_dies) as is_delete_dies'),
                         DB::raw('MAX(is_draft) as is_draft'),
+                        DB::raw('MAX(is_waiting) as is_waiting'),
                         DB::raw('MAX(is_edit) as is_edit'),
                         DB::raw('MAX(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
@@ -91,6 +93,8 @@ class DiesController extends Controller
             $data['DataLine'] = $Dataline;
 
             $data['jenis'] = 'dies';
+
+            // dd($dataDies);
 
             return view('operator.data.dies', $data);
         } elseif ($request->segment(2) != 'pengukuran-rutin') {

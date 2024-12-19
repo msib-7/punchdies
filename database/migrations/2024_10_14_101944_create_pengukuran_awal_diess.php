@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('masa_pengukuran');
             $table->string('note')->nullable();
             $table->string('is_draft');
+            $table->string('is_waiting')->default('0');
             $table->string('is_delete_pd');
             $table->string('is_edit');
             $table->string('is_approved');

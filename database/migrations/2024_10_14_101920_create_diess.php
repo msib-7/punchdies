@@ -30,7 +30,7 @@ return new class extends Migration
             $table->date('kalibrasi_caliper')->nullable();
             $table->date('kalibrasi_dial_indicator')->nullable();
             $table->string('is_draft');
-            $table->string('is_waiting');
+            $table->string('is_waiting')->default('0');
             $table->string('is_delete_dies');
             $table->string('is_edit');
             $table->string('is_approved');

@@ -111,13 +111,17 @@
             <div class="card shadow-sm border-0 rounded-3 h-100">
                 <div class="card-body">
                     <h5 class="card-title">{{ strtoupper($data->merk) }}
-                        @if ($data->is_approved == '1')
+                        @if($data->is_draft == '1')
+                            <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                        @elseif ($data->is_waiting == '1')
+                            <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                        @elseif ($data->is_approved == '1')
                             <span class="badge badge-square badge-outline badge-success">Approved</span>
+                        @elseif ($data->is_rejected == '1')
+                            <span class="badge badge-square badge-outline badge-success">Rejected</span>
                         @else
                             @if ($data->is_draft == '1')
                                 <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                            @elseif ($data->is_draft == '0')
-                                <span class="badge badge-square badge-outline badge-warning">Waiting</span>
                             @endif
                         @endif
                     </h5>

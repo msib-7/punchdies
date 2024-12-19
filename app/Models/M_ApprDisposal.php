@@ -16,6 +16,11 @@ class M_ApprDisposal extends Model
     protected $table = 'approval_disposals';
     protected $guarded;
 
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     public function autonumber()
     {
         $builder = DB::table($this->table);
