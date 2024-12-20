@@ -14,4 +14,9 @@ class PengukuranRutinPunch extends Model
 
     protected $table = "pengukuran_rutin_punchs";
     protected $guarded;
+    
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

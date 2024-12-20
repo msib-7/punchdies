@@ -175,7 +175,7 @@
                                                                             @if ($dataPengukuran->contains(function ($item) {
                                                                                 return strtoupper($item->status) === 'NOK';
                                                                             }))
-                                                                                <button class="btn btn-danger" onclick="confirmDisposal()">Disposal</button>
+                                                                                <a href="/disposal" class="btn btn-danger" onclick="confirmDisposal()">Disposal</a>
                                                                                 <br>
                                                                                 <small>
                                                                                 <span class="text-danger">Disposal Dapat Dilakukan! <br> Status NOK</span>

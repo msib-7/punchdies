@@ -14,4 +14,9 @@ class PengukuranAwalPunch extends Model
 
     protected $table = "pengukuran_awal_punchs";
     protected $guarded;
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

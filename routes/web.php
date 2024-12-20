@@ -199,7 +199,10 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
 });
 
 
-Route::get('disposal', [DisposalController::class, 'index'])->name('index');
+Route::get('disposal/{id}', [DisposalController::class, 'create'])->name('create');
+Route::get('upload/', [DisposalController::class, 'create'])->name('create');
+Route::post('/disposal/store', [DisposalController::class, 'store'])->name('disposal.store');
+Route::post('/disposal/draft', [DisposalController::class, 'saveDraft'])->name('disposal.draft');
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     //QA
 //     //Approval Pengukuran
