@@ -307,6 +307,20 @@
                                 </a>
                                 <!--end:Menu link-->
                             </div>
+
+                            {{-- Disposal Menu --}}
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                {{-- <a class="menu-link" href="{{route('pnd.approval.disposal.index')}}"> --}}
+                                <a class="menu-link" href="#">
+                                    <span class="menu-icon">
+                                        <i class="ki-outline ki-disconnect fs-2"></i>
+                                    </span>
+                                    <span class="menu-title">Request Disposal</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
                             <!--end:Menu item-->
                             @break
                         @endif

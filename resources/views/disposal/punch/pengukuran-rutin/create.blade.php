@@ -58,6 +58,15 @@
                     </div>
                     <div class="card-body">
                         <div class="col-12">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <div class="row">
                                 <h4 class="card-title align-items-start flex-column">
                                     <span class="card-label fw-semibold text-dark">Input Dokumen Disposal</span>
@@ -65,42 +74,46 @@
                                 <div class="card">
                                     <div class="card-body">
                                        <!--begin::Form-->
-                                        <form class="form" action="/disposal/store" method="post" enctype="multipart/form-data">
+                                        <form class="form" action="/disposal/store/{{$labelPunch->punch_id}}" method="post" enctype="multipart/form-data">
                                             @csrf
                                             <div>
-                                                <label for="formFile1" class="form-label">Dokumen 1</label>
+                                                <label for="formFile1" class="required form-label">Dokumen 1</label>
                                                 <input class="form-control" type="file" name="dokumen1" id="formFile1" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
                                                 <div id="fileInfo1" class="file-info"></div>
                                                 <div id="error1" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
                                             </div>
                                             <div>
-                                                <label for="formFile2" class="form-label">Dokumen 2</label>
+                                                <label for="formFile2" class="required form-label">Dokumen 2</label>
                                                 <input class="form-control" type="file" name="dokumen2" id="formFile2" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
                                                 <div id="fileInfo2" class="file-info"></div>
                                                 <div id="error2" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
                                             </div>
                                             <div>
-                                                <label for="formFile3" class="form-label">Dokumen 3</label>
+                                                <label for="formFile3" class="required form-label">Dokumen 3</label>
                                                 <input class="form-control" type="file" name="dokumen3" id="formFile3" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
                                                 <div id="fileInfo3" class="file-info"></div>
                                                 <div id="error3" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
                                             </div>
                                             <div>
-                                                <label for="formFile4" class="form-label">Dokumen 4</label>
+                                                <label for="formFile4" class="required form-label">Dokumen 4</label>
                                                 <input class="form-control" type="file" name="dokumen4" id="formFile4" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
                                                 <div id="fileInfo4" class="file-info"></div>
                                                 <div id="error4" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
                                             </div>
                                             <div>
-                                                <label for="formFile5" class="form-label">Dokumen 5</label>
+                                                <label for="formFile5" class="required form-label">Dokumen 5</label>
                                                 <input class="form-control" type="file" name="dokumen5" id="formFile5" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
                                                 <div id="fileInfo5" class="file-info"></div>
                                                 <div id="error5" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
+                                            </div>
+                                            <div>
+                                                <label for="formFile5" class="form-label">Catatan</label>
+                                                <textarea name="note" class="form-control" cols="30" rows="5">-</textarea>
                                             </div>
                                             <div class="mt-15">
                                                     <button type="submit" class="btn btn-light-primary  w-100 mb-1">

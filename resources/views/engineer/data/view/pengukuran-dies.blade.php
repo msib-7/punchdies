@@ -155,16 +155,19 @@
                                                                                 </td>
                                                                                 <td style="border: none;"
                                                                                     class="fs-5 px-4 my-4">
-                                                                                    <?php echo $statusPengukuran ?>
+                                                                                    @if ($labelPunch->is_approved == '1')
+                                                                                        <span class="badge badge-square badge-outline badge-success">Approved</span>
+                                                                                    @elseif ($labelPunch->is_rejected == '1') <!-- Check for rejection -->
+                                                                                        <span class="badge badge-square badge-outline badge-danger">Rejected</span>
+                                                                                    @else
+                                                                                        @if ($labelPunch->is_draft == '1')
+                                                                                            <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                                                                        @elseif ($labelPunch->is_draft == '0')
+                                                                                            <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                                                                                        @endif
+                                                                                    @endif
                                                                                 </td>
                                                                             </tr>
-                                                                            {{-- <tr style="border: none; height: 30px;">
-                                                                                <td style="border: none;" class="fs-3 px-4 my-4"
-                                                                                    colspan="3">
-                                                                                    <span
-                                                                                        class="badge badge-light-success fs-5">Approved</span>
-                                                                                </td>
-                                                                            </tr> --}}
                                                                         </tbody>
                                                                     </table>
                                                                 </div>

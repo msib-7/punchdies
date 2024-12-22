@@ -246,7 +246,6 @@
                                                                     $caliper = $labelPunch->kalibrasi_caliper ? new DateTime($labelPunch->kalibrasi_caliper) : null;
                                                                     $dial_indicator = $labelPunch->kalibrasi_dial_indicator ? new DateTime($labelPunch->kalibrasi_dial_indicator) : null;
                                                                     ?>
-
                                                                     <tr>
                                                                         <td>Micrometer Digital</td>
                                                                         <td>

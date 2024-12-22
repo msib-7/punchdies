@@ -83,7 +83,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                         <!--begin::Wrapper-->
                         <div class="d-flex flex-center flex-column flex-column-fluid pb-10 pb-lg-15">
                             <!--begin::Form-->
-                            <form class="form w-100"  action="{{url('/login-auth')}}" method="post">
+                            <form class="form w-100" id="loginForm">
                                 @csrf
                                 <!--begin::Heading-->
                                 <span class="d-flex flex-center">
@@ -170,14 +170,9 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 <!--begin::Submit button-->
                                 <div class="d-grid mb-10">
                                     <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
-                                        <!--begin::Indicator label-->
                                         <span class="indicator-label">Sign In</span>
-                                        <!--end::Indicator label-->
-                                        <!--begin::Indicator progress-->
                                         <span class="indicator-progress">Please wait...
-                                            <span
-                                                class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                        <!--end::Indicator progress-->
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                     </button>
                                 </div>
                                 <!--end::Submit button-->
@@ -210,12 +205,66 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
     </div>
     <!--end::Root-->
     <!--begin::Javascript-->
-    <script>
-        var hostUrl = "assets/";
-
-    </script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                // Get the values of the input fields
+                var username = $('input[name="username"]').val();
+                var password = $('input[name="password"]').val();
+
+                // Check if fields are empty
+                if (username === '' || password === '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Field Required',
+                        text: 'Please fill in both username and password.',
+                    });
+                    return; // Stop the form submission
+                }
+
+                // If fields are filled, proceed with AJAX submission
+                $.ajax({
+                    url: "{{ url('/login-auth') }}",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        let timerInterval;
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Login Successfully!",
+                            html: "auto close in 3 seconds.",
+                            allowOutsideClick: false, // Tidak bisa ditutup dengan klik luar
+                            allowEscapeKey: false, // Tidak bisa ditutup dengan klik esc
+                            timer: 3050,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                window.location.href = "{{ route('dashboard') }}";
+                            }
+                        });
+                    },
+                    error: function(xhr) {
+                        // Show alert if login fails
+                        if (xhr.status === 401) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Login Failed',
+                                text: xhr.responseJSON.error,
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    
     @include('layout.alert')
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js')}}"></script>

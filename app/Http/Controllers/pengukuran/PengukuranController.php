@@ -746,6 +746,21 @@ class PengukuranController extends Controller
             // dd($dataPunch);
             if ($dataPunch == null) {
                 $query = M_ApprPengukuran::query()->where('punch_id', $id);
+
+                //Get Masa Pengukuran
+                $masaPengukuran = $query->latest()->first()->masa_pengukuran;
+
+                //Get Data Pengukuran
+                if($masaPengukuran == 'pengukuran awal'){
+                    $pengukuran = PengukuranAwalPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->get();
+                }else{
+                    $pengukuran = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->get();
+                }
+                //Cek status OK/NOK 
+                $hasNok = $pengukuran->contains(function ($item) {
+                    return $item->status === 'NOK'; // Asumsikan 'status' adalah nama kolom
+                });
+                // dd($hasNok);
                 //Cek Data Approval ada / tidak
                 $cekApproval = $query->exists();
                 if ($cekApproval) {
@@ -762,7 +777,12 @@ class PengukuranController extends Controller
                             'success' => false,
                             'message' => 'Pengukuran Tidak Dapat Dilakukan Karena Data Gagal diApprove!',
                         ]);
-                    } else {
+                    } elseif($hasNok){
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Pengukuran Berikutnya Tidak Dapat Dilakukan! Status: NOK',
+                        ]);
+                    }else {
                         return response()->json([
                             'success' => true,
                             'message' => 'Data Pengukuran Baru',

@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('approval_disposals', function (Blueprint $table) {
-            // You probably want to make the new column nullable
-            $table->string('is_draft')->default('0')->after('attach_5');
+            $table->string('is_revisi')->default('0')->after('is_waiting');
         });
     }
 
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('approval_disposal', function (Blueprint $table) {
-            //
+        Schema::table('approval_disposals', function (Blueprint $table) {
+            $table->dropColumn('is_revisi');
         });
     }
 };

@@ -22,7 +22,7 @@ class AuthController extends Controller
             'username' => 'required',
             'password' => 'required'
         ], [
-            'email.required' => 'Username field is required!',
+            'username.required' => 'Username field is required!',
             'password.required' => 'Password field is required',
         ]);
 
@@ -37,19 +37,19 @@ class AuthController extends Controller
             ];
             User::where('username', $username)->update($last_login);
 
-            $user = User::where('username','=', $username)->first();
+            $user = User::where('username', '=', $username)->first();
             $line = Lines::where(['id' => $user->line_id])->first();
             $dataUser = [
-                            'user_id' => $user->id, 
-                            'line_user' => $line->nama_line,
-                            'nama_user' => $user->nama,
-                            'email_user' => $user->email,
-                        ];
+                'user_id' => $user->id,
+                'line_user' => $line->nama_line,
+                'nama_user' => $user->nama,
+                'email_user' => $user->email,
+            ];
             session()->put($infoLogin);
             session()->put($dataUser);
-            return redirect(route('dashboard'))->with('success','Login Berhasil!');
+            return redirect(route('dashboard'))->with('success', 'Login Berhasil!');
         } else {
-            return redirect('/')->with( 'error','Username dan Password tidak cocok!');
+            return response()->json(['error' => 'Username dan Password tidak cocok!'], 401);
         }
     }
 

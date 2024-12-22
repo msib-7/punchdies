@@ -14,21 +14,24 @@ return new class extends Migration
         Schema::create('approval_disposals', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('req_id');
-            $table->bigInteger('punch_id')->nullable();
-            $table->bigInteger('dies_id')->nullable();
+            $table->string('punch_id')->nullable();
+            $table->string('dies_id')->nullable();
             $table->uuid('user_id');
             $table->dateTime('tgl_submit');
             $table->dateTime('due_date');
-            $table->string('approved_by')->nullable();
-            $table->timestamp('approved_at')->nullable();
-            $table->string('approved_note')->nullable();
+            $table->string('req_note')->default('-');
+            $table->string('approved_note')->default('-');
             $table->string('attach_1')->default('-')->nullable();
             $table->string('attach_2')->default('-')->nullable();
             $table->string('attach_3')->default('-')->nullable();
             $table->string('attach_4')->default('-')->nullable();
             $table->string('attach_5')->default('-')->nullable();
-            $table->string('is_approved');
-            $table->string('is_rejected');
+            $table->string('is_draft')->default('1');
+            $table->string('is_waiting')->default('0');
+            $table->string('is_approved')->default('0');
+            $table->string('is_rejected')->default('0');
+            $table->string('by')->nullable();
+            $table->timestamp('at')->nullable();
             $table->timestamps();
         });
     }

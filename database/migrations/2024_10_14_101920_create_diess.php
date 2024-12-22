@@ -29,12 +29,13 @@ return new class extends Migration
             $table->date('kalibrasi_micrometer')->nullable();
             $table->date('kalibrasi_caliper')->nullable();
             $table->date('kalibrasi_dial_indicator')->nullable();
-            $table->string('is_draft');
+            $table->string('is_draft')->default('0');
             $table->string('is_waiting')->default('0');
-            $table->string('is_delete_dies');
-            $table->string('is_edit');
-            $table->string('is_approved');
-            $table->string('is_rejected');
+            $table->string('is_delete_dies')->default('0');
+            $table->string('is_edit')->default('0');
+            $table->string('is_approved')->default('0');
+            $table->string('is_rejected')->default('0');
+            $table->string('is_disposal')->default('0');
             $table->timestamps();
         });
     }

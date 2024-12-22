@@ -190,19 +190,23 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
             Route::get('approve/{id}', [ApprovalDisposalController::class, 'approve'])->name('approve');
             Route::get('reject/{id}', [ApprovalDisposalController::class, 'reject'])->name('reject');
         });
-
         Route::prefix('histori')->name('histori.')->group(function(){
             Route::get('histori', [ApprovalController::class, 'show_history'])->name('index');
             Route::get('pengukuran/{id}', [ApprovalController::class, 'detail_data_history'])->name('show-detail-pengukuran');
         });
     });
+
+    Route::prefix('request')->name('request.')->group(function(){
+        Route::prefix('disposal')->name('disposal.')->group(function(){
+            Route::get('index', [DisposalController::class, 'index'])->name('index');
+            Route::get('create/{id}', [DisposalController::class, 'create'])->name('create');
+            Route::post('store/{id}', [DisposalController::class, 'store'])->name('store');
+            Route::post('draft/{id}', [DisposalController::class, 'saveDraft'])->name('draft');
+        });
+    });
 });
 
 
-Route::get('disposal/{id}', [DisposalController::class, 'create'])->name('create');
-Route::get('upload/', [DisposalController::class, 'create'])->name('create');
-Route::post('/disposal/store', [DisposalController::class, 'store'])->name('disposal.store');
-Route::post('/disposal/draft', [DisposalController::class, 'saveDraft'])->name('disposal.draft');
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     //QA
 //     //Approval Pengukuran
