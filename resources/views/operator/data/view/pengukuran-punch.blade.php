@@ -197,8 +197,8 @@
                                                                                 <small>
                                                                                 <span class="text-danger">Disposal Dapat Dilakukan! <br> Status NOK</span>
                                                                                 </small>
-                                                                                @endif
-                                                                            </td>
+                                                                            @endif
+                                                                        </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>

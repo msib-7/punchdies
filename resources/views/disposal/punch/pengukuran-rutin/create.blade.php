@@ -54,7 +54,11 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header">
+                        @if (isset($draft))
+                        <h3 class="card-title fw-bold text-dark">Draft Disposal</h3>
+                        @else
                         <h3 class="card-title fw-bold text-dark">New Disposal</h3>
+                        @endif
                     </div>
                     <div class="card-body">
                         <div class="col-12">
@@ -68,60 +72,117 @@
                                 </div>
                             @endif
                             <div class="row">
+                                @if (isset($draft) && $draft->is_revisi == '1')
+                                    <div class="alert alert-info" role="alert">
+                                        <h4 class="alert-heading">Perhatian!</h4>
+                                        <p class="mb-0">Draft ini merupakan revisi dari disposal sebelumnya. <br>
+                                            Catatan revisi: <br>
+                                            <p> <i>"{{ $draft->approved_note }}"</i> </p>
+                                        </p>
+                                    </div>
+                                    
+                                @endif
                                 <h4 class="card-title align-items-start flex-column">
                                     <span class="card-label fw-semibold text-dark">Input Dokumen Disposal</span>
                                 </h4>
                                 <div class="card">
                                     <div class="card-body">
                                        <!--begin::Form-->
-                                        <form class="form" action="/disposal/store/{{$labelPunch->punch_id}}" method="post" enctype="multipart/form-data">
+                                        <form class="form" action="{{ route('pnd.request.disposal.store', $labelPunch->punch_id) }}" method="post" enctype="multipart/form-data">
                                             @csrf
                                             <div>
                                                 <label for="formFile1" class="required form-label">Dokumen 1</label>
-                                                <input class="form-control" type="file" name="dokumen1" id="formFile1" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
-                                                <div id="fileInfo1" class="file-info"></div>
+                                                <input class="form-control" type="file" value="{{ $draft->attach_1 ?? '-'}}" name="dokumen1" id="formFile1" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
+                                                
+                                                <!-- Display the filename if it exists -->
+                                                @if(isset($draft) && $draft->attach_1)
+                                                    <div class="file-info">Current file: {{ basename($draft->attach_1) }}</div>
+                                                @else
+                                                    <div class="file-info">No file attached.</div>
+                                                @endif
+
                                                 <div id="error1" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
                                             </div>
                                             <div>
                                                 <label for="formFile2" class="required form-label">Dokumen 2</label>
-                                                <input class="form-control" type="file" name="dokumen2" id="formFile2" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
-                                                <div id="fileInfo2" class="file-info"></div>
+                                                <input class="form-control" type="file" value="{{ $draft->attach_2 ?? '-'}}" name="dokumen2" id="formFile2" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
+
+                                                <!-- Display the filename if it exists -->
+                                                @if(isset($draft) && $draft->attach_2)
+                                                    <div class="file-info">Current file: {{ basename($draft->attach_2) }}</div>
+                                                @else
+                                                    <div class="file-info">No file attached.</div>
+                                                @endif
+
                                                 <div id="error2" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
                                             </div>
                                             <div>
                                                 <label for="formFile3" class="required form-label">Dokumen 3</label>
-                                                <input class="form-control" type="file" name="dokumen3" id="formFile3" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
-                                                <div id="fileInfo3" class="file-info"></div>
+                                                <input class="form-control" type="file" value="{{ $draft->attach_3 ?? '-'}}" name="dokumen3" id="formFile3" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
+                                                
+                                                <!-- Display the filename if it exists -->
+                                                @if(isset($draft) && $draft->attach_3)
+                                                    <div class="file-info">Current file: {{ basename($draft->attach_3) }}</div>
+                                                @else
+                                                    <div class="file-info">No file attached.</div>
+                                                @endif
+
                                                 <div id="error3" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
                                             </div>
                                             <div>
                                                 <label for="formFile4" class="required form-label">Dokumen 4</label>
-                                                <input class="form-control" type="file" name="dokumen4" id="formFile4" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
-                                                <div id="fileInfo4" class="file-info"></div>
+                                                <input class="form-control" type="file" value="{{ $draft->attach_4 ?? '-'}}" name="dokumen4" id="formFile4" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
+                                                
+                                                <!-- Display the filename if it exists -->
+                                                @if(isset($draft) && $draft->attach_4)
+                                                    <div class="file-info">Current file: {{ basename($draft->attach_4) }}</div>
+                                                @else
+                                                    <div class="file-info">No file attached.</div>
+                                                @endif
+
                                                 <div id="error4" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
                                             </div>
                                             <div>
                                                 <label for="formFile5" class="required form-label">Dokumen 5</label>
-                                                <input class="form-control" type="file" name="dokumen5" id="formFile5" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
-                                                <div id="fileInfo5" class="file-info"></div>
+                                                <input class="form-control" type="file" value="{{ $draft->attach_5 ?? '-'}}" name="dokumen5" id="formFile5" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
+                                                
+                                                <!-- Display the filename if it exists -->
+                                                @if(isset($draft) && $draft->attach_5)
+                                                    <div class="file-info">Current file: {{ basename($draft->attach_5) }}</div>
+                                                @else
+                                                    <div class="file-info">No file attached.</div>
+                                                @endif
+
                                                 <div id="error5" class="error-message text-danger" style="display: none;"></div>
                                                 <small class="text-muted text-end" style="display: block;">Max file size: 2 MB. Allowed formats: PDF, JPG, JPEG, PNG.</small>
                                             </div>
                                             <div>
                                                 <label for="formFile5" class="form-label">Catatan</label>
-                                                <textarea name="note" class="form-control" cols="30" rows="5">-</textarea>
+                                                <textarea name="note" class="form-control" cols="30" rows="5">{{$draft->req_note ?? ''}}</textarea>
                                             </div>
                                             <div class="mt-15">
+                                                @if ($draft->is_revisi == '1')
+                                                    <button type="submit" class="btn btn-light-primary  w-100 mb-1">
+                                                        Submit Revisi
+                                                    </button>
+
+                                                    <button type="button" onclick="saveRevisi()" class="btn btn-light-warning  w-100">
+                                                        Draft Revisi
+                                                    </button>
+                                                @else
                                                     <button type="submit" class="btn btn-light-primary  w-100 mb-1">
                                                         Create Disposal
                                                     </button>
+                                                    
                                                     <button type="button" onclick="saveDraft()" class="btn btn-light-warning  w-100">
                                                         Draft
                                                     </button>
+                                                @endif
+                                                    
                                             </div>
                                             {{-- <!--begin::Input group-->
                                             <div class="fv-row">
@@ -461,6 +522,107 @@
 <!--end::Bantuan Pengukuran-->
 
 <script>
+    $(document).ready(function () {
+        // Set up CSRF token for AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    });
+
+    function saveDraft() {
+        // Create a FormData object to hold the form data
+        var formData = new FormData();
+        
+        // Append the files and other data to the FormData object
+        for (let i = 1; i <= 5; i++) {
+            let fileInput = document.getElementById('formFile' + i);
+            if (fileInput.files.length > 0) {
+                formData.append('dokumen' + i, fileInput.files[0]);
+            }
+        }
+        
+        // Append other form data
+        formData.append('note', document.querySelector('textarea[name="note"]').value);
+
+        // Make the AJAX request
+        $.ajax({
+            url: "{{ route('pnd.request.disposal.draft', $labelPunch->punch_id) }}", // Use the route name
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Draft saved successfully.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            },
+            error: function(xhr) {
+                // Handle errors
+                var errors = xhr.responseJSON.errors;
+                if (errors) {
+                    var errorMessage = '';
+                    for (var key in errors) {
+                        errorMessage += errors[key].join(', ') + '\n';
+                    }
+                    alert(errorMessage);
+                } else {
+                    alert('An error occurred while saving the draft.');
+                }
+            }
+        });
+    }
+
+    function saveRevisi() {
+        // Create a FormData object to hold the form data
+        var formData = new FormData();
+        
+        // Append the files and other data to the FormData object
+        for (let i = 1; i <= 5; i++) {
+            let fileInput = document.getElementById('formFile' + i);
+            if (fileInput.files.length > 0) {
+                formData.append('dokumen' + i, fileInput.files[0]);
+            }
+        }
+        
+        // Append other form data
+        formData.append('note', document.querySelector('textarea[name="note"]').value);
+
+        // Make the AJAX request
+        $.ajax({
+            url: "{{ route('pnd.request.disposal.draft', $labelPunch->punch_id) }}", // Use the route name
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Draft Revisi saved successfully.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            },
+            error: function(xhr) {
+                // Handle errors
+                var errors = xhr.responseJSON.errors;
+                if (errors) {
+                    var errorMessage = '';
+                    for (var key in errors) {
+                        errorMessage += errors[key].join(', ') + '\n';
+                    }
+                    alert(errorMessage);
+                } else {
+                    alert('An error occurred while saving the draft.');
+                }
+            }
+        });
+    }
+
     function handleFileChange(input) {
         const file = input.files[0];
         const fileInfoDiv = document.getElementById('fileInfo' + input.id.charAt(input.id.length - 1));

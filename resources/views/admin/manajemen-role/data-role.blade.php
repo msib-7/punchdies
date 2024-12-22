@@ -453,7 +453,7 @@
                                                 </label>
                                             </div>
                                             @foreach ($routes as $routeName => $route)
-                                                @if (str_starts_with($routeName, 'pnd.approval.disposal'))
+                                                @if (str_starts_with($routeName, 'pnd.request.disposal'))
                                                     <div class="col-md-4 col-sm-6 pb-2">
                                                         <div class="form-check">
                                                             <input type="checkbox"  name="urls[]" value="{{ $routeName }}"
@@ -784,6 +784,26 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
+                                        <label class="fs-5 my-2">
+                                            Request Disposal
+                                        </label>
+                                    </div>
+                                    @foreach ($routes as $routeName => $route)
+                                        @if (str_starts_with($routeName, 'pnd.request.disposal'))
+                                            <div class="col-md-4 col-sm-6 pb-2">
+                                                <div class="form-check">
+                                                    <input type="checkbox"  name="eurls[]" value="{{ $routeName }}"
+                                                        class="form-check-input route-checkbox route-approval" id="route_{{ $loop->index }}">
+                                                    <label class=""
+                                                        for="route_{{ $loop->index }}">{{ $routeName }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
                                         <div class="form-check mt-3">
                                             <input type="checkbox" id="checkApprovalEdit" class="form-check-input route-checkbox">
                                             <label class="fs-4 fw-bold" for="checkApprovalEdit">
@@ -845,7 +865,7 @@
                                                 </label>
                                             </div>
                                             @foreach ($routes as $routeName => $route)
-                                                @if (str_starts_with($routeName, 'pnd.approval.disposal'))
+                                                @if (str_starts_with($routeName, 'pnd.approval.dis'))
                                                     <div class="col-md-4 col-sm-6 pb-2">
                                                         <div class="form-check">
                                                             <input type="checkbox"  name="eurls[]" value="{{ $routeName }}"

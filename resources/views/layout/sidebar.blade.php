@@ -312,8 +312,8 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                {{-- <a class="menu-link" href="{{route('pnd.approval.disposal.index')}}"> --}}
-                                <a class="menu-link" href="#">
+                                <a class="menu-link {{ request()->is('pnd/request/disposal*') ? 'active' : '' }}" href="{{route('pnd.request.disposal.index')}}">
+                                {{-- <a class="menu-link" href="#"> --}}
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-disconnect fs-2"></i>
                                     </span>

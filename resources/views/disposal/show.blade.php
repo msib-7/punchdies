@@ -172,7 +172,7 @@
                                                 <div class="row">
                                                     <div class="col">:</div>
                                                     <div class="col-11">
-                                                        {{ auth()->user()->nama }}
+                                                        {{ $dataApproval->by }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -186,116 +186,50 @@
                                                 <div class="row">
                                                     <div class="col">:</div>
                                                     <div class="col-11">
-                                                        {{ now() }}
+                                                        {{ $dataApproval->at }}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    @if ($dataApproval->is_approved == '1' || $dataApproval->is_rejected == '1' || $dataApproval->is_revisi == '1')
-                                        {{-- Status --}}
-                                        <div class="col-12 my-3">
-                                            <div class="row">
-                                                <div class="col-4">Status</div>
-                                                <div class="col-8">
-                                                    <div class="row">
-                                                        <div class="col">:</div>
-                                                        <div class="col-11">
-                                                            @if ($dataApproval->is_waiting == '1')
-                                                                <span class="badge badge-light-warning">Waiting</span>
-                                                            @elseif ($dataApproval->is_approved == '1' && $dataApproval->is_rejected == '0' && $dataApproval->is_waiting == '0' && $dataApproval->is_revisi == '0')
-                                                                <span class="badge badge-light-success">Approved</span>
-                                                            @elseif ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '1' && $dataApproval->is_waiting == '0' && $dataApproval->is_revisi == '0')
-                                                                <span class="badge badge-light-danger">Rejected</span>
-                                                            @elseif ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '0' && $dataApproval->is_waiting == '0' && $dataApproval->is_revisi == '1')
-                                                                <span class="badge badge-light-info">Revisi</span>
-                                                            @endif
-                                                        </div>
+                                    {{-- Status --}}
+                                    <div class="col-12 my-3">
+                                        <div class="row">
+                                            <div class="col-4">Status</div>
+                                            <div class="col-8">
+                                                <div class="row">
+                                                    <div class="col">:</div>
+                                                    <div class="col-11">
+                                                        @if ($dataApproval->is_waiting == '1')
+                                                            <span class="badge badge-light-warning">Waiting</span>
+                                                        @elseif ($dataApproval->is_approved == '1' && $dataApproval->is_rejected == '0' && $dataApproval->is_waiting == '0' && $dataApproval->is_revisi == '0')
+                                                            <span class="badge badge-light-success">Approved</span>
+                                                        @elseif ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '1' && $dataApproval->is_waiting == '0' && $dataApproval->is_revisi == '0')
+                                                            <span class="badge badge-light-danger">Rejected</span>
+                                                        @elseif ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '0' && $dataApproval->is_waiting == '0' && $dataApproval->is_revisi == '1')
+                                                            <span class="badge badge-light-info">Revisi</span>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        @if ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '0' && $dataApproval->is_waiting == '0' && $dataApproval->is_revisi == '1')
-                                            {{-- Catatan --}}
-                                            <div class="col-12 my-3">
-                                                <div class="row" id="catatanTextarea">
-                                                    <div class="col-12"><b>Catatan :</b></div>
-                                                    <div class="col-12">
-                                                        <textarea id="catatanTextarea" class="form-control my-3" rows="3" readonly>{{ $dataApproval->approved_note ?? ''}}</textarea>
-                                                    </div>
+                                    </div>
+                                    {{-- Alert --}}
+                                    <div class="alert alert-info" role="alert">
+                                        <h7 class="alert-heading">Catatan revisi sebelumnya:</h7>
+                                            <p> <i>"{{ $dataApproval->approved_note }}"</i> </p>
+                                        </p>
+                                    </div>
+                                    @if ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '0' && $dataApproval->is_waiting == '0' && $dataApproval->is_revisi == '1')
+                                        {{-- Catatan --}}
+                                        <div class="col-12 my-3">
+                                            <div class="row" id="catatanTextarea">
+                                                <div class="col-12"><b>Catatan :</b></div>
+                                                <div class="col-12">
+                                                    <textarea id="catatanTextarea" class="form-control my-3" rows="3" readonly>{{ $dataApproval->approved_note ?? ''}}</textarea>
                                                 </div>
                                             </div>
-                                        @endif
-                                    @else
-                                        <form action="{{ route('pnd.approval.dis.setStatus', $dataApproval->id) }}" id="formApprovalDisposal" method="post" enctype="multipart/form-data">
-                                            @csrf
-                                            {{-- Status --}}
-                                            <div class="col-12 my-3">
-                                                <!--begin::Heading-->
-                                                <div class="mb-3">
-                                                    <!--begin::Label-->
-                                                    <label class="d-flex align-items-center fs-5 fw-semibold">
-                                                        <span class="required">Status</span>
-                                                    </label>
-                                                    <!--end::Label-->
-                                                </div>
-                                                <!--end::Heading-->
-
-                                                <!--begin::Radio group-->
-                                                <div class="btn-group w-100 w-lg-50" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
-                                                    <!--begin::Radio-->
-                                                    <label class="btn btn-outline btn-color-muted btn-active-success {{ $dataApproval->is_approved == '1' ? 'active' : '' }}" data-kt-button="true">
-                                                        <!--begin::Input-->
-                                                        <input class="btn-check" type="radio" name="status" value="approve" {{ $dataApproval->is_approved == '1' ? 'checked' : '' }}/>
-                                                        <!--end::Input-->
-                                                        Approve
-                                                    </label>
-                                                    <!--end::Radio-->
-
-                                                    <!--begin::Radio-->
-                                                    <label class="btn btn-outline btn-color-muted btn-active-danger {{ $dataApproval->is_rejected == '1' ? 'active' : '' }}" data-kt-button="true">
-                                                        <!--begin::Input-->
-                                                        <input class="btn-check" type="radio" name="status" value="reject" {{ $dataApproval->is_rejected == '1' ? 'checked' : '' }}/>
-                                                        <!--end::Input-->
-                                                        Reject
-                                                    </label>
-                                                    <!--end::Radio-->
-
-                                                    <!--begin::Radio-->
-                                                    <label class="btn btn-outline btn-color-muted btn-active-warning {{ $dataApproval->is_revisi == '1' ? 'active' : '' }}" data-kt-button="true">
-                                                        <!--begin::Input-->
-                                                        <input class="btn-check" type="radio" name="status" value="revisi" {{ $dataApproval->is_revisi == '1' ? 'checked' : '' }}/>
-                                                        <!--end::Input-->
-                                                        Revisi
-                                                    </label>
-                                                    <!--end::Radio-->
-                                                </div>
-                                                <!--end::Radio group-->
-                                            </div>
-
-                                            @if ($dataApproval->approved_note != null || $dataApproval->approved_note != '' || $dataApproval->approved_note != '-')
-                                                {{-- Alert --}}
-                                                <div class="alert alert-info" role="alert">
-                                                    <h7 class="alert-heading">Catatan revisi sebelumnya:</h7>
-                                                        <p> <i>"{{ $dataApproval->approved_note }}"</i> </p>
-                                                    </p>
-                                                </div>
-                                            @endif
-                                            {{-- Catatan --}}
-                                            <div class="col-12 my-3">
-                                                <div class="row" id="catatanTextarea" style="display: {{ $dataApproval->is_approved == '1' || $dataApproval->is_rejected == '1' || $dataApproval->is_revisi == '1' ? 'block' : 'none' }};">
-                                                    <div class="col-12"><b>Catatan :</b></div>
-                                                    <div class="col-12">
-                                                        <textarea id="catatanTextarea" name="note" class="form-control my-3" rows="3"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {{-- Button --}}
-                                            <div class="col-12 my-3" id="submitButtonContainer" style="display: {{ $dataApproval->is_approved == '1' || $dataApproval->is_rejected == '1' || $dataApproval->is_revisi == '1' ? 'none' : 'block' }};">
-                                                <button id="submitButton" type="button" class="btn btn-primary w-100 btn-sm">Submit</button>
-                                            </div>
-                                        </form>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -361,7 +295,7 @@
     var attachmentModal = document.getElementById('attachmentModal');
     attachmentModal.addEventListener('show.bs.modal', function (event) {
         // Get the button that triggered the modal
-        var button = event.relatedTarget; 
+        var button = event.relatedTarget;
         // Extract info from data-* attributes
         var file = button.getAttribute('data-file'); 
         // Update the modal's content
@@ -380,7 +314,7 @@
     });
 
     // Handle radio button change event
-    document.querySelectorAll('input[name="status"]').forEach(function (radio) {
+    document.querySelectorAll('input[name="method"]').forEach(function (radio) {
         radio.addEventListener('change', function () {
             var catatanTextarea = document.getElementById('catatanTextarea');
             if (this.value === 'revisi') {
@@ -392,11 +326,9 @@
         });
     });
 
-
-    form = document.getElementById('formApprovalDisposal');
     // Handle submit button click event
     document.getElementById('submitButton').addEventListener('click', function () {
-        var selectedMethod = document.querySelector('input[name="status"]:checked');
+        var selectedMethod = document.querySelector('input[name="method"]:checked');
         
         if (selectedMethod) {
             // Check if the selected radio button is "Approve"
@@ -424,7 +356,6 @@
                                 Swal.showLoading();
                             },
                             willClose: () => {
-                                form.submit(); // Submit the form
                             }
                         });
                     }
@@ -452,7 +383,6 @@
                                 Swal.showLoading();
                             },
                             willClose: () => {
-                                form.submit(); // Submit the form
                             }
                         });
                     }
@@ -480,7 +410,6 @@
                                 Swal.showLoading();
                             },
                             willClose: () => {
-                                form.submit(); // Submit the form
                             }
                         });
                     }
