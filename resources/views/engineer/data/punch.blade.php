@@ -212,9 +212,9 @@
                                     <label for="exampleFormControlInput1" class="required form-label">Nama Mesin Cetak</label>
                                     <!--begin::Input-->
                                     <select name="nama_mesin_cetak" aria-label="Select a Nama Mesin" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
-                                        <option value="">Select a Line</option>
+                                        <option value="">Select</option>
                                         @foreach ($DataMesin as $item)
-                                            <option value="{{$item->id}}">{{$item->title}}</option>
+                                            <option value="{{$item->title}}">{{$item->title}}</option>
                                         @endforeach
                                     </select>
                                     <!--end::Input-->
@@ -227,9 +227,9 @@
                                         <div class="mb-5">
                                             <label for="exampleFormControlInput1" class="required form-label">Nama Produk</label>
                                             <select name="nama_produk" aria-label="Select a Nama Produk" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
-                                                <option value="">Select a Line</option>
+                                                <option value="">Select</option>
                                                 @foreach ($DataNamaProduk as $item)
-                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                    <option value="{{$item->title}}">{{$item->title}}</option>
                                                 @endforeach
                                             </select>
                                             {{-- <input type="text" class="form-control" placeholder="Masukkan Nama Produk" name="nama_produk" /> --}}
@@ -239,9 +239,9 @@
                                         <div class="mb-5">
                                             <label for="exampleFormControlInput1" class="required form-label">Kode Produk</label>
                                             <select name="kode_produk" aria-label="Select a Kode Produk" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
-                                                <option value="">Select a Line</option>
+                                                <option value="">Select</option>
                                                 @foreach ($DataKodeProduk as $item)
-                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                    <option value="{{$item->title}}">{{$item->title}}</option>
                                                 @endforeach
                                             </select>
                                             {{-- <input type="text" class="form-control" placeholder="Masukkan Kode Produk" name="kode_produk" /> --}}
@@ -252,7 +252,7 @@
                             <div class="col-12">
                                 <div class="">
                                     <label for="exampleFormControlInput1" class="required form-label">Pilih Line untuk Punch</label>
-                                    <select name="kode_produk" aria-label="Select a Line" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
+                                    <select name="line_id" aria-label="Select a Line" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
                                         <option value="">Select a Line</option>
                                         @foreach ($DataLine as $item)
                                             <option value="{{$item->id}}">{{$item->nama_line}}</option>
@@ -419,7 +419,6 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 {{-- Filter Tools --}}
 <script>
     let currentPage = 1;
@@ -588,126 +587,81 @@
         });
 
         $("#form_create_punch").submit(function (e) {
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-        $('.btn-create').html('Sending..');
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            $('.btn-create').html('Sending..');
 
-        // Clear previous error messages
-        $('.invalid-feedback').remove();
+            // Clear previous error messages
+            $('.invalid-feedback').remove();
 
-        // Validate required fields
-        let isValid = true;
-        const requiredFields = ['merk'];
+            // Validate required fields
+            let isValid = true;
+            const requiredFields = ['merk'];
 
-        requiredFields.forEach(field => {
-            const input = $(`[name="${field}"]`);
-            if (input.val().trim() === '') {
-                isValid = false;
-                input.addClass('is-invalid'); // Add invalid class for Bootstrap styling
-                input.after(`<div class="invalid-feedback">This field is required.</div>`); // Show error message
-            } else {
-                input.removeClass('is-invalid'); // Remove invalid class if field is filled
+            requiredFields.forEach(field => {
+                const input = $(`[name="${field}"]`);
+                if (input.val().trim() === '') {
+                    isValid = false;
+                    input.addClass('is-invalid'); // Add invalid class for Bootstrap styling
+                    input.after(`<div class="invalid-feedback">This field is required.</div>`); // Show error message
+                } else {
+                    input.removeClass('is-invalid'); // Remove invalid class if field is filled
+                }
+            });
+
+            // Check if the select fields are selected
+            const selectFields = ['nama_mesin_cetak', 'kode_produk', 'nama_produk','line_id', 'bulan_pembuatan', 'tahun_pembuatan'];
+            selectFields.forEach(field => {
+                const select = $(`[name="${field}"]`);
+                if (select.val() === null || select.val() === '') {
+                    isValid = false;
+                    select.addClass('is-invalid'); // Add invalid class for Bootstrap styling
+                    select.after(`<div class="invalid-feedback">This field is required.</div>`); // Show error message
+                } else {
+                    select.removeClass('is-invalid'); // Remove invalid class if field is filled
+                }
+            });
+
+            if (!isValid) {
+                $('.btn-create').html('Create Punch'); // Reset button text
+                return; // Stop the form submission
             }
-        });
 
-        // Check if the select fields are selected
-        const selectFields = ['nama_mesin_cetak', 'kode_produk', 'nama_produk','line_id', 'bulan_pembuatan', 'tahun_pembuatan'];
-        selectFields.forEach(field => {
-            const select = $(`[name="${field}"]`);
-            if (select.val() === null || select.val() === '') {
-                isValid = false;
-                select.addClass('is-invalid'); // Add invalid class for Bootstrap styling
-                select.after(`<div class="invalid-feedback">This field is required.</div>`); // Show error message
-            } else {
-                select.removeClass('is-invalid'); // Remove invalid class if field is filled
-            }
-        });
+            var form = $(this);
 
-        if (!isValid) {
-            $('.btn-create').html('Create Punch'); // Reset button text
-            return; // Stop the form submission
-        }
-
-        var form = $(this);
-
-        $.ajax({
-            type: "POST",
-            url: "{{route('pnd.pa.'.$route.'.create')}}",
-            data: form.serialize(), // serializes the form's elements.
-            beforeSend: function (){
-                $('.btn-create').prop('disabled', true);
-            },
-            success: function (data) {
-                if(data.success == false){
+            $.ajax({
+                type: "POST",
+                url: "{{route('pnd.pa.'.$route.'.create')}}",
+                data: form.serialize(), // serializes the form's elements.
+                beforeSend: function (){
+                    $('.btn-create').prop('disabled', true);
+                },
+                success: function (data) {
+                    if(data.success == false){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Access Forbidden",
+                            text: data.message,
+                        });
+                        $('#modal_create_data_punch').modal('hide');
+                    }else{   
+                        $('#modal_create_data_punch').modal('hide');
+                        $('#modal_buat_pengukuran_1').modal('show');
+                    }
+                },
+                error: function () {
                     Swal.fire({
                         icon: "error",
-                        title: "Access Forbidden",
-                        text: data.message,
+                        title: 'Error!',
+                        text: "An unexpected error occurred!",
                     });
-                    $('#modal_create_data_punch').modal('hide');
-                }else{   
-                    $('#modal_create_data_punch').modal('hide');
-                    $('#modal_buat_pengukuran_1').modal('show');
+                    $('.btn-create').html('Create Punch');
+                },
+                complete: function() {
+                    $('.btn-create').prop('disabled', false);
+                    $('.btn-create').html('Create Punch');
                 }
-            },
-            error: function () {
-                Swal.fire({
-                    icon: "error",
-                    title: 'Error!',
-                    text: "An unexpected error occurred!",
-                });
-                $('.btn-create').html('Create Punch');
-            },
-            complete: function() {
-                $('.btn-create').prop('disabled', false);
-                $('.btn-create').html('Create Punch');
-            }
+            });
         });
-    });
-        // // this is the id of the form
-        // $("#form_create_punch").submit(function (e) {
-
-        //     e.preventDefault(); // avoid to execute the actual submit of the form.
-        //     $('.btn-create').html('Sending..');
-
-        //     var form = $(this);
-
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "{{route('pnd.pa.'.$route.'.create')}}",
-        //         data: form.serialize(), // serializes the form's elements.
-        //         beforeSend: function (){
-        //             $('.btn-create').prop('disabled', true);
-        //         },
-        //         success: function (data) {
-        //             if(data.success == false){
-        //                 Swal.fire({
-        //                     icon: "error",
-        //                     title: "Access Forbidden",
-        //                     text: data.message,
-        //                 });
-        //                 $('#modal_create_data_punch').modal('hide');
-        //             }else{   
-        //                 // console.log('oke');
-        //                 $('#modal_create_data_punch').modal('hide');
-        //                 $('#modal_buat_pengukuran_1').modal('show');
-        //                 // show response from the php script.
-        //             }
-        //         },
-        //         error: function () {
-        //             Swal.fire({
-        //                     icon: "error",
-        //                     title: 'Error!',
-        //                     text: "Fields Cannot be Empty!",
-        //                 });
-        //         },
-        //         complete: function() {
-        //             $('.btn-create').prop('disabled', false);
-        //             $('.btn-create').html('Create Punch');
-        //         }
-        //     });
-
-        // });
-
     })
 </script>
 @endsection
