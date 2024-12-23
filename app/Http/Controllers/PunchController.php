@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KodeProduk;
 use App\Models\Lines;
+use App\Models\Mesin;
+use App\Models\NamaProduk;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
@@ -203,6 +206,10 @@ class PunchController extends Controller
                 ->count();
             $data['ttlPunch'] = $ttlPunch;
 
+            $data['DataMesin'] = Mesin::select('id', 'title')->get();
+            $data['DataNamaProduk'] = NamaProduk::select('id', 'title')->get();
+            $data['DataKodeProduk'] = KodeProduk::select('id', 'title')->get();
+            
             $Dataline = Lines::where('nama_line', '!=', 'All Line')->get();
             $data['DataLine'] = $Dataline;
 
@@ -248,6 +255,9 @@ class PunchController extends Controller
             $data['ttlPunch'] = $ttlPunch;
             // dd($ttlPunch);
 
+            $data['DataMesin'] = Mesin::select('id', 'title')->get();
+            $data['DataNamaProduk'] = NamaProduk::select('id', 'title')->get();
+            $data['DataKodeProduk'] = KodeProduk::select('id', 'title')->get();
             $Dataline = Lines::where('nama_line', '!=', 'All Line')->get();
             $data['DataLine'] = $Dataline;
 

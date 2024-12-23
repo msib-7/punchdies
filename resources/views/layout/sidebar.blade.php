@@ -339,18 +339,59 @@
                         @if (str_starts_with($item->url, 'admin.'))
                             {{-- Master Machine --}}
                             <!--begin:Menu item-->
-                            <div class="menu-item">
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('Admin*') ? 'here show' : '' }}">
                                 <!--begin:Menu link-->
-                                {{-- <a class="menu-link " href="{{ route('admin.mesin.index') }}"> --}}
-                                <a class="menu-link " href="#">
+                                <span class="menu-link">
                                     <span class="menu-icon">
-                                        <i class="ki-outline ki-technology-4 fs-2"></i>
+                                        <i class="ki-outline ki-more-2 fs-2"></i>
                                     </span>
-                                    <span class="menu-title">Master Mesin</span>
-                                </a>
+                                    <span class="menu-title">System</span>
+                                    <span class="menu-arrow"></span>
+                                </span>
                                 <!--end:Menu link-->
+                                <!--begin:Menu sub-->
+                                <div class="menu-sub menu-sub-accordion">
+                                    <!--begin:Menu item-->
+                                    <div class="menu-item">
+                                        <!--begin:Menu link-->
+                                        <a class="menu-link {{ request()->is('Admin/mesin*') ? 'active' : '' }}" href="{{route('admin.mesin.index')}}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Master Mesin</span>
+                                        </a>
+                                        <!--end:Menu link-->
+                                    </div>
+                                    <!--end:Menu item-->
+                                    <!--begin:Menu item-->
+                                    <div class="menu-item">
+                                        <!--begin:Menu link-->
+                                        <a class="menu-link {{ request()->is('Admin/nama-produk*') ? 'active' : '' }}" href="{{route('admin.namaProduk.index')}}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Master Nama Produk</span>
+                                        </a>
+                                        <!--end:Menu link-->
+                                    </div>
+                                    <!--end:Menu item-->
+                                    <!--begin:Menu item-->
+                                    <div class="menu-item">
+                                        <!--begin:Menu link-->
+                                        <a class="menu-link {{ request()->is('Admin/kode-produk*') ? 'active' : '' }}" href="{{route('admin.kodeProduk.index')}}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Master Kode Produk</span>
+                                        </a>
+                                        <!--end:Menu link-->
+                                    </div>
+                                    <!--end:Menu item-->
+                                </div>
+                                <!--end:Menu sub-->
                             </div>
                             <!--end:Menu item-->
+
                             {{-- Manajemen User --}}
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('Admin*') ? 'here show' : '' }}">

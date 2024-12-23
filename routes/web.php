@@ -11,7 +11,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiesController;
 use App\Http\Controllers\disposal\DisposalController;
+use App\Http\Controllers\KodeProdukController;
 use App\Http\Controllers\LineController;
+use App\Http\Controllers\MesinController;
+use App\Http\Controllers\NamaProdukController;
 use App\Http\Controllers\pengukuran\PengukuranController;
 use App\Http\Controllers\Permission;
 use App\Http\Controllers\PunchController;
@@ -51,10 +54,6 @@ Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
     });
     Route::prefix('permission')->name('permission.')->group(function(){
         Route::get('permissions', [Permission::class, 'manajemen_permission'])->name('index');
-        // Route::get('/save-permission', [Permission::class, 'add_permission'])->name('create');
-        // Route::get('/edit-permission/{id}', [Permission::class, 'edit_permission'])->name('edit');
-        // Route::post('/update-permission', [Permission::class, 'update_permission'])->name('update');
-        // Route::get('/delete-permission/{id}', [Permission::class, 'del_permission'])->name('delete');
     });
     Route::prefix('line')->name('line.')->group(function(){
         Route::get('lines', [LineController::class, 'manajemen_line'])->name('index');
@@ -62,6 +61,27 @@ Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
         Route::get('/edit-line/{id}', [LineController::class, 'edit_line'])->name('edit');
         Route::post('update-line', [LineController::class, 'update_line'])->name('update');
         Route::get('/delete-permission/{id}', [LineController::class, 'delete_line'])->name('delete');
+    });
+    Route::prefix('mesin')->name('mesin.')->group(function () {
+        Route::get('index', [MesinController::class, 'index'])->name('index');
+        Route::post('create-mesin', [MesinController::class, 'store'])->name('create');
+        Route::get('/edit-mesin/{id}', [MesinController::class, 'edit'])->name('edit');
+        Route::post('update-mesin', [MesinController::class, 'update'])->name('update');
+        Route::get('/delete-mesin/{id}', [MesinController::class, 'destroy'])->name('delete');
+    });
+    Route::prefix('nama-produk')->name('namaProduk.')->group(function () {
+        Route::get('index', [NamaProdukController::class, 'index'])->name('index');
+        Route::post('create-produk', [NamaProdukController::class, 'store'])->name('create');
+        Route::get('/edit-produk/{id}', [NamaProdukController::class, 'edit'])->name('edit');
+        Route::post('update-produk', [NamaProdukController::class, 'update'])->name('update');
+        Route::get('/delete-produk/{id}', [NamaProdukController::class, 'destroy'])->name('delete');
+    });
+    Route::prefix('kode-produk')->name('kodeProduk.')->group(function () {
+        Route::get('index', [KodeProdukController::class, 'index'])->name('index');
+        Route::post('create-produk', [KodeProdukController::class, 'store'])->name('create');
+        Route::get('/edit-produk/{id}', [KodeProdukController::class, 'edit'])->name('edit');
+        Route::post('update-produk', [KodeProdukController::class, 'update'])->name('update');
+        Route::get('/delete-produk/{id}', [KodeProdukController::class, 'destroy'])->name('delete');
     });
 });
 

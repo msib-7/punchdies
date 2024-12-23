@@ -210,7 +210,15 @@
                             <div class="col-12">
                                 <div class="mb-5">
                                     <label for="exampleFormControlInput1" class="required form-label">Nama Mesin Cetak</label>
-                                    <input type="text" class="form-control" placeholder="Masukkan Nama Mesin" name="nama_mesin_cetak" />
+                                    <!--begin::Input-->
+                                    <select name="nama_mesin_cetak" aria-label="Select a Nama Mesin" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
+                                        <option value="">Select a Line</option>
+                                        @foreach ($DataMesin as $item)
+                                            <option value="{{$item->id}}">{{$item->title}}</option>
+                                        @endforeach
+                                    </select>
+                                    <!--end::Input-->
+                                    {{-- <input type="text" class="form-control" placeholder="Masukkan Nama Mesin" name="nama_mesin_cetak" /> --}}
                                 </div>
                             </div>
                             <div class="col-12">
@@ -218,13 +226,25 @@
                                     <div class="col-6">
                                         <div class="mb-5">
                                             <label for="exampleFormControlInput1" class="required form-label">Nama Produk</label>
-                                            <input type="text" class="form-control" placeholder="Masukkan Nama Produk" name="nama_produk" />
+                                            <select name="nama_produk" aria-label="Select a Nama Produk" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
+                                                <option value="">Select a Line</option>
+                                                @foreach ($DataNamaProduk as $item)
+                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                @endforeach
+                                            </select>
+                                            {{-- <input type="text" class="form-control" placeholder="Masukkan Nama Produk" name="nama_produk" /> --}}
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="mb-5">
                                             <label for="exampleFormControlInput1" class="required form-label">Kode Produk</label>
-                                            <input type="text" class="form-control" placeholder="Masukkan Kode Produk" name="kode_produk" />
+                                            <select name="kode_produk" aria-label="Select a Kode Produk" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
+                                                <option value="">Select a Line</option>
+                                                @foreach ($DataKodeProduk as $item)
+                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                @endforeach
+                                            </select>
+                                            {{-- <input type="text" class="form-control" placeholder="Masukkan Kode Produk" name="kode_produk" /> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -232,10 +252,10 @@
                             <div class="col-12">
                                 <div class="">
                                     <label for="exampleFormControlInput1" class="required form-label">Pilih Line untuk Punch</label>
-                                    <select class="form-select" aria-label="Select example" name="line_id">
-                                        <option disabled selected> - </option>
+                                    <select name="kode_produk" aria-label="Select a Line" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
+                                        <option value="">Select a Line</option>
                                         @foreach ($DataLine as $item)
-                                        <option value="{{$item->id}}">{{$item->nama_line}}</option>
+                                            <option value="{{$item->id}}">{{$item->nama_line}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -399,6 +419,7 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 {{-- Filter Tools --}}
 <script>
     let currentPage = 1;
@@ -487,6 +508,7 @@
         filterCards(); // Initial filter to show all cards
     };
 </script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const createButton = document.getElementById('createPunch');
@@ -543,6 +565,7 @@
     }
 
     $(document).ready(function () {
+
         var start = 2010;
         var now = new Date().getFullYear();
         var options = "";
@@ -573,7 +596,7 @@
 
         // Validate required fields
         let isValid = true;
-        const requiredFields = ['merk', 'nama_mesin_cetak', 'nama_produk', 'kode_produk'];
+        const requiredFields = ['merk'];
 
         requiredFields.forEach(field => {
             const input = $(`[name="${field}"]`);
@@ -587,7 +610,7 @@
         });
 
         // Check if the select fields are selected
-        const selectFields = ['line_id', 'bulan_pembuatan', 'tahun_pembuatan'];
+        const selectFields = ['nama_mesin_cetak', 'kode_produk', 'nama_produk','line_id', 'bulan_pembuatan', 'tahun_pembuatan'];
         selectFields.forEach(field => {
             const select = $(`[name="${field}"]`);
             if (select.val() === null || select.val() === '') {
