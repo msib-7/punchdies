@@ -165,7 +165,7 @@
                                                 <textarea name="note" class="form-control" cols="30" rows="5">{{$draft->req_note ?? ''}}</textarea>
                                             </div>
                                             <div class="mt-15">
-                                                @if ($draft->is_revisi == '1')
+                                                @if (isset($draft) && $draft->is_revisi == '1' ?? '')
                                                     <button type="submit" class="btn btn-light-primary  w-100 mb-1">
                                                         Submit Revisi
                                                     </button>

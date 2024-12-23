@@ -3,7 +3,7 @@
 namespace App\Services\Pengukuran\Awal;
 
 use App\Models\Dies;
-use App\Models\M_ApprPengukuran;
+use App\Models\ApprovalPengukuran;
 use App\Models\PengukuranAwalDies;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinDies;
@@ -148,12 +148,12 @@ class SetDraftStatusServiceAwal
 
     private function sendToApproval($jenis)
     {
-        $M_ApprPengukuran = new M_ApprPengukuran();
+        $ApprovalPengukuran = new ApprovalPengukuran();
 
         if (in_array($jenis, ['punch-atas', 'punch-bawah'])) {
-            $this->createApprovalRequest($M_ApprPengukuran, 'RPU', session('punch_id'), null);
+            $this->createApprovalRequest($ApprovalPengukuran, 'RPU', session('punch_id'), null);
         } elseif ($jenis == 'dies') {
-            $this->createApprovalRequest($M_ApprPengukuran, 'RDI', null, session('dies_id'));
+            $this->createApprovalRequest($ApprovalPengukuran, 'RDI', null, session('dies_id'));
         }
     }
 

@@ -141,7 +141,7 @@ class DisposalController extends Controller
             'dokumen5' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $isRevisi = ApprovalDisposal::where('punch_id', $id)->first()->is_revisi;
+        $isRevisi = ApprovalDisposal::where('punch_id', $id)->first();
 
         // Determine punch_id and dies_id based on existence
         $data = Punch::where('punch_id', $id)->first() ?? Dies::where('dies_id', $id)->first();
@@ -166,40 +166,43 @@ class DisposalController extends Controller
             }
         }
 
-        if ($isRevisi == '1') {
-            // Update the existing record
+        if ($isRevisi != null) {
+            if($isRevisi->is_revisi == '1'){
+                // Update the existing record
+                ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+                    'user_id' => auth()->user()->id,
+                    'tgl_submit' => now(),
+                    'req_note' => $request->note ?? '-',
+                    'is_draft' => '1',
+                    'is_waiting' => '0',
+                    'is_approved' => '0',
+                    'is_rejected' => '0',
+                    'is_revisi' => '1',
+                ], $filePaths))->latest();
+
+                return redirect()->back()->with('success', 'Data Revisi Saved to Draft!');
+            }
+            // Create or update the record
             ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+                'req_id' => $newId,
+                'punch_id' => $punch_id,
+                'dies_id' => $dies_id,
                 'user_id' => auth()->user()->id,
                 'tgl_submit' => now(),
-                'req_note' => $request->note,
+                'due_date' => null,
+                'by' => '-',
+                'at' => null,
+                'approved_note' => '-',
+                'req_note' => $request->note ?? '-',
                 'is_draft' => '1',
                 'is_waiting' => '0',
                 'is_approved' => '0',
                 'is_rejected' => '0',
-                'is_revisi' => '1',
+                'is_revisi' => '0',
             ], $filePaths))->latest();
-            
-            return redirect()->back()->with('success', 'Data Revisi Saved to Draft!');
-        }
-        // Create or update the record
-        ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
-            'req_id' => $newId,
-            'punch_id' => $punch_id,
-            'dies_id' => $dies_id,
-            'user_id' => auth()->user()->id,
-            'tgl_submit' => now(),
-            'due_date' => null,
-            'by' => '-',
-            'at' => null,
-            'approved_note' => '-',
-            'req_note' => $request->note,
-            'is_draft' => '1',
-            'is_waiting' => '0',
-            'is_approved' => '0',
-            'is_rejected' => '0',
-            'is_revisi' => '0',
-        ], $filePaths))->latest();
 
-        return redirect()->back()->with('warning', 'Data Saved to Draft!');
+            return redirect()->back()->with('warning', 'Data Saved to Draft!');
+        }
+
     }
 }
