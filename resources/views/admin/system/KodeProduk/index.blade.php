@@ -143,7 +143,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5">
                 <!--begin::Form-->
-                <form id="kt_modal_add_user_form" action="{{route('admin.kodeProduk.create')}}" method="POST" class="form">
+                <form id="kt_modal_add_nm_produk_form" action="{{route('admin.kodeProduk.create')}}" method="POST" class="form">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll"
@@ -175,7 +175,7 @@
                         </div>
                         <!--begin::Actions-->
                         <div class="text-center pt-10">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" onclick="this.disabled = true; $('#kt_modal_add_nm_produk_form').submit(); " class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -197,7 +197,7 @@
 <!--end::Modal - Add User-->
 
 <!--begin::Modal - Edit User-->
-<div class="modal fade" id="kt_modal_edit_mesin" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="kt_modal_edit_nm_produk" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered">
         <!--begin::Modal content-->
@@ -215,7 +215,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5">
                 <!--begin::Form-->
-                <form id="kt_modal_add_user_form" action="{{route('admin.kodeProduk.update')}}" method="POST">
+                <form id="kt_modal_edit_nm_produk_form" action="{{route('admin.kodeProduk.update')}}" method="POST">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll"
@@ -250,7 +250,7 @@
                         <div class="text-center pt-10">
                             <button type="reset" class="btn btn-light me-3"
                                 data-bs-dismiss="modal">Discard</button>
-                            <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                            <button type="submit" onclick="this.disabled = true; $('#kt_modal_edit_nm_produk_form').submit()" class="btn btn-primary" data-kt-users-modal-action="submit">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>

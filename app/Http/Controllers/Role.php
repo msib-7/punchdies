@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Permissions;
 use App\Models\Roles;
-use App\Models\RolesPermission;
 use App\Models\User;
 use DB;
 use Illuminate\Http\Request;

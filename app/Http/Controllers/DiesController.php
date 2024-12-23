@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Audit_tr;
 use App\Models\Dies;
 use App\Models\Lines;
-use App\Models\M_Dies;
-use App\Models\M_Pengukuran_Dies;
 use App\Models\PengukuranAwalDies;
 use DB;
 use Illuminate\Http\Request;

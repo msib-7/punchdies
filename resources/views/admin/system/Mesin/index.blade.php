@@ -118,7 +118,7 @@
 </div>
 <!--end::Content-->
 
-<!--begin::Modal - Add User-->
+<!--begin::Modal - Add Mesin-->
 <div class="modal fade" id="kt_modal_add_user" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered ">
@@ -127,7 +127,7 @@
             <!--begin::Modal header-->
             <div class="modal-header" id="kt_modal_add_user_header">
                 <!--begin::Modal title-->
-                <h2 class="fw-bold">Add User</h2>
+                <h2 class="fw-bold">Add Mesin</h2>
                 <!--end::Modal title-->
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
@@ -174,7 +174,7 @@
                         </div>
                         <!--begin::Actions-->
                         <div class="text-center pt-10">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" onclick="this.disabled = true; $('#kt_modal_add_user_form').submit()" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span>

@@ -23,6 +23,11 @@ class AuditController extends Controller
             $newData = is_string($audit->new_data) ? json_decode($audit->new_data, true) : $audit->new_data;
             $oldData = is_string($audit->old_data) ? json_decode($audit->old_data, true) : $audit->old_data;
 
+            // Jika newData bukan array, set menjadi array kosong
+            if (!is_array($newData)) {
+                $newData = []; // Set newData menjadi array kosong jika bukan array
+            }
+
             // Jika oldData bukan array, set menjadi null
             if (!is_array($oldData)) {
                 $oldData = null; // Set oldData menjadi null jika bukan array

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\pengukuran;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dies;
-use App\Models\M_ApprDisposal;
-use App\Models\M_ApprPengukuran;
+use App\Models\ApprovalDisposal;
+use App\Models\ApprovalPengukuran;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranAwalDies;
 use App\Models\PengukuranRutinDies;
@@ -745,7 +745,7 @@ class PengukuranController extends Controller
             $dataPunch = Punch::where(['punch_id' => $id, 'is_draft' => '1'])->latest()->first();
             // dd($dataPunch);
             if ($dataPunch == null) {
-                $query = M_ApprPengukuran::query()->where('punch_id', $id);
+                $query = ApprovalPengukuran::query()->where('punch_id', $id);
 
                 //Get Masa Pengukuran
                 $masaPengukuran = $query->latest()->first()->masa_pengukuran;
@@ -812,7 +812,7 @@ class PengukuranController extends Controller
         }elseif($request->segment(3) == 'dies'){
             $dataDies = Dies::where(['dies_id' => $id, 'is_draft' => '1'])->latest()->first();
             if ($dataDies == null) {
-                $query = M_ApprPengukuran::query()->where('dies_id', $id);
+                $query = ApprovalPengukuran::query()->where('dies_id', $id);
                 //Cek Data Approval ada / tidak
                 $cekApproval = $query->exists();
                 if ($cekApproval) {
@@ -1804,13 +1804,13 @@ class PengukuranController extends Controller
 
     private function send_to_approval_rutin($jenis)
     {
-        $M_ApprPengukuran = new M_ApprPengukuran();
-        $M_ApprDisposal = new M_ApprDisposal();
+        $ApprovalPengukuran = new ApprovalPengukuran();
+        $ApprovalDisposal = new ApprovalDisposal();
 
         if ($jenis == 'punch-atas' or $jenis == 'punch-bawah') {
             //Approval Data
             //AutoNumber for Request ID Approval
-            $autonum = $M_ApprPengukuran->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
+            $autonum = $ApprovalPengukuran->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
             if (!$autonum) {
                 $id = "RPU" . date("ymd") . "0001";
             } else {
@@ -1834,12 +1834,12 @@ class PengukuranController extends Controller
                 'is_approved' => '-',
                 'is_rejected' => '-',
             ];
-            M_ApprPengukuran::create($dataApproval);
+            ApprovalPengukuran::create($dataApproval);
 
         } elseif ($jenis == 'dies') {
             //Approval Data
             //AutoNumber for Request ID Approval
-            $autonum = $M_ApprDisposal->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
+            $autonum = $ApprovalDisposal->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
             if (!$autonum) {
                 $id = "RDI" . date("ymd") . "0001";
             } else {
@@ -1863,7 +1863,7 @@ class PengukuranController extends Controller
                 'is_approved' => '-',
                 'is_rejected' => '-',
             ];
-            M_ApprPengukuran::create($dataApproval);
+            ApprovalPengukuran::create($dataApproval);
         }
     }
 

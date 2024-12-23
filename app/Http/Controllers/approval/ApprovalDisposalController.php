@@ -4,14 +4,14 @@ namespace App\Http\Controllers\approval;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dies;
-use App\Models\M_ApprDisposal;
+use App\Models\ApprovalDisposal;
 use App\Models\Punch;
 use Illuminate\Http\Request;
 
 class ApprovalDisposalController extends Controller
 {
     public function index() {
-        $approval = M_ApprDisposal::with('users')->where('is_draft', '!=', '1')->get();
+        $approval = ApprovalDisposal::with('users')->where('is_draft', '!=', '1')->get();
         $dataPunch = Punch::latest()->get();
         $dataDies = Dies::latest()->get();
 
@@ -19,7 +19,7 @@ class ApprovalDisposalController extends Controller
     }
 
     public function show(Request $request, $id) {
-        $dataApproval = M_ApprDisposal::find($id);
+        $dataApproval = ApprovalDisposal::find($id);
 
         if($dataApproval->punch_id != null || $dataApproval->punch_id != '-'){
             $data = Punch::where('punch_id', $dataApproval->punch_id)->latest()->first();
@@ -56,7 +56,7 @@ class ApprovalDisposalController extends Controller
             'at' => now(),
             'approved_note' => '-'
         ];
-        M_ApprDisposal::updateOrCreate(['id' => $id], $data);
+        ApprovalDisposal::updateOrCreate(['id' => $id], $data);
     }
 
     private function reject($id) {
@@ -70,7 +70,7 @@ class ApprovalDisposalController extends Controller
             'at' => now(),
             'approved_note' => '-'
         ];
-        M_ApprDisposal::updateOrCreate(['id' => $id], $data);
+        ApprovalDisposal::updateOrCreate(['id' => $id], $data);
     }
 
     private function revisi($note, $id) {
@@ -84,6 +84,6 @@ class ApprovalDisposalController extends Controller
             'at' => now(),
             'approved_note' => $note
         ];
-        M_ApprDisposal::updateOrCreate(['id' => $id], $data);
+        ApprovalDisposal::updateOrCreate(['id' => $id], $data);
     }
 }

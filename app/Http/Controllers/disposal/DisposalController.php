@@ -4,7 +4,7 @@ namespace App\Http\Controllers\disposal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dies;
-use App\Models\M_ApprDisposal;
+use App\Models\ApprovalDisposal;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 class DisposalController extends Controller
 {
     public function index(){
-        $approval = M_ApprDisposal::with('users')->get();
+        $approval = ApprovalDisposal::with('users')->get();
         $dataPunch = Punch::latest()->get();
         $dataDies = Dies::latest()->get();
 
@@ -21,7 +21,7 @@ class DisposalController extends Controller
     }
 
     public function show($id){
-        $dataApproval = M_ApprDisposal::find($id);
+        $dataApproval = ApprovalDisposal::find($id);
 
         if($dataApproval->punch_id != null || $dataApproval->punch_id != '-'){
             if ($dataApproval->is_draft == '1') {
@@ -46,7 +46,7 @@ class DisposalController extends Controller
 
     public function create($id) {
         $labelPunch = Punch::where('punch_id', $id)->latest()->first();
-        $draft = M_ApprDisposal::where('punch_id', $id)->latest()->first();
+        $draft = ApprovalDisposal::where('punch_id', $id)->latest()->first();
         // dd($draft);
 
         $masaPengukuran = $labelPunch->masa_pengukuran;
@@ -76,7 +76,7 @@ class DisposalController extends Controller
     public function store(Request $request, $id)
     {
         // Determine if there is an existing draft
-        $existingDraft = M_ApprDisposal::where('punch_id', $id)->first();
+        $existingDraft = ApprovalDisposal::where('punch_id', $id)->first();
 
         // Validate the request
         $request->validate([
@@ -93,7 +93,7 @@ class DisposalController extends Controller
         $dies_id = $data instanceof Dies ? $data->dies_id : null;
 
         // Generate unique request ID
-        $autonum = M_ApprDisposal::where('req_id', 'like', 'DIS' . date('ymd') . '%')->latest()->first();
+        $autonum = ApprovalDisposal::where('req_id', 'like', 'DIS' . date('ymd') . '%')->latest()->first();
         $newId = !$autonum ? "DIS" . date("ymd") . "0001" : "DIS" . date("ymd") . sprintf("%04s", (int) substr($autonum->req_id, 9, 4) + 1);
 
         // Handle file uploads
@@ -110,7 +110,7 @@ class DisposalController extends Controller
         }
 
         // Create or update the record
-        M_ApprDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+        ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
             'req_id' => $newId,
             'punch_id' => $punch_id,
             'dies_id' => $dies_id,
@@ -141,7 +141,7 @@ class DisposalController extends Controller
             'dokumen5' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $isRevisi = M_ApprDisposal::where('punch_id', $id)->first()->is_revisi;
+        $isRevisi = ApprovalDisposal::where('punch_id', $id)->first()->is_revisi;
 
         // Determine punch_id and dies_id based on existence
         $data = Punch::where('punch_id', $id)->first() ?? Dies::where('dies_id', $id)->first();
@@ -149,7 +149,7 @@ class DisposalController extends Controller
         $dies_id = $data instanceof Dies ? $data->dies_id : null;
 
         // Generate unique request ID
-        $autonum = M_ApprDisposal::where('req_id', 'like', 'DIS' . date('ymd') . '%')->latest()->first();
+        $autonum = ApprovalDisposal::where('req_id', 'like', 'DIS' . date('ymd') . '%')->latest()->first();
         $newId = !$autonum ? "DIS" . date("ymd") . "0001" : "DIS" . date("ymd") . sprintf("%04s", (int) substr($autonum->req_id, 9, 4) + 1);
 
         // Handle file uploads
@@ -161,14 +161,14 @@ class DisposalController extends Controller
                 $filePaths['attach_' . $i] = $file->storeAs('uploads', $fileName, 'public');
             } else {
                 // If no new file is uploaded, keep the existing value
-                $existingDraft = M_ApprDisposal::where('punch_id', $id)->first();
+                $existingDraft = ApprovalDisposal::where('punch_id', $id)->first();
                 $filePaths['attach_' . $i] = $existingDraft ? $existingDraft->{'attach_' . $i} : '-'; // Default value if no existing draft
             }
         }
 
         if ($isRevisi == '1') {
             // Update the existing record
-            M_ApprDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+            ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
                 'user_id' => auth()->user()->id,
                 'tgl_submit' => now(),
                 'req_note' => $request->note,
@@ -182,7 +182,7 @@ class DisposalController extends Controller
             return redirect()->back()->with('success', 'Data Revisi Saved to Draft!');
         }
         // Create or update the record
-        M_ApprDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+        ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
             'req_id' => $newId,
             'punch_id' => $punch_id,
             'dies_id' => $dies_id,

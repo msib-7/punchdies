@@ -4,8 +4,8 @@ namespace App\Http\Controllers\pengukuran\awal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dies;
-use App\Models\M_ApprDisposal;
-use App\Models\M_ApprPengukuran;
+use App\Models\ApprovalDisposal;
+use App\Models\ApprovalPengukuran;
 use App\Models\PengukuranAwalDies;
 use App\Models\PengukuranAwalPunch;
 use App\Models\Punch;
@@ -576,7 +576,7 @@ class PengukuranAwalController extends Controller
 
     public function set_draft_status(Request $request)
     {
-        $M_ApprPengukuran = new M_ApprPengukuran();
+        $ApprovalPengukuran = new ApprovalPengukuran();
 
         session()->remove('first_id');
         $updateDraftStatus = [
@@ -665,13 +665,13 @@ class PengukuranAwalController extends Controller
 
     private function send_to_approval($jenis)
     {
-        $M_ApprPengukuran = new M_ApprPengukuran();
-        $M_ApprDisposal = new M_ApprDisposal();
+        $ApprovalPengukuran = new ApprovalPengukuran();
+        $ApprovalDisposal = new ApprovalDisposal();
 
         if ($jenis == 'punch-atas' or $jenis == 'punch-bawah') {
             //Approval Data
             //AutoNumber for Request ID Approval
-            $autonum = $M_ApprPengukuran->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
+            $autonum = $ApprovalPengukuran->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
             if (!$autonum) {
                 $id = "RID" . date("ymd") . "0001";
             } else {
@@ -695,12 +695,12 @@ class PengukuranAwalController extends Controller
                 'is_approved' => '-',
                 'is_rejected' => '-',
             ];
-            M_ApprPengukuran::create($dataApproval);
+            ApprovalPengukuran::create($dataApproval);
 
         } elseif ($jenis == 'dies') {
             //Approval Data
             //AutoNumber for Request ID Approval
-            $autonum = $M_ApprDisposal->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
+            $autonum = $ApprovalDisposal->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
             if (!$autonum) {
                 $id = "RID" . date("ymd") . "0001";
             } else {
@@ -724,7 +724,7 @@ class PengukuranAwalController extends Controller
                 'is_approved' => '-',
                 'is_rejected' => '-',
             ];
-            M_ApprPengukuran::create($dataApproval);
+            ApprovalPengukuran::create($dataApproval);
         }
     }
 }

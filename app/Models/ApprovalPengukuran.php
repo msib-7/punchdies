@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class M_ApprPengukuran extends Model
+class ApprovalPengukuran extends Model
 {
     use HasFactory, Notifiable, UUIDAsPrimaryKey, AuditTrailable;
 

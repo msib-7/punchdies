@@ -13,7 +13,7 @@ class Audit_tr extends Model
 
     protected $table = 'audit_trails';
 
-    protected $fillable = ['model', 'model_id', 'action', 'old_data', 'new_data', 'user_id'];
+    protected $fillable = ['model', 'model_id', 'action', 'location', 'reason', 'how', 'timestamp', 'old_data', 'new_data', 'user_id',];
 
     protected $casts = [
         'old_data' => 'array',

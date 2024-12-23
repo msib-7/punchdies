@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\approval;
 
 use App\Http\Controllers\Controller;
-use App\Models\M_ApprDisposal;
-use App\Models\M_ApprPengukuran;
+use App\Models\ApprovalDisposal;
+use App\Models\ApprovalPengukuran;
 use App\Models\Dies;
 use App\Models\PengukuranAwalDies;
 use App\Models\PengukuranAwalPunch;
@@ -20,10 +20,10 @@ class ApprovalController extends Controller
         $showApproval = $request->segment(3);
 
         if($showApproval == 'pengukuran'){
-            $dataApproval = M_ApprPengukuran::all();
+            $dataApproval = ApprovalPengukuran::all();
             $data['dataApproval'] = $dataApproval;
         }elseif($showApproval == 'disposal'){
-            $dataApproval = M_ApprDisposal::all();
+            $dataApproval = ApprovalDisposal::all();
             $data['dataApproval'] = $dataApproval;
         }
     }
@@ -32,7 +32,7 @@ class ApprovalController extends Controller
         $showApproval = $request->segment(3);
 
         if ($showApproval == 'pengukuran') {
-            $dataApproval = M_ApprPengukuran::leftJoin('users', 'approval_pengukurans.user_id', '=', 'users.id')
+            $dataApproval = ApprovalPengukuran::leftJoin('users', 'approval_pengukurans.user_id', '=', 'users.id')
                                             ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
                                             ->get();
             $dataPunch = Punch::where('is_delete_punch','0')->get();
@@ -46,7 +46,7 @@ class ApprovalController extends Controller
             return view('qa.data.approval', $data);
             
         } elseif ($showApproval == 'disposal') {
-            $dataApproval = M_ApprDisposal::leftJoin('users', 'approval_disposals.user_id', '=', 'users.id')
+            $dataApproval = ApprovalDisposal::leftJoin('users', 'approval_disposals.user_id', '=', 'users.id')
                 ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
                 ->get();
             $dataPunch = Punch::where('is_delete_punch', '0')->get();
@@ -62,13 +62,13 @@ class ApprovalController extends Controller
     }
     public function show_history(Request $request)
     {
-        $dataApprPengukuran = M_ApprPengukuran::leftJoin('users', 'approval_pengukurans.user_id', '=', 'users.id')
+        $dataApprPengukuran = ApprovalPengukuran::leftJoin('users', 'approval_pengukurans.user_id', '=', 'users.id')
             ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
             ->where('is_approved','!=', '-')
             ->where('is_rejected','!=', '-')
             ->orderBy('req_id', 'desc')
             ->get();
-        $dataApprDisposal = M_ApprDisposal::leftJoin('users', 'approval_disposals.user_id', '=', 'users.id')
+        $dataApprDisposal = ApprovalDisposal::leftJoin('users', 'approval_disposals.user_id', '=', 'users.id')
             ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
             ->where('is_approved','!=', '-')
             ->where('is_rejected','!=', '-')
@@ -88,7 +88,7 @@ class ApprovalController extends Controller
 
     public function detail_data_approval($req_id)
     {
-        $dataRequest = M_ApprPengukuran::where('req_id', $req_id)->first();
+        $dataRequest = ApprovalPengukuran::where('req_id', $req_id)->first();
         $data['segment'] = 'approval';
 
         if($dataRequest->punch_id != null){
@@ -108,7 +108,7 @@ class ApprovalController extends Controller
                 $tglPengukuran = PengukuranRutinPunch::where('punch_id', '=', $id)->first();
             }
 
-            $checkStatus = M_ApprPengukuran::where(['req_id' => $req_id])->first();
+            $checkStatus = ApprovalPengukuran::where(['req_id' => $req_id])->first();
             if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
                 $status = '<span class="badge badge-square badge-outline badge-light-warning fs-4">Waiting For Approval</span>';
             } elseif ($checkStatus->is_approved == '1' and $checkStatus->is_rejected == '0') {
@@ -145,7 +145,7 @@ class ApprovalController extends Controller
                 $tglPengukuran = PengukuranRutinDies::where('dies_id', '=', $id)->first();
             }
 
-            $checkStatus = M_ApprPengukuran::where(['req_id' => $req_id])->first();
+            $checkStatus = ApprovalPengukuran::where(['req_id' => $req_id])->first();
             if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
                 $status = '<span class="badge badge-square badge-outline badge-light-warning fs-4">Waiting For Approval</span>';
             } elseif ($checkStatus->is_approved == '1' and $checkStatus->is_rejected == '0') {
@@ -170,7 +170,7 @@ class ApprovalController extends Controller
         $getHistory = $request->segment(4);
 
         if($getHistory == 'pengukuran'){
-            $dataRequest = M_ApprPengukuran::where('req_id', $req_id)->first();
+            $dataRequest = ApprovalPengukuran::where('req_id', $req_id)->first();
             $data['segment'] = 'history';
 
             if ($dataRequest->punch_id != null) {
@@ -181,7 +181,7 @@ class ApprovalController extends Controller
                 $dataPengukuran = PengukuranAwalPunch::where('punch_id', $id)->get();
                 $tglPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
 
-                $checkStatus = M_ApprPengukuran::where(['req_id' => $req_id])->first();
+                $checkStatus = ApprovalPengukuran::where(['req_id' => $req_id])->first();
                 if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
                     $status = '<span class="badge badge-square badge-outline badge-light-warning fs-4">Waiting For Approval</span>';
                 } elseif ($checkStatus->is_approved == '1' and $checkStatus->is_rejected == '0') {
@@ -206,7 +206,7 @@ class ApprovalController extends Controller
                 $dataPengukuran = PengukuranAwalDies::where('dies_id', $id)->get();
                 $tglPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
 
-                $checkStatus = M_ApprPengukuran::where(['req_id' => $req_id])->first();
+                $checkStatus = ApprovalPengukuran::where(['req_id' => $req_id])->first();
                 if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
                     $status = '<span class="badge badge-square badge-outline badge-light-warning fs-4">Waiting For Approval</span>';
                 } elseif ($checkStatus->is_approved == '1' and $checkStatus->is_rejected == '0') {
@@ -231,7 +231,7 @@ class ApprovalController extends Controller
     public function update_approval_status(Request $request, $req_id)
     {
         if($request->segment(3) == 'pengukuran'){
-            $ApprovalData = M_ApprPengukuran::where('req_id', $req_id)->first();
+            $ApprovalData = ApprovalPengukuran::where('req_id', $req_id)->first();
 
             if($ApprovalData->punch_id != null){
                 if ($request->segment(4) == 'approve') {
@@ -241,7 +241,7 @@ class ApprovalController extends Controller
                         'approved_by' => auth()->user()->nama,
                         'approved_at' => date('Y-m-d H:i:s'),
                     ];
-                    M_ApprPengukuran::where('req_id', $req_id)->update($setApproved);
+                    ApprovalPengukuran::where('req_id', $req_id)->update($setApproved);
                     $updateStatusApproved = [
                         'is_approved' => '1',
                         'is_rejected' => '0',
@@ -260,7 +260,7 @@ class ApprovalController extends Controller
                         'approved_by' => auth()->user()->nama,
                         'approved_at' => date('Y-m-d H:i:s'),
                     ];
-                    M_ApprPengukuran::where('req_id', $req_id)->update($setRejected);
+                    ApprovalPengukuran::where('req_id', $req_id)->update($setRejected);
                     $updateStatusApproved = [
                         'is_approved' => '0',
                         'is_rejected' => '1',
@@ -278,7 +278,7 @@ class ApprovalController extends Controller
                         'approved_by' => auth()->user()->nama,
                         'approved_at' => date('Y-m-d H:i:s'),
                     ];
-                    M_ApprPengukuran::where('req_id', $req_id)->update($setApproved);
+                    ApprovalPengukuran::where('req_id', $req_id)->update($setApproved);
                     $updateStatusApproved = [
                         'is_approved' => '1',
                         'is_rejected' => '0',
@@ -293,7 +293,7 @@ class ApprovalController extends Controller
                         'approved_by' => auth()->user()->nama,
                         'approved_at' => date('Y-m-d H:i:s'),
                     ];
-                    M_ApprPengukuran::where('req_id', $req_id)->update($setRejected);
+                    ApprovalPengukuran::where('req_id', $req_id)->update($setRejected);
                     $updateStatusApproved = [
                         'is_approved' => '0',
                         'is_rejected' => '1',
@@ -311,7 +311,7 @@ class ApprovalController extends Controller
                     'approved_by' => session('username'),
                     'approved_at' => date('Y-m-d H:i:s'),
                 ];
-                M_ApprDisposal::where('req_id', $req_id)->update($setApproved);
+                ApprovalDisposal::where('req_id', $req_id)->update($setApproved);
                 return redirect('/data/approval/pengukuran')->with('success', 'Permintaan Disposal berhasil di Approve!');
             } elseif ($request->segment(4) == 'reject') {
                 $setRejected = [
@@ -320,7 +320,7 @@ class ApprovalController extends Controller
                     'approved_by' => session('username'),
                     'approved_at' => date('Y-m-d H:i:s'),
                 ];
-                M_ApprDisposal::where('req_id', $req_id)->update($setRejected);
+                ApprovalDisposal::where('req_id', $req_id)->update($setRejected);
                 return redirect('/data/approval/pengukuran')->with('success', 'Permintaan Disposal di Reject!');
             }
         }

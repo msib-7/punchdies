@@ -4,7 +4,7 @@ namespace App\Http\Controllers\approval;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dies;
-use App\Models\M_ApprPengukuran;
+use App\Models\ApprovalPengukuran;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinDies;
 use App\Models\PengukuranRutinPunch;
@@ -16,7 +16,7 @@ use Log;
 class ApprovalPengukuranRutinController extends Controller
 {
     public function index(){
-        $approval = M_ApprPengukuran::with('users')->where('masa_pengukuran', '!=','pengukuran awal')->get();
+        $approval = ApprovalPengukuran::with('users')->where('masa_pengukuran', '!=','pengukuran awal')->get();
         $dataPunch = Punch::all();
         $dataDies = Dies::all();
 
@@ -24,9 +24,9 @@ class ApprovalPengukuranRutinController extends Controller
     }
 
     public function show(Request $request, $id){
-        $data = M_ApprPengukuran::find($id);
+        $data = ApprovalPengukuran::find($id);
 
-        $checkStatus = M_ApprPengukuran::where('req_id', $data->req_id)->first();
+        $checkStatus = ApprovalPengukuran::where('req_id', $data->req_id)->first();
         $status = match (true) {
             $checkStatus->is_approved === '-' && $checkStatus->is_rejected === '-' => '<span class="badge badge-square badge-outline badge-light-warning fs-4">Waiting For Approval</span>',
             $checkStatus->is_approved === '1' && $checkStatus->is_rejected === '0' => "<span class='badge badge-light-success fs-3'>Approved</span>",
@@ -65,7 +65,7 @@ class ApprovalPengukuranRutinController extends Controller
     }
 
     public function approve($id) {
-        $data = M_ApprPengukuran::find($id);
+        $data = ApprovalPengukuran::find($id);
 
         try {
             DB::beginTransaction();
@@ -75,8 +75,8 @@ class ApprovalPengukuranRutinController extends Controller
                 'by' => auth()->user()->nama,
                 'at' => date('Y-m-d H:i:s'),
             ];
-            // M_ApprPengukuran::where('req_id', $data->req_id)->update($update);
-            M_ApprPengukuran::updateOrCreate(['req_id' => $data->req_id], $update);
+            // ApprovalPengukuran::where('req_id', $data->req_id)->update($update);
+            ApprovalPengukuran::updateOrCreate(['req_id' => $data->req_id], $update);
 
             $updateStatusApproved = [
                 'is_draft' => '0',
@@ -110,7 +110,7 @@ class ApprovalPengukuranRutinController extends Controller
     }
     public function reject($id)
     {
-        $data = M_ApprPengukuran::find($id);
+        $data = ApprovalPengukuran::find($id);
 
         try {
             DB::beginTransaction();
@@ -120,8 +120,8 @@ class ApprovalPengukuranRutinController extends Controller
                 'by' => auth()->user()->nama,
                 'at' => date('Y-m-d H:i:s'),
             ];
-            // M_ApprPengukuran::where('req_id', $data->req_id)->update($update);
-            M_ApprPengukuran::updateOrCreate(['req_id' => $data->req_id], $update);
+            // ApprovalPengukuran::where('req_id', $data->req_id)->update($update);
+            ApprovalPengukuran::updateOrCreate(['req_id' => $data->req_id], $update);
 
             $updateStatusApproved = [
                 'is_draft' => '0',
