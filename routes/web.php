@@ -221,7 +221,7 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
             Route::get('show/{id}', [DisposalController::class, 'show'])->name('show');
             Route::get('create/{id}', [DisposalController::class, 'create'])->name('create');
             Route::post('store/{id}', [DisposalController::class, 'store'])->name('store');
-            Route::post('draft/{id}', [DisposalController::class, 'saveDraft'])->name('draft');
+            Route::post('draft', [DisposalController::class, 'saveDraft'])->name('draft');
         });
     });
 });

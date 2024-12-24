@@ -130,8 +130,9 @@ class DisposalController extends Controller
         return redirect()->back()->with('success', 'Files uploaded successfully!');
     }
 
-    public function saveDraft(Request $request, $id)
+    public function saveDraft(Request $request)
     {
+        $id = $request->id;
         // Validate the request
         $request->validate([
             'dokumen1' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -140,13 +141,6 @@ class DisposalController extends Controller
             'dokumen4' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'dokumen5' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
-
-        $isRevisi = ApprovalDisposal::where('punch_id', $id)->first();
-
-        // Determine punch_id and dies_id based on existence
-        $data = Punch::where('punch_id', $id)->first() ?? Dies::where('dies_id', $id)->first();
-        $punch_id = $data instanceof Punch ? $data->punch_id : null;
-        $dies_id = $data instanceof Dies ? $data->dies_id : null;
 
         // Generate unique request ID
         $autonum = ApprovalDisposal::where('req_id', 'like', 'DIS' . date('ymd') . '%')->latest()->first();
@@ -166,8 +160,14 @@ class DisposalController extends Controller
             }
         }
 
-        if ($isRevisi != null) {
-            if($isRevisi->is_revisi == '1'){
+        //Periksa Apakah data ini sudah pernah di draft sebelumnya
+        $dataDraft = ApprovalDisposal::where('punch_id', $id)->orWhere('dies_id', $id);
+
+        
+        if($dataDraft->exists()){
+            $isRevisi = $dataDraft->latest()->first();
+
+            if ($isRevisi->is_revisi == '1') {
                 // Update the existing record
                 ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
                     'user_id' => auth()->user()->id,
@@ -181,8 +181,29 @@ class DisposalController extends Controller
                 ], $filePaths))->latest();
 
                 return redirect()->back()->with('success', 'Data Revisi Saved to Draft!');
+            } else {
+                // Update the existing record
+                ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+                    'user_id' => auth()->user()->id,
+                    'tgl_submit' => now(),
+                    'req_note' => $request->note ?? '-',
+                    'is_draft' => '1',
+                    'is_waiting' => '0',
+                    'is_approved' => '0',
+                    'is_rejected' => '0',
+                    'is_revisi' => '0',
+                ], $filePaths))->latest();
+
+                return redirect()->back()->with('success', 'Data Saved to Draft!');
             }
-            // Create or update the record
+        }else{
+            // Create a new record
+            // Determine punch_id and dies_id based on existence
+            $data = Punch::where('punch_id', $id)->first() ?? Dies::where('dies_id', $id)->first();
+            $punch_id = $data instanceof Punch ? $data->punch_id : null;
+            $dies_id = $data instanceof Dies ? $data->dies_id : null;
+
+
             ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
                 'req_id' => $newId,
                 'punch_id' => $punch_id,
@@ -203,6 +224,5 @@ class DisposalController extends Controller
 
             return redirect()->back()->with('warning', 'Data Saved to Draft!');
         }
-
     }
 }

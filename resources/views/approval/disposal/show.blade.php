@@ -273,7 +273,7 @@
                                                 <!--end::Radio group-->
                                             </div>
 
-                                            @if ($dataApproval->approved_note != null || $dataApproval->approved_note != '' || $dataApproval->approved_note != '-')
+                                            @if ($dataApproval->approved_note != null && $dataApproval->approved_note != '' && $dataApproval->approved_note != '-')
                                                 {{-- Alert --}}
                                                 <div class="alert alert-info" role="alert">
                                                     <h7 class="alert-heading">Catatan revisi sebelumnya:</h7>

@@ -90,6 +90,7 @@
                                        <!--begin::Form-->
                                         <form class="form" action="{{ route('pnd.request.disposal.store', $labelPunch->punch_id) }}" method="post" enctype="multipart/form-data">
                                             @csrf
+                                            <input type="hidden" name="id" value="{{ $labelPunch->punch_id }}">
                                             <div>
                                                 <label for="formFile1" class="required form-label">Dokumen 1</label>
                                                 <input class="form-control" type="file" value="{{ $draft->attach_1 ?? '-'}}" name="dokumen1" id="formFile1" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
@@ -545,10 +546,11 @@
         
         // Append other form data
         formData.append('note', document.querySelector('textarea[name="note"]').value);
+        formData.append('id', document.querySelector('input[name="id"]').value);
 
         // Make the AJAX request
         $.ajax({
-            url: "{{ route('pnd.request.disposal.draft', $labelPunch->punch_id) }}", // Use the route name
+            url: "{{ route('pnd.request.disposal.draft') }}", // Use the route name
             type: 'POST',
             data: formData,
             contentType: false,
@@ -591,10 +593,11 @@
         
         // Append other form data
         formData.append('note', document.querySelector('textarea[name="note"]').value);
+        formData.append('id', document.querySelector('input[name="id"]').value);
 
         // Make the AJAX request
         $.ajax({
-            url: "{{ route('pnd.request.disposal.draft', $labelPunch->punch_id) }}", // Use the route name
+            url: "{{ route('pnd.request.disposal.draft') }}", // Use the route name
             type: 'POST',
             data: formData,
             contentType: false,
