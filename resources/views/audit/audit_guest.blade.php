@@ -62,12 +62,12 @@
                                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                                     <th>No</th>
                                                     <th>Log Date</th>
-                                                    <th>Event</th>
                                                     <th>User</th>
                                                     <th>Line</th>
+                                                    <th>Event</th>
                                                     <th>IP Address</th>
                                                     <th>Action</th>
-                                                    <th>Detail</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -77,14 +77,7 @@
                                                     <td>{{ $no++ }}</td>
                                                     <td>
                                                         <div class="d-flex flex-start">
-                                                            <span class="text-gray-800">{{ $data->created_at->format('d M Y H:i') }}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td >
-                                                        <div class="d-flex flex-start">
-                                                            <span class="text-gray-800 text-hover-primary">
-                                                                {{ ucwords($data->action) . ' ' . str_replace('App\Models\\', '', $data->model) }}
-                                                            </span>
+                                                            <span class="text-gray-800">{{ $data->created_at->format('d M Y H:i:s') }}</span>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -92,6 +85,13 @@
                                                     </td>
                                                     <td>
                                                         <div class="text-gray-800">{{ ucwords(optional(optional($data->users)->lines)->nama_line) }}</div>
+                                                    </td>
+                                                    <td >
+                                                        <div class="d-flex flex-start">
+                                                            <span class="text-gray-800">
+                                                                {{ ucwords($data->action) . ' ' . str_replace('App\Models\\', '', $data->model) }}
+                                                            </span>
+                                                        </div>
                                                     </td>
                                                     <td>
                                                         <div class="text -gray-800">{{ $data->location }}</div>
