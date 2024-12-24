@@ -30,7 +30,7 @@
                 Filter Options
             </button>
         </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#filterAccordion">
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#filterAccordion">
             <div class="accordion-body">
                 <div class="row g-3">
                     <div class="col-12 col-md-2">
@@ -90,7 +90,10 @@
             <a class="btn btn-light-primary rounded-bottom-0 mx-1 active" data-bs-toggle="tab" href="#all_data_tab">All</a>
         </li>
         <li class="nav-item">
-            <a class="btn btn-light-warning  rounded-bottom-0 mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">Perlu Pengukuran</a>
+            <a class="btn btn-light-warning rounded-bottom-0 mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">
+                Perlu Pengukuran 
+                <span class="badge badge-circle badge-warning" id="badgePerluPengukuran">{{ count($dataPunchOlderThanOneYear) }}</span>
+            </a>
         </li>
     </ul>
 </div>
@@ -660,6 +663,15 @@
 
     $(document).ready(function () {
 
+        if ({{ count($dataPunchOlderThanOneYear) }} > 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Attention!',
+                text: 'Terdapat data yang memerlukan pengukuran rutin!',
+                confirmButtonText: 'Okay'
+            });
+        }
+        
         document.querySelectorAll('.nav-tabs a').forEach(tab => {
             tab.addEventListener('click', filterCards);
         });
