@@ -33,7 +33,7 @@
         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#filterAccordion">
             <div class="accordion-body">
                 <div class="row g-3">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-2">
                         <label for="searchInput" class="form-label">Search</label>
                         <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="filterCards()" title="Search by any keyword">
                     </div>
@@ -56,29 +56,13 @@
                     </div>
                     <div class="col-6 col-md-2">
                         <label for="namaMesinFilter" class="form-label">Machine Name</label>
-                        <input type="text" id="namaMesinFilter" class="form-control" placeholder="Nama Mesin..." onkeyup="filterCards()" title="Filter by machine name">
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <label for="bulanFilter" class="form-label">Month</label>
-                        <select id="bulanFilter" class="form-select" onchange="filterCards()" title="Filter by month of production">
-                            <option value="">All Months</option>
-                            <option value="01">January</option>
-                            <option value="02">February</option>
-                            <option value="03">March </option>
-                            <option value="04">April</option>
-                            <option value="05">May</option>
-                            <option value="06">June</option>
-                            <option value="07">July</option>
-                            <option value="08">August</option>
-                            <option value="09">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
+                        <select id="namaMesinFilter" onchange="filterCards()" data-control="select2" data-dropdown-parent="#collapseOne" data-placeholder="Select a item..." class="form-select fw-bold">
+                            <option value=""></option>
+                            @foreach ($DataMesin as $item)
+                                <option value="{{$item->title}}">{{$item->title}}</option>
+                            @endforeach
                         </select>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <label for="tahunFilter" class="form-label">Year</label>
-                        <input type="number" id="tahunFilter" class="form-control" placeholder="Tahun..." onkeyup="filterCards()" title="Filter by year of production">
+                        {{-- <input type="text" id="namaMesinFilter" class="form-control" placeholder="Nama Mesin..."  title="Filter by machine name"> --}}
                     </div>
                     <div class="col-6 col-md-2">
                         <label for="lineFilter" class="form-label">Line</label>
@@ -89,6 +73,9 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="col-12">
+                        <button class="btn btn-light" id="resetFilters">Reset Filters</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,22 +83,78 @@
 </div>
 <!--end::Accordion -->
 
+{{-- Tabs --}}
 <div class="mx-10">
     <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
         <li class="nav-item">
-            <a class="nav-link btn btn-active-light btn-color-gray-600 btn-active-color-primary rounded-bottom-0 active" data-bs-toggle="tab" href="#all_data_tab">All</a>
+            <a class="btn btn-light-primary rounded-bottom-0 mx-1 active" data-bs-toggle="tab" href="#all_data_tab">All</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link btn btn-active-light btn-color-gray-600 btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" href="#perlu_ukur_tab">Perlu Pengukuran </a>
+            <a class="btn btn-light-warning  rounded-bottom-0 mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">Perlu Pengukuran</a>
         </li>
     </ul>
 </div>
+{{-- end tabs --}}
 <!--begin Content-->
 <div class="mb-4 mx-10">
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="all_data_tab" role="tabpanel">
+            {{-- All --}}
+            {{-- Content --}}
             <div class="row g-5 gx-xl-10" id="cardContainer">
-                @foreach ($dataPunch as $data)
+                @foreach ($dataPunchRecent as $data)
+                    <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
+                        data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_rejected == '1' ? 'rejected' : ($data->is_draft == '1' ? 'draft' : 'waiting')) }}" 
+                        data-merk="{{ strtolower($data->merk) }}" 
+                        data-nama-mesin="{{ strtolower($data->nama_mesin_cetak) }}" 
+                        data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
+                        data-line="{{ $data->line_id }}">
+                        <div class="card shadow-sm border-0 rounded-3 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ strtoupper($data->merk) }}
+                                    @if ($data->is_approved == '1')
+                                        <span class="badge badge-square badge-outline badge-success">Approved</span>
+                                    @elseif ($data->is_rejected == '1') <!-- Check for rejection -->
+                                        <span class="badge badge-square badge-outline badge-danger">Rejected</span>
+                                    @else
+                                        @if ($data->is_draft == '1')
+                                            <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                        @elseif ($data->is_draft == '0')
+                                            <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                                        @endif
+                                    @endif
+                                </h5>
+                                <div class="separator border-info border-3 my-4"></div>
+                                <p class="card-text">Bulan/Tahun Pembuatan: <strong>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</strong></p>
+                                <p class="card-text">Nama Mesin: <strong>{{ strtoupper($data->nama_mesin_cetak) }}</strong></p>
+                                <p class="card-text">Kode Produk: <strong>{{ strtoupper($data->kode_produk) }}</strong></p>
+                                <p class="card-text">Nama Produk: <strong>{{ strtoupper($data->nama_produk) }}</strong></p>
+                                <p class="card-text">Pengukuran Terakhir: <strong>{{ ucwords($data->masa_pengukuran) }}</strong></p>
+                                <p class="card-text">Tanggal Pengukuran: <strong>{{ date_format($data->created_at, 'd M Y')}}</strong></p>
+                                <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
+                                    @if($data->masa_pengukuran == '-') <!-- Check if there's no pengukuran awal -->
+                                        <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->punch_id}}" onclick="buatPengukuran(this)">Buat Pengukuran</button>
+                                    @endif
+                                    <button class="btn btn-secondary" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
+                                        <i class="ki-outline ki-eye fs-2"></i>
+                                        Lihat Data Pengukuran
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-4" id="paginationAllData">
+                <ul class="pagination"></ul>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="perlu_ukur_tab" role="tabpanel">
+            {{-- Data Perlu Pengukuran --}}
+            {{-- Content --}}
+            <div class="row g-5 gx-xl-10" id="cardContainer">
+                @foreach ($dataPunchOlderThanOneYear as $data)
                     <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
                         data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_rejected == '1' ? 'rejected' : ($data->is_draft == '1' ? 'draft' : 'waiting')) }}" 
                         data-merk="{{ strtolower($data->merk) }}" 
@@ -156,14 +199,10 @@
                     </div>
                 @endforeach
             </div>
-
             <!-- Pagination -->
-            <div class="d-flex justify-content-center mt-4">
+            <div class="d-flex justify-content-center mt-4" id="paginationPerluPengukuran" style="display: none;">
                 <ul class="pagination"></ul>
             </div>
-        </div>
-        <div class="tab-pane fade" id="perlu_ukur_tab" role="tabpanel">
-            
         </div>
     </div>
 </div>
@@ -438,7 +477,8 @@
 
 {{-- Filter Tools --}}
 <script>
-    let currentPage = 1;
+    let currentPageAllData = 1;
+    let currentPagePerluPengukuran = 1;
     const itemsPerPage = 9;
 
     function filterCards() {
@@ -446,11 +486,12 @@
         const status = document.getElementById('statusFilter').value.toLowerCase();
         const merk = document.getElementById('merkFilter').value.toLowerCase();
         const tanggalPengukuran = document.getElementById('tanggalPengukuranFilter').value;
-        const namaMesin = document.getElementById('namaMesinFilter').value.toLowerCase();
-        const bulan = document.getElementById('bulanFilter').value;
-        const tahun = document.getElementById('tahunFilter').value;
+        const namaMesin = document.getElementById('namaMesinFilter').value; // Get the selected value
         const line = document.getElementById('lineFilter').value;
-        const cards = document.querySelectorAll('.card-item');
+
+        // Get the currently active tab
+        const activeTab = document.querySelector('.nav-tabs .active').getAttribute('href').substring(1);
+        const cards = document.querySelectorAll(`#${activeTab} .card-item`);
 
         // Hide all cards initially
         cards.forEach(card => {
@@ -464,20 +505,16 @@
             const cardMerk = card.getAttribute('data-merk');
             const cardNamaMesin = card.getAttribute('data-nama-mesin');
             const cardTanggalPengukuran = card.getAttribute('data-tanggal-pengukuran');
-            const cardBulan = card.getAttribute('data-bulan');
-            const cardTahun = card.getAttribute('data-tahun');
             const cardLine = card.getAttribute('data-line');
 
             const matchesSearch = title.includes(input) || bodyText.includes(input);
             const matchesStatus = status === '' || cardStatus === status;
             const matchesMerk = cardMerk.includes(merk);
-            const matchesNamaMesin = cardNamaMesin.includes(namaMesin);
+            const matchesNamaMesin = cardNamaMesin.includes(namaMesin); // Check against the selected machine name
             const matchesTanggal = tanggalPengukuran === '' || cardTanggalPengukuran === tanggalPengukuran;
-            const matchesBulan = bulan === '' || cardBulan === bulan;
-            const matchesTahun = tahun === '' || cardTahun === tahun;
             const matchesLine = line === '' || cardLine === line;
 
-            return matchesSearch && matchesStatus && matchesMerk && matchesNamaMesin && matchesTanggal && matchesBulan && matchesTahun && matchesLine;
+            return matchesSearch && matchesStatus && matchesMerk && matchesNamaMesin && matchesTanggal && matchesLine;
         });
 
         // Show only the visible cards
@@ -485,24 +522,35 @@
             card.style.display = '';
         });
 
-        setupPagination(visibleCards);
-        showPage(currentPage, visibleCards);
+        // Setup pagination based on the active tab
+        if (activeTab === 'all_data_tab') {
+            setupPagination(visibleCards, 'paginationAllData');
+            showPage(currentPageAllData, visibleCards, 'paginationAllData');
+        } else if (activeTab === 'perlu_ukur_tab') {
+            setupPagination(visibleCards, 'paginationPerluPengukuran');
+            showPage(currentPagePerluPengukuran, visibleCards, 'paginationPerluPengukuran');
+        }
     }
 
-    function setupPagination(visibleCards) {
+    function setupPagination(visibleCards, paginationId) {
         const totalPages = Math.ceil(visibleCards.length / itemsPerPage);
-        const paginationLinks = document.querySelector('.pagination');
+        const paginationLinks = document.querySelector(`#${paginationId} .pagination`);
         paginationLinks.innerHTML = '';
 
         for (let i = 1; i <= totalPages; i++) {
-            const link = document.createElement('a');
+            const link = document .createElement('a');
             link.textContent = i;
             link.className = 'page-link';
             link.href = '#';
             link.onclick = (e) => {
                 e.preventDefault();
-                currentPage = i;
-                showPage(currentPage, visibleCards);
+                if (paginationId === 'paginationAllData') {
+                    currentPageAllData = i;
+                    showPage(currentPageAllData, visibleCards, paginationId);
+                } else {
+                    currentPagePerluPengukuran = i;
+                    showPage(currentPagePerluPengukuran, visibleCards, paginationId);
+                }
             };
             const listItem = document.createElement('li');
             listItem.className = 'page-item';
@@ -511,18 +559,48 @@
         }
     }
 
-    function showPage(page, visibleCards) {
+    function showPage(page, visibleCards, paginationId) {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
         visibleCards.forEach((card, index) => {
             card.style.display = (index >= start && index < end) ? '' : 'none';
         });
+
+        // Show or hide the pagination based on the number of visible cards
+        const paginationContainer = document.getElementById(paginationId);
+        paginationContainer.style.display = visibleCards.length > itemsPerPage ? 'flex' : 'none';
     }
 
     window.onload = () => {
         filterCards(); // Initial filter to show all cards
     };
+</script>
+
+{{-- Reset Filter --}}
+<script>
+    document.getElementById('resetFilters').addEventListener('click', function() {
+        // Reset the search input
+        document.getElementById('searchInput').value = '';
+
+        // Reset the status filter
+        document.getElementById('statusFilter').value = '';
+
+        // Reset the merk filter
+        document.getElementById('merkFilter').value = '';
+
+        // Reset the tanggal pengukuran filter
+        document.getElementById('tanggalPengukuranFilter').value = '';
+
+        // Reset the nama mesin filter
+        document.getElementById('namaMesinFilter').value = '';
+
+        // Reset the line filter
+        document.getElementById('lineFilter').value = '';
+
+        // Call the filterCards function to refresh the displayed cards
+        filterCards();
+    });
 </script>
 
 <script>
@@ -581,6 +659,10 @@
     }
 
     $(document).ready(function () {
+
+        document.querySelectorAll('.nav-tabs a').forEach(tab => {
+            tab.addEventListener('click', filterCards);
+        });
 
         var start = 2010;
         var now = new Date().getFullYear();
