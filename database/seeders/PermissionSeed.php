@@ -18,6 +18,7 @@ class PermissionSeed extends Seeder
         $routes = Route::getRoutes()->getRoutesByName();
         $role = Roles::latest()->get();
 
+        $adminRole = Roles::firstOrCreate(['name' => 'Administrator']);
         foreach($role as $item){
             foreach($routes as $routeName => $route){
                 if(str_starts_with($route->getPrefix(), 'pnd')){

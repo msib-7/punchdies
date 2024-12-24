@@ -579,7 +579,7 @@
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no++]['head_outer_diameter']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer; color: red;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>

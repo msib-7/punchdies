@@ -44,7 +44,6 @@
                     <div class="menu-item pt-5">
                         <!--begin:Menu content-->
                         <div class="menu-content">
-                            <span class="menu-heading fw-bold text-uppercase fs-7">Navigation</span>
                         </div>
                         <!--end:Menu content-->
                     </div>
@@ -57,7 +56,7 @@
                             <span class="menu-icon">
                                 <i class="ki-outline ki-element-11 fs-2"></i>
                             </span>
-                            <span class="menu-title">Dashboard</span>
+                            <span class="menu-title text-gray-600">Dashboard</span>
                         </a>
                         <!--end:Menu link-->
                     </div>
@@ -67,7 +66,7 @@
                     <div class="menu-item pt-5">
                         <!--begin:Menu content-->
                         <div class="menu-content">
-                            <span class="menu-heading fw-bold text-uppercase fs-7">Form Pengukuran</span>
+                            <span class=" fw-bold text-uppercase fs-8 text-gray-800">Form Pengukuran</span>
                         </div>
                         <!--end:Menu content-->
                     </div>
@@ -83,7 +82,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-rocket fs-2"></i>
                                     </span>
-                                    <span class="menu-title">Data Pengukuran Awal</span>
+                                    <span class="menu-title text-gray-600">Data Pengukuran Awal</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
@@ -96,7 +95,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Punch</span>
+                                            <span class="menu-title text-gray-600">Punch</span>
                                             <span class="menu-arrow"></span>
                                         </span>
                                         <!--end:Menu link-->
@@ -109,7 +108,7 @@
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
-                                                    <span class="menu-title">Punch Atas</span>
+                                                    <span class="menu-title text-gray-600">Punch Atas</span>
                                                 </a>
                                                 <!--end:Menu link-->
                                             </div>
@@ -121,7 +120,7 @@
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
-                                                    <span class="menu-title">Punch Bawah</span>
+                                                    <span class="menu-title text-gray-600">Punch Bawah</span>
                                                 </a>
                                                 <!--end:Menu link-->
                                             </div>
@@ -137,7 +136,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Dies</span>
+                                            <span class="menu-title text-gray-600">Dies</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -161,7 +160,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-rocket fs-2"></i>
                                     </span>
-                                    <span class="menu-title">Data Pengukuran Rutin</span>
+                                    <span class="menu-title text-gray-600">Data Pengukuran Rutin</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
@@ -174,7 +173,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Punch</span>
+                                            <span class="menu-title text-gray-600">Punch</span>
                                             <span class="menu-arrow"></span>
                                         </span>
                                         <!--end:Menu link-->
@@ -187,7 +186,7 @@
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
-                                                    <span class="menu-title">Punch Atas</span>
+                                                    <span class="menu-title text-gray-600">Punch Atas</span>
                                                 </a>
                                                 <!--end:Menu link-->
                                             </div>
@@ -199,7 +198,7 @@
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
-                                                    <span class="menu-title">Punch Bawah</span>
+                                                    <span class="menu-title text-gray-600">Punch Bawah</span>
                                                 </a>
                                                 <!--end:Menu link-->
                                             </div>
@@ -215,7 +214,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Dies</span>
+                                            <span class="menu-title text-gray-600">Dies</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -232,7 +231,7 @@
                     <div class="menu-item pt-5">
                         <!--begin:Menu content-->
                         <div class="menu-content">
-                            <span class="menu-heading fw-bold text-uppercase fs-7">Approval Menu</span>
+                            <span class="text-gray-800 fw-bold text-uppercase fs-8">Approval Menu</span>
                         </div>
                         <!--end:Menu content-->
                     </div>
@@ -248,7 +247,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-information-3 fs-2"></i>
                                     </span>
-                                    <span class="menu-title">Waiting List</span>
+                                    <span class="menu-title text-gray-600">Waiting List</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
@@ -261,7 +260,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Approval Pengukuran Awal</span>
+                                            <span class="menu-title text-gray-600">Approval Pengukuran Awal</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -273,7 +272,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Approval Pengukuran Rutin</span>
+                                            <span class="menu-title text-gray-600">Approval Pengukuran Rutin</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -285,7 +284,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Approval Disposal</span>
+                                            <span class="menu-title text-gray-600">Approval Disposal</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -303,7 +302,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-archive fs-2"></i>
                                     </span>
-                                    <span class="menu-title">History</span>
+                                    <span class="menu-title text-gray-600">History</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -317,7 +316,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-disconnect fs-2"></i>
                                     </span>
-                                    <span class="menu-title">Request Disposal</span>
+                                    <span class="menu-title text-gray-600">Request Disposal</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -330,7 +329,7 @@
                     <div class="menu-item pt-5">
                         <!--begin:Menu content-->
                         <div class="menu-content">
-                            <span class="menu-heading fw-bold text-uppercase fs-7">Admin Tools</span>
+                            <span class="text-gray-800 fw-bold text-uppercase fs-8">Admin Tools</span>
                         </div>
                         <!--end:Menu content-->
                     </div>
@@ -345,7 +344,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-more-2 fs-2"></i>
                                     </span>
-                                    <span class="menu-title">System</span>
+                                    <span class="menu-title text-gray-600">System</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
@@ -358,7 +357,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Master Mesin</span>
+                                            <span class="menu-title text-gray-600">Master Mesin</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -370,7 +369,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Master Nama Produk</span>
+                                            <span class="menu-title text-gray-600">Master Nama Produk</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -382,7 +381,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Master Kode Produk</span>
+                                            <span class="menu-title text-gray-600">Master Kode Produk</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -400,7 +399,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-user fs-2"></i>
                                     </span>
-                                    <span class="menu-title">User Management</span>
+                                    <span class="menu-title text-gray-600">User Management</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
@@ -413,7 +412,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">User</span>
+                                            <span class="menu-title text-gray-600">User</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -425,7 +424,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Line</span>
+                                            <span class="menu-title text-gray-600">Line</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -437,7 +436,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Role</span>
+                                            <span class="menu-title text-gray-600">Role</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -449,7 +448,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title">Permission</span>
+                                            <span class="menu-title text-gray-600">Permission</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>

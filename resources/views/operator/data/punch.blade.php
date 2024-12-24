@@ -92,74 +92,132 @@
 </div>
 <!--end::Accordion -->
 
+{{-- Tabs --}}
+<div class="mx-10">
+    <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
+        <li class="nav-item">
+            <a class="btn btn-light-primary shadow shadow-sm mx-1 active" data-bs-toggle="tab" href="#all_data_tab">All</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-light-warning shadow shadow-sm mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">
+                Perlu Pengukuran 
+                <span class="badge badge-circle badge-light " id="badgePerluPengukuran">{{ count($dataPunchOlderThanOneYear) ?? '' }}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+{{-- end tabs --}}
+
 <!--begin Content-->
 <div class="mb-4 mx-10">
-    <div class="row g-5 gx-xl-10" id="cardContainer">
-        @foreach ($dataPunch as $data)
-            <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
-                data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_rejected == '1' ? 'rejected' : ($data->is_draft == '1' ? 'draft' : 'waiting')) }}" 
-                data-merk="{{ strtolower($data->merk) }}" 
-                data-nama-mesin="{{ strtolower($data->nama_mesin_cetak) }}" 
-                data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
-                data-bulan="{{ $data->bulan_pembuatan }}" 
-                data-tahun="{{ $data->tahun_pembuatan }}"
-                data-line="{{ $data->line_id }}">
-                <div class="card shadow-sm border-0 rounded-3 h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ strtoupper($data->merk) }}
-                            {{-- @if ($data->is_draft == '1')
-                                <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                            @elseif($data->is_draft == '0')
-                                <span class="badge badge-square badge-outline badge-warning">Waiting</span>
-                            @elseif ($data->is_approved == '1')
-                                @if ($data->is_approved == '1' && $data->is_draft == '0')
-                                    <span class="badge badge-square badge-outline badge-success">Approved</span>
-                                @elseif ($data->is_approved == '1' && $data->is_draft == '1')
-                                    <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                                @endif
-                            @endif --}}
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="all_data_tab" role="tabpanel">
+            <div class="row g-5 gx-xl-10" id="cardContainer">
+                @foreach ($dataPunchRecent as $data)
+                    <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
+                        data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_rejected == '1' ? 'rejected' : ($data->is_draft == '1' ? 'draft' : 'waiting')) }}" 
+                        data-merk="{{ strtolower($data->merk) }}" 
+                        data-nama-mesin="{{ strtolower($data->nama_mesin_cetak) }}" 
+                        data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
+                        data-line="{{ $data->line_id }}">
+                        <div class="card shadow-sm border-0 rounded-3 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ strtoupper($data->merk) }}
 
-
-                            @if ($data->is_approved == '1' && $data->is_draft == '0')
-                                <span class="badge badge-square badge-outline badge-success">Approved</span>
-                            @elseif ($data->is_rejected == '1') <!-- Check for rejection -->
-                                <span class="badge badge-square badge-outline badge-danger">Rejected</span>
-                            @else
-                                @if ($data->is_draft == '1')
-                                    <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                                @elseif ($data->is_draft == '0')
-                                    <span class="badge badge-square badge-outline badge-warning">Waiting</span>
-                                @endif
-                            @endif
-                        </h5>
-                        <div class="separator border-info border-3 my-4"></div>
-                        <p class="card-text">Bulan/Tahun Pembuatan: <strong>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</strong></p>
-                        <p class="card-text">Nama Mesin: <strong>{{ strtoupper($data->nama_mesin_cetak) }}</strong></p>
-                        <p class="card-text">Kode Produk: <strong>{{ strtoupper($data->kode_produk) }}</strong></p>
-                        <p class="card-text">Nama Produk: <strong>{{ strtoupper($data->nama_produk) }}</strong></p>
-                        <p class="card-text">Pengukuran Terakhir: <strong>{{ ucwords($data->masa_pengukuran) }}</strong></p>
-                        <p class="card-text">Tanggal Pengukuran: <strong>{{ date_format($data->created_at, 'd M Y')}}</strong></p>
-                        <p class="card-text">Tanggal Terakhir Diperbarui: <strong>{{ date_format($data->updated_at, 'd M Y')}}</strong></p>
-                        <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
-                            @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal and not rejected -->
-                                <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->punch_id}}" onclick="opsiPengukuran(this)">
-                                    <span class="fs-7">Pengukuran</span>
-                                </button>
-                            @endif
-                            <button class="btn btn-secondary" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
-                                <i class="ki-solid ki-eye fs-2"></i>
-                                <span class="fs-8">Lihat Data Pengukuran</span>
-                            </button>
+                                    @if ($data->is_approved == '1' && $data->is_draft == '0')
+                                        <span class="badge badge-square badge-outline badge-success">Approved</span>
+                                    @elseif ($data->is_rejected == '1') <!-- Check for rejection -->
+                                        <span class="badge badge-square badge-outline badge-danger">Rejected</span>
+                                    @else
+                                        @if ($data->is_draft == '1')
+                                            <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                        @elseif ($data->is_draft == '0')
+                                            <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                                        @endif
+                                    @endif
+                                </h5>
+                                <div class="separator border-info border-3 my-4"></div>
+                                <p class="card-text">Bulan/Tahun Pembuatan: <strong>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</strong></p>
+                                <p class="card-text">Nama Mesin: <strong>{{ strtoupper($data->nama_mesin_cetak) }}</strong></p>
+                                <p class="card-text">Kode Produk: <strong>{{ strtoupper($data->kode_produk) }}</strong></p>
+                                <p class="card-text">Nama Produk: <strong>{{ strtoupper($data->nama_produk) }}</strong></p>
+                                <p class="card-text">Pengukuran Terakhir: <strong>{{ ucwords($data->masa_pengukuran) }}</strong></p>
+                                <p class="card-text">Tanggal Pengukuran: <strong>{{ date_format($data->created_at, 'd M Y')}}</strong></p>
+                                <p class="card-text">Tanggal Terakhir Diperbarui: <strong>{{ date_format($data->updated_at, 'd M Y')}}</strong></p>
+                                <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
+                                    @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal and not rejected -->
+                                        <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->punch_id}}" onclick="opsiPengukuran(this)">
+                                            <span class="fs-7">Pengukuran</span>
+                                        </button>
+                                    @endif
+                                    <button class="btn btn-secondary" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
+                                        <i class="ki-solid ki-eye fs-2"></i>
+                                        <span class="fs-8">Lihat Data Pengukuran</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-        @endforeach
-    </div>
 
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-4">
-        <ul class="pagination"></ul>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-4" id="paginationAllData">
+                <ul class="pagination"></ul>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="perlu_ukur_tab" role="tabpanel">
+            {{-- Data Perlu Pengukuran --}}
+            {{-- Content --}}
+            <div class="row g-5 gx-xl-10" id="cardContainer">
+                @foreach ($dataPunchOlderThanOneYear as $data)
+                    <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
+                        data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_rejected == '1' ? 'rejected' : ($data->is_draft == '1' ? 'draft' : 'waiting')) }}" 
+                        data-merk="{{ strtolower($data->merk) }}" 
+                        data-nama-mesin="{{ strtolower($data->nama_mesin_cetak) }}" 
+                        data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
+                        data-line="{{ $data->line_id }}">
+                        <div class="card shadow-sm border-0 rounded-3 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ strtoupper($data->merk) }}
+                                    @if ($data->is_approved == '1')
+                                        <span class="badge badge-square badge-outline badge-success">Approved</span>
+                                    @elseif ($data->is_rejected == '1') <!-- Check for rejection -->
+                                        <span class="badge badge-square badge-outline badge-danger">Rejected</span>
+                                    @else
+                                        @if ($data->is_draft == '1')
+                                            <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                        @elseif ($data->is_draft == '0')
+                                            <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                                        @endif
+                                    @endif
+                                </h5>
+                                <div class="separator border-info border-3 my-4"></div>
+                                <p class="card-text">Bulan/Tahun Pembuatan: <strong>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</strong></p>
+                                <p class="card-text">Nama Mesin: <strong>{{ strtoupper($data->nama_mesin_cetak) }}</strong></p>
+                                <p class="card-text">Kode Produk: <strong>{{ strtoupper($data->kode_produk) }}</strong></p>
+                                <p class="card-text">Nama Produk: <strong>{{ strtoupper($data->nama_produk) }}</strong></p>
+                                <p class="card-text">Pengukuran Terakhir: <strong>{{ ucwords($data->masa_pengukuran) }}</strong></p>
+                                <p class="card-text">Tanggal Pengukuran: <strong>{{ date_format($data->created_at, 'd M Y')}}</strong></p>
+                                <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
+                                    @if($data->masa_pengukuran == '-') <!-- Check if there's no pengukuran awal -->
+                                        <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->punch_id}}" onclick="buatPengukuran(this)">Buat Pengukuran</button>
+                                    @endif
+                                    <button class="btn btn-secondary" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
+                                        <i class="ki-outline ki-eye fs-2"></i>
+                                        Lihat Data Pengukuran
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-4" id="paginationPerluPengukuran" style="display: none;">
+                <ul class="pagination"></ul>
+            </div>
+        </div>
     </div>
 </div>
 <!--end::Content-->
