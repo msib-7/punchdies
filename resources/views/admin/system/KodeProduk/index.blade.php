@@ -175,7 +175,7 @@
                         </div>
                         <!--begin::Actions-->
                         <div class="text-center pt-10">
-                            <button type="submit" onclick="this.disabled = true; $('#kt_modal_add_nm_produk_form').submit(); " class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -197,7 +197,7 @@
 <!--end::Modal - Add User-->
 
 <!--begin::Modal - Edit User-->
-<div class="modal fade" id="kt_modal_edit_nm_produk" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="kt_modal_edit_kd_produk" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered">
         <!--begin::Modal content-->
@@ -250,7 +250,7 @@
                         <div class="text-center pt-10">
                             <button type="reset" class="btn btn-light me-3"
                                 data-bs-dismiss="modal">Discard</button>
-                            <button type="submit" onclick="this.disabled = true; $('#kt_modal_edit_nm_produk_form').submit()" class="btn btn-primary" data-kt-users-modal-action="submit">
+                            <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -284,12 +284,12 @@
             success: function (response) {
 
                 //fill data to form
-                $('#id_KodeProduk   ').val(response.data.id);
+                $('#id_KodeProduk').val(response.data.id);
                 $('#title_edit').val(response.data.title);
                 $('#description_edit').val(response.data.description);
 
                 //open modal
-                $('#kt_modal_edit_mesin').modal('show');
+                $('#kt_modal_edit_kd_produk').modal('show');
             }
         });
     });

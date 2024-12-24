@@ -34,7 +34,7 @@ class AuditController extends Controller
             }
 
             // Hapus field yang tidak ingin ditampilkan dari newData
-            $fieldsToHideFromNewData = ['id', 'user_id', 'role_id', 'model_id', 'line_id', 'password'];
+            $fieldsToHideFromNewData = ['user_id', 'role_id', 'model_id', 'line_id', 'password'];
             foreach ($fieldsToHideFromNewData as $field) {
                 unset($newData[$field]);
             }
@@ -53,6 +53,11 @@ class AuditController extends Controller
                 // Pastikan oldData adalah array sebelum memeriksa kunci
                 if (is_array($oldData) && array_key_exists($key, $oldData)) {
                     if ($oldData[$key] !== $newValue) {
+                        $changes[$key] = [
+                            'old' => $oldData[$key],
+                            'new' => $newValue,
+                        ];
+                    }elseif($oldData[$key] === $newValue){
                         $changes[$key] = [
                             'old' => $oldData[$key],
                             'new' => $newValue,

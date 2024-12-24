@@ -80,6 +80,7 @@ class PunchController extends Controller
                         DB::raw('MAX(is_delete_punch) as is_delete_punch'),
                         DB::raw('MAX(is_draft) as is_draft'),
                         DB::raw('MAX(is_edit) as is_edit'),
+                        DB::raw('MAX(is_waiting) as is_waiting'),
                         DB::raw('MAX(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
                         DB::raw('MAX(created_at) as created_at'),
@@ -222,7 +223,21 @@ class PunchController extends Controller
                     ->latest()
                     ->get();
             }
-            $data['dataPunch'] = $dataPunch;
+            // Separate dataPunch into two collections
+            $oneYearAgo = Carbon::now()->subYear();
+            $dataPunchOlderThanOneYear = $dataPunch->filter(function ($punch) use ($oneYearAgo) {
+                return $punch->created_at <= $oneYearAgo;
+            });
+
+            $dataPunchRecent = $dataPunch->filter(function ($punch) use ($oneYearAgo) {
+                return $punch->created_at >= $oneYearAgo;
+            });
+
+            // Add the separated data to the data array
+            $data['dataPunchOlderThanOneYear'] = $dataPunchOlderThanOneYear;
+            $data['dataPunchRecent'] = $dataPunchRecent;
+            
+            // $data['dataPunch'] = $dataPunch;
 
             $ttlPunch = Punch::
                 where(['jenis' => $request->segment(3), 'is_delete_punch' => '0'])
@@ -283,7 +298,6 @@ class PunchController extends Controller
                 return $punch->created_at >= $oneYearAgo;
             });
 
-            // dd($dataPunchOlderThanOneYear, $dataPunchRecent);
             // Add the separated data to the data array
             $data['dataPunchOlderThanOneYear'] = $dataPunchOlderThanOneYear;
             $data['dataPunchRecent'] = $dataPunchRecent;

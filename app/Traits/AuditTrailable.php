@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Audit_tr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 trait AuditTrailable
 {
@@ -66,7 +67,7 @@ trait AuditTrailable
             $ip = request()->header('X-Forwarded-For') ?: $ip;
         }
 
-        \Log::info('User  IP: ' . $ip); // Log the IP for debugging
+        Log::info('User  IP: ' . $ip); // Log the IP for debugging
 
         Audit_tr::create(array_merge([
             'model' => get_class($this),

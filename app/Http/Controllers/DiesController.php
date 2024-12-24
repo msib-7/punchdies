@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dies;
+use App\Models\KodeProduk;
 use App\Models\Lines;
+use App\Models\Mesin;
+use App\Models\NamaProduk;
 use App\Models\PengukuranAwalDies;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 
@@ -33,14 +37,59 @@ class DiesController extends Controller
                         DB::raw('MAX(is_rejected) as is_rejected'),
                         DB::raw('MAX(created_at) as created_at')
                     )
-                    ->where('jenis', $request->segment(3))
-                    ->where('masa_pengukuran', '!=', 'pengukuran awal')
-                    ->where('masa_pengukuran', '!=', '-')
-                    ->where('is_delete_dies', '0')
-                    ->orWhere('jenis', $request->segment(3))
-                    ->where('masa_pengukuran', 'pengukuran awal')
-                    ->where('is_draft', '0')
-                    ->where('is_delete_dies', '0')
+                    ->where(function ($query) use ($request) {
+                        $query->where('jenis', $request->segment(3))
+                            ->where('is_delete_dies', '0')
+                            ->where(function ($query) {
+                                $query
+                                    ->where(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_approved', '=', '-');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '=', 'pengukuran awal')
+                                            ->where('is_draft', '=', '0')
+                                            ->where('is_approved', '=', '0');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_draft', '1')
+                                            ->where('is_approved', '=', '-');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_draft', '0')
+                                            ->where('is_approved', '=', '-');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_draft', '0')
+                                            ->where('is_approved', '=', '1');
+                                    });
+                            })
+                            ->orWhere('jenis', $request->segment(3))
+                            ->where('is_delete_punch', '0')
+                            ->where(function ($query) {
+                                $query->where(function ($query) {
+                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                        ->where('is_approved', '=', '0');
+                                })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '=', 'pengukuran awal')
+                                            ->where('is_approved', '=', '1');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '!=', 'pengukuran awal')
+                                            ->where('is_draft', '0')
+                                            ->where('is_approved', '=', '1');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_draft', '1')
+                                            ->where('is_approved', '=', '-');
+                                    });
+                            });
+                    })
                     ->groupBy('dies_id')
                     ->orderBy('created_at', "desc")
                     ->get();
@@ -64,21 +113,79 @@ class DiesController extends Controller
                         DB::raw('MAX(is_rejected) as is_rejected'),
                         DB::raw('MAX(created_at) as created_at')
                     )
-                    ->where('jenis', $request->segment(3))
-                    ->where('masa_pengukuran', '!=', 'pengukuran awal')
-                    ->where('masa_pengukuran', '!=', '-')
-                    ->where('line_id', auth()->user()->line_id)
-                    ->where('is_delete_dies', '0')
-                    ->orWhere('jenis', $request->segment(3))
-                    ->where('masa_pengukuran', 'pengukuran awal')
-                    ->where('is_draft', '0')
-                    ->where('line_id', auth()->user()->line_id)
-                    ->where('is_delete_dies', '0')
+                    ->where(function ($query) use ($request) {
+                        $query->where('jenis', $request->segment(3))
+                            ->where('line_id', auth()->user()->line_id)
+                            ->where('is_delete_dies', '0')
+                            ->where(function ($query) {
+                                $query
+                                    ->where(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_approved', '=', '-');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '=', 'pengukuran awal')
+                                            ->where('is_draft', '=', '0')
+                                            ->where('is_approved', '=', '0');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_draft', '1')
+                                            ->where('is_approved', '=', '-');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_draft', '0')
+                                            ->where('is_approved', '=', '-');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_draft', '0')
+                                            ->where('is_approved', '=', '1');
+                                    });
+                            })
+                            ->orWhere('jenis', 'dies')
+                            ->where('is_delete_dies', '0')
+                            ->where(function ($query) {
+                                $query->where(function ($query) {
+                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                        ->where('is_approved', '=', '0');
+                                })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '=', 'pengukuran awal')
+                                            ->where('is_approved', '=', '1');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->where('masa_pengukuran', '!=', 'pengukuran awal')
+                                            ->where('is_draft', '0')
+                                            ->where('is_approved', '=', '1');
+                                    })
+                                    ->orWhere(function ($query) {
+                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                            ->where('is_draft', '1')
+                                            ->where('is_approved', '=', '-');
+                                    });
+                            });
+                    })
                     ->groupBy('dies_id')
                     ->orderBy('created_at', "desc")
+                    ->latest()
                     ->get();
             }
-            $data['dataDies'] = $dataDies;
+            // Separate dataDies into two collections
+            $oneYearAgo = Carbon::now()->subYear();
+            $dataDiesOlderThanOneYear = $dataDies->filter(function ($dies) use ($oneYearAgo) {
+                return $dies->created_at <= $oneYearAgo;
+            });
+
+            $dataDiesRecent = $dataDies->filter(function ($dies) use ($oneYearAgo) {
+                return $dies->created_at >= $oneYearAgo;
+            });
+
+            // Add the separated data to the data array
+            $data['dataDiesOlderThanOneYear'] = $dataDiesOlderThanOneYear;
+            $data['dataDiesRecent'] = $dataDiesRecent;
+            // $data['dataDies'] = $dataDies;
 
             $ttlDies = Dies::
                 where(['jenis' => $request->segment(3), 'is_delete_dies' => '0'])
@@ -86,7 +193,10 @@ class DiesController extends Controller
                 ->count();
             $data['ttlDies'] = $ttlDies;
 
-            $Dataline = Lines::all();
+            $data['DataMesin'] = Mesin::select('id', 'title')->get();
+            $data['DataNamaProduk'] = NamaProduk::select('id', 'title')->get();
+            $data['DataKodeProduk'] = KodeProduk::select('id', 'title')->get();
+            $Dataline = Lines::where('nama_line', '!=', 'All Line')->get();
             $data['DataLine'] = $Dataline;
 
             $data['jenis'] = 'dies';
@@ -94,7 +204,7 @@ class DiesController extends Controller
             // dd($dataDies);
 
             return view('operator.data.dies', $data);
-        } elseif ($request->segment(2) != 'pengukuran-rutin') {
+        } elseif ($request->segment(2) == 'pengukuran-awal') {
             if (auth()->user()->lines->nama_line == 'All Line') {
                 $dataDies = Dies::query()
                     ->where('jenis', $request->segment(3))
@@ -116,8 +226,20 @@ class DiesController extends Controller
                     ->orderBy('created_at', "desc")
                     ->get();
             }
+            // Separate dataDies into two collections
+            $oneYearAgo = Carbon::now()->subYear();
+            $dataDiesOlderThanOneYear = $dataDies->filter(function ($dies) use ($oneYearAgo) {
+                return $dies->created_at <= $oneYearAgo;
+            });
 
-            $data['dataDies'] = $dataDies;
+            $dataDiesRecent = $dataDies->filter(function ($dies) use ($oneYearAgo) {
+                return $dies->created_at >= $oneYearAgo;
+            });
+
+            // Add the separated data to the data array
+            $data['dataDiesOlderThanOneYear'] = $dataDiesOlderThanOneYear;
+            $data['dataDiesRecent'] = $dataDiesRecent;
+            // $data['dataDies'] = $dataDies;
 
             $hasPengukuranAwal = Dies::where('masa_pengukuran', 'pengukuran awal')
                 ->where('jenis', $request->segment(3))
@@ -130,6 +252,9 @@ class DiesController extends Controller
             $data['ttlDies'] = $ttlDies;
             // dd($ttlDies);
 
+            $data['DataMesin'] = Mesin::select('id', 'title')->get();
+            $data['DataNamaProduk'] = NamaProduk::select('id', 'title')->get();
+            $data['DataKodeProduk'] = KodeProduk::select('id', 'title')->get();
             $Dataline = Lines::where('nama_line', '!=', 'All Line')->get();
             $data['DataLine'] = $Dataline;
 

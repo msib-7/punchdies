@@ -26,7 +26,7 @@
 <div class="accordion mb-4 mx-10" id="filterAccordion">
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 Filter Options
             </button>
         </h2>
@@ -87,12 +87,12 @@
 <div class="mx-10">
     <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
         <li class="nav-item">
-            <a class="btn btn-light-primary rounded-bottom-0 mx-1 active" data-bs-toggle="tab" href="#all_data_tab">All</a>
+            <a class="btn btn-light-primary shadow shadow-sm mx-1 active" data-bs-toggle="tab" href="#all_data_tab">All</a>
         </li>
         <li class="nav-item">
-            <a class="btn btn-light-warning rounded-bottom-0 mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">
+            <a class="btn btn-light-warning shadow shadow-sm mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">
                 Perlu Pengukuran 
-                <span class="badge badge-circle badge-warning" id="badgePerluPengukuran">{{ count($dataPunchOlderThanOneYear) }}</span>
+                <span class="badge badge-circle badge-light " id="badgePerluPengukuran">{{ count($dataPunchOlderThanOneYear) ?? '' }}</span>
             </a>
         </li>
     </ul>
@@ -277,7 +277,6 @@
                                         @endforeach
                                     </select>
                                     <!--end::Input-->
-                                    {{-- <input type="text" class="form-control" placeholder="Masukkan Nama Mesin" name="nama_mesin_cetak" /> --}}
                                 </div>
                             </div>
                             <div class="col-12">
