@@ -6,7 +6,7 @@
     <div id="kt_app_content_container" class="app-container container-fluid">
         <!--begin::Row-->
         <div class="row g-5 gx-xl-10 mb-5 mb-xl-10">
-            <div class="card">
+            <div class="card shadow">
                 <div class="card-header">
                     <h3 class="card-title">Lembar Disposal</h3>
                 </div>
