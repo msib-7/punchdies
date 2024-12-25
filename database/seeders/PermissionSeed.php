@@ -6,7 +6,7 @@ use App\Models\Permissions;
 use App\Models\Roles;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Route;
+use Illuminate\Support\Facades\Route;
 
 class PermissionSeed extends Seeder
 {

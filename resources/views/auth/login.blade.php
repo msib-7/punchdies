@@ -76,7 +76,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
             <!--begin::Body-->
             <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12">
                 <!--begin::Wrapper-->
-                <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-600px p-10"
+                <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-500px py-10"
                     style="box-shadow: 0px 3px 10px 5px #E2E2E9;">
                     <!--begin::Content-->
                     <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-400px">
@@ -87,25 +87,20 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 @csrf
                                 <!--begin::Heading-->
                                 <span class="d-flex flex-center">
-                                    <img alt="Logo" src="{{asset('assets/logo/kalbe_farma.png')}}"
+                                    <img alt="Logo" src="{{asset('assets/logo/Logo-Kalbe-&-BSB_Original.png')}}"
                                         class="h-100px app-sidebar-logo-default theme-light-show" />
-                                    <img alt="Logo" src="{{asset('assets/logo/kalbe_farma_svg.svg')}}"
+                                    <img alt="Logo" src="{{asset('assets/logo/Logo-Kalbe-&-BSB_Original.svg')}}"
                                         class="h-100px app-sidebar-logo-default theme-dark-show"
                                         style="filter: contrast(0);" />
                                 </span>
-                                <div class="text-center mb-11 mt-11">
-                                    <!--begin::Title-->
-                                    {{-- <h1 class="text-dark fw-bolder mb-3">Sign In</h1> --}}
-                                    <!--end::Title-->
-                                </div>
                                 <!--begin::Heading-->
                                 <!--begin::Heading-->
-                                <div class="text-center mb-11">
+                                <div class="text-center mb-8">
                                     <!--begin::Title-->
-                                    <h1 class="text-dark fw-bolder mb-3">Sign In</h1>
+                                    <h1 class="text-dark fw-bolder">Sign In</h1>
                                     <!--end::Title-->
                                     <!--begin::Subtitle-->
-                                    <div class="text-gray-500 fw-semibold fs-6">Sign in to start your session</div>
+                                    <div class="text-gray-500 fw-semibold fs-6">Portal Punch n Dies</div>
                                     <!--end::Subtitle=-->
                                 </div>
                                 <!--begin::Heading-->
@@ -144,35 +139,26 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 <!--end::Alert-->
                                 @endif
                                 <!--begin::Input group=-->
-                                <div class="fv-row mb-8">
-                                    <!--begin::Email-->
-                                    <input type="text" placeholder="Username" name="username" autocomplete="off"
-                                        class="form-control bg-transparent" />
-                                    <!--end::Email-->
+                                <div class="fv-row my-2">
+                                    <!--begin::Username-->
+                                    <label for="username" class="required form-label text-gray-600">Username</label>
+                                    <input type="text" id="username" placeholder="jhon doe" name="username" autocomplete="off"
+                                    class="form-control" />
+                                    <!--end::Username-->
                                 </div>
                                 <!--end::Input group=-->
-                                <div class="fv-row mb-3">
+                                <div class="fv-row mt-3 mb-2">
                                     <!--begin::Password-->
-                                    <input type="password" placeholder="Password" name="password" autocomplete="off"
-                                        class="form-control bg-transparent" />
+                                    <label for="password" class="required form-label  text-gray-600">Password</label>
+                                    <input type="password" id="password" placeholder="********" name="password" autocomplete="off"
+                                        class="form-control" />
                                     <!--end::Password-->
                                 </div>
                                 <!--end::Input group=-->
-                                <!--begin::Wrapper-->
-                                <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-                                    <div></div>
-                                    <!--begin::Link-->
-                                    {{-- <a href="../../demo1/dist/authentication/layouts/overlay/reset-password.html"
-                                        class="link-primary">Forgot Password ?</a> --}}
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Wrapper-->
                                 <!--begin::Submit button-->
-                                <div class="d-grid mb-10">
+                                <div class="d-grid mt-8">
                                     <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
-                                        <span class="indicator-label">Sign In</span>
-                                        <span class="indicator-progress">Please wait...
-                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                        <span class="indicator-label">Log in Accout</span>
                                     </button>
                                 </div>
                                 <!--end::Submit button-->
@@ -180,9 +166,9 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                             <!--end::Form-->
                         </div>
                         <!--end::Wrapper-->
-                        <div class="separator separator-content my-10"><i>guest</i></div>
+                        <div class="separator separator-content"><i>guest</i></div>
                         <!--begin::Footer-->
-                        <div class="d-grid mb-5">
+                        <div class="d-grid my-5">
                             <!--begin::Links-->
                             <div class="d-grid fw-semibold text-primary fs-base gap-5">
                                 <a href="{{url('audit-trail')}}" class="btn btn-outline btn-outline-dashed btn-outline" style="width: auto;">
@@ -231,6 +217,12 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                     url: "{{ url('/login-auth') }}",
                     type: "POST",
                     data: $(this).serialize(),
+                    beforeSend: function() {
+                        $('#kt_sign_in_submit').attr('disabled', true);
+                        $('#kt_sign_in_submit').html(
+                            '<span class="indicator-label">Logging in...</span>'
+                        );
+                    },
                     success: function(response) {
                         let timerInterval;
                         Swal.fire({
@@ -259,6 +251,10 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 text: xhr.responseJSON.error,
                             });
                         }
+                        $('#kt_sign_in_submit').attr('disabled', false);
+                        $('#kt_sign_in_submit').html(
+                            '<span class="indicator-label">Log in Accout</span>'
+                        );
                     }
                 });
             });

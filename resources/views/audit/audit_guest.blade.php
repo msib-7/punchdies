@@ -39,7 +39,9 @@
                     </div>
                     <div class="app-navbar flex-shrink-0">
                         <div class="app-navbar-item ms-1 ms-md-4">
-                            <a href="{{url('/')}}" class="btn btn-light-danger btn-lg"><i class="ki-solid ki-exit-left fs-1"></i> Back</a>
+                            <button id="btnBack" class="btn btn-light-danger btn-lg" data-route="{{ route('dashboard') }}">
+                                <i class="ki-solid ki-exit-left fs-1"></i> Back
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -187,6 +189,12 @@
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        document.getElementById('btnBack').addEventListener('click', function() {
+            // Get the route from the data-route attribute
+            var route = this.getAttribute('data-route');
+            // Redirect to the dashboard route
+            window.location.href = route;
         });
     </script>
     @include('layout.javascript')

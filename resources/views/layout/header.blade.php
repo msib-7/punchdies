@@ -1,6 +1,7 @@
 <div id="kt_app_header" class="app-header" data-kt-sticky="true" data-kt-sticky-activate="{default: true, lg: true}"
     data-kt-sticky-name="app-header-minimize" data-kt-sticky-offset="{default: '200px', lg: '0'}"
     data-kt-sticky-animation="false">
+
     <!--begin::Header container-->
     <div class="app-container container-fluid d-flex align-items-stretch justify-content-between"
         id="kt_app_header_container">
@@ -27,11 +28,45 @@
                 data-kt-drawer-toggle="#kt_app_header_menu_toggle" data-kt-swapper="true"
                 data-kt-swapper-mode="{default: 'append', lg: 'prepend'}"
                 data-kt-swapper-parent="{default: '#kt_app_body', lg: '#kt_app_header_wrapper'}">
+                <div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0" id="kt_app_header_menu" data-kt-menu="true">
+                    @php
+                        $uri = request()->route()->uri();
+                        $lastSegment = $uri; // Get the last segment of the URI
+
+                        // Remove underscores from the last segment
+                        $lastSegment = str_replace(['_', '-', 'pnd/'], ' ', $lastSegment);
+
+                        $lastSegment = str_replace('/', ' - ', $lastSegment);
+
+                        $breadcrumbs = [
+                            ['title' => 'Dashboard', 'url' => route('dashboard')],
+                            ['title' => ucwords($lastSegment), 'url' => ''], // Use the last segment as the title
+                        ];
+                    @endphp
+                    <!--begin:Menu item-->
+                    <div class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                        <!--begin:Menu link-->
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                @foreach($breadcrumbs as $breadcrumb)
+                                    <li class="breadcrumb-item">
+                                        @if($loop->last)
+                                            <span>{{ $breadcrumb['title'] }}</span>
+                                        @else
+                                            <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['title'] }}</a>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ol>
+                        </nav>
+                        <!--end:Menu link-->
+                    </div>
+                </div>
+                <!--end:Menu link-->
             </div>
             <!--end::Menu wrapper-->
             <!--begin::Navbar-->
             <div class="app-navbar flex-shrink-0">
-
                 <!--begin::Notifications-->
                 <div class="app-navbar-item ms-1 ms-md-4">
                     <!--begin::Menu- wrapper-->

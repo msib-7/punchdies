@@ -1,6 +1,9 @@
 <script>
     // var hostUrl = "assets/"; 
     $(document).ready(function () {
+        $('#form_table').DataTable({
+            responsive: true,
+        });
         $('#dboard_Table1').DataTable({
             layout: {
                 topStart: {

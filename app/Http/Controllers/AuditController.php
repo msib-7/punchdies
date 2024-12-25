@@ -8,6 +8,17 @@ use Route;
 
 class AuditController extends Controller
 {
+    public function index(Request $request)
+    {
+        // Fetch data from the database
+        $dataAudit = Audit_tr::with(['users', 'users.lines']) // Eager load relationships
+            ->orderBy('created_at', 'desc') // Order by date
+            ->get();
+
+        // Return data as JSON
+        return response()->json($dataAudit);
+    }
+
     public function audit_trail_guest(Request $request)
     {
         $dataAudit = Audit_tr::with('users')

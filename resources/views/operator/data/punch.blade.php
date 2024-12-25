@@ -393,8 +393,6 @@
         const merk = document.getElementById('merkFilter').value.toLowerCase();
         const tanggalPengukuran = document.getElementById('tanggalPengukuranFilter').value;
         const namaMesin = document.getElementById('namaMesinFilter').value.toLowerCase();
-        const bulan = document.getElementById('bulanFilter').value;
-        const tahun = document.getElementById('tahunFilter').value;
         const line = document.getElementById('lineFilter').value;
         const cards = document.querySelectorAll('.card-item');
 
@@ -410,8 +408,6 @@
             const cardMerk = card.getAttribute('data-merk');
             const cardNamaMesin = card.getAttribute('data-nama-mesin');
             const cardTanggalPengukuran = card.getAttribute('data-tanggal-pengukuran');
-            const cardBulan = card.getAttribute('data-bulan');
-            const cardTahun = card.getAttribute('data-tahun');
             const cardLine = card.getAttribute('data-line');
 
             const matchesSearch = title.includes(input) || bodyText.includes(input);
@@ -419,11 +415,9 @@
             const matchesMerk = cardMerk.includes(merk);
             const matchesNamaMesin = cardNamaMesin.includes(namaMesin);
             const matchesTanggal = tanggalPengukuran === '' || cardTanggalPengukuran === tanggalPengukuran;
-            const matchesBulan = bulan === '' || cardBulan === bulan;
-            const matchesTahun = tahun === '' || cardTahun === tahun;
             const matchesLine = line === '' || cardLine === line;
 
-            return matchesSearch && matchesStatus && matchesMerk && matchesNamaMesin && matchesTanggal && matchesBulan && matchesTahun && matchesLine;
+            return matchesSearch && matchesStatus && matchesMerk && matchesNamaMesin && matchesTanggal && matchesLine;
         });
 
         // Show only the visible cards

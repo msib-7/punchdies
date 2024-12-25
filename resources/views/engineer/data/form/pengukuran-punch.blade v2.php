@@ -12,16 +12,6 @@
             min-width: 130px;
         }
     }
-
-    /* Style for odd rows */
-    #form_table tbody tr:nth-child(odd) {
-        background-color: #e0e0e0; /* Darker gray for odd rows */
-    }
-
-    /* Style for even rows */
-    #form_table tbody tr:nth-child(even) {
-        background-color: #f2f2f2; /* Light gray for even rows */
-    }
 </style>
 <!--begin::Content-->
 <div id="kt_app_content" class="app-content flex-column-fluid">
@@ -218,18 +208,18 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table id="form_table" class="display" style="width:100%">
+                                                <table class="table" style="width:100%">
                                                     <thead id="table_head">
-                                                        <tr>
-                                                            <th class="min-width-responsive text-center">No</th>
-                                                            <th class="min-width-responsive text-center">A. Head Outer Diameter</th>
-                                                            <th class="min-width-responsive text-center">E. Neck Diameter</th>
-                                                            <th class="min-width-responsive text-center">F. Barrel</th>
-                                                            <th class="min-width-responsive text-center">G. Overall Length</th>
-                                                            <th class="min-width-responsive text-center">I. Tip Diameter 1</th>
-                                                            <th class="min-width-responsive text-center">J. Tip Diameter 2</th>
-                                                            <th class="min-width-responsive text-center">K. Cup Depth</th>
-                                                            <th class="min-width-responsive text-center">L. Working Length</th>
+                                                        <tr class="fw-bold fs-7 text-gray-800">
+                                                            <td class="min-width-responsive text-center">No</td>
+                                                            <td class="min-width-responsive text-center">A. Head Outer Diameter</td>
+                                                            <td class="min-width-responsive text-center">E. Neck Diameter</td>
+                                                            <td class="min-width-responsive text-center">F. Barrel</td>
+                                                            <td class="min-width-responsive text-center">G. Overall Length</td>
+                                                            <td class="min-width-responsive text-center">I. Tip Diameter 1</td>
+                                                            <td class="min-width-responsive text-center">J. Tip Diameter 2</td>
+                                                            <td class="min-width-responsive text-center">K. Cup Depth</td>
+                                                            <td class="min-width-responsive text-center">L. Working Length</td>
                                                             <td class="min-width-responsive text-center"></td>
                                                         </tr>
                                                     </thead>
@@ -556,44 +546,54 @@
 </script>
 <script>
     $(document).ready(function () {
-        // Check threshold for all inputs on document load
-        checkAllThresholds();
-
         //Table Body
+        
+        var tr = document.createElement('tr');
+        
         //No
-        <?php
-            $ch = $count_header;
-            $no = 0;
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = $count_header;
             foreach($draftPengukuran as $data){ ?>
-
-                // No Punch
-                var tr = document.createElement('tr'); // Create a new row
-                var td = tr.appendChild(document.createElement('td')); // Create a new column
-                var x = td.appendChild(document.createElement('INPUT')); // Create a new input
+                var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("class", "form-control text-center mb-2 ");
                 x.setAttribute("type", "text");
                 x.setAttribute("readonly", "readonly");
                 x.setAttribute("style", "cursor: not-allowed;");
-                x.setAttribute("value", "Punch <?= $ch++?>");
+                x.setAttribute("value", "Punch <?= $no++?>");
+            <?php }?>
+            document.getElementById("table_body").appendChild(tr);
+        //
 
-                // Head Outer Diameter
-                var td = tr.appendChild(document.createElement('td'));
+        //Head Outer Diameter
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = 0;
+            foreach($draftPengukuran as $data){ ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("maxlength", "6");
-                x.setAttribute("id", "hdo<?=$no?>");
+                x.setAttribute("id", "hdo");
                 x.setAttribute("name", "hdo[]");
                 // x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no]['head_outer_diameter']; ?>");
+                x.setAttribute("value", "<?= $draftPengukuran[$no++]['head_outer_diameter']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer; color: red;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
-
-                // Neck Diameter
-                var td = tr.appendChild(document.createElement('td'));
+                document.getElementById("table_body").appendChild(tr);
+                <?php 
+            }
+            ?>
+        //
+            
+        //Neck Diameter
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = 0;
+            foreach($draftPengukuran as $data){ ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
@@ -601,15 +601,23 @@
                 x.setAttribute("id", "ned<?=$no?>");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("maxlength", "4");
-                x.setAttribute("value", "<?= $draftPengukuran[$no]['neck_diameter']; ?>");
+                x.setAttribute("value", "<?= $draftPengukuran[$no++]['neck_diameter']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
+                document.getElementById("table_body").appendChild(tr);
+            <?php 
+            }
+            ?>
+        //
 
-                // Barrel
-                var td = tr.appendChild(document.createElement('td'));
+        //Barrel
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = 0;
+            foreach($draftPengukuran as $data){ ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
@@ -617,15 +625,22 @@
                 x.setAttribute("id", "bar<?=$no?>");
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no]['barrel']; ?>");
+                x.setAttribute("value", "<?= $draftPengukuran[$no++]['barrel']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
+                document.getElementById("table_body").appendChild(tr);
+            <?php 
+            }
+            ?>
+        //
 
-                // Overall Length
-                var td = tr.appendChild(document.createElement('td'));
+        //Overall Length
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = 0;
+            foreach($draftPengukuran as $data){ ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
@@ -633,15 +648,22 @@
                 x.setAttribute("id", "ovl<?=$no?>");
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no]['overall_length']; ?>");
+                x.setAttribute("value", "<?= $draftPengukuran[$no++]['overall_length']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
+                document.getElementById("table_body").appendChild(tr);
+            <?php 
+            }
+            ?>
+        //
 
-                // Tip Diameter 1
-                var td = tr.appendChild(document.createElement('td'));
+        //Tip Diameter 1
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = 0;
+            foreach($draftPengukuran as $data){ ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
@@ -649,15 +671,22 @@
                 x.setAttribute("id", "tip1<?=$no?>");
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_1']; ?>");
+                x.setAttribute("value", "<?= $draftPengukuran[$no++]['tip_diameter_1']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
+                document.getElementById("table_body").appendChild(tr);
+            <?php 
+            }
+            ?>
+        //
 
-                // Tip Diameter 2
-                var td = tr.appendChild(document.createElement('td'));
+        //Tip Diameter 2
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = 0;
+            foreach($draftPengukuran as $data){ ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
@@ -665,15 +694,22 @@
                 x.setAttribute("id", "tip2<?=$no?>");
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_2']; ?>");
+                x.setAttribute("value", "<?= $draftPengukuran[$no++]['tip_diameter_2']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
+                document.getElementById("table_body").appendChild(tr);
+            <?php 
+            }
+            ?>
+        //
 
-                // Cup Depth
-                var td = tr.appendChild(document.createElement('td'));
+        //Cup Depth
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = 0;
+            foreach($draftPengukuran as $data){ ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
@@ -681,15 +717,22 @@
                 x.setAttribute("id", "cup<?=$no?>");
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no]['cup_depth']; ?>");
+                x.setAttribute("value", "<?= $draftPengukuran[$no++]['cup_depth']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
+                document.getElementById("table_body").appendChild(tr);
+            <?php 
+            }
+            ?>
+        //
 
-                // Working Length
-                var td = tr.appendChild(document.createElement('td'));
+        //Working Length
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = 0;
+            foreach($draftPengukuran as $data){ ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
@@ -697,25 +740,32 @@
                 x.setAttribute("id", "wkl<?=$no?>");
                 x.setAttribute("maxlength", "6");
                 // x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no]['working_length']; ?>");
+                x.setAttribute("value", "<?= $draftPengukuran[$no++]['working_length']; ?>");
                 x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
+                document.getElementById("table_body").appendChild(tr);
+            <?php 
+            }
+            ?>
+        //
 
-                // Update Id
-                var td = tr.appendChild(document.createElement('td'));
+        //Update id
+            var td = tr.appendChild(document.createElement('td'));
+            <?php
+            $no = 0;
+            foreach($draftPengukuran as $data){ ?>
                 var a = td.appendChild(document.createElement('INPUT'));
                     a.setAttribute("type", "hidden");
-                    a.setAttribute("readonly", "readonly");
                     a.setAttribute("name", "update_id[]");
-                    a.setAttribute("value", "<?= $draftPengukuran[$no]['no']; ?>");
-                
+                    a.setAttribute("value", "<?= $draftPengukuran[$no++]['no']; ?>");
                 document.getElementById("table_body").appendChild(tr);
-        <?php $no++; } ?>
-
+            <?php 
+            }
+            ?>
         //
+
         //Get Last Id per page
             var last_id = td.appendChild(document.createElement('INPUT'));
             last_id.setAttribute("type", "hidden");
@@ -738,10 +788,13 @@
 
             var btn_next = document.createElement("BUTTON");
             btn_next.setAttribute("class", "btn btn-primary btn-small");
-            btn_next.setAttribute("id", "btn_next");
             btn_next.setAttribute("type", "button");
-            btn_next.setAttribute("onclick", "checkInvalid()"); // Change this line
-            
+            btn_next.setAttribute("onclick", "this.disabled=true; this.innerHTML ='Processing...'; form.submit();");
+            if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
+                btn_next.setAttribute("onclick", "saveData()");
+                btn_next.setAttribute("data-bs-toggle", "modal");
+                btn_next.setAttribute("data-bs-target", "#modal_confirm_pengukuran");
+            }
             var title2 = document.createTextNode("Next");
             btn_next.appendChild(title2);
 
@@ -749,133 +802,14 @@
             document.getElementById("btn-next").appendChild(btn_next);
         //
 
-        // Ketika Tab / Enter di click
-        $(".inputs").keydown(function (e) {
-            // Periksa apakah tombol yang ditekan adalah Tab atau Enter
-            if (e.key === "Tab" || e.key === "Enter") {
-                e.preventDefault();
-
-                // Dapatkan field input saat ini
-                var currentInput = $(this);
-                var currentRow = currentInput.closest('tr'); // Dapatkan baris saat ini
-                var currentIndex = currentInput.index(); // Dapatkan indeks input saat ini di baris
-
-                // Temukan input berikutnya di kolom yang sama dari baris berikutnya
-                var nextInput = currentRow.next().find('input.inputs').eq(currentIndex);
-
-                // Jika tidak ada input berikutnya di baris berikutnya, kembali ke baris pertama
-                if (nextInput.length === 0) {
-                    nextInput = currentRow.siblings().first().find('input.inputs').eq(currentIndex);
-                }
-
-                // Fokus pada input berikutnya
-                if (nextInput.length > 0) {
-                    nextInput.focus();
-                }
+        $(".inputs").keyup(function () {
+            if (this.value.length == this.maxLength) {
+                setTimeout(() => {
+                    $(this).next('.inputs').focus();
+                }, 500)
             }
         });
-
-        // Add event listener for input on inputs
-        $(".inputs").on("input", function () {
-            // Check if the input value length is equal to its maxlength
-            if (this.value.length >= this.maxLength) {
-                // Trigger the Enter key event
-                var event = jQuery.Event("keydown", { key: "Enter" });
-                $(this).trigger(event);
-                convertToDecimal(this);
-            }
-            
-            checkThreshold(this);
-            // Check for threshold
-        });
-
-        $(".inputs").on("blur", function () {
-            convertToDecimal(this);
-        });
-
-        function checkThreshold(input) {
-            var value = parseFloat(input.value); // Get the value of the input field
-            var warningIcon = $(input).siblings('.warning-icon'); // Get the warning icon
-
-            if (!isNaN(value) && value > 200) { // Check if the value is a number and greater than 10
-                $(input).addClass('is-invalid'); // Add a red border to the input field
-                input.focus(); // Optionally focus back on the input field
-            } else {
-                warningIcon.hide(); // Hide the warning icon if the value is within the threshold
-                $(input).removeClass('is-invalid'); // Remove the red border if the value is within the threshold
-            }
-        }
-
-        // Function to convert input value to decimal
-        function convertToDecimal(input) {
-            // Get the value of the input field
-            var value = parseFloat(input.value);
-            
-            // Check if the value is a valid number
-            if (!isNaN(value)) {
-                // Format the value to 2 decimal places
-                input.value = value.toFixed(2);
-            }
-        }
-
-        function checkAllThresholds() {
-            $(".inputs").each(function () {
-                checkThreshold(this); // Call checkThreshold for each input
-            });
-        }
-
     });
-    function checkWorkingLengthThreshold() {
-        let workingLengths = [];
-        
-        // Collect all working length values
-        $("input[name='wkl[]']").each(function() {
-            let value = parseFloat($(this).val());
-            if (!isNaN(value)) {
-                workingLengths.push(value);
-            }
-        });
-
-        if (workingLengths.length > 0) {
-            let maxLength = Math.max(...workingLengths);
-            let minLength = Math.min(...workingLengths);
-            let difference = maxLength - minLength;
-
-            // Check if the difference exceeds 0.05
-            if (difference > 0.05) {
-                // Show error message
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'The difference between the maximum and minimum Working Length exceeds 0.05!',
-                });
-                return false; // Indicate that there is an error
-            }
-        }
-        return true; // No error
-    }
-
-    // New function to check for invalid fields and proceed
-    function checkInvalid() {
-        // Check if there are any fields with the 'is-invalid' class
-        if ($('.is-invalid').length > 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please fill in all required fields correctly!',
-            });
-            return; // Prevent further action
-        }
-        // Check the Working Length threshold
-        if (!checkWorkingLengthThreshold()) {
-            return; // If there's an error, stop further action
-        }
-            if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
-                $('#modal_confirm_pengukuran').modal('show');
-            }
-        // If no invalid fields, proceed with saving data
-        // saveData(); // Call your saveData function
-    }
 
     function saveData() {
         $.ajax({
