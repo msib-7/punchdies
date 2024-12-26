@@ -76,8 +76,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
             <!--begin::Body-->
             <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12">
                 <!--begin::Wrapper-->
-                <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-500px py-10"
-                    style="box-shadow: 0px 3px 10px 5px #E2E2E9;">
+                <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-500px p-10 shadow border">
                     <!--begin::Content-->
                     <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-400px">
                         <!--begin::Wrapper-->
@@ -89,7 +88,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 <span class="d-flex flex-center">
                                     <img alt="Logo" src="{{asset('assets/logo/Logo-Kalbe-&-BSB_Original.png')}}"
                                         class="h-100px app-sidebar-logo-default theme-light-show" />
-                                    <img alt="Logo" src="{{asset('assets/logo/Logo-Kalbe-&-BSB_Original.svg')}}"
+                                    <img alt="Logo" src="{{asset('assets/logo/Logo-Kalbe-&-BSB_Original.png')}}"
                                         class="h-100px app-sidebar-logo-default theme-dark-show"
                                         style="filter: contrast(0);" />
                                 </span>

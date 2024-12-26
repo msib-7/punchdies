@@ -248,97 +248,18 @@
                                                 <div class="col text-end" id="btn-next">
                                                 </div>
                                             </div>
-                                            <div class="col-12 mt-10">
+                                            {{-- <div class="col-12 mt-10">
                                                 <div class="form-check form-switch form-check-custom form-check-solid">
                                                     <input class="form-check-input" name="CheckBoxDraft" type="checkbox" value="enabled" id="flexSwitch" checked='checked'/>
                                                     <label class="form-check-label" for="flexSwitch">
                                                         Simpan Draft untuk saat ini
                                                     </label>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                            {{-- @if ($page == session('jumlah_punch'))
-                                <div class="col-12 mt-5">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="d-flex flex-column mx-2">
-                                                        <label for="" class="required  form-label">Referensi Drawing</label>
-                                                        <input type="text" class="form-control" placeholder="Insert Reference Drawing"/>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <div class="row">
-                                                        <div class="col-12 mt-3">
-                                                            <div class="d-flex flex-column mx-2">
-                                                                <label for="" class="required form-label">Catatan</label>
-                                                                <textarea class="form-control @error('permasalahan') is-invalid @enderror" id="permasalahan" name="permasalahan"
-                                                                    rows="3" placeholder="Insert Your Message"></textarea>
-                                                                @error('permasalahan')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12 mt-3">
-                                                            <div class="d-flex flex-column mx-2">
-                                                                <label for="" class="required form-label">Kesimpulan</label>
-                                                                <textarea class="form-control @error('permasalahan') is-invalid @enderror" id="permasalahan" name="permasalahan"
-                                                                    rows="3" placeholder="Insert Your Message"></textarea>
-                                                                @error('permasalahan')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-md-6">
-                                                    <div class="d-flex flex-column mt-5">
-                                                        <label for="" class="required form-label">Kalibrasi Tools</label>
-                                                        <div class="table-responsive">
-                                                            <table class="table table-rounded table-bordered">
-                                                                <thead>
-                                                                    <tr class="fw-bold fs-6 text-gray-800">
-                                                                        <th>Tools</th>
-                                                                        <th>Tgl Kalibrasi</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>Micrometer Digital</td>
-                                                                        <td>
-                                                                            <input type="date" name="" id="" class="form-control">
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Caliper Digital</td>
-                                                                        <td>
-                                                                            <input type="date" name="" id="" class="form-control">
-                                                                        </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Dial Indicator Digital</td>
-                                                                        <td>
-                                                                            <input type="date" name="" id="" class="form-control">
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif --}}
                         </div>
                     </div>
                 </div>
@@ -554,6 +475,7 @@
         });
     });
 </script>
+
 <script>
     $(document).ready(function () {
         // Check threshold for all inputs on document load
@@ -806,7 +728,6 @@
             }
         }
 
-        // Function to convert input value to decimal
         function convertToDecimal(input) {
             // Get the value of the input field
             var value = parseFloat(input.value);
@@ -855,7 +776,6 @@
         return true; // No error
     }
 
-    // New function to check for invalid fields and proceed
     function checkInvalid() {
         // Check if there are any fields with the 'is-invalid' class
         if ($('.is-invalid').length > 0) {

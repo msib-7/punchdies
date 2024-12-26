@@ -2,13 +2,13 @@
     data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px"
     data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
     <!--begin::Logo-->
-    <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
+    <div class="app-sidebar-logo px-6 pt-10" id="kt_app_sidebar_logo">
         <!--begin::Logo image-->
         <a>
-            <img alt="Logo" src="{{asset('assets/logo/kalbe_farma_svg.svg')}}"
-                class="h-50px app-sidebar-logo-default theme-light-show" />
-            <img alt="Logo" src="{{asset('assets/logo/kalbe_farma_svg.svg')}}"
-                class="h-50px app-sidebar-logo-default theme-dark-show" style="filter: contrast(0);" />
+            <img alt="Logo" src="{{asset('assets/logo/Logo-Kalbe-&-BSB_Original.png')}}"
+                class="w-100 app-sidebar-logo-default theme-light-show" />
+            <img alt="Logo" src="{{asset('assets/logo/Logo-Kalbe-&-BSB_Original.png')}}"
+                class="w-100 app-sidebar-logo-default theme-dark-show" style="filter: contrast(0);" />
             <img alt="Logo" src="{{asset('assets/logo/logo_only.png')}}" class="h-50px app-sidebar-logo-minimize" />
         </a>
         <!--end::Logo image-->
