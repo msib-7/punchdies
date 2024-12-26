@@ -320,6 +320,20 @@ class PengukuranController extends Controller
                 session()->put('jumlah_dies', $jumlahDies);
 
                 return redirect(route('pnd.pa.dies.show-form'));
+            } elseif ($cekDraft->is_rejected == '1') {
+                session()->remove('jumlah_punch');
+                session()->remove('dies_id');
+                session()->remove('count');
+                session()->remove('show_id');
+                session()->remove('start_count');
+                session()->put('first_id', 0);
+                session()->put('dies_id', $id);
+
+                $jumlahDies = PengukuranAwalDies::where('dies_id', '=', $id)->count();
+                session()->put('jumlah_dies', $jumlahDies);
+
+                //Mengarahkan user ke tampilan form
+                return redirect(route('pnd.pa.dies.show-form'))->with('error', 'Data Pengukuran Punch ini telah di Reject, Silahkan Periksa Kembali Data Pengukuran!');
             }else{
                 // session()->remove('count');
                 $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
