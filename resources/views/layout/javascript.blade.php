@@ -3,6 +3,8 @@
     $(document).ready(function () {
         $('#form_table').DataTable({
             responsive: true,
+            paging: false,
+            info: false,
         });
         $('#dboard_Table1').DataTable({
             layout: {
@@ -334,6 +336,32 @@
             responsive: true,
             keys: true,
         });
+    });
+</script>
+<script>
+    // Function to check orientation and update display
+    function checkOrientation() {
+        if (window.innerHeight > window.innerWidth) {
+            // Portrait mode
+            document.getElementById('kt_app_content').style.display = 'none'; // Hide content
+            alert("Please rotate your device to landscape mode."); // Show alert
+        } else {
+            // Landscape mode
+            document.getElementById('kt_app_content').style.display = 'block'; // Show content
+        }
+    }
+
+    // Initial check on page load
+    checkOrientation();
+
+    // Add event listener for orientation change
+    window.addEventListener("orientationchange", function() {
+        checkOrientation();
+    });
+
+    // Also listen for resize events (for browsers that don't support orientationchange)
+    window.addEventListener("resize", function() {
+        checkOrientation();
     });
 </script>
 <!--begin::Global Javascript Bundle(mandatory for all pages)-->

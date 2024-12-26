@@ -226,6 +226,8 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
     });
 });
 
+Route::post('pnd/pa/{route}/get-data', [PengukuranController::class, 'preview']);
+
 
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     //QA

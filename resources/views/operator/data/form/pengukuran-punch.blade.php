@@ -377,20 +377,27 @@
 
         //Table Body
         
-        var tr = document.createElement('tr');
-
+        
         //No
+        <?php
+        $ch = $count_header;
+        $no = 0;
+        foreach($draftPengukuran as $data){ ?>
+
+            var tr = document.createElement('tr');
+            
             var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = $count_header;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("class", "form-control text-center mb-2");
-                x.setAttribute("type", "text");
-                x.setAttribute("readonly", "readonly");
-                x.setAttribute("value", "Punch <?= $no++?>");
-            <?php }?>
+            var x = td.appendChild(document.createElement('INPUT'));
+            x.setAttribute("class", "form-control text-center mb-2");
+            x.setAttribute("type", "text");
+            x.setAttribute("readonly", "readonly");
+            x.setAttribute("value", "Punch <?= $ch++?>");
+                
+                
+                
+                
             document.getElementById("table_body").appendChild(tr);
+        <?php }?>
         //
 
         //Overall Length

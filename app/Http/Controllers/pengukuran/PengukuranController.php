@@ -231,6 +231,20 @@ class PengukuranController extends Controller
 
                 //Mengarahkan user ke tampilan form
                 return redirect(route('pnd.pa.'.$route.'.show-form'));
+            }elseif($cekDraft->is_rejected == '1'){
+                session()->remove('jumlah_punch');
+                session()->remove('punch_id');
+                session()->remove('count');
+                session()->remove('show_id');
+                session()->remove('start_count');
+                session()->put('first_id', 0);
+                session()->put('punch_id', $id);
+
+                $jumlahPunch = PengukuranAwalPunch::where('punch_id', '=', $id)->count();
+                session()->put('jumlah_punch', $jumlahPunch);
+
+                //Mengarahkan user ke tampilan form
+                return redirect(route('pnd.pa.' . $route . '.show-form'))->with('error', 'Data Pengukuran Punch ini telah di Reject, Silahkan Periksa Kembali Data Pengukuran!');
             }else{
                 $pengukuran = session('masa_pengukuran_view');
                 if ($pengukuran == 'pengukuran awal') {
@@ -626,6 +640,7 @@ class PengukuranController extends Controller
 
     public function add_note_pa(Request $request)
     {
+        $id = $request->id;
         $note  = $request->note;
         $jenis = $request->segment(2);
         $route = $request->segment(3);
@@ -636,7 +651,7 @@ class PengukuranController extends Controller
         $caliper_digital = $request->caliper_digital;
         $dial_indicator_digital = $request->dial_indicator_digital;
 
-        return (new ServicePengukuranAwal)->addNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital);
+        return (new ServicePengukuranAwal)->addNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital);
     }
 
     //Pengukuran Rutin

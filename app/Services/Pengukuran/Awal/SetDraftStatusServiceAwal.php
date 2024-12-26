@@ -15,7 +15,7 @@ use App\Models\Punch;
  */
 class SetDraftStatusServiceAwal
 {
-    public function handle($jenis, $route)
+    public function handle($id, $jenis, $route)
     {
         // dd($jenis);
         session()->remove('first_id');
@@ -27,9 +27,9 @@ class SetDraftStatusServiceAwal
 
         if ($jenis == 'pengukuran-awal') {
             if (in_array($route, ['punch-atas', 'punch-bawah'])) {
-                $this->updatePunchDraftStatus($updateDraftStatus, $this->getRoute($route));
+                $this->updatePunchDraftStatus($id, $updateDraftStatus, $this->getRoute($route));
             } elseif ($route == 'dies') {
-                $this->updateDiesDraftStatus($updateDraftStatus);
+                $this->updateDiesDraftStatus($id, $updateDraftStatus);
             }
         }
     }
@@ -51,7 +51,7 @@ class SetDraftStatusServiceAwal
         }
     }
 
-    private function updatePunchDraftStatus($updateDraftStatus, $route)
+    private function updatePunchDraftStatus($id, $updateDraftStatus, $route)
     {
         $getData = PengukuranAwalPunch::query()
             ->where('punch_id', '=', session('punch_id'))
@@ -100,12 +100,12 @@ class SetDraftStatusServiceAwal
             ]);
 
             $this->sendToApproval($this->getSegment($route));
+
         }
 
-        return redirect(route('pnd.pa.'.$route.'.index'))->with($alert, $msg);
     }
 
-    private function updateDiesDraftStatus($updateDraftStatus)
+    private function updateDiesDraftStatus($id, $updateDraftStatus)
     {
         $getData = PengukuranAwalDies::query()
             ->where('dies_id', session('dies_id'))
@@ -143,7 +143,6 @@ class SetDraftStatusServiceAwal
             $this->sendToApproval('dies');
         }
 
-        return redirect(route('pnd.pa.dies.index'))->with($alert, $msg);
     }
 
     private function sendToApproval($jenis)

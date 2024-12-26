@@ -1,5 +1,71 @@
 @extends('layout.metronic')
 @section('main-content')
+<style>
+    @media (max-width: 576px) { /* Bootstrap's sm breakpoint */
+        .min-width-responsive {
+            min-width: 150px;
+        }
+    }
+
+    @media (min-width: 576px) and (max-width: 768px) { /* Bootstrap's md breakpoint */
+        .min-width-responsive {
+            min-width: 130px;
+        }
+    }
+
+    /* Style for odd rows */
+    #form_table tbody tr:nth-child(odd) {
+        background-color: gainsboro; /* Darker gray for odd rows */
+        border-radius: 10px; /* Adjust the value as needed for rounding */
+    }
+
+    /* Style for even rows */
+    #form_table tbody tr:nth-child(even) {
+        background-color: whitesmoke; /* Light gray for even rows */
+        border-radius: 10px; /* Adjust the value as needed for rounding */
+    }
+
+    /* To ensure the rounded corners are visible, you may need to add this */
+    #form_table tbody tr {
+        overflow: hidden; /* Prevents overflow of rounded corners */
+    }
+
+    /* Style for the DataTable */
+    #form_table {
+        border-collapse: separate; /* Ensure borders are separate for rounded corners */
+        border-radius: 10px; /* Adjust the value for desired roundness */
+        overflow: hidden; /* Prevent overflow of rounded corners */
+    }
+
+    /* Style for the table header */
+    #form_table thead {
+        background-color: burlywood; /* Change this to your desired header background color */
+        color: white; /* Change this to your desired text color */
+    }
+
+    /* Style for the table cells */
+    #form_table th, #form_table td {
+        border: 1px solid #dee2e6; /* Add border to cells */
+        border-radius: 0; /* Reset border-radius for cells */
+    }
+
+    /* Optional: Add rounded corners to the first and last cells of the header and body */
+    #form_table thead th:first-child {
+        border-top-left-radius: 10px; /* Top left corner */
+    }
+
+    #form_table thead th:last-child {
+        border-top-right-radius: 10px; /* Top right corner */
+    }
+
+    #form_table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 10px; /* Bottom left corner */
+    }
+
+    #form_table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 10px; /* Bottom right corner */
+    }
+</style>
 <!--begin::Content-->
 <div id="kt_app_content" class="app-content flex-column-fluid">
     <!--begin::Engage-->
@@ -189,22 +255,24 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <table id="Table_pengukuran" class="display" style="width:100%">
-                                                <thead id="table_head">
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>L. Outer Diameter</th>
-                                                        <th>M. Inner Diameter 1</th>
-                                                        <th>N. Inner Diameter 2</th>
-                                                        <th>O. Ketinggian Dies</th>
-                                                        <th>Visual</th>
-                                                        <th>Kesesuaian Dies</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="table_body">
-                                                </tbody>
-                                            </table>
+                                            <div class="table-responsive">
+                                                <table id="form_table" class="display" style="width:100%">
+                                                    <thead id="table_head">
+                                                        <tr>
+                                                            <th class="min-width-responsive text-center">No</th>
+                                                            <th class="min-width-responsive text-center">L. Outer Diameter</th>
+                                                            <th class="min-width-responsive text-center">M. Inner Diameter 1</th>
+                                                            <th class="min-width-responsive text-center">N. Inner Diameter 2</th>
+                                                            <th class="min-width-responsive text-center">O. Ketinggian Dies</th>
+                                                            <th class="min-width-responsive text-center">Visual</th>
+                                                            <th class="min-width-responsive text-center">Kesesuaian Dies</th>
+                                                            <th class="text-center"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="table_body">
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                         <div class="card-footer">
                                             <div id="last_id"></div>
@@ -359,164 +427,111 @@
 <script>
     $(document).ready(function () {
         // alert({{session('jumlah_ukur')}}); 
-        var tr = document.createElement('tr');
+        //Table Body
 
-        //No
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = $count_header;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("class", "form-control text-center mb-2");
-                x.setAttribute("type", "text");
-                x.setAttribute("readonly", "readonly");
-                x.setAttribute("value", "Dies <?= $no++?>");
-            <?php }?>
-            document.getElementById("table_body").appendChild(tr);
-        //
         
-        //Outer Diameter
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("type", "text");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("maxlength", "4");
-                x.setAttribute("name", "otd[]");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['outer_diameter']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
-
-        //Inner Diameter 1
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("type", "text");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("maxlength", "4");
-                x.setAttribute("name", "inn1[]");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['inner_diameter_1']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
-
-        //Inner Diameter 2
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("type", "text");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("maxlength", "4");
-                x.setAttribute("name", "inn2[]");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['inner_diameter_2']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
-
-        //Ketinggian Dies
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("type", "text");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("maxlength", "4");
-                x.setAttribute("name", "ktd[]");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['ketinggian_dies']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-                <?php 
-            }
-            ?>
-        //
+        //No
+        <?php
+        $ch = $count_header;
+        $no = 0;
+        foreach($draftPengukuran as $data){ ?>
             
-        //Visual Dies
+            var tr = document.createElement('tr');
             var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var select = td.appendChild(document.createElement('select'));
-                select.setAttribute('class', 'form-select text-center mb-2');
-                select.setAttribute('id', 'select_ok');
-                select.setAttribute('name', 'vis[]');
-                select.setAttribute("value", "<?= $draftPengukuran[$no++]['visual']; ?>");
-                var option_null = document.createElement('option');
-                var option_ok = document.createElement('option');
-                var option_nok = document.createElement('option');
-                option_null.text = '-';
-                option_null.setAttribute('value', '-')
-                option_ok.text = 'OK';
-                option_ok.setAttribute('value', 'OK')
-                option_nok.text = 'NOK';
-                option_nok.setAttribute('value', 'NOK')
-                select.appendChild(option_null);
-                select.appendChild(option_ok);
-                select.appendChild(option_nok);
-                document.getElementById("table_body").appendChild(tr);
-                <?php 
-            }
-            ?>
+            var x = td.appendChild(document.createElement('INPUT'));
+            x.setAttribute("class", "form-control text-center mb-2");
+            x.setAttribute("type", "text");
+            x.setAttribute("readonly", "readonly");
+            x.setAttribute("value", "Dies <?= $ch++?>");
+
+            var td = tr.appendChild(document.createElement('td'));
+            var x = td.appendChild(document.createElement('INPUT'));
+            x.setAttribute("type", "text");
+            x.setAttribute("data-index", "<?= $no ?>");
+            x.setAttribute("class", "inputs form-control text-center mb-2");
+            x.setAttribute("maxlength", "4");
+            x.setAttribute("name", "otd[]");
+            x.setAttribute("placeholder", "00.00");
+            x.setAttribute("value", "<?= $draftPengukuran[$no]['outer_diameter']; ?>");
+            
+            var td = tr.appendChild(document.createElement('td'));
+            var x = td.appendChild(document.createElement('INPUT'));
+            x.setAttribute("type", "text");
+            x.setAttribute("data-index", "<?= $no ?>");
+            x.setAttribute("class", "inputs form-control text-center mb-2");
+            x.setAttribute("maxlength", "4");
+            x.setAttribute("name", "inn1[]");
+            x.setAttribute("placeholder", "00.00");
+            x.setAttribute("value", "<?= $draftPengukuran[$no]['inner_diameter_1']; ?>");
+            
+            var td = tr.appendChild(document.createElement('td'));
+            var x = td.appendChild(document.createElement('INPUT'));
+            x.setAttribute("type", "text");
+            x.setAttribute("data-index", "<?= $no ?>");
+            x.setAttribute("class", "inputs form-control text-center mb-2");
+            x.setAttribute("maxlength", "4");
+            x.setAttribute("name", "inn2[]");
+            x.setAttribute("placeholder", "00.00");
+            x.setAttribute("value", "<?= $draftPengukuran[$no]['inner_diameter_2']; ?>");
+            
+            var td = tr.appendChild(document.createElement('td'));
+            var x = td.appendChild(document.createElement('INPUT'));
+            x.setAttribute("type", "text");
+            x.setAttribute("data-index", "<?= $no ?>");
+            x.setAttribute("class", "inputs form-control text-center mb-2");
+            x.setAttribute("maxlength", "4");
+            x.setAttribute("name", "ktd[]");
+            x.setAttribute("placeholder", "00.00");
+            x.setAttribute("value", "<?= $draftPengukuran[$no]['ketinggian_dies']; ?>");
+            
+            var td = tr.appendChild(document.createElement('td'));
+            var select = td.appendChild(document.createElement('select'));
+            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('id', 'select_ok');
+            select.setAttribute('name', 'vis[]');
+            select.setAttribute("value", "<?= $draftPengukuran[$no]['visual']; ?>");
+            var option_null = document.createElement('option');
+            var option_ok = document.createElement('option');
+            var option_nok = document.createElement('option');
+            option_null.text = '-';
+            option_null.setAttribute('value', '-')
+            option_ok.text = 'OK';
+            option_ok.setAttribute('value', 'OK')
+            option_nok.text = 'NOK';
+            option_nok.setAttribute('value', 'NOK')
+            select.appendChild(option_null);
+            select.appendChild(option_ok);
+            select.appendChild(option_nok);
+            
+            var td = tr.appendChild(document.createElement('td'));
+            var select = td.appendChild(document.createElement('select'));
+            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('id', 'select_ok');
+            select.setAttribute('name', 'ksd[]');
+            select.setAttribute("value", "<?= $draftPengukuran[$no]['kesesuaian_dies']; ?>");
+            var option_null = document.createElement('option');
+            var option_ok = document.createElement('option');
+            var option_nok = document.createElement('option');
+            option_null.text = '-';
+            option_null.setAttribute('value', '-')
+            option_ok.text = 'OK';
+            option_ok.setAttribute('value', 'OK')
+            option_nok.text = 'NOK';
+            option_nok.setAttribute('value', 'NOK')
+            select.appendChild(option_null);
+            select.appendChild(option_ok);
+            select.appendChild(option_nok);
+            
+            var td = tr.appendChild(document.createElement('td'));
+            var a = td.appendChild(document.createElement('INPUT'));
+            a.setAttribute("type", "hidden");
+            a.setAttribute("name", "update_id[]");
+            a.setAttribute("value", "<?= $draftPengukuran[$no]['no']; ?>");
+
+            document.getElementById("table_body").appendChild(tr);
+        <?php $no++; } ?>
         //
 
-        //Kesesuaian Dies
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var select = td.appendChild(document.createElement('select'));
-                select.setAttribute('class', 'form-select text-center mb-2');
-                select.setAttribute('id', 'select_ok');
-                select.setAttribute('name', 'ksd[]');
-                select.setAttribute("value", "<?= $draftPengukuran[$no++]['kesesuaian_dies']; ?>");
-                var option_null = document.createElement('option');
-                var option_ok = document.createElement('option');
-                var option_nok = document.createElement('option');
-                option_null.text = '-';
-                option_null.setAttribute('value', '-')
-                option_ok.text = 'OK';
-                option_ok.setAttribute('value', 'OK')
-                option_nok.text = 'NOK';
-                option_nok.setAttribute('value', 'NOK')
-                select.appendChild(option_null);
-                select.appendChild(option_ok);
-                select.appendChild(option_nok);
-                document.getElementById("table_body").appendChild(tr);
-                <?php 
-            }
-            ?>
-        //
-
-        //Update id
-            var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var a = td.appendChild(document.createElement('INPUT'));
-                    a.setAttribute("type", "hidden");
-                    a.setAttribute("name", "update_id[]");
-                    a.setAttribute("value", "<?= $draftPengukuran[$no++]['no']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
 
         //Get Last Id per page
             var last_id = td.appendChild(document.createElement('INPUT'));
@@ -538,34 +553,151 @@
         //Create Button Next
             var btn_next = document.createElement("BUTTON");
             btn_next.setAttribute("class", "btn btn-primary btn-small");
-            btn_next.setAttribute("type", "submit");
-            if (<?= $page ?> == <?= session('jumlah_dies') ?>) {
-                btn_next.setAttribute("onclick", "saveData()");
-                btn_next.setAttribute("type", "button");
-                btn_next.setAttribute("data-bs-toggle", "modal");
-                btn_next.setAttribute("data-bs-target", "#modal_confirm_pengukuran");
-            }
+            btn_next.setAttribute("id", "btn_next");
+            btn_next.setAttribute("type", "button");
+            btn_next.setAttribute("onclick", "checkInvalid()");
+
             var title2 = document.createTextNode("Next");
             btn_next.appendChild(title2);
+
             document.getElementById("btn-next").appendChild(btn_next);
         //
 
-        $(".inputs").keyup(function () {
-            if (this.value.length == this.maxLength) {
-                $(this).next('.inputs').focus();
+        // $(".inputs").keyup(function () {
+        //     if (this.value.length == this.maxLength) {
+        //         $(this).next('.inputs').focus();
+        //     }
+        // });
+
+        // Ketika Tab / Enter di click
+        $(".inputs").keydown(function (e) {
+            // Check if the pressed key is Tab or Enter
+            if (e.key === "Tab" || e.key === "Enter") {
+                e.preventDefault(); // Prevent the default tab behavior
+                
+                // Get the current input field
+                var currentInput = $(this);
+                var currentRow = currentInput.closest('tr'); // Get the current row
+                var currentIndex = currentInput.data('index'); // Get the data-index of the current input
+                
+                
+                // Find the next row
+                var nextRow = currentRow.next('tr'); // Get the next row
+
+                // If there is no next row, wrap around to the first row
+                if (nextRow.length === 0) {
+                    nextRow = currentRow.siblings().first(); // Get the first row
+                }
+
+                // Find the input in the next row with the same data-index + 1 and same name
+                var nextInput = nextRow.find('input[data-index="' + (parseInt(currentIndex) + 1) + '"][name="' + currentInput.attr('name') + '"]');
+
+                // If the next input does not exist, move to the next column in the same row
+                if (nextInput.length === 0) {
+                    // Find the next input with the same data-index + 1 in the same row
+                    nextInput = currentRow.find('input[data-index="' + (parseInt(currentIndex) + 1) + '"]');
+
+                    // If the next input still does not exist, move to the next row and reset the data-index to 0
+                    if (nextInput.length === 0) {
+                        nextInput = nextRow.find('input[data-index="0"][name="' + currentInput.attr('name') + '"]');
+                    }
+                }
+
+                // If the next input exists, focus on it
+                if (nextInput.length > 0) {
+                    nextInput.focus();
+                }
             }
         });
+
+        // Add event listener for input on inputs
+        $(".inputs").on("input", function () {
+            // Check if the input value length is equal to its maxlength
+            if (this.value.length >= this.maxLength) {
+                // Trigger the Enter key event
+                var event = jQuery.Event("keydown", { key: "Enter" });
+                $(this).trigger(event);
+                // convertToDecimal(this);
+            }
+            
+            // checkThreshold(this);
+            // Check for threshold
+        });
+
+        $(".inputs").on("blur", function () {
+            // convertToDecimal(this);
+        });
+
+        // function checkAllThresholds() {
+        //     var input = document.querySelectorAll('.inputs'); // Get all input fields
+            
+        //     $(input).each(function () {
+        //         checkThreshold(this); // Call checkThreshold for each input
+        //     });
+        // }
+
+        // function checkThreshold(input) {
+        //     var value = parseFloat(input.value); // Get the value of the input field
+        //     var warningIcon = $(input).siblings('.warning-icon'); // Get the warning icon
+
+        //     if (!isNaN(value) && value > 50) { // Check if the value is a number and greater than 10
+        //         $(input).addClass('is-invalid'); // Add a red border to the input field
+        //         input.focus(); // Optionally focus back on the input field
+        //     } else {
+        //         warningIcon.hide(); // Hide the warning icon if the value is within the threshold
+        //         $(input).removeClass('is-invalid'); // Remove the red border if the value is within the threshold
+        //     }
+        // }
+
+        function convertToDecimal(input) {
+            // Get the value of the input field
+            var value = parseFloat(input.value);
+            
+            // Check if the value is a valid number
+            if (!isNaN(value)) {
+                // Format the value to 2 decimal places
+                input.value = value.toFixed(2);
+            }
+        }
         
     });
-</script>
-<script>
-    function saveData() {
-            $.ajax({
-                url: "{{route('pnd.pa.dies.store')}}",
-                type: "POST",
-                data: $('#form_data_pengukuran').serialize(),
-            })
+
+    function checkInvalid() {
+        // Check if there are any fields with the 'is-invalid' class
+        if ($('.is-invalid').length > 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill in all required fields correctly!',
+            });
+            return; // Prevent further action
         }
+        saveData(); // Call your saveData function
+        if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
+            $('#modal_confirm_pengukuran').modal('show');
+            // $('#modal_preview_pengukuran').modal('show');
+        } else {
+            form.submit();
+        }
+        // If no invalid fields, proceed with saving data
+    }
+
+    function saveData() {
+        $.ajax({
+            url: "{{route('pnd.pa.dies.store')}}",
+            type: "POST",
+            data: $('#form_data_pengukuran').serialize(),
+            success: function(response) {
+                // Handle success (e.g., show a success message, redirect, etc.)
+            },
+            error: function(xhr, status, error) {
+                // Handle error (e.g., show an error message)
+                // Re-enable the button if needed
+                document.querySelector("#btn-next button").disabled = false; // Re-enable the button
+                document.querySelector("#btn-next button").innerHTML = "Next"; // Reset button text
+            }
+        });
+    }
 </script>
 <!--end::Content-->
 @endsection

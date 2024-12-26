@@ -10,20 +10,20 @@ use App\Models\Punch;
  */
 class ServicePengukuranAwal
 {
-    public function addNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital)
+    public function addNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital)
     {
         // $route = $this->getRoute($route);
         if (in_array($route, ['punch-atas', 'punch-bawah', 'dies'])) {
             $this->removeSessionVariables();
-
+            
             if (in_array($route, ['punch-atas', 'punch-bawah'])) {
-                $this->updatePunchNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital);
+                $this->updatePunchNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital);
             } elseif ($route == 'dies') {
-                $this->updateDiesNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital);
+                $this->updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital);
             }
         }
-
-        return redirect(route('pnd.pa.atas.index'));
+        
+        return redirect(route('pnd.pa.'. $this->getRoute($route) .'.view', $id));
     }
 
     private function getRoute($segment)
@@ -32,6 +32,8 @@ class ServicePengukuranAwal
             return 'atas';
         } elseif ($segment == 'punch-bawah') {
             return 'bawah';
+        }elseif ($segment == 'dies') {
+            return 'dies';
         }
     }
 
@@ -42,7 +44,7 @@ class ServicePengukuranAwal
         session()->remove('count_num');
     }
 
-    private function updatePunchNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital)
+    private function updatePunchNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital)
     {
         Punch::updateOrCreate([
             'punch_id' => session('punch_id'),
@@ -55,10 +57,10 @@ class ServicePengukuranAwal
             'kalibrasi_caliper' => $caliper_digital,
             'kalibrasi_dial_indicator' => $dial_indicator_digital,
         ]);
-        return (new SetDraftStatusServiceAwal)->handle($jenis, $route);
+        return (new SetDraftStatusServiceAwal)->handle($id, $jenis, $route);
     }
 
-    private function updateDiesNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital)
+    private function updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital)
     {
         Dies::updateOrCreate([
             'dies_id' => session('dies_id'),
@@ -71,6 +73,6 @@ class ServicePengukuranAwal
             'kalibrasi_caliper' => $caliper_digital,
             'kalibrasi_dial_indicator' => $dial_indicator_digital,
         ]);
-        return (new SetDraftStatusServiceAwal)->handle($jenis, $route);
+        return (new SetDraftStatusServiceAwal)->handle($id, $jenis, $route);
     }
 }

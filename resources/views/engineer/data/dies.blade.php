@@ -44,6 +44,7 @@
                             <option value="draft">Draft</option>
                             <option value="waiting">Waiting</option>
                             <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
                         </select>
                     </div>
                     <div class="col-6 col-md-2">
@@ -113,29 +114,63 @@
                     data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
                     data-line="{{ $data->line_id }}">
                     <div class="card shadow-sm border-0 rounded-3 h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ strtoupper($data->merk) }}
-                                @if($data->is_draft == '1')
-                                    <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                                @elseif ($data->is_waiting == '1')
-                                    <span class="badge badge-square badge-outline badge-warning">Waiting</span>
-                                @elseif ($data->is_approved == '1')
-                                    <span class="badge badge-square badge-outline badge-success">Approved</span>
-                                @elseif ($data->is_rejected == '1')
-                                    <span class="badge badge-square badge-outline badge-success">Rejected</span>
-                                @else
-                                    @if ($data->is_draft == '1')
-                                        <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                        <div class="card-header">
+                            <!--begin::Title-->
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold text-gray-800">{{ strtoupper($data->merk) }}</span>
+                            </h3>
+                            <!--end::Title-->
+                            <!--begin::Toolbar-->
+                            <div class="card-toolbar">
+                                @if ($data->is_approved == '1')
+                                        <span class="badge badge-square badge-outline badge-success">Approved</span>
+                                    @elseif ($data->is_rejected == '1') <!-- Check for rejection -->
+                                        <span class="badge badge-square badge-outline badge-danger">Rejected</span>
+                                    @else
+                                        @if ($data->is_draft == '1')
+                                            <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                        @elseif ($data->is_draft == '0')
+                                            <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                                        @endif
                                     @endif
-                                @endif
-                            </h5>
-                            <div class="separator border-info border-3 my-4"></div>
-                            <p class="card-text">Bulan/Tahun Pembuatan: <strong>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</strong></p>
-                            <p class="card-text">Nama Mesin: <strong>{{ strtoupper($data->nama_mesin_cetak) }}</strong></p>
-                            <p class="card-text">Kode Produk: <strong>{{ strtoupper($data->kode_produk) }}</strong></p>
-                            <p class="card-text">Nama Produk: <strong>{{ strtoupper($data->nama_produk) }}</strong></p>
-                            <p class="card-text">Pengukuran Terakhir: <strong>{{ ucwords($data->masa_pengukuran) }}</strong></p>
-                            <p class="card-text">Tanggal Pengukuran: <strong>{{ date_format($data->created_at, 'd M Y')}}</strong></p>
+                            </div>
+                            <!--end::Toolbar-->
+                        </div>
+                        <div class="card-body">
+                            <table class="card-text">
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Bulan/Tahun Pembuatan</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nama Mesin</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ strtoupper($data->nama_mesin_cetak) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Kode Produk</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ strtoupper($data->kode_produk) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nama Produk</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ strtoupper($data->nama_produk) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Pengukuran Terakhir</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ strtoupper($data->masa_pengukuran) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Tanggal Pengukuran</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ date_format($data->created_at, 'd M Y')}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
                                 @if($hasPengukuranAwal) <!-- Check if there's no pengukuran awal -->
                                 <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="buatPengukuran(this)">Buat Pengukuran</button>
@@ -167,29 +202,63 @@
                     data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
                     data-line="{{ $data->line_id }}">
                     <div class="card shadow-sm border-0 rounded-3 h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ strtoupper($data->merk) }}
-                                @if($data->is_draft == '1')
-                                    <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                                @elseif ($data->is_waiting == '1')
-                                    <span class="badge badge-square badge-outline badge-warning">Waiting</span>
-                                @elseif ($data->is_approved == '1')
-                                    <span class="badge badge-square badge-outline badge-success">Approved</span>
-                                @elseif ($data->is_rejected == '1')
-                                    <span class="badge badge-square badge-outline badge-success">Rejected</span>
-                                @else
-                                    @if ($data->is_draft == '1')
-                                        <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                        <div class="card-header">
+                            <!--begin::Title-->
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold text-gray-800">{{ strtoupper($data->merk) }}</span>
+                            </h3>
+                            <!--end::Title-->
+                            <!--begin::Toolbar-->
+                            <div class="card-toolbar">
+                                @if ($data->is_approved == '1')
+                                        <span class="badge badge-square badge-outline badge-success">Approved</span>
+                                    @elseif ($data->is_rejected == '1') <!-- Check for rejection -->
+                                        <span class="badge badge-square badge-outline badge-danger">Rejected</span>
+                                    @else
+                                        @if ($data->is_draft == '1')
+                                            <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                        @elseif ($data->is_draft == '0')
+                                            <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                                        @endif
                                     @endif
-                                @endif
-                            </h5>
-                            <div class="separator border-info border-3 my-4"></div>
-                            <p class="card-text">Bulan/Tahun Pembuatan: <strong>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</strong></p>
-                            <p class="card-text">Nama Mesin: <strong>{{ strtoupper($data->nama_mesin_cetak) }}</strong></p>
-                            <p class="card-text">Kode Produk: <strong>{{ strtoupper($data->kode_produk) }}</strong></p>
-                            <p class="card-text">Nama Produk: <strong>{{ strtoupper($data->nama_produk) }}</strong></p>
-                            <p class="card-text">Pengukuran Terakhir: <strong>{{ ucwords($data->masa_pengukuran) }}</strong></p>
-                            <p class="card-text">Tanggal Pengukuran: <strong>{{ date_format($data->created_at, 'd M Y')}}</strong></p>
+                            </div>
+                            <!--end::Toolbar-->
+                        </div>
+                        <div class="card-body">
+                            <table class="card-text">
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Bulan/Tahun Pembuatan</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nama Mesin</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ strtoupper($data->nama_mesin_cetak) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Kode Produk</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ strtoupper($data->kode_produk) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nama Produk</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ strtoupper($data->nama_produk) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Pengukuran Terakhir</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ strtoupper($data->masa_pengukuran) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Tanggal Pengukuran</strong></td>
+                                        <td><span class="px-2">:</span></td>
+                                        <td>{{ date_format($data->created_at, 'd M Y')}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
                                 @if($hasPengukuranAwal) <!-- Check if there's no pengukuran awal -->
                                 <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="buatPengukuran(this)">Buat Pengukuran</button>

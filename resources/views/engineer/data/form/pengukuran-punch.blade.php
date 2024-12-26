@@ -15,12 +15,55 @@
 
     /* Style for odd rows */
     #form_table tbody tr:nth-child(odd) {
-        background-color: #e0e0e0; /* Darker gray for odd rows */
+        background-color: gainsboro; /* Darker gray for odd rows */
+        border-radius: 10px; /* Adjust the value as needed for rounding */
     }
 
     /* Style for even rows */
     #form_table tbody tr:nth-child(even) {
-        background-color: #f2f2f2; /* Light gray for even rows */
+        background-color: whitesmoke; /* Light gray for even rows */
+        border-radius: 10px; /* Adjust the value as needed for rounding */
+    }
+
+    /* To ensure the rounded corners are visible, you may need to add this */
+    #form_table tbody tr {
+        overflow: hidden; /* Prevents overflow of rounded corners */
+    }
+
+    /* Style for the DataTable */
+    #form_table {
+        border-collapse: separate; /* Ensure borders are separate for rounded corners */
+        border-radius: 10px; /* Adjust the value for desired roundness */
+        overflow: hidden; /* Prevent overflow of rounded corners */
+    }
+
+    /* Style for the table header */
+    #form_table thead {
+        background-color: burlywood; /* Change this to your desired header background color */
+        color: white; /* Change this to your desired text color */
+    }
+
+    /* Style for the table cells */
+    #form_table th, #form_table td {
+        border: 1px solid #dee2e6; /* Add border to cells */
+        border-radius: 0; /* Reset border-radius for cells */
+    }
+
+    /* Optional: Add rounded corners to the first and last cells of the header and body */
+    #form_table thead th:first-child {
+        border-top-left-radius: 10px; /* Top left corner */
+    }
+
+    #form_table thead th:last-child {
+        border-top-right-radius: 10px; /* Top right corner */
+    }
+
+    #form_table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 10px; /* Bottom left corner */
+    }
+
+    #form_table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 10px; /* Bottom right corner */
     }
 </style>
 <!--begin::Content-->
@@ -230,7 +273,7 @@
                                                             <th class="min-width-responsive text-center">J. Tip Diameter 2</th>
                                                             <th class="min-width-responsive text-center">K. Cup Depth</th>
                                                             <th class="min-width-responsive text-center">L. Working Length</th>
-                                                            <td class="min-width-responsive text-center"></td>
+                                                            <td class="text-center hidden"></td>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="table_body">
@@ -326,6 +369,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
+                                <input type="text" name="id" value="{{$labelPunch->punch_id}}" hidden>
                                 <div class="col-12">
                                     <div class="d-flex flex-column mx-2">
                                         <label for="referensi_drawing" class="required form-label">Referensi Drawing</label>
@@ -397,32 +441,6 @@
     </div>
 </div>
 
-<script>
-    // Function to check orientation and update display
-    function checkOrientation() {
-        if (window.innerHeight > window.innerWidth) {
-            // Portrait mode
-            document.getElementById('kt_app_content').style.display = 'none'; // Hide content
-            alert("Please rotate your device to landscape mode."); // Show alert
-        } else {
-            // Landscape mode
-            document.getElementById('content').style.display = 'block'; // Show content
-        }
-    }
-
-    // Initial check on page load
-    checkOrientation();
-
-    // Add event listener for orientation change
-    window.addEventListener("orientationchange", function() {
-        checkOrientation();
-    });
-
-    // Also listen for resize events (for browsers that don't support orientationchange)
-    window.addEventListener("resize", function() {
-        checkOrientation();
-    });
-</script>
 
 <script>
     $(document).ready(function () {
@@ -479,7 +497,7 @@
 <script>
     $(document).ready(function () {
         // Check threshold for all inputs on document load
-        checkAllThresholds();
+        // new checkAllThresholds();
 
         //Table Body
         //No
@@ -502,6 +520,7 @@
                 var td = tr.appendChild(document.createElement('td'));
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("maxlength", "6");
                 x.setAttribute("id", "hdo<?=$no?>");
@@ -518,6 +537,7 @@
                 var td = tr.appendChild(document.createElement('td'));
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "ned[]");
                 x.setAttribute("id", "ned<?=$no?>");
@@ -534,6 +554,7 @@
                 var td = tr.appendChild(document.createElement('td'));
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "bar[]");
                 x.setAttribute("id", "bar<?=$no?>");
@@ -550,6 +571,7 @@
                 var td = tr.appendChild(document.createElement('td'));
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "ovl[]");
                 x.setAttribute("id", "ovl<?=$no?>");
@@ -566,6 +588,7 @@
                 var td = tr.appendChild(document.createElement('td'));
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "tip1[]");
                 x.setAttribute("id", "tip1<?=$no?>");
@@ -582,6 +605,7 @@
                 var td = tr.appendChild(document.createElement('td'));
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "tip2[]");
                 x.setAttribute("id", "tip2<?=$no?>");
@@ -598,6 +622,7 @@
                 var td = tr.appendChild(document.createElement('td'));
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "cup[]");
                 x.setAttribute("id", "cup<?=$no?>");
@@ -614,6 +639,7 @@
                 var td = tr.appendChild(document.createElement('td'));
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "wkl[]");
                 x.setAttribute("id", "wkl<?=$no?>");
@@ -662,7 +688,7 @@
             btn_next.setAttribute("class", "btn btn-primary btn-small");
             btn_next.setAttribute("id", "btn_next");
             btn_next.setAttribute("type", "button");
-            btn_next.setAttribute("onclick", "checkInvalid()"); // Change this line
+            btn_next.setAttribute("onclick", "checkInvalid()");
             
             var title2 = document.createTextNode("Next");
             btn_next.appendChild(title2);
@@ -673,24 +699,39 @@
 
         // Ketika Tab / Enter di click
         $(".inputs").keydown(function (e) {
-            // Periksa apakah tombol yang ditekan adalah Tab atau Enter
+            // Check if the pressed key is Tab or Enter
             if (e.key === "Tab" || e.key === "Enter") {
-                e.preventDefault();
-
-                // Dapatkan field input saat ini
+                e.preventDefault(); // Prevent the default tab behavior
+                
+                // Get the current input field
                 var currentInput = $(this);
-                var currentRow = currentInput.closest('tr'); // Dapatkan baris saat ini
-                var currentIndex = currentInput.index(); // Dapatkan indeks input saat ini di baris
+                var currentRow = currentInput.closest('tr'); // Get the current row
+                var currentIndex = currentInput.data('index'); // Get the data-index of the current input
+                
+                
+                // Find the next row
+                var nextRow = currentRow.next('tr'); // Get the next row
 
-                // Temukan input berikutnya di kolom yang sama dari baris berikutnya
-                var nextInput = currentRow.next().find('input.inputs').eq(currentIndex);
-
-                // Jika tidak ada input berikutnya di baris berikutnya, kembali ke baris pertama
-                if (nextInput.length === 0) {
-                    nextInput = currentRow.siblings().first().find('input.inputs').eq(currentIndex);
+                // If there is no next row, wrap around to the first row
+                if (nextRow.length === 0) {
+                    nextRow = currentRow.siblings().first(); // Get the first row
                 }
 
-                // Fokus pada input berikutnya
+                // Find the input in the next row with the same data-index + 1 and same name
+                var nextInput = nextRow.find('input[data-index="' + (parseInt(currentIndex) + 1) + '"][name="' + currentInput.attr('name') + '"]');
+
+                // If the next input does not exist, move to the next column in the same row
+                if (nextInput.length === 0) {
+                    // Find the next input with the same data-index + 1 in the same row
+                    nextInput = currentRow.find('input[data-index="' + (parseInt(currentIndex) + 1) + '"]');
+
+                    // If the next input still does not exist, move to the next row and reset the data-index to 0
+                    if (nextInput.length === 0) {
+                        nextInput = nextRow.find('input[data-index="0"][name="' + currentInput.attr('name') + '"]');
+                    }
+                }
+
+                // If the next input exists, focus on it
                 if (nextInput.length > 0) {
                     nextInput.focus();
                 }
@@ -704,29 +745,37 @@
                 // Trigger the Enter key event
                 var event = jQuery.Event("keydown", { key: "Enter" });
                 $(this).trigger(event);
-                convertToDecimal(this);
+                // convertToDecimal(this);
             }
             
-            checkThreshold(this);
+            // checkThreshold(this);
             // Check for threshold
         });
 
         $(".inputs").on("blur", function () {
-            convertToDecimal(this);
+            // convertToDecimal(this);
         });
 
-        function checkThreshold(input) {
-            var value = parseFloat(input.value); // Get the value of the input field
-            var warningIcon = $(input).siblings('.warning-icon'); // Get the warning icon
+        // function checkAllThresholds() {
+        //     var input = document.querySelectorAll('.inputs'); // Get all input fields
+            
+        //     $(input).each(function () {
+        //         checkThreshold(this); // Call checkThreshold for each input
+        //     });
+        // }
 
-            if (!isNaN(value) && value > 200) { // Check if the value is a number and greater than 10
-                $(input).addClass('is-invalid'); // Add a red border to the input field
-                input.focus(); // Optionally focus back on the input field
-            } else {
-                warningIcon.hide(); // Hide the warning icon if the value is within the threshold
-                $(input).removeClass('is-invalid'); // Remove the red border if the value is within the threshold
-            }
-        }
+        // function checkThreshold(input) {
+        //     var value = parseFloat(input.value); // Get the value of the input field
+        //     var warningIcon = $(input).siblings('.warning-icon'); // Get the warning icon
+
+        //     if (!isNaN(value) && value > 50) { // Check if the value is a number and greater than 10
+        //         $(input).addClass('is-invalid'); // Add a red border to the input field
+        //         input.focus(); // Optionally focus back on the input field
+        //     } else {
+        //         warningIcon.hide(); // Hide the warning icon if the value is within the threshold
+        //         $(input).removeClass('is-invalid'); // Remove the red border if the value is within the threshold
+        //     }
+        // }
 
         function convertToDecimal(input) {
             // Get the value of the input field
@@ -739,11 +788,6 @@
             }
         }
 
-        function checkAllThresholds() {
-            $(".inputs").each(function () {
-                checkThreshold(this); // Call checkThreshold for each input
-            });
-        }
 
     });
     function checkWorkingLengthThreshold() {
@@ -786,15 +830,14 @@
             });
             return; // Prevent further action
         }
-        // Check the Working Length threshold
-        if (!checkWorkingLengthThreshold()) {
-            return; // If there's an error, stop further action
+        saveData(); // Call your saveData function
+        if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
+            $('#modal_confirm_pengukuran').modal('show');
+            // $('#modal_preview_pengukuran').modal('show');
+        } else {
+            form.submit();
         }
-            if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
-                $('#modal_confirm_pengukuran').modal('show');
-            }
         // If no invalid fields, proceed with saving data
-        // saveData(); // Call your saveData function
     }
 
     function saveData() {
