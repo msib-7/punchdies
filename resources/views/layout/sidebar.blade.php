@@ -344,7 +344,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-more-2 fs-2"></i>
                                     </span>
-                                    <span class="menu-title text-gray-600">System</span>
+                                    <span class="menu-title text-gray-600">Systems</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
