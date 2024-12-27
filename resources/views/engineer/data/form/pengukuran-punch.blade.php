@@ -524,10 +524,10 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("maxlength", "6");
                 x.setAttribute("id", "hdo<?=$no?>");
-                x.setAttribute("name", "hdo[]");
+                x.setAttribute("name", "hdo[]");    
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['head_outer_diameter']; ?>");
-                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
@@ -544,7 +544,7 @@
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['neck_diameter']; ?>");
-                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
@@ -561,7 +561,7 @@
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['barrel']; ?>");
-                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
@@ -578,7 +578,7 @@
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['overall_length']; ?>");
-                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
@@ -595,7 +595,7 @@
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_1']; ?>");
-                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
@@ -612,7 +612,7 @@
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_2']; ?>");
-                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
@@ -629,7 +629,7 @@
                 x.setAttribute("maxlength", "4");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['cup_depth']; ?>");
-                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
@@ -646,7 +646,7 @@
                 x.setAttribute("maxlength", "6");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['working_length']; ?>");
-                x.setAttribute("onkeypress", "return event.keyCode != 13;");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");

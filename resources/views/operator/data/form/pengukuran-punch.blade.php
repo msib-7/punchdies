@@ -194,7 +194,7 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <table id="Table_pengukuran" class="display" style="width:100%">
+                                            <table id="form_table" class="display" style="width:100%">
                                                 <thead id="table_head">
                                                     <tr class="fw-bold fs-7 text-gray-800">
                                                         <td class="text-center">No</td>
@@ -373,11 +373,8 @@
 
 <script>
     $(document).ready(function () {
-        // alert({{session('jumlah_ukur')}}); 
-
         //Table Body
-        
-        
+
         //No
         <?php
         $ch = $count_header;
@@ -386,47 +383,33 @@
 
             var tr = document.createElement('tr');
             
+            //NO
             var td = tr.appendChild(document.createElement('td'));
             var x = td.appendChild(document.createElement('INPUT'));
-            x.setAttribute("class", "form-control text-center mb-2");
-            x.setAttribute("type", "text");
-            x.setAttribute("readonly", "readonly");
-            x.setAttribute("value", "Punch <?= $ch++?>");
-                
-                
-                
-                
-            document.getElementById("table_body").appendChild(tr);
-        <?php }?>
-        //
+                x.setAttribute("class", "form-control text-center mb-2");
+                x.setAttribute("data-index", "<?= $no ?>");
+                x.setAttribute("readonly", "readonly");
+                x.setAttribute("style", "cursor: not-allowed;");
+                x.setAttribute("value", "Punch <?= $ch++?>");
+            
 
-        //Overall Length
+            //G. Overall Length
             var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
+            var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "ovl[]");
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['overall_length']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
-
-        //Working Length Awal
+                x.setAttribute("value", "<?= $draftPengukuran[$no]['overall_length']; ?>");
+            
+            //L. Working Length (AWAL)
             var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ 
-                $wklRutin = $draftPengukuranPre[$no]['working_length_rutin'];
-                ?>
+            <?php $wklRutin = $draftPengukuranPre[$no]['working_length_rutin']; ?>
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "wkl_awal[]");
                 x.setAttribute("maxlength", "4");
@@ -434,107 +417,66 @@
                 x.setAttribute("placeholder", "00.00");
                 <?php
                 if($wklRutin == null){ ?>
-                    x.setAttribute("value", "<?= $draftPengukuranPre[$no++]['working_length']; ?>");
+                    x.setAttribute("value", "<?= $draftPengukuranPre[$no]['working_length']; ?>");
                 <?php }else{ ?>
-                    x.setAttribute("value", "<?= $draftPengukuranPre[$no++]['working_length_rutin']; ?>");
+                    x.setAttribute("value", "<?= $draftPengukuranPre[$no]['working_length_rutin']; ?>");
                 <?php } ?>
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
 
-        //Working Length Rutin
+            //L. Working Length (RUTIN)
             var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
+            var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "wkl_rutin[]");
                 x.setAttribute("maxlength", "4");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['working_length_rutin']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
+                x.setAttribute("value", "<?= $draftPengukuran[$no]['working_length_rutin']; ?>");
 
-        //Cup Depth
+            //K. Cup Depth
             var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var x = td.appendChild(document.createElement('INPUT'));
+            var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
+                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "cup[]");
                 x.setAttribute("maxlength", "4");
-                x.setAttribute("placeholder", "00.00");
-                x.setAttribute("value", "<?= $draftPengukuran[$no++]['cup_depth']; ?>");
-                // x.addEventListener('input', function() {
-                //     if (this.value) {
-                //         saveDataRutin();
-                //     }
-                // });
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
-        //
+                x.setAttribute("value", "<?= $draftPengukuran[$no]['cup_depth']; ?>");
 
-        //Head Configuration
+            //Head Configuration
             var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data) {
-                // Get the head_configuration value from PHP
-                $headConfigurationValue = $draftPengukuran[$no]['head_configuration'];
-            ?>
-                var select = td.appendChild(document.createElement('select'));
-                select.setAttribute('class', 'form-select text-center mb-2');
-                select.setAttribute('id', 'select_ok');
-                select.setAttribute('name', 'hcf[]');
+            // Get the head_configuration value from PHP
+            var select = td.appendChild(document.createElement('select'));
+            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('id', 'select_ok');
+            select.setAttribute('name', 'hcf[]');
 
-                // Define options
-                var options = ['-', 'OK', 'NOK'];
+            // Define options
+            var options = ['-', 'OK', 'NOK'];
 
-                // Create and append options
-                options.forEach(function(optionValue) {
-                    var option = document.createElement('option');
-                    option.text = optionValue;
-                    option.value = optionValue;
-                    select.appendChild(option);
+            // Create and append options
+            options.forEach(function(optionValue) {
+                var option = document.createElement('option');
+                option.text = optionValue;
+                option.value = optionValue;
+                select.appendChild(option);
 
-                    // Set the selected option based on the head_configuration value
-                    if (optionValue === '<?= $headConfigurationValue; ?>') {
-                        option.selected = true;
-                    }
-                });
+                // Set the selected option based on the head_configuration value
+                if (optionValue === '<?= $draftPengukuran[$no]['head_configuration']; ?>') {
+                    option.selected = true;
+                }
+            });
 
-                // Append the select to the table body
-                document.getElementById("table_body").appendChild(tr);
-                <?php 
-                $no++;
-            }
-            ?>
-        //
-
-        //Update id
+            //Update ID
             var td = tr.appendChild(document.createElement('td'));
-            <?php
-            $no = 0;
-            foreach($draftPengukuran as $data){ ?>
-                var a = td.appendChild(document.createElement('INPUT'));
-                    a.setAttribute("type", "hidden");
-                    a.setAttribute("name", "update_id[]");
-                    a.setAttribute("value", "<?= $draftPengukuran[$no++]['no']; ?>");
-                document.getElementById("table_body").appendChild(tr);
-            <?php 
-            }
-            ?>
+            var a = td.appendChild(document.createElement('INPUT'));
+                a.setAttribute("type", "hidden");
+                a.setAttribute("readonly", "readonly");
+                a.setAttribute("name", "update_id[]");
+                a.setAttribute("value", "<?= $draftPengukuran[$no]['no']; ?>");
+
+                
+            document.getElementById("table_body").appendChild(tr);
+        <?php $no++; }?>
         //
 
         //Get Last Id per page
@@ -552,38 +494,12 @@
             document.getElementById("last_id").appendChild(last_id);
         //    
 
-        //Create Button Cancel
-            var btn_cancel = document.createElement("BUTTON");
-            btn_cancel.setAttribute("class", "btn btn-secondary btn-small");
-            btn_cancel.setAttribute("type", "button");
-            var title1 = document.createTextNode("Cancel");
-            btn_cancel.appendChild(title1);
-            document.getElementById("btn-cancel").appendChild(btn_cancel);
-        //
 
-        //Create Button Next
-            form = document.getElementById('form_data_pengukuran');
-
-            var btn_next = document.createElement("BUTTON");
-            btn_next.setAttribute("class", "btn btn-primary btn-small");
-            btn_next.setAttribute("type", "button");
-            btn_next.setAttribute("onclick", "this.disabled=true; this.innerHTML ='Processing...'; form.submit();");
-            if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
-                btn_next.setAttribute("onclick", "saveDataRutin()");
-                btn_next.setAttribute("type", "button");
-                btn_next.setAttribute("data-bs-toggle", "modal");
-                btn_next.setAttribute("data-bs-target", "#modal_confirm_pengukuran");
-            }
-            var title2 = document.createTextNode("Next");
-            btn_next.appendChild(title2);
-            document.getElementById("btn-next").appendChild(btn_next);
-        //
-
-        $(".inputs").keyup(function () {
-            if (this.value.length == this.maxLength) {
-                $(this).next('.inputs').focus();
-            }
-        }); 
+        // $(".inputs").keyup(function () {
+        //     if (this.value.length == this.maxLength) {
+        //         $(this).next('.inputs').focus();
+        //     }
+        // }); 
         
     });
 

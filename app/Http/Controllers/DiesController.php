@@ -68,7 +68,7 @@ class DiesController extends Controller
                                     });
                             })
                             ->orWhere('jenis', $request->segment(3))
-                            ->where('is_delete_punch', '0')
+                            ->where('is_delete_dies', '0')
                             ->where(function ($query) {
                                 $query->where(function ($query) {
                                     $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
@@ -186,6 +186,7 @@ class DiesController extends Controller
             $data['dataDiesOlderThanOneYear'] = $dataDiesOlderThanOneYear;
             $data['dataDiesRecent'] = $dataDiesRecent;
             // $data['dataDies'] = $dataDies;
+            // dd($dataDies);
 
             $ttlDies = Dies::
                 where(['jenis' => $request->segment(3), 'is_delete_dies' => '0'])

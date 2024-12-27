@@ -155,14 +155,14 @@
                                                                                 </td>
                                                                                 <td style="border: none;"
                                                                                     class="fs-5 px-4 my-4">
-                                                                                    @if ($labelPunch->is_approved == '1')
+                                                                                    @if ($labelDies->is_approved == '1')
                                                                                         <span class="badge badge-square badge-outline badge-success">Approved</span>
-                                                                                    @elseif ($labelPunch->is_rejected == '1') <!-- Check for rejection -->
+                                                                                    @elseif ($labelDies->is_rejected == '1') <!-- Check for rejection -->
                                                                                         <span class="badge badge-square badge-outline badge-danger">Rejected</span>
                                                                                     @else
-                                                                                        @if ($labelPunch->is_draft == '1')
+                                                                                        @if ($labelDies->is_draft == '1')
                                                                                             <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                                                                                        @elseif ($labelPunch->is_draft == '0')
+                                                                                        @elseif ($labelDies->is_draft == '0')
                                                                                             <span class="badge badge-square badge-outline badge-warning">Waiting</span>
                                                                                         @endif
                                                                                     @endif

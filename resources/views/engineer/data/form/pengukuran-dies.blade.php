@@ -354,6 +354,7 @@
                         <div class="card">
                         <div class="card-body">
                             <div class="row">
+                                <input type="text" name="id" value="{{$labelDies->dies_id}}" hidden>
                                 <div class="col-12">
                                     <div class="d-flex flex-column mx-2">
                                         <label for="referensi_drawing" class="required form-label">Referensi Drawing</label>
@@ -551,6 +552,8 @@
         //
 
         //Create Button Next
+            form = document.getElementById('form_data_pengukuran');
+
             var btn_next = document.createElement("BUTTON");
             btn_next.setAttribute("class", "btn btn-primary btn-small");
             btn_next.setAttribute("id", "btn_next");
@@ -673,7 +676,7 @@
             return; // Prevent further action
         }
         saveData(); // Call your saveData function
-        if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
+        if (<?= $page ?> == <?= session('jumlah_dies') ?>) {
             $('#modal_confirm_pengukuran').modal('show');
             // $('#modal_preview_pengukuran').modal('show');
         } else {
