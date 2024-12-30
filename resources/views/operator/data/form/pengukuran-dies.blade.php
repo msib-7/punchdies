@@ -196,7 +196,7 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table id="Table_pengukuran" class="table display" style="width:100%">
+                                                <table id="form_table" class="table display" style="width:100%">
                                                     <thead id="table_head">
                                                         <tr class="fw-bold fs-7 text-gray-800">
                                                             <td class="text-center">No</td>

@@ -494,6 +494,101 @@
             document.getElementById("last_id").appendChild(last_id);
         //    
 
+        //Create Button Cancel
+            var btn_cancel = document.createElement("BUTTON");
+            btn_cancel.setAttribute("class", "btn btn-secondary btn-small");
+            btn_cancel.setAttribute("type", "button");
+            var title1 = document.createTextNode("Cancel");
+            btn_cancel.appendChild(title1);
+            document.getElementById("btn-cancel").appendChild(btn_cancel);
+        //
+
+        // Create Button Next
+            form = document.getElementById('form_data_pengukuran');
+
+            var btn_next = document.createElement("BUTTON");
+            btn_next.setAttribute("class", "btn btn-primary btn-small");
+            btn_next.setAttribute("id", "btn_next");
+            btn_next.setAttribute("type", "button");
+            btn_next.setAttribute("onclick", "checkInvalid()");
+            
+            var title2 = document.createTextNode("Next");
+            btn_next.appendChild(title2);
+
+            // Append the button to the DOM
+            document.getElementById("btn-next").appendChild(btn_next);
+        //
+
+        // Ketika Tab / Enter di click
+        $(".inputs").keydown(function (e) {
+            // Check if the pressed key is Tab or Enter
+            if (e.key === "Tab" || e.key === "Enter") {
+                e.preventDefault(); // Prevent the default tab behavior
+                
+                // Get the current input field
+                var currentInput = $(this);
+                var currentRow = currentInput.closest('tr'); // Get the current row
+                var currentIndex = currentInput.data('index'); // Get the data-index of the current input
+                
+                
+                // Find the next row
+                var nextRow = currentRow.next('tr'); // Get the next row
+
+                // If there is no next row, wrap around to the first row
+                if (nextRow.length === 0) {
+                    nextRow = currentRow.siblings().first(); // Get the first row
+                }
+
+                // Find the input in the next row with the same data-index + 1 and same name
+                var nextInput = nextRow.find('input[data-index="' + (parseInt(currentIndex) + 1) + '"][name="' + currentInput.attr('name') + '"]');
+
+                // If the next input does not exist, move to the next column in the same row
+                if (nextInput.length === 0) {
+                    // Find the next input with the same data-index + 1 in the same row
+                    nextInput = currentRow.find('input[data-index="' + (parseInt(currentIndex) + 1) + '"]');
+
+                    // If the next input still does not exist, move to the next row and reset the data-index to 0
+                    if (nextInput.length === 0) {
+                        nextInput = nextRow.find('input[data-index="0"][name="' + currentInput.attr('name') + '"]');
+                    }
+                }
+
+                // If the next input exists, focus on it
+                if (nextInput.length > 0) {
+                    nextInput.focus();
+                }
+            }
+        });
+
+        // Add event listener for input on inputs
+        $(".inputs").on("input", function () {
+            // Check if the input value length is equal to its maxlength
+            if (this.value.length >= this.maxLength) {
+                // Trigger the Enter key event
+                var event = jQuery.Event("keydown", { key: "Enter" });
+                $(this).trigger(event);
+                // convertToDecimal(this);
+            }
+            
+            // checkThreshold(this);
+            // Check for threshold
+        });
+
+        $(".inputs").on("blur", function () {
+            // convertToDecimal(this);
+        });
+
+        function convertToDecimal(input) {
+            // Get the value of the input field
+            var value = parseFloat(input.value);
+            
+            // Check if the value is a valid number
+            if (!isNaN(value)) {
+                // Format the value to 2 decimal places
+                input.value = value.toFixed(2);
+            }
+        }
+
 
         // $(".inputs").keyup(function () {
         //     if (this.value.length == this.maxLength) {
@@ -503,22 +598,59 @@
         
     });
 
-    function saveDataRutin() {
+    function checkInvalid() {
+        // Check if there are any fields with the 'is-invalid' class
+        if ($('.is-invalid').length > 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill in all required fields correctly!',
+            });
+            return; // Prevent further action
+        }
+        saveData(); // Call your saveData function
+        if (<?= $page ?> == <?= session('jumlah_punch') ?>) {
+            $('#modal_confirm_pengukuran').modal('show');
+            // $('#modal_preview_pengukuran').modal('show');
+        } else {
+            form.submit();
+        }
+        // If no invalid fields, proceed with saving data
+    }
+
+    function saveData() {
         $.ajax({
             url: "{{route('pnd.pr.'.$route.'.store')}}",
             type: "POST",
             data: $('#form_data_pengukuran').serialize(),
             success: function(response) {
-                // Reload the table data after successful save
-                $('#Table_pengukuran').DataTable().ajax.reload();
-                alert('Data saved successfully!');
+                // Handle success (e.g., show a success message, redirect, etc.)
             },
             error: function(xhr, status, error) {
-                console.error('Error saving data:', error);
-                alert('Failed to save data. Please try again.');
+                // Handle error (e.g., show an error message)
+                // Re-enable the button if needed
+                document.querySelector("#btn-next button").disabled = false; // Re-enable the button
+                document.querySelector("#btn-next button").innerHTML = "Next"; // Reset button text
             }
         });
     }
+
+    // function saveDataRutin() {
+    //     $.ajax({
+    //         url: "{{route('pnd.pr.'.$route.'.store')}}",
+    //         type: "POST",
+    //         data: $('#form_data_pengukuran').serialize(),
+    //         success: function(response) {
+    //             // Reload the table data after successful save
+    //             $('#Table_pengukuran').DataTable().ajax.reload();
+    //             alert('Data saved successfully!');
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error('Error saving data:', error);
+    //             alert('Failed to save data. Please try again.');
+    //         }
+    //     });
+    // }
 </script>
 <!--end::Content-->
 @endsection

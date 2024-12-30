@@ -6,7 +6,6 @@ use App\Models\Lines;
 use App\Models\Permissions;
 use App\Models\Roles;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Route;
 
