@@ -80,7 +80,11 @@
                                 <!--begin:Menu link-->
                                 <span class="menu-link">
                                     <span class="menu-icon">
-                                        <i class="ki-outline ki-rocket fs-2"></i>
+                                        <i class="ki-duotone ki-add-files fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            <span class="path3"></span>
+                                        </i>
                                     </span>
                                     <span class="menu-title text-gray-600">Data Pengukuran Awal</span>
                                     <span class="menu-arrow"></span>
@@ -158,7 +162,12 @@
                                 <!--begin:Menu link-->
                                 <span class="menu-link">
                                     <span class="menu-icon">
-                                        <i class="ki-outline ki-rocket fs-2"></i>
+                                        <i class="ki-duotone ki-update-file fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            <span class="path3"></span>
+                                            <span class="path4"></span>
+                                        </i>
                                     </span>
                                     <span class="menu-title text-gray-600">Data Pengukuran Rutin</span>
                                     <span class="menu-arrow"></span>
