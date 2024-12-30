@@ -27,12 +27,12 @@ class PunchFactory extends Factory
         return [
             'id' => (string) Str::uuid(),
             'punch_id' => $punch_id,
-            'merk' => $this->faker->word,
-            'bulan_pembuatan' => $this->faker->month,
-            'tahun_pembuatan' => $this->faker->year,
-            'nama_mesin_cetak' => $this->faker->word,
-            'nama_produk' => $this->faker->word,
-            'kode_produk' => $this->faker->word,
+            'merk' => 'ALTINEX',
+            'bulan_pembuatan' => '06',
+            'tahun_pembuatan' => '2024',
+            'nama_mesin_cetak' => 'JCMCO',
+            'nama_produk' => 'TCRV3',
+            'kode_produk' => 'TCRV3',
             'line_id' => Lines::all()->random()->id, // Assuming you want to create a new line for each punch
             'jenis' => $this->faker->randomElement(['punch-atas','punch-bawah']),
             'masa_pengukuran' => 'pengukuran awal', // Randomly select between the two values,

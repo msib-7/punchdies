@@ -426,8 +426,8 @@
             var td = tr.appendChild(document.createElement('td'));
             var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
-                x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("readonly", "readonly");
                 x.setAttribute("name", "wkl_rutin[]");
                 x.setAttribute("maxlength", "4");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['working_length_rutin']; ?>");

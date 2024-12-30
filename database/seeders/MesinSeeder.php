@@ -16,8 +16,8 @@ class MesinSeeder extends Seeder
     public function run(): void
     {
         $user = User::where('username', 'admin')->first();
-        $title = ['Mesin 1', 'Mesin 2', 'Mesin 3'];
-        $description = ['Description for Mesin 1', 'Description for Mesin 2', 'Description for Mesin 3'];
+        $title = ['JCMCO'];
+        $description = ['Description for Mesin 1'];
 
         for ($i = 0; $i < count($title); $i++) {
             Mesin::create([

@@ -17,8 +17,8 @@ class ProdukSeeder extends Seeder
     public function run(): void
     {
         $user = User::where('username', 'admin')->first();
-        $namaProduk = ['Nama Produk 1', 'Nama Produk 2', 'Nama Produk 3'];
-        $descriptionNamaProduk = ['Description for Nama Produk 1', 'Description for Nama Produk 2', 'Description for Nama Produk 3'];
+        $namaProduk = ['TCRV3'];
+        $descriptionNamaProduk = ['Description for Nama Produk 1'];
         for ($i = 0; $i < count($namaProduk); $i++) {
             NamaProduk::create([
                 'user_id' => $user->id,
@@ -27,8 +27,8 @@ class ProdukSeeder extends Seeder
             ]);
         }
 
-        $kodeProduk = ['Kode Produk 1', 'Kode Produk 2', 'Kode Produk 3'];
-        $descriptionKodeProduk = ['Description for Kode Produk 1', 'Description for Kode Produk 2', 'Description for Kode Produk 3'];
+        $kodeProduk = ['TCRV3'];
+        $descriptionKodeProduk = ['Description for Kode Produk 1'];
         for ($i = 0; $i < count($kodeProduk); $i++) {
             KodeProduk::create([
                 'user_id' => $user->id,

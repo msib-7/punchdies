@@ -47,21 +47,42 @@
                                             <td>{{$no++}}</td>
                                             <td>{{$item->req_id}}</td>
                                             @if ($item->punch_id != null || $item->punch_id != '-')
+                                                @php $printed = false; @endphp
+                                                @foreach ($dataPunch as $punch)
+                                                    @if ($item->punch_id == $punch->punch_id && !$printed)
+                                                        <td>{{$punch->merk}}</td>
+                                                        <td>{{$punch->jenis}}</td>
+                                                        @php $printed = true; @endphp
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                            @if ($item->dies_id != null || $item->dies_id != '-')
+                                                @php $printed = false; @endphp
+                                                @foreach ($dataDies as $dies)
+                                                    @if ($item->dies_id == $punch->dies_id && !$printed)
+                                                        <td>{{$dies->merk}}</td>
+                                                        <td>{{$dies->jenis}}</td>
+                                                        @php $printed = true; @endphp
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                            {{-- @if ($item->punch_id != null || $item->punch_id != '-')
                                                 @foreach ($dataPunch as $punch)
                                                     @if ($item->punch_id == $punch->punch_id)
                                                         <td>{{$punch->merk}}</td>
                                                         <td>{{$punch->jenis}}</td>
                                                     @endif
+                                                    
                                                 @endforeach
-                                            @endif
-                                            @if ($item->dies_id != null || $item->dies_id != '-')
+                                            @endif --}}
+                                            {{-- @if ($item->dies_id != null || $item->dies_id != '-')
                                                 @foreach ($dataDies as $dies)
                                                     @if ($item->dies_id == $dies->dies_id)
                                                         <td>{{$dies->merk}}</td>
                                                         <td>{{$dies->jenis}}</td>
                                                     @endif
                                                 @endforeach
-                                            @endif
+                                            @endif --}}
                                             <td>{{$item->tgl_submit}}</td>
                                             <td class="text-center">
                                                 @if ($item->is_draft == '1')

@@ -192,7 +192,7 @@
                                                                             @if ($dataPengukuran->contains(function ($item) {
                                                                                 return strtoupper($item->status) === 'NOK';
                                                                             }) && $labelPunch->is_waiting == '0')
-                                                                                <button class="btn btn-danger" onclick="confirmDisposal()">Disposal</button>
+                                                                                <a href="{{ route('pnd.request.disposal.create', $labelPunch->punch_id) }}" class="btn btn-danger">Disposal</a>
                                                                                 <br>
                                                                                 <small>
                                                                                 <span class="text-danger">Disposal Dapat Dilakukan! <br> Status NOK</span>

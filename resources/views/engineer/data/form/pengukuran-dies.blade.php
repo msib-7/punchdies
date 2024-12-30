@@ -551,7 +551,7 @@
             document.getElementById("btn-cancel").appendChild(btn_cancel);
         //
 
-        //Create Button Next
+        // Create Button Next
             form = document.getElementById('form_data_pengukuran');
 
             var btn_next = document.createElement("BUTTON");
@@ -559,10 +559,11 @@
             btn_next.setAttribute("id", "btn_next");
             btn_next.setAttribute("type", "button");
             btn_next.setAttribute("onclick", "checkInvalid()");
-
+            
             var title2 = document.createTextNode("Next");
             btn_next.appendChild(title2);
 
+            // Append the button to the DOM
             document.getElementById("btn-next").appendChild(btn_next);
         //
 

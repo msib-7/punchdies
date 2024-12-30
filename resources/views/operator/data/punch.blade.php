@@ -338,7 +338,7 @@
 
 {{-- Option Pengukuran --}}
 <div class="modal fade" tabindex="-1" id="modal_option_pengukuran">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Action</h4>
@@ -352,7 +352,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-6">
+                    {{-- <div class="col-6">
                         <a href="#">
                             <div class="card">
                                 <div class="card-body text-center shadow">
@@ -366,8 +366,8 @@
                                 </div>
                             </div>
                         </a>
-                    </div>
-                    <div class="col-6">
+                    </div> --}}
+                    <div class="col-12">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <input type="hidden" id="id_create_rutin">

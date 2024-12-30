@@ -390,9 +390,11 @@
                                 <div class="d-flex flex-column">
                                     <div class="fw-bold d-flex align-items-center fs-5">
                                         {{auth()->user()->nama}}
-                                        <small class="badge badge-light-success fw-bold fs-9 px-2 py-1 ms-2">{{ auth()->user()->roles->role_name }}</small>
+                                        <div class="d-flex">
+                                            <small class="badge badge-light-success fw-bold fs-10 px-2 py-1 ms-2">{{ auth()->user()->roles->role_name }}</small>
+                                        </div>
                                     </div>
-                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{session('email_user')}}</a>
+                                    <small class="fw-semibold text-muted fs-9">{{session('email_user')}}</small>
                                 </div>
                                 <!--end::Username-->
                             </div>

@@ -13,6 +13,6 @@ class PunchSeeder extends Seeder
      */
     public function run(): void
     {
-        Punch::factory()->count(15)->create();
+        Punch::factory()->count(6)->create();
     }
 }

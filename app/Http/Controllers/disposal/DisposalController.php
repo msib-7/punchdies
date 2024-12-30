@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 class DisposalController extends Controller
 {
     public function index(){
-        $approval = ApprovalDisposal::with('users')->get();
+        $approval = ApprovalDisposal::with('users')->where('is_approved', '!=', '1')->get();
         $dataPunch = Punch::latest()->get();
         $dataDies = Dies::latest()->get();
 
@@ -127,7 +127,11 @@ class DisposalController extends Controller
             'is_revisi' => '0',
         ], $filePaths));
 
-        return redirect()->back()->with('success', 'Files uploaded successfully!');
+        // Retrieve the newly created or updated record
+        $newApproval = ApprovalDisposal::where('punch_id', $id)->latest()->first();
+        $disposalId = $newApproval->id;
+
+        return redirect()->route('pnd.request.disposal.show', $disposalId)->with('success', 'Files uploaded successfully!');
     }
 
     public function saveDraft(Request $request)
