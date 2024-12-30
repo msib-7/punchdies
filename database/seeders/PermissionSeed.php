@@ -23,7 +23,25 @@ class PermissionSeed extends Seeder
         foreach ($roles as $role) {
             foreach ($routes as $routeName => $route) {
                 // Check if the route prefix is 'pnd'
-                if (str_starts_with($routeName, 'pnd.pa.') || str_starts_with($routeName, 'pnd.approval.histori.') || $routeName == 'login' || $routeName == 'logout' || $routeName == 'dashboard' || $routeName == 'audit') {
+                if (
+                    str_starts_with($routeName, 'pnd.pa.') || 
+                    str_starts_with($routeName, 'pnd.approval.histori.') ||
+
+                    $routeName == 'pnd.pr.atas.list' ||
+                    $routeName == 'pnd.pr.atas.cek-pengukuran' ||
+                    $routeName == 'pnd.pr.atas.view' ||
+                    $routeName == 'pnd.pr.bawah.list' ||
+                    $routeName == 'pnd.pr.bawah.cek-pengukuran' ||
+                    $routeName == 'pnd.pr.bawah.view' ||
+                    $routeName == 'pnd.pr.dies.list' ||
+                    $routeName == 'pnd.pr.dies.cek-pengukuran' ||
+                    $routeName == 'pnd.pr.dies.view' ||
+
+                    $routeName == 'login' || 
+                    $routeName == 'logout' || 
+                    $routeName == 'dashboard' || 
+                    $routeName == 'audit'
+                    ) {
                     // If the role is Engineering, allow permissions for 'pnd.pa.*', 'login', 'logout', and 'dashboard'
                     if ($role->role_name === 'Engineering') {
                         // Create permission for the role
@@ -40,7 +58,25 @@ class PermissionSeed extends Seeder
         foreach ($roles as $role) {
             foreach ($routes as $routeName => $route) {
                 // Check if the route prefix is 'pnd'
-                if (str_starts_with($routeName, 'pnd.pr.') || str_starts_with($routeName, 'pnd.approval.histori.') || $routeName == 'login' || $routeName == 'logout' || $routeName == 'dashboard' || $routeName == 'audit') {
+                if (
+                    str_starts_with($routeName, 'pnd.pr.') || 
+                    str_starts_with($routeName, 'pnd.approval.histori.') ||
+
+                    $routeName == 'pnd.pa.atas.list' ||
+                    $routeName == 'pnd.pa.atas.cek-pengukuran' ||
+                    $routeName == 'pnd.pa.atas.view' ||
+                    $routeName == 'pnd.pa.bawah.list' ||
+                    $routeName == 'pnd.pa.bawah.cek-pengukuran' ||
+                    $routeName == 'pnd.pa.bawah.view' ||
+                    $routeName == 'pnd.pa.dies.list' ||
+                    $routeName == 'pnd.pa.dies.cek-pengukuran' ||
+                    $routeName == 'pnd.pa.dies.view' ||
+
+                    $routeName == 'login' || 
+                    $routeName == 'logout' || 
+                    $routeName == 'dashboard' || 
+                    $routeName == 'audit'
+                    ) {
                     // If the role is Engineering, allow permissions for 'pnd.pa.*', 'login', 'logout', and 'dashboard'
                     if ($role->role_name === 'Operator') {
                         // Create permission for the role

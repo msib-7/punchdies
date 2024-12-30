@@ -73,7 +73,7 @@
                     <!--end:Menu item-->
                     @foreach (auth()->user()->permissions as $item)
                         {{-- {{ $item->url }} --}}
-                        @if (str_starts_with($item->url, 'pnd.pa'))
+                        @if (str_starts_with($item->url, 'pnd.pa.atas.index') || str_starts_with($item->url, 'pnd.pa.bawah.index') || str_starts_with($item->url, 'pnd.pa.dies.index'))
                             {{-- Data Pengukuran Awal--}}
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/pengukuran-awal*') ? 'here show' : '' }}">
@@ -155,7 +155,7 @@
 
                     @foreach (auth()->user()->permissions as $item)
                         {{-- {{ $item->url }} --}}
-                        @if (str_starts_with($item->url, 'pnd.pr'))
+                        @if (str_starts_with($item->url, 'pnd.pr.atas.index') || str_starts_with($item->url, 'pnd.pr.bawah.index') || str_starts_with($item->url, 'pnd.pr.dies.index'))
                             {{-- Data Pengukuran Rutin--}}
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/pengukuran-rutin*') ? 'here show' : '' }}">

@@ -251,17 +251,18 @@ class PengukuranController extends Controller
                     $LabelPunch = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
                         ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
                         ->where('punchs.punch_id', $id)
-                        ->first();
+                        ->get();
                     $data['labelPunch'] = $LabelPunch;
                 } else {
                     $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
                         ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
                         ->where('punchs.punch_id', $id)
                         ->where('pengukuran_rutin_punchs.masa_pengukuran', session('masa_pengukuran_view'))
-                        ->first();
+                        ->get();
                     $data['labelPunch'] = $LabelPunch;
                 }
 
+                // dd($LabelPunch);
                 // $dataPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
                 // $data['tglPengukuran'] = $dataPengukuran;
 

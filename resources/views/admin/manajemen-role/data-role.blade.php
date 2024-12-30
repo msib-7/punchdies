@@ -898,6 +898,26 @@
                                                 @endif
                                             @endforeach
                                         </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="fs-5 my-2">
+                                                    *
+                                                </label>
+                                            </div>
+                                            @foreach ($routes as $routeName => $route)
+                                                @if (str_starts_with($routeName, 'storage.'))
+                                                    <div class="col-md-4 col-sm-6 pb-2">
+                                                        <div class="form-check">
+                                                            <input type="checkbox"  name="eurls[]" value="{{ $routeName }}"
+                                                                class="form-check-input route-checkbox route-approval" id="route_{{ $loop->index }}">
+                                                            <label class=""
+                                                                for="route_{{ $loop->index }}">{{ $routeName }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                                 {{-- @foreach ($routes as $routeName => $route)
