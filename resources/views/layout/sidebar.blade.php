@@ -236,6 +236,7 @@
                         @endif
                     @endforeach
 
+                    {{-- Approval Menu --}}
                     <!--begin:Menu item-->
                     <div class="menu-item pt-5">
                         <!--begin:Menu content-->
@@ -246,9 +247,8 @@
                     </div>
                     <!--end:Menu item-->
                     @foreach (auth()->user()->permissions as $item)
-                        {{-- {{ $item->url }} --}}
-                        @if (str_starts_with($item->url, 'pnd.approval'))
-                            {{-- Waiting List Approval --}}
+                        {{-- Waiting List Approval --}}
+                        @if (str_starts_with($item->url, 'pnd.approval.pa.index') || str_starts_with($item->url, 'pnd.approval.pr.index') || str_starts_with($item->url, 'pnd.approval.dis.index') || str_starts_with($item->url, 'pnd.approval.histori.index'))
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/approval*') ? 'here show' : '' }}">
                                 <!--begin:Menu link-->
@@ -262,48 +262,57 @@
                                 <!--end:Menu link-->
                                 <!--begin:Menu sub-->
                                 <div class="menu-sub menu-sub-accordion">
-                                    <!--begin:Menu item-->
-                                    <div class="menu-item">
-                                        <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('pnd/approval/pengukuran-awal*') ? 'active' : '' }}" href="{{route('pnd.approval.pa.index')}}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title text-gray-600">Approval Pengukuran Awal</span>
-                                        </a>
-                                        <!--end:Menu link-->
-                                    </div>
-                                    <!--end:Menu item-->
-                                    <!--begin:Menu item-->
-                                    <div class="menu-item">
-                                        <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('pnd/approval/pengukuran-rutin*') ? 'active' : '' }}" href="{{route('pnd.approval.pr.index')}}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title text-gray-600">Approval Pengukuran Rutin</span>
-                                        </a>
-                                        <!--end:Menu link-->
-                                    </div>
-                                    <!--end:Menu item-->
-                                    <!--begin:Menu item-->
-                                    <div class="menu-item">
-                                        <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('pnd/approval/disposal*') ? 'active' : '' }}" href="{{route('pnd.approval.dis.index')}}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title text-gray-600">Approval Disposal</span>
-                                        </a>
-                                        <!--end:Menu link-->
-                                    </div>
-                                    <!--end:Menu item-->
+                                    @if (str_starts_with($item->url, 'pnd.approval.pa.index') || str_starts_with($item->url, 'pnd.approval.pr.index') || str_starts_with($item->url, 'pnd.approval.dis.index'))
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link {{ request()->is('pnd/approval/pengukuran-awal*') ? 'active' : '' }}" href="{{route('pnd.approval.pa.index')}}">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title text-gray-600">Approval Pengukuran Awal</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link {{ request()->is('pnd/approval/pengukuran-rutin*') ? 'active' : '' }}" href="{{route('pnd.approval.pr.index')}}">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title text-gray-600">Approval Pengukuran Rutin</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link {{ request()->is('pnd/approval/disposal*') ? 'active' : '' }}" href="{{route('pnd.approval.dis.index')}}">
+                                                <span class="menu-bullet">
+                                                    <span class="bullet bullet-dot"></span>
+                                                </span>
+                                                <span class="menu-title text-gray-600">Approval Disposal</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                    @endif
                                 </div>
                                 <!--end:Menu sub-->
                             </div>
                             <!--end:Menu item-->
+                            @break
+                        @endif
+                    @endforeach
 
-                            {{-- Approval History --}}
+                    @foreach (auth()->user()->permissions as $item)
+                        {{-- Approval History --}}
+                        @if (str_starts_with($item->url, 'pnd.approval.histori.index'))
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
@@ -315,8 +324,13 @@
                                 </a>
                                 <!--end:Menu link-->
                             </div>
+                            @break
+                        @endif
+                    @endforeach
 
-                            {{-- Disposal Menu --}}
+                    @foreach (auth()->user()->permissions as $item)
+                        {{-- Disposal Menu --}}
+                        @if (str_starts_with($item->url, 'pnd.request.disposal.index'))
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
@@ -330,21 +344,21 @@
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
-                            @break
                         @endif
                     @endforeach
-
-                    <!--begin:Menu item-->
-                    <div class="menu-item pt-5">
-                        <!--begin:Menu content-->
-                        <div class="menu-content">
-                            <span class="text-gray-800 fw-bold text-uppercase fs-8">Admin Tools</span>
-                        </div>
-                        <!--end:Menu content-->
-                    </div>
-                    <!--end:Menu item-->
+                            
+ 
                     @foreach (auth()->user()->permissions as $item)
                         @if (str_starts_with($item->url, 'admin.'))
+                            <!--begin:Menu item-->
+                            <div class="menu-item pt-5">
+                                <!--begin:Menu content-->
+                                <div class="menu-content">
+                                    <span class="text-gray-800 fw-bold text-uppercase fs-8">Admin Tools</span>
+                                </div>
+                                <!--end:Menu content-->
+                            </div>
+                            <!--end:Menu item-->
                             {{-- Master Machine --}}
                             <!--begin:Menu item-->
                             <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('Admin*') ? 'here show' : '' }}">
@@ -469,7 +483,6 @@
                             @break
                         @endif
                     @endforeach
-                    
                 </div>
                 <!--end::Menu-->
             </div>
