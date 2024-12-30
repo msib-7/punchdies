@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PunchSeeder::class,
             PengukuranAwalPunchSeeder::class,
+            MesinSeeder::class,
+            ProdukSeeder::class,
         ]);
     }
 }
