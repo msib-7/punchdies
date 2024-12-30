@@ -23,6 +23,8 @@ class SetDraftStatusServiceRutin
         $updateDraftStatus = [
             'is_draft' => 0,
             'is_waiting' => 1,
+            'is_approved' => 0,
+            'is_rejected' => 0,
         ];
 
         if (in_array($route, ['punch-atas', 'punch-bawah'])) {

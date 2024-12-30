@@ -23,6 +23,8 @@ class SetDraftStatusServiceAwal
         $updateDraftStatus = [
             'is_draft' => 0,
             'is_waiting' => 1,
+            'is_approved' => 0,
+            'is_rejected' => 0,
         ];
 
         if ($jenis == 'pengukuran-awal') {
@@ -96,7 +98,9 @@ class SetDraftStatusServiceAwal
                 'masa_pengukuran' => 'pengukuran awal'
             ], [
                 'is_draft' => 0,
-                'is_waiting' => 1
+                'is_waiting' => 1,
+                'is_approved' => 0,
+                'is_rejected' => 0,
             ]);
 
             $this->sendToApproval($this->getSegment($route));
@@ -138,6 +142,8 @@ class SetDraftStatusServiceAwal
             ], [
                 'is_draft' => 0,
                 'is_waiting' => 1,
+                'is_approved' => 0,
+                'is_rejected' => 0,
             ]);
 
             $this->sendToApproval('dies');
