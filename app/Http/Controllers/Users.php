@@ -50,7 +50,7 @@ class Users extends Controller
         } else {
             $nama = $request->nama;
             $email = $request->email;
-            $username = ucwords($request->username);
+            $username = $request->username;
             $password = $request->password;
             $role = $request->user_role;
             $line = $request->line_id;
