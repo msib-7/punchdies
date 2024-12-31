@@ -173,6 +173,7 @@ class ApprovalController extends Controller
             $dataRequest = ApprovalPengukuran::where('req_id', $req_id)->first();
             $data['segment'] = 'history';
 
+
             if ($dataRequest->punch_id != null) {
                 $id = $dataRequest->punch_id;
                 $labelIdentitas = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
@@ -182,12 +183,14 @@ class ApprovalController extends Controller
                 $tglPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
 
                 $checkStatus = ApprovalPengukuran::where(['req_id' => $req_id])->first();
-                if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
-                    $status = '<span class="badge badge-square badge-outline badge-light-warning fs-4">Waiting For Approval</span>';
+                if ($checkStatus->is_approved == '-' && $checkStatus->is_rejected == '-' || $checkStatus->is_approved == '0' && $checkStatus->is_rejected == '0') {
+                    $status = '<span class="badge badge-square badge-outline badge-light-secondary fs-4">Belum diTinjau</span>';
                 } elseif ($checkStatus->is_approved == '1' and $checkStatus->is_rejected == '0') {
                     $status = '<button class="btn btn-lg btn-outline btn-outline-success btn-active-light-success fs-2">Approved</button>';
                 } elseif ($checkStatus->is_approved == '0' and $checkStatus->is_rejected == '1') {
                     $status = '<button class="btn btn-lg btn-outline btn-outline-danger btn-active-light-danger fs-2">Rejected</button>';
+                }else{
+                    $status = '<span class="badge badge-square badge-outline badge-light-secondary fs-4">Belum diTinjau</span>';
                 }
 
                 $data['labelIdentitas'] = $labelIdentitas;

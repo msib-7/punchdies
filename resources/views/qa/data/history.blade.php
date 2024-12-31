@@ -73,8 +73,8 @@
                                                 </td>
                                             @else
                                                 <td class="text-center">
-                                                    <button class="btn btn-secondary btn-sm w-100 fs-5 fw-semibold">
-                                                        unset
+                                                    <button class="btn btn-warning btn-sm w-100 fs-5 fw-semibold">
+                                                        Waiting
                                                     </button>
                                                 </td>
                                             @endif
