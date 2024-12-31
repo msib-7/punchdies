@@ -210,8 +210,9 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
             Route::post('status/{id}', [ApprovalDisposalController::class, 'setStatus'])->name('setStatus');
         });
         Route::prefix('histori')->name('histori.')->group(function(){
-            Route::get('histori', [ApprovalController::class, 'show_history'])->name('index');
+            Route::get('', [ApprovalController::class, 'show_history'])->name('index');
             Route::get('pengukuran/{id}', [ApprovalController::class, 'detail_data_history'])->name('show-detail-pengukuran');
+            Route::get('disposal/{id}', [ApprovalController::class, 'detail_disposal_history'])->name('show-detail-disposal');
         });
     });
 

@@ -214,12 +214,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- Alert --}}
-                                    <div class="alert alert-info" role="alert">
-                                        <h7 class="alert-heading">Catatan revisi sebelumnya:</h7>
-                                            <p> <i>"{{ $dataApproval->approved_note }}"</i> </p>
-                                        </p>
-                                    </div>
+                                    @if (!request()->is('pnd/approval/histori*'))
+                                        {{-- Alert --}}
+                                        <div class="alert alert-info" role="alert">
+                                            <h7 class="alert-heading">Catatan revisi sebelumnya:</h7>
+                                                <p> <i>"{{ $dataApproval->approved_note }}"</i> </p>
+                                            </p>
+                                        </div>
+                                    @endif
                                     @if ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '0' && $dataApproval->is_waiting == '0' && $dataApproval->is_revisi == '1')
                                         {{-- Catatan --}}
                                         <div class="col-12 my-3">

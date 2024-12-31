@@ -165,7 +165,7 @@
                                             <td>{{$item->by}}</td>
                                             <td>{{$item->at}}</td>
                                             <td class="text-center">
-                                                <a href="#">
+                                                <a href="{{route('pnd.approval.histori.show-detail-disposal', $item->req_id)}}">
                                                     <button class="btn btn-secondary btn-sm fw-bold">
                                                         <i class="lab la-sistrix fs-2"></i>
                                                         open

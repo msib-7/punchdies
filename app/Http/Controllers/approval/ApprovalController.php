@@ -328,4 +328,29 @@ class ApprovalController extends Controller
             }
         }
     }
+
+    public function detail_disposal_history(Request $request, $req_id)
+    {
+        $dataApproval = ApprovalDisposal::where('req_id', $req_id)->first();
+
+        if ($dataApproval->punch_id != null || $dataApproval->punch_id != '-') {
+            if ($dataApproval->is_draft == '1') {
+                return redirect()->route('pnd.request.disposal.create', $dataApproval->punch_id)->with('warning', 'You are in draft mode!');
+            } elseif ($dataApproval->is_revisi == '1') {
+                return redirect()->route('pnd.request.disposal.create', $dataApproval->punch_id)->with('warning', 'You are in revisi mode!');
+            } else {
+                $data = Punch::where('punch_id', $dataApproval->punch_id)->latest()->first();
+            }
+        } else {
+            if ($dataApproval->is_draft == '1') {
+                return redirect()->route('pnd.request.disposal.create', $dataApproval->dies_id)->with('warning', 'You are in draft mode!');
+            } elseif ($dataApproval->is_revisi == '1') {
+                return redirect()->route('pnd.request.disposal.create', $dataApproval->dies_id)->with('warning', 'You are in revisi mode!');
+            } else {
+                $data = Dies::where('dies_id', $dataApproval->dies_id)->latest()->first();
+            }
+        }
+
+        return view('disposal.show', compact('dataApproval', 'data'));
+    }
 }
