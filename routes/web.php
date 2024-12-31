@@ -38,14 +38,14 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->group(function(){
     Route::prefix('users')->name('users.')->group(function(){
-        Route::get('users', [Users::class, 'manajemen_user'])->name('index');
+        Route::get('', [Users::class, 'manajemen_user'])->name('index');
         Route::post('add-user', [Users::class, 'add_user'])->name('create');
         Route::get('/edit-user/{id}', [Users::class, 'edit_user'])->name('edit');
         Route::post('update-user', [Users::class, 'update_user'])->name('update');
         Route::get('/delete-user/{id}', [Users::class, 'delete_user'])->name('delete');
     });
     Route::prefix('role')->name('role.')->group(function(){
-        Route::get('roles', [Role::class, 'manajemen_role'])->name('index');
+        Route::get('', [Role::class, 'manajemen_role'])->name('index');
         Route::post('add', [Role::class, 'add_role'])->name('create');
         Route::get('/view/{id}', [Role::class, 'view_role'])->name('view');
         Route::get('/edit/{id}', [Role::class, 'edit_role'])->name('edit');
@@ -53,31 +53,31 @@ Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
         Route::get('/delete/{id}', [Role::class, 'del_role'])->name('delete');
     });
     Route::prefix('permission')->name('permission.')->group(function(){
-        Route::get('permissions', [Permission::class, 'manajemen_permission'])->name('index');
+        Route::get('', [Permission::class, 'manajemen_permission'])->name('index');
     });
     Route::prefix('line')->name('line.')->group(function(){
-        Route::get('lines', [LineController::class, 'manajemen_line'])->name('index');
+        Route::get('', [LineController::class, 'manajemen_line'])->name('index');
         Route::post('create-line', [LineController::class, 'add_line'])->name('create');
         Route::get('/edit-line/{id}', [LineController::class, 'edit_line'])->name('edit');
         Route::post('update-line', [LineController::class, 'update_line'])->name('update');
         Route::get('/delete-permission/{id}', [LineController::class, 'delete_line'])->name('delete');
     });
     Route::prefix('mesin')->name('mesin.')->group(function () {
-        Route::get('index', [MesinController::class, 'index'])->name('index');
+        Route::get('', [MesinController::class, 'index'])->name('index');
         Route::post('create-mesin', [MesinController::class, 'store'])->name('create');
         Route::get('/edit-mesin/{id}', [MesinController::class, 'edit'])->name('edit');
         Route::post('update-mesin', [MesinController::class, 'update'])->name('update');
         Route::get('/delete-mesin/{id}', [MesinController::class, 'destroy'])->name('delete');
     });
     Route::prefix('nama-produk')->name('namaProduk.')->group(function () {
-        Route::get('index', [NamaProdukController::class, 'index'])->name('index');
+        Route::get('', [NamaProdukController::class, 'index'])->name('index');
         Route::post('create-produk', [NamaProdukController::class, 'store'])->name('create');
         Route::get('/edit-produk/{id}', [NamaProdukController::class, 'edit'])->name('edit');
         Route::post('update-produk', [NamaProdukController::class, 'update'])->name('update');
         Route::get('/delete-produk/{id}', [NamaProdukController::class, 'destroy'])->name('delete');
     });
     Route::prefix('kode-produk')->name('kodeProduk.')->group(function () {
-        Route::get('index', [KodeProdukController::class, 'index'])->name('index');
+        Route::get('', [KodeProdukController::class, 'index'])->name('index');
         Route::post('create-produk', [KodeProdukController::class, 'store'])->name('create');
         Route::get('/edit-produk/{id}', [KodeProdukController::class, 'edit'])->name('edit');
         Route::post('update-produk', [KodeProdukController::class, 'update'])->name('update');
