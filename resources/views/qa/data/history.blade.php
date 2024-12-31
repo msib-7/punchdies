@@ -44,6 +44,7 @@
                                                     @if ($item->punch_id == $punch->punch_id && $item->masa_pengukuran == $punch->masa_pengukuran)
                                                         <td>{{$punch->merk}}</td>
                                                         <td>{{$punch->jenis}}</td>
+                                                        @break
                                                     @endif
                                                 @endforeach
                                             @endif
@@ -52,6 +53,7 @@
                                                     @if ($item->dies_id == $dies->dies_id && $item->masa_pengukuran == $dies->masa_pengukuran)
                                                         <td>{{$dies->merk}}</td>
                                                         <td>{{$dies->jenis}}</td>
+                                                        @break
                                                     @endif
                                                 @endforeach
                                             @endif
@@ -63,16 +65,20 @@
                                                         Approved
                                                     </button>
                                                 </td>
-                                            @endif
-                                            @if ($item->is_approved == '0' and $item->is_rejected == '1')
+                                            @elseif ($item->is_approved == '0' and $item->is_rejected == '1')
                                                 <td class="text-center">
                                                     <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold">
                                                         Rejected
                                                     </button>
                                                 </td>
+                                            @else
+                                                <td class="text-center">
+                                                    <button class="btn btn-secondary btn-sm w-100 fs-5 fw-semibold">
+                                                        unset
+                                                    </button>
+                                                </td>
                                             @endif
-                                            {{-- <td>{{$item->approved_by}}</td> --}}
-                                            <td>Supervisor Engineering</td>
+                                            <td>{{$item->by}}</td>
                                             <td>{{$item->approved_at}}</td>
                                             <td class="text-center">
                                                 <a href="{{route('pnd.approval.histori.show-detail-pengukuran', $item->req_id)}}">
