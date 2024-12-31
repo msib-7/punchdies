@@ -62,8 +62,7 @@
 							<h1 class="fw-bolder fs-2qx text-gray-900 mb-4">Access Forbidden</h1>
 							<!--end::Title-->
 							<!--begin::Text-->
-							<div class="fw-semibold fs-6 text-gray-500 mb-7">The page you are looking was moved, removed,<br>
-                                    renamed, or might never exist!</div>
+							<div class="fw-semibold fs-6 text-gray-500 mb-7">Kamu Tidak Memiliki Akses <br> Ke Halaman ini!</div>
 							<!--end::Text-->
 							<!--begin::Illustration-->
 							<div class="mb-11">
