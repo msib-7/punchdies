@@ -316,7 +316,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="{{route('pnd.approval.histori.index')}}">
+                                <a class="menu-link {{ request()->is('pnd/approval/histori*') ? 'active' : '' }}" href="{{route('pnd.approval.histori.index')}}">
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-archive fs-2"></i>
                                     </span>
