@@ -18,12 +18,12 @@ class UserSeeder extends Seeder
     {
         // Define users with their respective roles
         $users = [
-            ['nama' => 'Engineering', 'username' => 'Engineering1', 'email' => 'engineering@example.com', 'password' => Hash::make('password')],
-            ['nama' => 'Operator',    'username' => 'Operator1', 'email' => 'operator@example.com', 'password' => Hash::make('password')],
-            ['nama' => 'Supervisor Engineering', 'username' => 'SpvEng1', 'email' => 'supervisor_engineering@example.com', 'password' => Hash::make('password')],
-            ['nama' => 'Supervisor Produksi',    'username' => 'SpvProd1', 'email' => 'supervisor_produksi@example.com', 'password' => Hash::make('password')],
-            ['nama' => 'Manager Produksi',       'username' => 'ManProd1', 'email' => 'manager_produksi@example.com', 'password' => Hash::make('password')],
-            ['nama' => 'Guest',                  'username' => 'Guest1', 'email' => 'guest@example.com', 'password' => Hash::make('password')],
+            ['nama' => 'Engineering',            'username' => 'Engineering1',  'email' => 'engineering@example.com',               'password' => Hash::make('password')],
+            ['nama' => 'Operator',               'username' => 'Operator1',     'email' => 'operator@example.com',                  'password' => Hash::make('password')],
+            ['nama' => 'Supervisor Engineering', 'username' => 'SpvEng1',       'email' => 'supervisor_engineering@example.com',    'password' => Hash::make('password')],
+            ['nama' => 'Supervisor Produksi',    'username' => 'SpvProd1',      'email' => 'supervisor_produksi@example.com',       'password' => Hash::make('password')],
+            ['nama' => 'Manager Produksi',       'username' => 'ManProd1',      'email' => 'manager_produksi@example.com',          'password' => Hash::make('password')],
+            ['nama' => 'Guest',                  'username' => 'Guest1',        'email' => 'guest@example.com',                     'password' => Hash::make('password')],
         ];
 
         // Get role IDs from the Roles table

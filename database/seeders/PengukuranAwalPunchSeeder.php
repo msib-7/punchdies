@@ -23,7 +23,7 @@ class PengukuranAwalPunchSeeder extends Seeder
 
         foreach ($punches as $punch) {
             // Create 38 dummy PengukuranAwalPunch records for each punch_id
-            PengukuranAwalPunch::factory()->count(23)->create([
+            PengukuranAwalPunch::factory()->count(38)->create([
                 'punch_id' => $punch->punch_id, // Set the punch_id for each record
                 'user_id' => $users->id, // You can replace this with a valid user_id if needed
             ]);
