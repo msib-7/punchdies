@@ -96,18 +96,30 @@ class DisposalController extends Controller
         $autonum = ApprovalDisposal::where('req_id', 'like', 'DIS' . date('ymd') . '%')->latest()->first();
         $newId = !$autonum ? "DIS" . date("ymd") . "0001" : "DIS" . date("ymd") . sprintf("%04s", (int) substr($autonum->req_id, 9, 4) + 1);
 
-        // Handle file uploads
         $filePaths = [];
-        foreach (range(1, 5) as $i) {
+        foreach (range(1,5) as $i) {
             $file = $request->file('dokumen' . $i);
-            if ($file) {
-                $fileName = 'disposal_' . $newId . '_' . $i . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePaths['attach_' . $i] = $file->storeAs('uploads', $fileName, 'public');
+            if($file){
+                $fileName = 'disposal_' . $newId . '_' . $i . '_' . time() . '.' . $file->extension();
+                $file->move(public_path('assets/img/disposals'), $fileName);
+                $filePaths['attach_' . $i] = $fileName;
             } else {
-                // If no new file is uploaded, retain the existing file path
                 $filePaths['attach_' . $i] = $existingDraft ? $existingDraft->{'attach_' . $i} : '-';
             }
         }
+
+        // // Handle file uploads
+        // $filePaths = [];
+        // foreach (range(1, 5) as $i) {
+        //     $file = $request->file('dokumen' . $i);
+        //     if ($file) {
+        //         $fileName = 'disposal_' . $newId . '_' . $i . '_' . time() . '.' . $file->getClientOriginalExtension();
+        //         $filePaths['attach_' . $i] = $file->storeAs('uploads', $fileName, 'public');
+        //     } else {
+        //         // If no new file is uploaded, retain the existing file path
+        //         $filePaths['attach_' . $i] = $existingDraft ? $existingDraft->{'attach_' . $i} : '-';
+        //     }
+        // }
 
         // Create or update the record
         ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([

@@ -241,27 +241,27 @@
                                 <div class="separator border-2 my-3"></div>
                                 <div class="row">
                                     <div class="col">
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('storage/'.$dataApproval->attach_1) }}">
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('assets/img/disposals/'.$dataApproval->attach_1) }}">
                                             View Attach 1
                                         </button>
                                     </div>
                                     <div class="col">
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('storage/'.$dataApproval->attach_2) }}">
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('assets/img/disposals/'.$dataApproval->attach_2) }}">
                                             View Attach 2
                                         </button>
                                     </div>
                                     <div class="col">
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('storage/'.$dataApproval->attach_3) }}">
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('assets/img/disposals/'.$dataApproval->attach_3) }}">
                                             View Attach 3
                                         </button>
                                     </div>
                                     <div class="col">
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('storage/'.$dataApproval->attach_4) }}">
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('assets/img/disposals/'.$dataApproval->attach_4) }}">
                                             View Attach 4
                                         </button>
                                     </div>
                                     <div class="col">
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('storage/'.$dataApproval->attach_5) }}">
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#attachmentModal" data-file="{{ asset('assets/img/disposals/'.$dataApproval->attach_5) }}">
                                             View Attach 5
                                         </button>
                                     </div>
