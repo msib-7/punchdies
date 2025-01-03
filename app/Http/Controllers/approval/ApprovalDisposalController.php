@@ -74,6 +74,9 @@ class ApprovalDisposalController extends Controller
     }
 
     private function revisi($note, $id) {
+        if($note == null || $note == ''){
+            $note = '-';
+        }
         $data = [
             'is_draft' => '0',
             'is_waiting' => '0',
