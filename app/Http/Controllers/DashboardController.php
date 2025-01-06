@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Dies;
 use App\Models\Lines;
 use App\Models\Punch;
+use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {

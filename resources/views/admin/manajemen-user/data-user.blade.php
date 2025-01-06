@@ -227,7 +227,7 @@
                 <h2 class="fw-bold">Add User</h2>
                 <!--end::Modal title-->
                 <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                     <i class="ki-duotone ki-cross fs-1">
                         <span class="path1"></span>
                         <span class="path2"></span>
@@ -376,7 +376,7 @@
                         <!--begin::Actions-->
                         <div class="text-center pt-10">
                             <button type="reset" class="btn btn-light me-3"
-                                data-kt-users-modal-action="cancel">Discard</button>
+                                data-bs-dismiss="modal">Discard</button>
                             <button type="submit" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...

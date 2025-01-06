@@ -39,7 +39,7 @@ class SendApproval extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name', // Change this to the view name
+            view: 'mail.sendApproval', // Change this to the view name
         );
     }
 

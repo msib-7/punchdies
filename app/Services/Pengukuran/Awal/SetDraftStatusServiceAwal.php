@@ -9,6 +9,11 @@ use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinDies;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
+use App\Models\User;
+use App\Notifications\SendApproval;
+use App\Services\Mail\ApprovalMailService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetDraftStatusService.
@@ -181,6 +186,49 @@ class SetDraftStatusServiceAwal
             'is_rejected' => '0',
         ];
         $model::create($dataApproval);
+
+        $message = 'Halo! Test!';
+        $data = [
+            'status' => 'Approval Pengukuran',
+            'link' => route('dashboard'),
+            'penerima' => 'ferdyyrahmat@gmail.com',
+            'body' => $message
+        ];
+        $email = 'ferdyyrahmat@gmail.com';
+
+        // (new ApprovalMailService)->handle($email, $data);
+
+
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('role_name', 'Supervisor Engineering');
+        })->get();
+
+        $msg = 'test';
+        $userEmails = []; // Array to store user emails
+        $failedEmails = []; // Array to store emails that failed to send
+
+        foreach ($users as $user) {
+            $userEmails[] = $user->email; // Store the email in the array
+
+            try {
+                // Attempt to send notification to the user
+                $user->notify(new SendApproval($msg));
+            } catch (\Exception $e) {
+                // Log the error message
+                Log::error('Failed to send email to ' . $user->email . ': ' . $e->getMessage());
+
+                // Optionally, store the failed email for further processing or reporting
+                $failedEmails[] = $user->email;
+            }
+        }
+
+        // Optionally, log the successful emails sent
+        Log::info('Emails sent to: ', $userEmails);
+
+        // Optionally, log the failed emails
+        if (!empty($failedEmails)) {
+            Log::warning('Failed to send emails to: ', $failedEmails);
+        }
     }
 
     private function generateNewId($req_id, $prefix)
