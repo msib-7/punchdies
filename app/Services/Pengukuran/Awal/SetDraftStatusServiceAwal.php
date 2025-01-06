@@ -14,6 +14,7 @@ use App\Notifications\SendApproval;
 use App\Services\Mail\ApprovalMailService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Class SetDraftStatusService.
@@ -187,18 +188,6 @@ class SetDraftStatusServiceAwal
         ];
         $model::create($dataApproval);
 
-        $message = 'Halo! Test!';
-        $data = [
-            'status' => 'Approval Pengukuran',
-            'link' => route('dashboard'),
-            'penerima' => 'ferdyyrahmat@gmail.com',
-            'body' => $message
-        ];
-        $email = 'ferdyyrahmat@gmail.com';
-
-        // (new ApprovalMailService)->handle($email, $data);
-
-
         $users = User::whereHas('roles', function ($query) {
             $query->where('role_name', 'Supervisor Engineering');
         })->get();
@@ -208,11 +197,19 @@ class SetDraftStatusServiceAwal
         $failedEmails = []; // Array to store emails that failed to send
 
         foreach ($users as $user) {
-            $userEmails[] = $user->email; // Store the email in the array
+            // $userEmails[] = $user->email; // Store the email in the array
+            $message = 'Halo! Test!';
+            $data = [
+                'status' => 'Waiting Approval',
+                'link' => route('dashboard'),
+                'penerima' => $user->nama,
+                'body' => $message
+            ];
 
             try {
-                // Attempt to send notification to the user
-                $user->notify(new SendApproval($msg));
+                // // Attempt to send notification to the user
+                // $user->notify(new SendApproval($msg));
+                Mail::to($user->email)->send(new \App\Mail\SendApproval($data));
             } catch (\Exception $e) {
                 // Log the error message
                 Log::error('Failed to send email to ' . $user->email . ': ' . $e->getMessage());

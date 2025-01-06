@@ -14,9 +14,9 @@ class SendApproval extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($message)
+    public function __construct($data)
     {
-        // dd($message);
+        $this->data = $data;
     }
 
     /**
@@ -34,10 +34,16 @@ class SendApproval extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+
         return (new MailMessage)
+                    ->view('mail.sendApproval')
                     ->line('Approval.')
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
+        // return (new MailMessage)
+        //             ->line('Approval.')
+        //             ->action('Notification Action', url('/'))
+        //             ->line('Thank you for using our application!');
     }
 
     /**
