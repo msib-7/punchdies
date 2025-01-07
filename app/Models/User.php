@@ -63,22 +63,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Lines::class, 'line_id', 'id');
     }
-
-    public function getUserRole($where = false)
-    {
-        if($where === false){
-            $builder = DB::table('users');
-            $builder->select('*');
-            $builder->Join('roles', 'users.role_id', '=', 'roles.id');
-            $builder->orderBy('users.id', 'asc');
-            return $query = $builder->get();
-        } else {
-            $builder = DB::table('users');
-            $builder->select('*');
-            $builder->where($where);
-            $builder->Join('roles', 'users.role_id', '=', 'roles.id');
-            $builder->orderBy('users.id', 'asc');
-            return $query = $builder->get();
-        }
-    }
 }

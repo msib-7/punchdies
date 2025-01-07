@@ -172,7 +172,7 @@
                                 </div>
                                 <!--begin::User details-->
                             </td>
-                            <td>{{$data->role_name}}</td>
+                            <td>{{$data->roles->role_name}}</td>
                             <td>
                                 @if ($data->last_login_at == null)
                                     n/a

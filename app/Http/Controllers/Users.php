@@ -17,7 +17,8 @@ class Users extends Controller
     {
         $modelUser = new User();
         // $dataUser = User::all();
-        $dataUser = $modelUser->getUserRole()->all();
+        // $dataUser = $modelUser->getUserRole()->all();
+        $dataUser = User::with('roles')->get();
         $dataRoles = Roles::orderBy('role_name', 'asc')->get();
         $dataLines = Lines::orderBy('nama_line', 'asc')->get();
         $data['dataUser'] = $dataUser;
@@ -114,7 +115,12 @@ class Users extends Controller
     }
     public function delete_user($id)
     {
-        User::where('id', '=', $id)->delete();
+        $user = User::find($id);
+
+        if (!$user) {
+            return redirect(route('admin.users.index'))->with('error', 'User not found!');
+        }
+        User::where('id',  $id)->delete();
         return redirect(route('admin.users.index'))->with('success', 'User deleted successfully');
     }
 }
