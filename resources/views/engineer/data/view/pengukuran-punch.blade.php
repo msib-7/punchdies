@@ -5,13 +5,13 @@
     <!--begin::Engage-->
 	<div class="app-engage " id="kt_app_engage">  
 		<!--begin::Prebuilts toggle-->
-        <a href="{{route('pnd.'.$masaPengukuran.'.'.$route.'.print', $labelPunch->punch_id)}}" class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
+        <a href="{{route('pnd.'.$masaPengukuran.'.'.$route.'.print', request()->segment(5))}}" class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
             <i class="ki-duotone ki-printer fs-1 pt-1 mb-2">
-                <span class="path1"></span>
-                <span class="path2"></span>
-                <span class="path3"></span>
-                <span class="path4"></span>
-                <span class="path5"></span>
+            <span class="path1"></span>
+            <span class="path2"></span>
+            <span class="path3"></span>
+            <span class="path4"></span>
+            <span class="path5"></span>
             </i>
             Print/PDF
         </a>
