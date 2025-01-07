@@ -113,8 +113,8 @@
                                             <th>Submission by</th>
                                             <th>Submission date</th>
                                             <th class="text-center">Status</th>
-                                            <th>Approve by</th>
-                                            <th>Approved at</th>
+                                            <th>Response by</th>
+                                            <th>Response at</th>
                                             <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
@@ -162,7 +162,11 @@
                                                     </button>
                                                 </td>
                                             @endif
-                                            <td>{{$item->by}}</td>
+                                            @if ($item->by == '-' || $item->by == null)
+                                                <td>-</td>
+                                            @else
+                                                <td>{{ $item->user_by->nama}}</td>
+                                            @endif
                                             <td>{{$item->at}}</td>
                                             <td class="text-center">
                                                 <a href="{{route('pnd.approval.histori.show-detail-disposal', $item->req_id)}}">

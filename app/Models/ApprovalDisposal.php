@@ -20,6 +20,10 @@ class ApprovalDisposal extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    public function user_by()
+    {
+        return $this->belongsTo(User::class, 'by', 'id');
+    }
     public function punch()
     {
         return $this->belongsTo(Punch::class, 'punch_id', 'punch_id');

@@ -57,8 +57,7 @@
                                                         @php $printed = true; @endphp
                                                     @endif
                                                 @endforeach
-                                            @endif
-                                            @if ($item->dies_id != null || $item->dies_id != '-')
+                                            @elseif ($item->dies_id != null || $item->dies_id != '-')
                                                 @php $printed = false; @endphp
                                                 @foreach ($dataDies as $dies)
                                                     @if ($item->dies_id == $punch->dies_id && !$printed)
@@ -93,9 +92,13 @@
                                             <td>{{$item->due_date}}</td>
                                             <td class="text-center">
                                                 @if ($item->is_approved == '1' && $item->is_rejected == '0')
-                                                    <i>approved</i>
+                                                    <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold">
+                                                        Approved
+                                                    </button>
                                                 @elseif ($item->is_rejected == '1' && $item->is_approved == '0')
-                                                    <i>rejected</i>
+                                                    <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold">
+                                                        Rejected
+                                                    </button>
                                                 @else
                                                     <a href="{{route('pnd.approval.dis.show', $item->id)}}">
                                                         <button class="btn btn-sm btn-primary">
