@@ -193,7 +193,6 @@ class PengukuranController extends Controller
             }
         }
     }
-
     public function view_pengukuran(Request $request, $id)
     {
         if ($request->segment(3) == 'punch-atas') {
