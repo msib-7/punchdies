@@ -9,7 +9,7 @@
             </h1>
             <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                 <li class="breadcrumb-item text-muted">
-                    <span class="text-muted text-hover-primary">Total Punch: <b>{{ $ttlDies }}</b></span>
+                    <span class="text-muted text-hover-primary">Total Dies: <b>{{ $ttlDies }}</b></span>
                 </li>
             </ul>
         </div>
