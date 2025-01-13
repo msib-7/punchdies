@@ -778,6 +778,7 @@ class PengukuranController extends Controller
 
                 //Get Masa Pengukuran
                 $masaPengukuran = $query->latest()->first()->masa_pengukuran;
+                // dd($masaPengukuran);
 
                 //Get Data Pengukuran
                 if($masaPengukuran == 'pengukuran awal'){
@@ -785,6 +786,7 @@ class PengukuranController extends Controller
                 }else{
                     $pengukuran = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->get();
                 }
+                // dd($pengukuran);
                 //Cek status OK/NOK 
                 $hasNok = $pengukuran->contains(function ($item) {
                     return $item->status === 'NOK'; // Asumsikan 'status' adalah nama kolom
@@ -792,9 +794,11 @@ class PengukuranController extends Controller
                 // dd($hasNok);
                 //Cek Data Approval ada / tidak
                 $cekApproval = $query->exists();
+                // dd($cekApproval);
                 if ($cekApproval) {
                     //Get Data Approval 
                     $dataApproval = $query->latest()->first();
+                    // dd($dataApproval);
 
                     if ($dataApproval->is_approved == '0' && $dataApproval->is_rejected == '0') { // Jika Data Pengukuran Belum diapprove tidak bisa buat pengukuran baru
                         return response()->json([

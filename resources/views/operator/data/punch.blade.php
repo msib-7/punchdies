@@ -273,7 +273,7 @@
                                 </table>
                                 <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
                                     @if($data->masa_pengukuran == '-') <!-- Check if there's no pengukuran awal -->
-                                        <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->punch_id}}" onclick="buatPengukuran(this)">Buat Pengukuran</button>
+                                        <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->punch_id}}" onclick="opsiPengukuran(this)">Pengukuran</button>
                                     @endif
                                     <button class="btn btn-secondary" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
                                         <i class="ki-outline ki-eye fs-2"></i>

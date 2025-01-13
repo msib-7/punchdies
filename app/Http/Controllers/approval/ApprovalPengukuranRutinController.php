@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\approval;
 
+use App\Events\NotificationEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Dies;
 use App\Models\ApprovalPengukuran;
@@ -9,9 +10,10 @@ use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinDies;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
-use DB;
 use Illuminate\Http\Request;
-use Log;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class ApprovalPengukuranRutinController extends Controller
 {
@@ -40,7 +42,7 @@ class ApprovalPengukuranRutinController extends Controller
                 ->where('pengukuran_rutin_punchs.masa_pengukuran', $data->masa_pengukuran)
                 ->where('punchs.punch_id', $data->punch_id);
 
-            $labelIdentitas = $query->first();
+            $labelIdentitas = $query->orderBy('punchs.created_at', 'desc')->first();
             $dataPengukuran = PengukuranRutinPunch::where('punch_id', $data->punch_id)
                 ->where('masa_pengukuran', $data->masa_pengukuran)
                 ->get();
@@ -54,7 +56,7 @@ class ApprovalPengukuranRutinController extends Controller
             ->where('pengukuran_rutin_diess.masa_pengukuran', $data->masa_pengukuran)
             ->where('diess.dies_id', $data->dies_id);
             
-            $labelIdentitas = $query->first();
+            $labelIdentitas = $query->orderBy('diess.created_at', 'desc')->first();
             $dataPengukuran = PengukuranRutinDies::where('dies_id', $data->dies_id)
             ->where('masa_pengukuran', $data->masa_pengukuran)
             ->get();
@@ -98,6 +100,14 @@ class ApprovalPengukuranRutinController extends Controller
                 PengukuranRutinDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
             }
 
+            // Buat NOtifikasi Ke Penerima
+            event(new NotificationEvent(
+                $data->user_id,
+                'Approved!, Pengukuran Rutin',
+                'Pengukuran Rutin telah approved oleh Supervisor ' . auth()->user()->nama,
+                route('pnd.pr.atas.index')
+            ));
+
             DB::commit();
 
             return redirect(route('pnd.approval.pr.index'))->with('success', 'Data Approved Successfully! by '.auth()->user()->nama);
@@ -140,6 +150,52 @@ class ApprovalPengukuranRutinController extends Controller
             } elseif (!$isNullDiesId) { //JIka Tidak Kosong update status approved pada table diess
                 Dies::where(['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
                 PengukuranRutinDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
+            }
+
+            // Buat NOtifikasi Ke Penerima
+            event(new NotificationEvent(
+                $data->user_id,
+                'Rejected, Pengukuran Rutin',
+                'Pengukuran Rutin telah rejected oleh Supervisor ' . auth()->user()->nama,
+                route('pnd.pr.atas.index')
+            ));
+            // Buat NOtifikasi Ke Pengirim
+            event(new NotificationEvent(
+                auth()->user()->id,
+                'Success Rejected Pengukuran Rutin',
+                'Pengukuran Rutin telah rejected oleh Supervisor ' . auth()->user()->nama,
+                route('pnd.approval.pr.index')
+            ));
+
+            $userEmail = $data->users->email;
+            $userName = $data->users->nama; // Array to store user emails
+            $failedEmail = []; // Array to store emails that failed to send
+
+            $message = 'Halo, Supervisor telah menolak approval Anda. Silakan periksa kembali data yang telah Anda ajukan dan lakukan perbaikan jika diperlukan.';
+            $data = [
+                'status' => 'Rejected',
+                'link' => route('pnd.pr.atas.index'),
+                'penerima' => $userName,
+                'body' => $message
+            ];
+
+            try {
+                // // Attempt to send notification to the user
+                Mail::to($userEmail)->send(new \App\Mail\SendApproval($data));
+            } catch (\Exception $e) {
+                // Log the error message
+                Log::error('Failed to send email to ' . $userEmail . ': ' . $e->getMessage());
+
+                // Optionally, store the failed email for further processing or reporting
+                $failedEmails[] = $userEmail;
+            }
+
+            // Optionally, log the successful emails sent
+            Log::info('Emails sent to: ', [$userEmail]);
+
+            // Optionally, log the failed emails
+            if (!empty($failedEmails)) {
+                Log::warning('Failed to send email to: ', $failedEmail);
             }
 
             DB::commit();

@@ -244,7 +244,7 @@
                                                                 <div
                                                                     style="color:#B1AED1;font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:20px;font-weight:700;line-height:120%;text-align:center;mso-line-height-alt:24px;">
                                                                     <p style="margin: 0; word-break: break-word;">
-                                                                        <span>MSTD NOTIFICATIONS</span>
+                                                                        <span>TSUP NOTIFICATIONS</span>
                                                                     </p>
                                                                 </div>
                                                             </td>
@@ -361,9 +361,9 @@
                                                                     </p>
                                                                     <p style="margin: 0; margin-bottom: 4px;">&nbsp;
                                                                     </p>
-                                                                    <p style="margin: 0; margin-bottom: 4px;">Fauzan
-                                                                        Taqiyuddin</p>
-                                                                    <p style="margin: 0;">MSTD IT</p>
+                                                                    {{-- <p style="margin: 0; margin-bottom: 4px;">Fauzan
+                                                                        Taqiyuddin</p> --}}
+                                                                    <p style="margin: 0;">Plant Technical Support</p>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -380,8 +380,7 @@
                                                                 style="padding-bottom:20px;padding-left:20px;padding-right:35px;">
                                                                 <div
                                                                     style="color:#827a7a;direction:ltr;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:9px;font-weight:500;letter-spacing:0px;line-height:120%;text-align:right;mso-line-height-alt:10.799999999999999px;">
-                                                                    <p style="margin: 0;">Manufacturing System &
-                                                                        Technology Dev<br>PT Kalbe Farma Tbk<br>Jl. MH
+                                                                    <p style="margin: 0;">Plant Technology Development<br>PT Kalbe Farma Tbk<br>Jl. MH
                                                                         Thamrin Blok A3 - 1<br>Lippo Cikarang
                                                                         17550<br>Tel. +6221 89907333</p>
                                                                 </div>
@@ -461,7 +460,7 @@
                                                                         <p
                                                                             style="margin: 0; font-size: 14px; text-align: center; mso-line-height-alt: 16.8px;">
                                                                             Copyright {{ date('Y') }} ©️ All rights
-                                                                            reserved<br>Made with ❤️&nbsp;MSTD IT</p>
+                                                                            reserved<br>Made with ❤️&nbsp;TSUP</p>
                                                                     </div>
                                                                 </div>
                                                             </td>

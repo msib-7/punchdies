@@ -93,13 +93,6 @@ class LineController extends Controller
             return redirect(route('admin.line.index'))->with('error', $nama_line . ' Sudah Ada!');
 
         }
-        // try {
-            
-            
-        // } catch (\Throwable $th) {
-        //     //throw $th;
-        // }
-        // return redirect(route('lines'))->with('success', 'Line Name berhasil diUpdate!');
     }
     public function delete_line($id)
     {

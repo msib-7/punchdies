@@ -2,6 +2,7 @@
 
 namespace App\Services\Pengukuran\Awal;
 
+use App\Events\NotificationEvent;
 use App\Models\Dies;
 use App\Models\ApprovalPengukuran;
 use App\Models\PengukuranAwalDies;
@@ -13,6 +14,7 @@ use App\Models\User;
 use App\Notifications\SendApproval;
 use App\Services\Mail\ApprovalMailService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -162,69 +164,98 @@ class SetDraftStatusServiceAwal
         $ApprovalPengukuran = new ApprovalPengukuran();
 
         if (in_array($jenis, ['punch-atas', 'punch-bawah'])) {
-            $this->createApprovalRequest($ApprovalPengukuran, 'RPU', session('punch_id'), null);
+            $this->createApprovalRequest($ApprovalPengukuran, 'RPU', session('punch_id'), null, $jenis);
         } elseif ($jenis == 'dies') {
-            $this->createApprovalRequest($ApprovalPengukuran, 'RDI', null, session('dies_id'));
+            $this->createApprovalRequest($ApprovalPengukuran, 'RDI', null, session('dies_id'), $jenis);
         }
     }
 
-    private function createApprovalRequest($model, $prefix, $punchId, $diesId)
+    private function createApprovalRequest($model, $prefix, $punchId, $diesId, $jenis)
     {
         $autonum = $model->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
         $id = !$autonum ? $prefix . date("ymd") . "0001" : $this->generateNewId($autonum->req_id, $prefix);
 
-        $dataApproval = [
-            'req_id' => $id,
-            'punch_id' => $punchId,
-            'dies_id' => $diesId,
-            'masa_pengukuran' => session('masa_pengukuran'),
-            'user_id' => session('user_id'),
-            'tgl_submit' => date('Y-m-d H:i:s'),
-            'due_date' => date('Y-m-d H:i:s', strtotime(date('Y-m-d 23:59:59') . " +6 days")),
-            'by' => '-',
-            'at' => null,
-            'is_approved' => '0',
-            'is_rejected' => '0',
-        ];
-        $model::create($dataApproval);
+        try {
+            DB::beginTransaction();
 
-        $users = User::whereHas('roles', function ($query) {
-            $query->where('role_name', 'Supervisor Engineering');
-        })->get();
-
-        $msg = 'test';
-        $userEmails = []; // Array to store user emails
-        $failedEmails = []; // Array to store emails that failed to send
-
-        foreach ($users as $user) {
-            // $userEmails[] = $user->email; // Store the email in the array
-            $message = 'Halo! Test!';
-            $data = [
-                'status' => 'Waiting Approval',
-                'link' => route('dashboard'),
-                'penerima' => $user->nama,
-                'body' => $message
+            $dataApproval = [
+                'req_id' => $id,
+                'punch_id' => $punchId,
+                'dies_id' => $diesId,
+                'masa_pengukuran' => session('masa_pengukuran'),
+                'user_id' => session('user_id'),
+                'tgl_submit' => date('Y-m-d H:i:s'),
+                'due_date' => date('Y-m-d H:i:s', strtotime(date('Y-m-d 23:59:59') . " +6 days")),
+                'by' => '-',
+                'at' => null,
+                'is_approved' => '0',
+                'is_rejected' => '0',
             ];
+            $model::create($dataApproval);
 
-            try {
-                // // Attempt to send notification to the user
-                // $user->notify(new SendApproval($msg));
-                Mail::to($user->email)->send(new \App\Mail\SendApproval($data));
-            } catch (\Exception $e) {
-                // Log the error message
-                Log::error('Failed to send email to ' . $user->email . ': ' . $e->getMessage());
+            $users = User::whereHas('roles', function ($query) {
+                $query->where('role_name', 'Supervisor Engineering');
+                    //   ->orWhere('role_name', 'Administraor');
+            })->get();
 
-                // Optionally, store the failed email for further processing or reporting
-                $failedEmails[] = $user->email;
+            // Buat NOtifikasi Ke Pengirim
+            event(new NotificationEvent(
+                auth()->user()->id,
+                'Success Sending Approval',
+                'Data Pengukuran Awal telah dikirim oleh '. auth()->user()->nama .' ke Approval menunggu response dari Supervisor ',
+                route('pnd.pa.atas.index')
+            ));
+
+            $userEmails = []; // Array to store user emails
+            $failedEmails = []; // Array to store emails that failed to send
+
+            foreach ($users as $user) {
+                // $userEmails[] = $user->email; // Store the email in the array
+
+                // Buat NOtifikasi Ke Penerima
+                event(new NotificationEvent(
+                    $user->user_id,
+                    'Waiting!, Approval Pengukuran Awal',
+                    'User ' . auth()->user()->nama . ' telah mengirim data approval dan menunggu persetujuan Anda.',
+                    route('pnd.approval.pa.index')
+                ));
+
+                $message = 'Halo anda baru saja menerima permintaan persetujuan Pengukuran Awal ' . $jenis . ' yang telah dibuat oleh ' . auth()->user()->nama . ' Silahkan lakukan persetujuan segera.';
+                $data = [
+                    'status' => 'Waiting Approval',
+                    'link' => route('pnd.approval.pa.index'),
+                    'penerima' => $user->nama,
+                    'body' => $message
+                ];
+
+                try {
+                    // // Attempt to send notification to the user
+                    Mail::to($user->email)->send(new \App\Mail\SendApproval($data));
+                } catch (\Exception $e) {
+                    // Log the error message
+                    Log::error('Failed to send email to ' . $user->email . ': ' . $e->getMessage());
+
+                    // Optionally, store the failed email for further processing or reporting
+                    $failedEmails[] = $user->email;
+                }
             }
-        }
 
-        // Optionally, log the successful emails sent
-        Log::info('Emails sent to: ', $userEmails);
+            // Optionally, log the successful emails sent
+            Log::info('Emails sent to: ', $userEmails);
 
-        // Optionally, log the failed emails
-        if (!empty($failedEmails)) {
-            Log::warning('Failed to send emails to: ', $failedEmails);
+            // Optionally, log the failed emails
+            if (!empty($failedEmails)) {
+                Log::warning('Failed to send emails to: ', $failedEmails);
+            }
+
+            DB::commit();
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            // Log error untuk debugging
+            Log::error('Error added create Approval : ' . $th->getMessage());
+
         }
     }
 

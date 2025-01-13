@@ -9,6 +9,9 @@ use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinDies;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Class SetDraftStatusServiceRutin.
@@ -143,13 +146,13 @@ class SetDraftStatusServiceRutin
         $ApprovalPengukuran = new ApprovalPengukuran();
 
         if (in_array($jenis, ['punch-atas', 'punch-bawah'])) {
-            $this->createApprovalRequest($ApprovalPengukuran, 'RPU', session('punch_id'), null, $masa_pengukuran);
+            $this->createApprovalRequest($ApprovalPengukuran, 'RPU', session('punch_id'), null, $masa_pengukuran, $jenis);
         } elseif ($jenis == 'dies') {
-            $this->createApprovalRequest($ApprovalPengukuran, 'RDI', null, session('dies_id'), $masa_pengukuran);
+            $this->createApprovalRequest($ApprovalPengukuran, 'RDI', null, session('dies_id'), $masa_pengukuran, $jenis);
         }
     }
 
-    private function createApprovalRequest($model, $prefix, $punchId, $diesId, $masa_pengukuran)
+    private function createApprovalRequest($model, $prefix, $punchId, $diesId, $masa_pengukuran, $jenis)
     {
         $autonum = $model->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
         $id = !$autonum ? $prefix . date("ymd") . "0001" : $this->generateNewId($autonum->req_id, $prefix);
@@ -168,6 +171,44 @@ class SetDraftStatusServiceRutin
             'is_rejected' => '0',
         ];
         $model::create($dataApproval);
+
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('role_name', 'Supervisor Produksi');
+        })->get();
+
+        $userEmails = []; // Array to store user emails
+        $failedEmails = []; // Array to store emails that failed to send
+
+        foreach ($users as $user) {
+            // $userEmails[] = $user->email; // Store the email in the array
+
+            $message = 'Halo anda baru saja menerima permintaan persetujuan Pengukuran Rutin ' . $jenis . ' yang telah dibuat oleh ' . auth()->user()->nama . ' Silahkan lakukan persetujuan segera.';
+            $data = [
+                'status' => 'Waiting Approval',
+                'link' => route('pnd.approval.pr.index'),
+                'penerima' => $user->nama,
+                'body' => $message
+            ];
+
+            try {
+                // // Attempt to send notification to the user
+                Mail::to($user->email)->send(new \App\Mail\SendApproval($data));
+            } catch (\Exception $e) {
+                // Log the error message
+                Log::error('Failed to send email to ' . $user->email . ': ' . $e->getMessage());
+
+                // Optionally, store the failed email for further processing or reporting
+                $failedEmails[] = $user->email;
+            }
+        }
+
+        // Optionally, log the successful emails sent
+        Log::info('Emails sent to: ', $userEmails);
+
+        // Optionally, log the failed emails
+        if (!empty($failedEmails)) {
+            Log::warning('Failed to send emails to: ', $failedEmails);
+        }
     }
 
     private function generateNewId($req_id, $prefix)

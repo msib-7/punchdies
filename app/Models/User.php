@@ -63,4 +63,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Lines::class, 'line_id', 'id');
     }
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+    public function notify()
+    {
+        return $this->notifications()->orderBy('created_at', 'desc')->get();
+    }
 }
