@@ -2,6 +2,7 @@
 
 namespace App\Services\Pengukuran\Rutin;
 
+use App\Events\NotificationEvent;
 use App\Models\Dies;
 use App\Models\ApprovalPengukuran;
 use App\Models\PengukuranAwalDies;
@@ -176,11 +177,27 @@ class SetDraftStatusServiceRutin
             $query->where('role_name', 'Supervisor Produksi');
         })->get();
 
+        // Buat NOtifikasi Ke Pengirim
+        event(new NotificationEvent(
+            auth()->user()->id,
+            'Success Sending Approval',
+            'Data Pengukuran Rutin telah dikirim oleh ' . auth()->user()->nama . ' ke Approval menunggu response dari Supervisor ',
+            route('pnd.pr.atas.index')
+        ));
+
         $userEmails = []; // Array to store user emails
         $failedEmails = []; // Array to store emails that failed to send
 
         foreach ($users as $user) {
             // $userEmails[] = $user->email; // Store the email in the array
+
+            // Buat NOtifikasi Ke Penerima
+            event(new NotificationEvent(
+                $user->user_id,
+                'Waiting!, Approval Pengukuran Rutin',
+                'User ' . auth()->user()->nama . ' telah mengirim data approval dan menunggu persetujuan Anda.',
+                route('pnd.approval.pr.show', $id)
+            ));
 
             $message = 'Halo anda baru saja menerima permintaan persetujuan Pengukuran Rutin ' . $jenis . ' yang telah dibuat oleh ' . auth()->user()->nama . ' Silahkan lakukan persetujuan segera.';
             $data = [
