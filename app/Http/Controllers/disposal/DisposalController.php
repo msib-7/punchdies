@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\disposal;
 
+use App\Events\NotificationEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Dies;
 use App\Models\ApprovalDisposal;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class DisposalController extends Controller
 {
@@ -142,6 +146,67 @@ class DisposalController extends Controller
         // Retrieve the newly created or updated record
         $newApproval = ApprovalDisposal::where('punch_id', $id)->latest()->first();
         $disposalId = $newApproval->id;
+
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('role_name', 'Manager Produksi');
+            //   ->orWhere('role_name', 'Administraor');
+        })->get();
+
+        // if ($punchId == null || $punchId == '-') {
+        //     $idView = $diesId;
+        // } elseif ($diesId == null || $diesId == '-') {
+        //     $idView = $punchId;
+        // }
+
+        // Buat NOtifikasi Ke Pengirim
+        event(new NotificationEvent(
+            auth()->user()->id,
+            'Success Sending Disposal',
+            'Data Permintaan Disposal telah dikirim oleh ' . auth()->user()->nama . ' ke Approval menunggu response dari Manager ',
+            route('pnd.pa.atas.view')
+        ));
+
+        $userEmails = []; // Array to store user emails
+        $failedEmails = []; // Array to store emails that failed to send
+
+        foreach ($users as $user) {
+            // $userEmails[] = $user->email; // Store the email in the array
+
+            // Buat NOtifikasi Ke Penerima
+            event(new NotificationEvent(
+                $user->user_id,
+                'Waiting!, Approval Pengukuran Awal',
+                'User ' . auth()->user()->nama . ' telah mengirim data approval dan menunggu persetujuan Anda.',
+                route('pnd.approval.dis.show', $newId)
+            ));
+
+            $message = 'Halo anda baru saja menerima permintaan persetujuan Disposal  yang telah dibuat oleh ' . auth()->user()->nama . ' Silahkan lakukan persetujuan segera.';
+            $data = [
+                'status' => 'Waiting Approval',
+                'link' => route('pnd.approval.dis.show', $newId),
+                'penerima' => $user->nama,
+                'body' => $message
+            ];
+
+            try {
+                // // Attempt to send notification to the user
+                Mail::to($user->email)->send(new \App\Mail\SendApproval($data));
+            } catch (\Exception $e) {
+                // Log the error message
+                Log::error('Failed to send email to ' . $user->email . ': ' . $e->getMessage());
+
+                // Optionally, store the failed email for further processing or reporting
+                $failedEmails[] = $user->email;
+            }
+        }
+
+        // Optionally, log the successful emails sent
+        Log::info('Emails sent to: ', $userEmails);
+
+        // Optionally, log the failed emails
+        if (!empty($failedEmails)) {
+            Log::warning('Failed to send emails to: ', $failedEmails);
+        }
 
         return redirect()->route('pnd.request.disposal.show', $disposalId)->with('success', 'Files uploaded successfully!');
     }

@@ -50,6 +50,8 @@ class SetDraftStatusServiceAwal
             return 'atas';
         } elseif ($segment == 'punch-bawah') {
             return 'bawah';
+        } elseif($segment == 'dies'){
+            return 'dies';
         }
     }
     private function getSegment($route)
@@ -127,6 +129,15 @@ class SetDraftStatusServiceAwal
             ->where('inner_diameter_2', '!=', '0')
             ->where('ketinggian_dies', '!=', '0')
             ->where('visual', '!=', '-')
+            ->where('kesesuaian_dies', '!=', '-')
+            //
+            ->orWhere('dies_id', session('dies_id'))
+            ->where('masa_pengukuran', 'pengukuran awal')
+            ->where('outer_diameter', '!=', null)
+            ->where('inner_diameter_1', '!=', null)
+            ->where('inner_diameter_2', '!=', null)
+            ->where('ketinggian_dies', '!=', null)
+            ->where('visual', '!=', '-')
             ->where('kesesuaian_dies', '!=', '-');
 
         $getData->update($updateDraftStatus);
@@ -198,12 +209,18 @@ class SetDraftStatusServiceAwal
                     //   ->orWhere('role_name', 'Administraor');
             })->get();
 
+            if ($punchId == null || $punchId == '-') {
+                $idView = $diesId;
+            } elseif ($diesId == null || $diesId == '-') {
+                $idView = $punchId;
+            }
+
             // Buat NOtifikasi Ke Pengirim
             event(new NotificationEvent(
                 auth()->user()->id,
                 'Success Sending Approval',
                 'Data Pengukuran Awal telah dikirim oleh '. auth()->user()->nama .' ke Approval menunggu response dari Supervisor ',
-                route('pnd.pa.atas.index')
+                route('pnd.pa.'. $this->getRoute($jenis) .'.view', $idView)
             ));
 
             $userEmails = []; // Array to store user emails
@@ -212,18 +229,19 @@ class SetDraftStatusServiceAwal
             foreach ($users as $user) {
                 // $userEmails[] = $user->email; // Store the email in the array
 
+                $uuid = ApprovalPengukuran::where('req_id', $id)->latest()->first()->id;
                 // Buat NOtifikasi Ke Penerima
                 event(new NotificationEvent(
                     $user->user_id,
                     'Waiting!, Approval Pengukuran Awal',
                     'User ' . auth()->user()->nama . ' telah mengirim data approval dan menunggu persetujuan Anda.',
-                    route('pnd.approval.pa.index')
+                    route('pnd.approval.pa.show', $uuid)
                 ));
 
                 $message = 'Halo anda baru saja menerima permintaan persetujuan Pengukuran Awal ' . $jenis . ' yang telah dibuat oleh ' . auth()->user()->nama . ' Silahkan lakukan persetujuan segera.';
                 $data = [
                     'status' => 'Waiting Approval',
-                    'link' => route('pnd.approval.pa.index'),
+                    'link' => route('pnd.approval.pa.show', $uuid),
                     'penerima' => $user->nama,
                     'body' => $message
                 ];

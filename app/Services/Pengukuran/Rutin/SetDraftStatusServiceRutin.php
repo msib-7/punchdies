@@ -44,6 +44,8 @@ class SetDraftStatusServiceRutin
             return 'atas';
         } elseif ($segment == 'punch-bawah') {
             return 'bawah';
+        } elseif($segment == 'dies'){
+            return 'dies';
         }
     }
     private function getSegment($route)
@@ -177,12 +179,17 @@ class SetDraftStatusServiceRutin
             $query->where('role_name', 'Supervisor Produksi');
         })->get();
 
+        if($punchId==null || $punchId=='-'){
+            $idView = $diesId;
+        }elseif($diesId==null || $diesId=='-'){
+            $idView = $punchId;
+        }
         // Buat NOtifikasi Ke Pengirim
         event(new NotificationEvent(
             auth()->user()->id,
             'Success Sending Approval',
             'Data Pengukuran Rutin telah dikirim oleh ' . auth()->user()->nama . ' ke Approval menunggu response dari Supervisor ',
-            route('pnd.pr.atas.index')
+            route('pnd.pr.'. $this->getRoute($jenis) .'.view', $idView)
         ));
 
         $userEmails = []; // Array to store user emails
@@ -191,18 +198,19 @@ class SetDraftStatusServiceRutin
         foreach ($users as $user) {
             // $userEmails[] = $user->email; // Store the email in the array
 
+            $uuid = ApprovalPengukuran::where('req_id', $id)->latest()->first()->id;
             // Buat NOtifikasi Ke Penerima
             event(new NotificationEvent(
                 $user->user_id,
                 'Waiting!, Approval Pengukuran Rutin',
                 'User ' . auth()->user()->nama . ' telah mengirim data approval dan menunggu persetujuan Anda.',
-                route('pnd.approval.pr.show', $id)
+                route('pnd.approval.pr.show', $uuid)
             ));
 
             $message = 'Halo anda baru saja menerima permintaan persetujuan Pengukuran Rutin ' . $jenis . ' yang telah dibuat oleh ' . auth()->user()->nama . ' Silahkan lakukan persetujuan segera.';
             $data = [
                 'status' => 'Waiting Approval',
-                'link' => route('pnd.approval.pr.index'),
+                'link' => route('pnd.approval.pr.show', $uuid),
                 'penerima' => $user->nama,
                 'body' => $message
             ];

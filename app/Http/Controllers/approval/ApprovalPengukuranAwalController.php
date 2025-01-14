@@ -52,6 +52,8 @@ class ApprovalPengukuranAwalController extends Controller
             $status = '<span class="badge badge-square badge-outline badge-light-warning fs-4">Waiting For Approval</span>';
         } elseif ($checkStatus->is_approved == '1' and $checkStatus->is_rejected == '0') {
             $status = "<span class='badge badge-light-success fs-3'>Approved</span>";
+        } elseif($checkStatus->is_approved == '0' and $checkStatus->is_rejected == '1'){
+            $status = "<span class='badge badge-light-danger fs-3'>Rejected</span>";
         }
 
         return view('approval.pengukuranAwal.show', compact('labelIdentitas', 'dataPengukuran', 'tglPengukuran', 'status', 'data', 'show'));
@@ -145,7 +147,7 @@ class ApprovalPengukuranAwalController extends Controller
             auth()->user()->id,
             'Success Rejected Pengukuran Awal',
             'Pengukuran Awal telah rejected oleh Supervisor ' . auth()->user()->nama,
-            route('pnd.approval.pa.index')
+            route('pnd.approval.pa.show', $data->id)
         ));
 
         $userEmail = $data->users->email; 

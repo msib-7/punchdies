@@ -71,10 +71,13 @@
                 <!--begin::Notifications-->
                 <div class="app-navbar-item ms-1 ms-md-4">
                     <!--begin::Menu- wrapper-->
-                    <div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px"
+                    <div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px position-relative"
                         data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end" id="kt_menu_item_wow">
                         <i class="ki-outline ki-notification-status fs-2"></i>
+                        @if(auth()->user()->notify()->count() > 0)
+                            <span class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+                        @endif
                     </div>
                     <!--begin::Menu-->
                     <div class="menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px" data-kt-menu="true"
