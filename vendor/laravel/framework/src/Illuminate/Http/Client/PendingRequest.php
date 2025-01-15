@@ -941,7 +941,7 @@ class PendingRequest
                 $exception = new ConnectionException($e->getMessage(), 0, $e);
                 $request = new Request($e->getRequest());
 
-                $this->factory->recordRequestResponsePair($request, null);
+                $this->factory?->recordRequestResponsePair($request, null);
 
                 $this->dispatchConnectionFailedEvent($request, $exception);
 
@@ -1153,7 +1153,7 @@ class PendingRequest
 
         $laravelData = $options[$this->bodyFormat] ?? $options['query'] ?? [];
 
-        $urlString = Str::of($url);
+        $urlString = (new Stringable($url));
 
         if (empty($laravelData) && $method === 'GET' && $urlString->contains('?')) {
             $laravelData = (string) $urlString->after('?');

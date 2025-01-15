@@ -1,11 +1,11 @@
 @extends('layout.metronic')
 @section('main-content')
 <!--begin::Content-->
-<div id="kt_app_content" class="app-content flex-column-fluid">
+<div id="kt_app_content" class="app-content flex-column-fluid content-to-print">
     <!--begin::Engage-->
 	<div class="app-engage " id="kt_app_engage">  
 		<!--begin::Prebuilts toggle-->
-        <a href="{{route('pnd.'.$masaPengukuran.'.'.$route.'.print', request()->segment(5))}}" class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
+        <button onclick="printContent()" class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
             <i class="ki-duotone ki-printer fs-1 pt-1 mb-2">
             <span class="path1"></span>
             <span class="path2"></span>
@@ -14,7 +14,7 @@
             <span class="path5"></span>
             </i>
             Print/PDF
-        </a>
+        </button>
 	</div>
 	<!--end::Engage-->
     <!--begin::Content container-->
@@ -326,31 +326,37 @@
     <!--end::Content container-->
 </div>
 
-{{-- Modal Konfirmasi Data Pengukuran --}}
 <script>
-    function printPage() {
-        // Get the entire content of the view
-        var content = document.getElementById('kt_app_content').innerHTML;
+function printContent() {
+    // Hide the print button
+    var printButton = document.getElementById('kt_drawer_example_basic_button');
+    printButton.style.display = 'none';
 
-        // Create a new window
-        var newWindow = window.open('', '', 'height=600,width=800');
+    // Get the content to print
+    var content = document.getElementById('kt_app_content').innerHTML;
 
-        // Write the content to the new window
-        newWindow.document.write('<html><head><title>Print</title>');
-        newWindow.document.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">'); // Include Bootstrap CSS for styling
-        newWindow.document.write('</head><body>');
-        newWindow.document.write(content); // Add the entire content
-        newWindow.document.write('</body></html>');
+    // Create a new window
+    var printWindow = window.open('', '', 'height=600,width=800');
 
-        // Close the document to finish writing
-        newWindow.document.close();
+    // Write the content to the new window
+    printWindow.document.write('<html><head><title>Print</title>');
+    printWindow.document.write('<link rel="stylesheet" href="/assets/plugins/global/plugins.bundle.css">'); // Include your CSS file if needed
+    printWindow.document.write('<link rel="stylesheet" href="/assets/css/style.bundle.css">'); // Include your CSS file if needed
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(content);
+    printWindow.document.write('</body></html>');
 
-        // Wait for the content to load, then print
-        newWindow.onload = function() {
-            newWindow.print();
-            newWindow.close();
-        };
-    }
+    // Close the document to finish loading
+    printWindow.document.close();
+
+    // Wait for the content to load, then print
+    printWindow.onload = function() {
+        printWindow.print();
+        printWindow.close();
+        // Show the print button again after the print window is closed
+        printButton.style.display = 'block';
+    };
+}
 </script>
 <!--end::Content-->
 @endsection

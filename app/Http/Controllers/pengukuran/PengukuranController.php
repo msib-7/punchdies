@@ -18,10 +18,12 @@ use App\Services\Rumus\GetRumusPengukuranAwalDies;
 use App\Services\Rumus\GetRumusPengukuranAwalPunch;
 use App\Services\Rumus\GetRumusPengukuranRutinDies;
 use App\Services\Rumus\GetRumusPengukuranRutinPunch;
-use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Constraint\IsNull;
+use Spatie\Browsershot\Browsershot;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class PengukuranController extends Controller
 {
@@ -1922,10 +1924,22 @@ class PengukuranController extends Controller
                 $data['dataPengukuran'] = $showPengukuranAll;
 
                 // Load the view and set the paper size to A4
-                $pdf = Pdf::loadView('partials.pdf.punch.pengukuranAwalPDF', $data)
-                    ->setPaper('A4', 'landscape'); // Set paper size and orientation
+                // $pdf = Pdf::loadView('partials.pdf.punch.pengukuranAwalPDF', $data)
+                //     ->setPaper('A4', 'landscape'); // Set paper size and orientation
 
-                return $pdf->stream('pengukuran_awal.pdf');
+                // return $pdf->stream('pengukuran_awal.pdf');
+
+                return Pdf::view('partials.pdf.punch.pengukuranAwalPDF', $data)
+                    ->format('A4')
+                    ->withBrowsershot(function (Browsershot $browsershot) {
+                        $browsershot->newHeadless()
+                            ->timeout(60000); // Increase timeout to 60 seconds
+                    });
+
+                // return Pdf::view('partials.pdf.punch.pengukuranAwalPDF', $data)
+                //     ->format('a4')
+                //     ->name('test.pdf');
+
             } elseif ($request->segment(2) == 'pengukuran-rutin') {
                 $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
                     ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
