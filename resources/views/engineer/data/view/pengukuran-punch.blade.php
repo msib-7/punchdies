@@ -1,11 +1,11 @@
 @extends('layout.metronic')
 @section('main-content')
 <!--begin::Content-->
-<div id="kt_app_content" class="app-content flex-column-fluid content-to-print">
+<div id="kt_app_content" class="app-content flex-column-fluid">
     <!--begin::Engage-->
 	<div class="app-engage " id="kt_app_engage">  
 		<!--begin::Prebuilts toggle-->
-        <button onclick="printContent()" class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
+        <a href="{{route('pnd.'.$masaPengukuran.'.'.$route.'.print', request()->segment(5))}}" class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
             <i class="ki-duotone ki-printer fs-1 pt-1 mb-2">
             <span class="path1"></span>
             <span class="path2"></span>
@@ -14,7 +14,7 @@
             <span class="path5"></span>
             </i>
             Print/PDF
-        </button>
+        </a>
 	</div>
 	<!--end::Engage-->
     <!--begin::Content container-->
@@ -325,38 +325,5 @@
     </div>
     <!--end::Content container-->
 </div>
-
-<script>
-function printContent() {
-    // Hide the print button
-    var printButton = document.getElementById('kt_drawer_example_basic_button');
-    printButton.style.display = 'none';
-
-    // Get the content to print
-    var content = document.getElementById('kt_app_content').innerHTML;
-
-    // Create a new window
-    var printWindow = window.open('', '', 'height=600,width=800');
-
-    // Write the content to the new window
-    printWindow.document.write('<html><head><title>Print</title>');
-    printWindow.document.write('<link rel="stylesheet" href="/assets/plugins/global/plugins.bundle.css">'); // Include your CSS file if needed
-    printWindow.document.write('<link rel="stylesheet" href="/assets/css/style.bundle.css">'); // Include your CSS file if needed
-    printWindow.document.write('</head><body>');
-    printWindow.document.write(content);
-    printWindow.document.write('</body></html>');
-
-    // Close the document to finish loading
-    printWindow.document.close();
-
-    // Wait for the content to load, then print
-    printWindow.onload = function() {
-        printWindow.print();
-        printWindow.close();
-        // Show the print button again after the print window is closed
-        printButton.style.display = 'block';
-    };
-}
-</script>
 <!--end::Content-->
 @endsection

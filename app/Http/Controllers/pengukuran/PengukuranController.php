@@ -1923,6 +1923,16 @@ class PengukuranController extends Controller
                 $showPengukuranAll = PengukuranAwalPunch::where('punch_id', '=', $id)->get();
                 $data['dataPengukuran'] = $showPengukuranAll;
 
+                $data['title'] = 'Pengukuran Awal Punch - '. $LabelPunch->merk;
+
+                if($request->segment(3) == 'punch-atas'){
+                    $jenis = 'Punch Atas';
+                }elseif($request->segment(3) == 'punch-bawah'){
+                    $jenis = 'Punch Bawah';
+                }
+
+                $data['jenis'] = $jenis;
+
                 // Load the view and set the paper size to A4
                 // $pdf = Pdf::loadView('partials.pdf.punch.pengukuranAwalPDF', $data)
                 //     ->setPaper('A4', 'landscape'); // Set paper size and orientation
@@ -1933,10 +1943,12 @@ class PengukuranController extends Controller
                     ->format('A4')
                     ->withBrowsershot(function (Browsershot $browsershot) {
                         $browsershot->newHeadless()
-                            ->timeout(60000); // Increase timeout to 60 seconds
+                            ->timeout(60000)
+                            ->scale(0.6); // Increase timeout to 60 seconds
                     });
 
                 // return Pdf::view('partials.pdf.punch.pengukuranAwalPDF', $data)
+                //     ->margins(2,2,2,2)
                 //     ->format('a4')
                 //     ->name('test.pdf');
 
