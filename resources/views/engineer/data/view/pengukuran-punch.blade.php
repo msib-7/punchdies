@@ -159,12 +159,10 @@
                                                                                         <span class="badge badge-square badge-outline badge-success">Approved</span>
                                                                                     @elseif ($labelPunch->is_rejected == '1') <!-- Check for rejection -->
                                                                                         <span class="badge badge-square badge-outline badge-danger">Rejected</span>
-                                                                                    @else
-                                                                                        @if ($labelPunch->is_draft == '1')
-                                                                                            <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                                                                                        @elseif ($labelPunch->is_draft == '0')
-                                                                                            <span class="badge badge-square badge-outline badge-warning">Waiting</span>
-                                                                                        @endif
+                                                                                    @elseif ($labelPunch->is_draft == '1')
+                                                                                        <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                                                                    @elseif ($labelPunch->is_waiting == '1')
+                                                                                        <span class="badge badge-square badge-outline badge-warning">Waiting</span>
                                                                                     @endif
                                                                                 </td>
                                                                             </tr>

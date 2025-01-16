@@ -1923,6 +1923,13 @@ class PengukuranController extends Controller
                 $showPengukuranAll = PengukuranAwalPunch::where('punch_id', '=', $id)->get();
                 $data['dataPengukuran'] = $showPengukuranAll;
 
+                $approvalData = ApprovalPengukuran::query()
+                            ->where('punch_id', $id)
+                            ->where('masa_pengukuran', session('masa_pengukuran_view'))
+                            ->latest()
+                            ->first();
+                $data['approvalInfo'] = $approvalData;
+
                 $data['title'] = 'Pengukuran Awal Punch - '. $LabelPunch->merk;
 
                 if($request->segment(3) == 'punch-atas'){

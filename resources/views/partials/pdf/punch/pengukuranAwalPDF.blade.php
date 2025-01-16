@@ -70,6 +70,9 @@
             padding: 10px 0;
             border-top: 1px solid #ddd;
         }
+        .table-header{
+            font-size: small;
+        }
 
         @media print {
             body {
@@ -139,16 +142,16 @@
             <table class="{{ !$loop->last ? 'new-page' : '' }}">
                 <thead>
                     <tr>
-                        <th>No Punch</th>
-                        <th>Head Outer Diameter</th>
-                        <th>Neck Diameter</th>
-                        <th>Barrel</th>
-                        <th>Overall Length</th>
-                        <th>Tip Diameter 1</th>
-                        <th>Tip Diameter 2</th>
-                        <th>Cup Depth</th>
-                        <th>Working Length</th>
-                        <th>Status</th>
+                        <th class="table-header text-center">No Punch</th>
+                        <th class="table-header text-center">Head Outer Diameter</th>
+                        <th class="table-header text-center">Neck Diameter</th>
+                        <th class="table-header text-center">Barrel</th>
+                        <th class="table-header text-center">Overall Length</th>
+                        <th class="table-header text-center">Tip Diameter 1</th>
+                        <th class="table-header text-center">Tip Diameter 2</th>
+                        <th class="table-header text-center">Cup Depth</th>
+                        <th class="table-header text-center">Working Length</th>
+                        <th class="table-header text-center">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -274,11 +277,37 @@
                         <thead>
                             <th class="text-center">Diukur Oleh</th>
                             <th class="text-center">Diverifikasi Oleh</th>
+                            <th class="text-center">Status</th>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="text-center">{{ $labelPunch->nama }}</td>
-                                <td class="text-center">{{ $labelPunch->by }}</td>
+                                <td class="text-center">
+                                    {{ $labelPunch->nama }}
+                                    <p>
+                                        {{ date_format($tglPengukuran->created_at, 'd M Y') }}
+                                    </p>
+                                </td>
+                                <td class="text-center">
+                                    {{ $approvalInfo->by }}
+                                    <p>
+                                        @if ($approvalInfo->at == null)
+                                            -
+                                        @else
+                                            {{ date_format(new DateTime($approvalInfo->at), 'd M Y') }}
+                                        @endif
+                                    </p>
+                                </td>
+                                <td class="text-center">
+                                    @if ($labelPunch->is_approved == '1')
+                                        <span class="badge badge-square badge-outline badge-success">Approved</span>
+                                    @elseif ($labelPunch->is_rejected == '1') <!-- Check for rejection -->
+                                        <span class="badge badge-square badge-outline badge-danger">Rejected</span>
+                                    @elseif ($labelPunch->is_draft == '1')
+                                        <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                    @elseif ($labelPunch->is_waiting == '1')
+                                        <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                                    @endif
+                                </td>
                             </tr>
                         </tbody>
                     </table>
