@@ -940,8 +940,8 @@ class PengukuranController extends Controller
                 $dataPengukuran = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
                     ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
                     ->where('diess.dies_id', $id)
-                    ->orderby('diess.dies_id', 'desc')
-                    ->orderBy('diess.id', 'desc')
+                    // ->orderby('diess.dies_id', 'desc')
+                    ->orderBy('diess.created_at', 'desc')
                     ->first();
             }
             if ($pengukuran == "pengukuran awal") {
@@ -955,6 +955,7 @@ class PengukuranController extends Controller
                 'success' => true,
                 'message' => 'Dies Data',
                 'masa_pengukuran_pre' => $pengukuran,
+                'tgl_terakhir' => $dataDies->created_at,
                 'masa_pengukuran' => $masa_pengukuran,
                 'data' => $dataPengukuran
             ]);
@@ -1929,22 +1930,15 @@ class PengukuranController extends Controller
                             ->latest()
                             ->first();
                 $data['approvalInfo'] = $approvalData;
-
-                $data['title'] = 'Pengukuran Awal Punch - '. $LabelPunch->merk;
-
+                
                 if($request->segment(3) == 'punch-atas'){
                     $jenis = 'Punch Atas';
                 }elseif($request->segment(3) == 'punch-bawah'){
                     $jenis = 'Punch Bawah';
                 }
-
                 $data['jenis'] = $jenis;
 
-                // Load the view and set the paper size to A4
-                // $pdf = Pdf::loadView('partials.pdf.punch.pengukuranAwalPDF', $data)
-                //     ->setPaper('A4', 'landscape'); // Set paper size and orientation
-
-                // return $pdf->stream('pengukuran_awal.pdf');
+                $data['title'] = 'Pengukuran Awal '. $jenis. ' ' . $LabelPunch->merk;
 
                 return Pdf::view('partials.pdf.punch.pengukuranAwalPDF', $data)
                     ->format('A4')
@@ -1954,16 +1948,12 @@ class PengukuranController extends Controller
                             ->scale(0.6); // Increase timeout to 60 seconds
                     });
 
-                // return Pdf::view('partials.pdf.punch.pengukuranAwalPDF', $data)
-                //     ->margins(2,2,2,2)
-                //     ->format('a4')
-                //     ->name('test.pdf');
-
             } elseif ($request->segment(2) == 'pengukuran-rutin') {
                 $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
                     ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
                     ->where('punchs.punch_id', $id)
                     ->where('pengukuran_rutin_punchs.masa_pengukuran', session('masa_pengukuran_view'))
+                    ->orderBy('punchs.created_at', 'desc')
                     ->first();
                 $data['labelPunch'] = $LabelPunch;
 
@@ -1973,18 +1963,68 @@ class PengukuranController extends Controller
                 $showPengukuranAll = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->get();
                 $data['dataPengukuran'] = $showPengukuranAll;
 
-                // Load the view and set the paper size to A4
-                $pdf = Pdf::loadView('partials.pdf.punch.pengukuranRutinPDF', $data)
-                    ->setPaper('A4', 'portrait'); // Set paper size and orientation
+                $approvalData = ApprovalPengukuran::query()
+                    ->where('punch_id', $id)
+                    ->where('masa_pengukuran', session('masa_pengukuran_view'))
+                    ->latest()
+                    ->first();
+                $data['approvalInfo'] = $approvalData;
 
-                return $pdf->download('pengukuran_rutin.pdf');
+                if ($request->segment(3) == 'punch-atas') {
+                    $jenis = 'Punch Atas';
+                } elseif ($request->segment(3) == 'punch-bawah') {
+                    $jenis = 'Punch Bawah';
+                }
+                
+                $data['jenis'] = $jenis;
+
+                $data['title'] = 'Pengukuran Rutin '. $jenis . ' ' . $LabelPunch->merk;
+
+                return Pdf::view('partials.pdf.punch.pengukuranRutinPDF', $data)
+                    ->format('A4')
+                    ->withBrowsershot(function (Browsershot $browsershot) {
+                        $browsershot->newHeadless()
+                            ->timeout(60000)
+                            ->scale(0.6); // Increase timeout to 60 seconds
+                    });
+
             }
         } elseif ($request->segment(3) == 'dies') {
-            $dataDies = Dies::where('dies_id', $id)->get();
-            $arrayData = json_decode($dataDies, true);
-            foreach ($arrayData as $data) {
-                echo '<option value="' . $data['masa_pengukuran'] . '">' . $data['masa_pengukuran'] . '</option>';
+            $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
+                ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
+                ->where('diess.dies_id', $id)
+                ->first();
+            $data['labelDies'] = $LabelDies;
+
+            $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
+            $data['tglPengukuran'] = $dataPengukuran;
+
+            $showPengukuranAll = PengukuranAwalDies::where('dies_id', '=', $id)->get();
+            $data['dataPengukuran'] = $showPengukuranAll;
+
+            //
+            $approvalData = ApprovalPengukuran::query()
+                ->where('dies_id', $id)
+                ->where('masa_pengukuran', session('masa_pengukuran_view'))
+                ->latest()
+                ->first();
+            $data['approvalInfo'] = $approvalData;
+
+            if ($request->segment(3) == 'dies') {
+                $jenis = 'Dies';
             }
+
+            $data['jenis'] = $jenis;
+
+            $data['title'] = 'Pengukuran Awal ' . $jenis . ' ' . $LabelDies->merk;
+
+            return Pdf::view('partials.pdf.dies.pengukuranAwalPDF', $data)
+                ->format('A4')
+                ->withBrowsershot(function (Browsershot $browsershot) {
+                    $browsershot->newHeadless()
+                        ->timeout(60000)
+                        ->scale(0.6); // Increase timeout to 60 seconds
+                });
         }
     }
 }

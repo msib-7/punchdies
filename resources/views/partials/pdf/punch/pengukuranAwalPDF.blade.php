@@ -173,7 +173,6 @@
                 </tbody>
             </table>
             @if (!$loop->last)
-                
                 @pageBreak
             </div>
         </div>
@@ -317,36 +316,14 @@
     </div>
 
     <div class="footer">
-        <span id="print-date"></span> | Page <span id="current-page"></span> of <span id="total-pages"></span>
+        <span id="print-date"></span>
     </div>
 
     <script src="/assets/plugins/global/plugins.bundle.js"></script>
     <script src="/assets/js/scripts.bundle.js"></script>
     <script>
         // Set the print date
-        document.getElementById('print-date').innerText = 'Printed on: ' + new Date().toLocaleDateString();
-
-        // Calculate total pages
-        const totalPages = {{ count(array_chunk($dataPengukuran->toArray(), 25)) }};
-        document.getElementById('total-pages').innerText = totalPages;
-
-        // Set current page number
-        let currentPage = 1; // Initialize current page
-        document.getElementById('current-page').innerText = currentPage;
-
-        // Function to update current page number on page break
-        function updatePageNumber() {
-            currentPage++;
-            document.getElementById('current-page').innerText = currentPage;
-        }
-
-        // Call this function on each page break
-        @foreach (array_chunk($dataPengukuran->toArray(), 25) as $chunk)
-            // Your existing table code here
-            @if (!$loop->last)
-                updatePageNumber(); // Update page number on page break
-            @endif
-        @endforeach
+        document.getElementById('print-date').innerText = 'Printed on: ' + new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
     </script>
 </body>
 </html>

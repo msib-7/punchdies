@@ -159,14 +159,14 @@
                                                                                 </td>
                                                                                 <td style="border: none;"
                                                                                     class="fs-5 px-4 my-4">
-                                                                                    @if ($labelPunch->is_approved == '1')
+                                                                                    @if ($labelDies->is_approved == '1')
                                                                                         <span class="badge badge-square badge-outline badge-success">Approved</span>
-                                                                                    @elseif ($labelPunch->is_rejected == '1') <!-- Check for rejection -->
+                                                                                    @elseif ($labelDies->is_rejected == '1') <!-- Check for rejection -->
                                                                                         <span class="badge badge-square badge-outline badge-danger">Rejected</span>
                                                                                     @else
-                                                                                        @if ($labelPunch->is_draft == '1')
+                                                                                        @if ($labelDies->is_draft == '1')
                                                                                             <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                                                                                        @elseif ($labelPunch->is_draft == '0')
+                                                                                        @elseif ($labelDies->is_draft == '0')
                                                                                             <span class="badge badge-square badge-outline badge-warning">Waiting</span>
                                                                                         @endif
                                                                                     @endif
@@ -199,11 +199,7 @@
                                                 <thead id="table_head">
                                                     <tr class="fw-bold fs-7 text-gray-800">
                                                         <td class="text-center">No</td>
-                                                        <td class="text-center">Cincin Tidak Berbayang</td>
-                                                        <td class="text-center">Tidak Gompal</td>
-                                                        <td class="text-center">Tidak Retak</td>
-                                                        <td class="text-center">Tidak Pecah</td>
-                                                        <td class="text-center">Status</td>
+                                                        <td class="text-center">Visual Dies/Segement Dies</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -211,11 +207,7 @@
                                                     @foreach ($dataPengukuran as $item)
                                                         <tr>
                                                             <td class="text-center">{{ $no++ }}</td>
-                                                            <td class="text-center">{{ $item->is_cincin_berbayang }}</td>
-                                                            <td class="text-center">{{ $item->is_gompal }}</td>
-                                                            <td class="text-center">{{ $item->is_retak }}</td>
-                                                            <td class="text-center">{{ $item->is_pecah }}</td>
-                                                            <td class="text-center">{{ $item->status }}</td>
+                                                            <td class="text-center">{{ $item->visual_dies }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>

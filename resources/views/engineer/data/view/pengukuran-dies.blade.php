@@ -187,7 +187,7 @@
                                         <table class="table table-bordered" style="width:100%">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center">No Punch</th>
+                                                    <th class="text-center">No Dies</th>
                                                     <th class="text-center">Outer Diameter</th>
                                                     <th class="text-center">Inner Diameter 1</th>
                                                     <th class="text-center">Inner Diameter 2</th>

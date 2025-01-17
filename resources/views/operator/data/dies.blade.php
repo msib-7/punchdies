@@ -714,7 +714,7 @@
             type: "GET",
             url: "{{route('pnd.pr.dies.info', ':id')}}".replace(':id', id_create_rutin),
             success: function (data) {
-                var tgl_pre = new Date(data.data.created_at).format("dd mmm yyyy");
+                var tgl_pre = new Date(data.tgl_terakhir).format("dd mmm yyyy");
                 var now = new Date().format("dd mmm yyyy");
                 
                 $('#masa_pengukuran_pre').val(data.masa_pengukuran_pre);
