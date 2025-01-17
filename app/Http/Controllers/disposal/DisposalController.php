@@ -166,7 +166,7 @@ class DisposalController extends Controller
             $jenis = 'dies';
         }
 
-        if($$data->masa_pengukuran == 'pengukuran awal'){
+        if($data->masa_pengukuran == 'pengukuran awal'){
             $mp = 'pa';
         }else{
             $mp = 'pr';
