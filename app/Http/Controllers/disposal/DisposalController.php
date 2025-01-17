@@ -157,13 +157,27 @@ class DisposalController extends Controller
         // } elseif ($diesId == null || $diesId == '-') {
         //     $idView = $punchId;
         // }
+        $dataJenis = $data->jenis;
+        if ($dataJenis == 'punch-atas') {
+            $jenis = 'atas';
+        } elseif($dataJenis == 'punch-bawah') {
+            $jenis = 'bawah';
+        } elseif($dataJenis == 'dies'){
+            $jenis = 'dies';
+        }
+
+        if($$data->masa_pengukuran == 'pengukuran awal'){
+            $mp = 'pa';
+        }else{
+            $mp = 'pr';
+        }
 
         // Buat NOtifikasi Ke Pengirim
         event(new NotificationEvent(
             auth()->user()->id,
             'Success Sending Disposal',
             'Data Permintaan Disposal telah dikirim oleh ' . auth()->user()->nama . ' ke Approval menunggu response dari Manager ',
-            route('pnd.pa.atas.view')
+            route('pnd.'.$mp.'.'.$jenis.'.index')
         ));
 
         $userEmails = []; // Array to store user emails
