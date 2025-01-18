@@ -16,7 +16,11 @@ use Illuminate\Support\Facades\Mail;
 class ApprovalPengukuranAwalController extends Controller
 {
     public function index(){
-        $approval = ApprovalPengukuran::with('users')->where('masa_pengukuran', 'pengukuran awal')->get();
+        $approval = ApprovalPengukuran::with('users')
+                                        ->where('masa_pengukuran', 'pengukuran awal')
+                                        ->where('is_approved', '!=', '1')
+                                        ->where('is_rejected', '!=', '1')
+                                        ->get();
         $dataPunch = Punch::all();
         $dataDies = Dies::all();
 

@@ -34,6 +34,7 @@ class ApprovalController extends Controller
         if ($showApproval == 'pengukuran') {
             $dataApproval = ApprovalPengukuran::leftJoin('users', 'approval_pengukurans.user_id', '=', 'users.id')
                                             ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
+                                            ->where('is_approved', '!=', '1')
                                             ->get();
             $dataPunch = Punch::where('is_delete_punch','0')->get();
             $dataDies = Dies::where('is_delete_dies','0')->get();

@@ -91,7 +91,7 @@
                                                     <td >
                                                         <div class="d-flex flex-start">
                                                             <span class="text-gray-800">
-                                                                {{ ucwords($data->action) . ' ' . str_replace('App\Models\\', '', $data->model) }}
+                                                                {{ ucwords($data->action). ': ' .ucwords($data->reason) . ' ' . str_replace('App\Models\\', '', $data->model) }}
                                                             </span>
                                                         </div>
                                                     </td>

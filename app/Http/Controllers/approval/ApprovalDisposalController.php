@@ -11,7 +11,11 @@ use Illuminate\Http\Request;
 class ApprovalDisposalController extends Controller
 {
     public function index() {
-        $approval = ApprovalDisposal::with('users')->where('is_draft', '!=', '1')->get();
+        $approval = ApprovalDisposal::with('users')
+                                    ->where('is_draft', '!=', '1')
+                                    ->where('is_approved', '!=', '1')
+                                    ->where('is_rejected', '!=', '1')
+                                    ->get();
         $dataPunch = Punch::latest()->get();
         $dataDies = Dies::latest()->get();
 

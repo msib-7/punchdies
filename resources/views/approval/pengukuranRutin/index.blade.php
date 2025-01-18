@@ -13,7 +13,18 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-md-2 order-sm-last">notif</div>
+                            <div class="col-12 col-md-2 order-sm-last">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="fs-3 fw-semibold">
+                                            <span>Waiting List:</span>
+                                        </div>
+                                        <div class="fs-2 fw-bold">
+                                            <span>{{count($approval)}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 col-md-10 order-sm-first">
                                 <table id="dboard_Table1" class="display" style="width:100%">
                                     <thead>

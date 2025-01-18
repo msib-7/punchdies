@@ -143,22 +143,34 @@
                                             @endif
                                             <td>{{$item->nama}}</td>
                                             <td>{{$item->tgl_submit}}</td>
-                                            @if ($item->is_approved == '1' and $item->is_rejected == '0')
-                                                <td class="text-center">
+                                            @if ($item->is_draft == '1')
+                                                <td>
+                                                    <button class="btn btn-primary btn-sm w-100 fs-5 fw-semibold">
+                                                        Draft
+                                                    </button>
+                                                </td>
+                                            @elseif ($item->is_approved == '1' && $item->is_rejected == '0' && $item->is_waiting == '0' && $item->is_revisi == '0')
+                                                <td>
                                                     <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold">
                                                         Approved
                                                     </button>
                                                 </td>
-                                            @elseif ($item->is_approved == '0' and $item->is_rejected == '1')
-                                                <td class="text-center">
+                                            @elseif ($item->is_approved == '0' && $item->is_rejected == '1' && $item->is_waiting == '0' && $item->is_revisi == '0')
+                                                <td>
                                                     <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold">
                                                         Rejected
                                                     </button>
                                                 </td>
-                                            @else
-                                                <td class="text-center">
+                                            @elseif ($item->is_approved == '0' && $item->is_rejected == '0' && $item->is_waiting == '1' && $item->is_revisi == '0')
+                                                <td>    
                                                     <button class="btn btn-warning btn-sm w-100 fs-5 fw-semibold">
                                                         Waiting
+                                                    </button>
+                                                </td>
+                                            @elseif ($item->is_approved == '0' && $item->is_rejected == '0' && $item->is_waiting == '0' && $item->is_revisi == '1')
+                                                <td>
+                                                    <button class="btn btn-info btn-sm w-100 fs-5 fw-semibold">
+                                                        Revisi
                                                     </button>
                                                 </td>
                                             @endif

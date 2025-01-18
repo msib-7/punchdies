@@ -158,11 +158,15 @@
                                                             <div class="col-12 d-flex align-items-center justify-content-center border border-3 rounded-3 h-100 d-inline-block">
                                                                 @if ($data->is_approved == '0' && $data->is_rejected == '0')
                                                                     <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
-                                                                        <a href="{{route('pnd.approval.pa.approve', $data->id)}}">
+                                                                        {{-- <a href="{{route('pnd.approval.pa.approve', $data->id)}}"> --}}
+                                                                            <button class="btn btn-success btn-lg w-100" style="height: 100%; min-height: 5vh; max-height: 8vh;" onclick="checkUser()">
+                                                                                Approve
+                                                                            </button>
+                                                                        {{-- <a href="{{route('pnd.approval.pa.approve', $data->id)}}">
                                                                             <button class="btn btn-success btn-lg w-100" style="height: 100%; min-height: 5vh; max-height: 8vh;">
                                                                                 Approve
                                                                             </button>
-                                                                        </a>
+                                                                        </a> --}}
                                                                     </div>
                                                                     <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
                                                                         <a href="{{route('pnd.approval.pa.reject', $data->id)}}">
@@ -369,6 +373,49 @@
 
 {{-- Modal Konfirmasi Data Pengukuran --}}
 <script>
+    function checkUser() {
+        Swal.fire({
+            title: '<i class="ki-duotone ki-lock-2 fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>',
+            text: 'hai {{ auth()->user()->nama }}! enter your credential to confirm approval!',
+            input: "password",
+            inputPlaceholder: "...",
+            inputAttributes: {
+                autocapitalize: "off",
+                autocorrect: "off"
+            },
+            showCancelButton: true,
+            confirmButtonText: "Confirm",
+            showLoaderOnConfirm: true,
+            preConfirm: async (password) => {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                return $.ajax({
+                    type: 'POST',
+                    url: '{{url("approval/check-password")}}',
+                    data: {
+                        password: password,
+                        _token: csrfToken // Include the CSRF token
+                    },
+                    success: function (data) {
+                        console.log(data.);
+                        return data; // Return the data to be used in the then() block
+                    },
+                    error: function (xhr) {
+                        // Handle error
+                        Swal.showValidationMessage(`Request failed: ${xhr.responseText}`);
+                    }
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                title: `${result.value.login}'s avatar`,
+                imageUrl: result.value.avatar_url
+                });
+            }
+        });
+    }
 </script>
 <!--end::Content-->
 @endsection
