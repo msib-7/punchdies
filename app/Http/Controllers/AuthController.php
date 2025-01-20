@@ -86,6 +86,20 @@ class AuthController extends Controller
                 return redirect(route('dashboard'))->with('success', 'Login Berhasil!');
             } else {
                 //Failed Login password error disini
+                $logData = [
+                    'model' => null,
+                    'model_id' => null,
+                    'user_id' => $users->id,
+                    'action' => 'Login Auth',
+                    'location' => $ip,
+                    'reason' => 'Password Salah untuk User ' . $username,
+                    'how' => 'Login',
+                    'timestamp' => now(),
+                    'old_data' => $infoLogin,
+                    'new_data' => null,
+                ];
+                (new LogService)->handle($logData);
+
                 return response()->json(['error' => 'Username dan Password tidak cocok!'], 401);
             }
         }
