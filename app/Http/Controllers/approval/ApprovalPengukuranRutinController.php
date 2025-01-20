@@ -81,9 +81,8 @@ class ApprovalPengukuranRutinController extends Controller
                 'message' => 'Data Successfully Approved by, ',
                 'by' => auth()->user()->nama
             ]);
-            // return redirect(route('pnd.approval.pr.index'))->with('success', 'Data Approved Successfully! by ' . auth()->user()->nama);
         } else {
-            return redirect(route('dashboard'))->with('error', 'You are not authorized to approve this request.');
+            return redirect()->back()->with('error', 'You are not authorized to approve this request.');
         }
 
     }
@@ -98,9 +97,8 @@ class ApprovalPengukuranRutinController extends Controller
                 'message' => 'Data Successfully Rejeected by, ',
                 'by' => auth()->user()->nama
             ]);
-            // return redirect(route('pnd.approval.pr.index'))->with('success', 'Data Approved Successfully! by ' . auth()->user()->nama);
         } else {
-            return redirect(route('dashboard'))->with('error', 'You are not authorized to approve this request.');
+            return redirect()->back()->with('error', 'You are not authorized to approve this request.');
         }
     }
 

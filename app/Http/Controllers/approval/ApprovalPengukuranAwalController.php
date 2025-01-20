@@ -71,7 +71,7 @@ class ApprovalPengukuranAwalController extends Controller
                 $this->approved_update($id);
             }
         }else{
-            return redirect(route('dashboard'))->with('error', 'You are not authorized to approve this request.');
+            return redirect()->back()->with('error', 'You are not authorized to approve this request.');
         }
         
     }
@@ -82,7 +82,7 @@ class ApprovalPengukuranAwalController extends Controller
                 $this->rejected_update($id);
             }
         } else {
-                return redirect(route('dashboard'))->with('error', 'You are not authorized to approve this request.');
+            return redirect()->back()->with('error', 'You are not authorized to approve this request.');
         }
     }
 
