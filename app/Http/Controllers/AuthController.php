@@ -16,33 +16,100 @@ class AuthController extends Controller
     }
 
     public function login_auth(Request $request)
-    {
-        $username = htmlspecialchars($request->username);
-        $password = htmlspecialchars($request->password);
-        $ip = request()->ip();
+{
+    $username = htmlspecialchars($request->username);
+    $password = htmlspecialchars($request->password);
+    $ip = request()->ip();
 
-        $request->validate([
-            'username' => 'required',
-            'password' => 'required'
-        ], [
-            'username.required' => 'Username field is required!',
-            'password.required' => 'Password field is required',
-        ]);
+    $request->validate([
+        'username' => 'required',
+        'password' => 'required'
+    ], [
+        'username.required' => 'Username field is required!',
+        'password.required' => 'Password field is required',
+    ]);
 
-        $infoLogin = [
-            'username' => $username,
-            'password' => $password
+    $infoLogin = [
+        'username' => $username,
+        'password' => $password
+    ];
+
+    $users = User::where('username', $username)->first();
+
+    if (empty($users)) {
+        // Log untuk username tidak ditemukan
+        $logData = [
+            'model' => null,
+            'model_id' => null,
+            'user_id' => null,
+            'action' => 'Login Auth',
+            'location' => $ip,
+            'reason' => 'User Tidak Terdaftar ' . $username,
+            'how' => 'Login',
+            'timestamp' => now(),
+            'old_data' => $infoLogin,
+            'new_data' => null,
         ];
+        (new LogService)->handle($logData);
 
-        $users = User::where('username', $username)->first();
-        if(empty($users)){
+        return response()->json(['error' => 'User tidak terdaftar'], 401);
+    }
+
+    // Periksa apakah akun diblokir
+    if ($users->is_blocked) {
+        return response()->json(['error' => 'Akun Anda diblokir. Silakan hubungi administrator.'], 403);
+    }
+
+    if (Auth::attempt($infoLogin)) {
+        // Reset failed_attempts setelah login berhasil
+        $users->update(['failed_attempts' => 0]);
+
+        $last_login = [
+            'last_login_at' => date('Y-m-d H:i:s'),
+        ];
+        User::where('username', $username)->update($last_login);
+
+        $newData = Auth::user();
+        $logData = [
+            'model' => null,
+            'model_id' => null,
+            'user_id' => $newData->id,
+            'action' => 'Login Auth',
+            'location' => $ip,
+            'reason' => 'Berhasil Login ' . $newData->nama,
+            'how' => 'Login',
+            'timestamp' => now(),
+            'old_data' => $infoLogin,
+            'new_data' => $newData,
+        ];
+        (new LogService)->handle($logData);
+
+        $user = User::where('username', '=', $username)->first();
+        $line = Lines::where(['id' => $user->line_id])->first();
+        $dataUser = [
+            'user_id' => $user->id,
+            'line_user' => $line->nama_line,
+            'nama_user' => $user->nama,
+            'email_user' => $user->email,
+        ];
+        session()->put($infoLogin);
+        session()->put($dataUser);
+        return redirect(route('dashboard'))->with('success', 'Login Berhasil!');
+    } else {
+        // Login gagal: Password salah
+        $users->increment('failed_attempts');
+
+        // Jika gagal 3 kali, blokir akun
+        if ($users->failed_attempts >= 3) {
+            $users->update(['is_blocked' => true]);
+
             $logData = [
                 'model' => null,
                 'model_id' => null,
-                'user_id' => null,
-                'action' => 'Login Auth',
+                'user_id' => $users->id,
+                'action' => 'Account Blocked',
                 'location' => $ip,
-                'reason' => 'User Tidak Terdaftar '. $username,
+                'reason' => 'Akun diblokir setelah 3 kali gagal login',
                 'how' => 'Login',
                 'timestamp' => now(),
                 'old_data' => $infoLogin,
@@ -50,60 +117,28 @@ class AuthController extends Controller
             ];
             (new LogService)->handle($logData);
 
-            return response()->json(['error' => 'User tidak terdaftar'], 401);
-        }else{
-            if (Auth::attempt($infoLogin)) {
-                $last_login = [
-                    'last_login_at' => date('Y-m-d H:i:s'),
-                ];
-                User::where('username', $username)->update($last_login);
-
-                $newData = Auth::user();
-                $logData = [
-                    'model' => null,
-                    'model_id' => null,
-                    'user_id' => $newData->id,
-                    'action' => 'Login Auth',
-                    'location' => $ip,
-                    'reason' => 'Berhasil Login ' . $newData->nama,
-                    'how' => 'Login',
-                    'timestamp' => now(),
-                    'old_data' => $infoLogin,
-                    'new_data' => $newData,
-                ];
-                (new LogService)->handle($logData);
-
-                $user = User::where('username', '=', $username)->first();
-                $line = Lines::where(['id' => $user->line_id])->first();
-                $dataUser = [
-                    'user_id' => $user->id,
-                    'line_user' => $line->nama_line,
-                    'nama_user' => $user->nama,
-                    'email_user' => $user->email,
-                ];
-                session()->put($infoLogin);
-                session()->put($dataUser);
-                return redirect(route('dashboard'))->with('success', 'Login Berhasil!');
-            } else {
-                //Failed Login password error disini
-                $logData = [
-                    'model' => null,
-                    'model_id' => null,
-                    'user_id' => $users->id,
-                    'action' => 'Login Auth',
-                    'location' => $ip,
-                    'reason' => 'Password Salah untuk User ' . $username,
-                    'how' => 'Login',
-                    'timestamp' => now(),
-                    'old_data' => $infoLogin,
-                    'new_data' => null,
-                ];
-                (new LogService)->handle($logData);
-
-                return response()->json(['error' => 'Username dan Password tidak cocok!'], 401);
-            }
+            return response()->json(['error' => 'Akun Anda telah diblokir karena terlalu banyak percobaan login yang gagal.'], 403);
         }
+
+        // Log untuk password salah
+        $logData = [
+            'model' => null,
+            'model_id' => null,
+            'user_id' => $users->id,
+            'action' => 'Login Auth',
+            'location' => $ip,
+            'reason' => 'Password Salah untuk User ' . $username,
+            'how' => 'Login',
+            'timestamp' => now(),
+            'old_data' => $infoLogin,
+            'new_data' => null,
+        ];
+        (new LogService)->handle($logData);
+
+        return response()->json(['error' => 'Username dan Password tidak cocok!'], 401);
     }
+}
+
 
     public function logout(Request $request)
     {

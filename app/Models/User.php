@@ -27,7 +27,9 @@ class User extends Authenticatable
         'role_id',
         'line_id',
         'last_login_at',
-        'line_id'
+        'line_id',
+        'failed_attempts',
+        'is_blocked',
     ];
 
     /**
