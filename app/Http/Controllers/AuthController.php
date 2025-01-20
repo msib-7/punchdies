@@ -85,6 +85,7 @@ class AuthController extends Controller
                 session()->put($dataUser);
                 return redirect(route('dashboard'))->with('success', 'Login Berhasil!');
             } else {
+                //Failed Login password error disini
                 return response()->json(['error' => 'Username dan Password tidak cocok!'], 401);
             }
         }
