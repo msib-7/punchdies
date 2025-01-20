@@ -397,7 +397,7 @@
                         _token: csrfToken // Include the CSRF token
                     },
                     success: function (data) {
-                        console.log(data.);
+                        console.log(data.success);
                         return data; // Return the data to be used in the then() block
                     },
                     error: function (xhr) {
