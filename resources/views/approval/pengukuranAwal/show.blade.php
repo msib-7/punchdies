@@ -373,45 +373,46 @@
 
 {{-- Modal Konfirmasi Data Pengukuran --}}
 <script>
-    function checkUser() {
-        Swal.fire({
-            title: '<i class="ki-duotone ki-lock-2 fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>',
-            text: 'hai {{ auth()->user()->nama }}! enter your credential to confirm approval!',
-            input: "password",
-            inputPlaceholder: "...",
-            inputAttributes: {
-                autocapitalize: "off",
-                autocorrect: "off"
-            },
-            showCancelButton: true,
-            confirmButtonText: "Confirm",
-            showLoaderOnConfirm: true,
-            preConfirm: async (password) => {
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    function checkUser () {
+    Swal.fire({
+        title: '<i class="ki-duotone ki-lock-2 fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>',
+        text: 'hai {{ auth()->user()->nama }}! enter your credential to confirm approval!',
+        input: "password",
+        inputPlaceholder: "...",
+        inputAttributes: {
+            autocapitalize: "off",
+            autocorrect: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Confirm",
+        showLoaderOnConfirm: true,
+        preConfirm: async (password) => {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-                return $.ajax({
-                    type: 'POST',
-                    url: '{{url("approval/check-password")}}',
-                    data: {
-                        password: password,
-                        _token: csrfToken // Include the CSRF token
-                    },
-                    success: function (data) {
-                        console.log(data.success);
-                        return data; // Return the data to be used in the then() block
-                    },
-                    error: function (xhr) {
-                        // Handle error
-                        Swal.showValidationMessage(`Request failed: ${xhr.responseText}`);
-                    }
-                });
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {
+            return $.ajax({
+                type: 'POST',
+                url: '{{url("approval/check-password")}}',
+                data: {
+                    password: password,
+                    _token: csrfToken // Include the CSRF token
+                },
+                success: function (data) {
+                    console.log(data.success);
+                    return data; // Return the data to be used in the then() block
+                },
+                error: function (xhr) {
+                    // Handle error
+                    Swal.showValidationMessage(`Request failed: ${xhr.responseText}`);
+                    Swal.close(); // Close the loader
+                }
+            });
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                title: `${result.value.login}'s avatar`,
-                imageUrl: result.value.avatar_url
+                    title: `${result.value.login}'s avatar`,
+                    imageUrl: result.value.avatar_url
                 });
             }
         });
