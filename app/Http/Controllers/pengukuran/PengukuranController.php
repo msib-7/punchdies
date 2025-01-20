@@ -1088,6 +1088,7 @@ class PengukuranController extends Controller
             }
         } elseif ($request->segment(3) == 'dies') {
             $data['jenis'] = 'dies';
+            $data['route'] = 'dies';
 
             $cekDraft = Dies::where('dies_id', '=', $id)
                 ->where('masa_pengukuran', session('masa_pengukuran_view'))
@@ -1165,6 +1166,7 @@ class PengukuranController extends Controller
                     $data['tglPengukuran'] = $dataPengukuran;
                     $showPengukuranAll = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->get();
                     $data['dataPengukuran'] = $showPengukuranAll;
+                    $data['masaPengukuran'] = 'pr';
 
                     return view('operator.data.view.pengukuran-dies', $data);
                 }
@@ -1990,41 +1992,89 @@ class PengukuranController extends Controller
 
             }
         } elseif ($request->segment(3) == 'dies') {
-            $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
-                ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
-                ->where('diess.dies_id', $id)
-                ->first();
-            $data['labelDies'] = $LabelDies;
+            $checkStatus = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view'), 'is_draft' => '1'])->count();
+            $status = $checkStatus != 0 ? "<span class='badge badge-light-warning fs-3'>Draft</span>" : '';
 
-            $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
-            $data['tglPengukuran'] = $dataPengukuran;
+            $data['statusPengukuran'] = $status;
 
-            $showPengukuranAll = PengukuranAwalDies::where('dies_id', '=', $id)->get();
-            $data['dataPengukuran'] = $showPengukuranAll;
+            if ($request->segment(2) == 'pengukuran-awal') 
+            {
+                $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
+                    ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
+                    ->where('diess.dies_id', $id)
+                    ->first();
+                $data['labelDies'] = $LabelDies;
 
-            //
-            $approvalData = ApprovalPengukuran::query()
-                ->where('dies_id', $id)
-                ->where('masa_pengukuran', session('masa_pengukuran_view'))
-                ->latest()
-                ->first();
-            $data['approvalInfo'] = $approvalData;
+                $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
+                $data['tglPengukuran'] = $dataPengukuran;
 
-            if ($request->segment(3) == 'dies') {
-                $jenis = 'Dies';
+                $showPengukuranAll = PengukuranAwalDies::where('dies_id', '=', $id)->get();
+                $data['dataPengukuran'] = $showPengukuranAll;
+
+                //
+                $approvalData = ApprovalPengukuran::query()
+                    ->where('dies_id', $id)
+                    ->where('masa_pengukuran', session('masa_pengukuran_view'))
+                    ->latest()
+                    ->first();
+                $data['approvalInfo'] = $approvalData;
+
+                if ($request->segment(3) == 'dies') {
+                    $jenis = 'Dies';
+                }
+
+                $data['jenis'] = $jenis;
+
+                $data['title'] = 'Pengukuran Awal ' . $jenis . ' ' . $LabelDies->merk;
+
+                return Pdf::view('partials.pdf.dies.pengukuranAwalPDF', $data)
+                    ->format('A4')
+                    ->withBrowsershot(function (Browsershot $browsershot) {
+                        $browsershot->newHeadless()
+                            ->timeout(60000)
+                            ->scale(0.6); // Increase timeout to 60 seconds
+                    });
+
+            }elseif($request->segment(2) == 'pengukuran-rutin')
+            {
+                $LabelDies = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
+                    ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
+                    ->where('diess.dies_id', $id)
+                    ->where('pengukuran_rutin_diess.masa_pengukuran', session('masa_pengukuran_view'))
+                    ->orderBy('diess.created_at', 'desc')
+                    ->first();
+                $data['labelDies'] = $LabelDies;
+
+                $dataPengukuran = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->first();
+                $data['tglPengukuran'] = $dataPengukuran;
+
+                $showPengukuranAll = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->get();
+                $data['dataPengukuran'] = $showPengukuranAll;
+
+                //
+                $approvalData = ApprovalPengukuran::query()
+                    ->where('dies_id', $id)
+                    ->where('masa_pengukuran', session('masa_pengukuran_view'))
+                    ->latest()
+                    ->first();
+                $data['approvalInfo'] = $approvalData;
+
+                if ($request->segment(3) == 'dies') {
+                    $jenis = 'Dies';
+                }
+
+                $data['jenis'] = $jenis;
+
+                $data['title'] = 'Pengukuran Rutin ' . $jenis . ' ' . $LabelDies->merk;
+
+                return Pdf::view('partials.pdf.dies.pengukuranRutinPDF', $data)
+                    ->format('A4')
+                    ->withBrowsershot(function (Browsershot $browsershot) {
+                        $browsershot->newHeadless()
+                            ->timeout(60000)
+                            ->scale(0.6); // Increase timeout to 60 seconds
+                    });
             }
-
-            $data['jenis'] = $jenis;
-
-            $data['title'] = 'Pengukuran Awal ' . $jenis . ' ' . $LabelDies->merk;
-
-            return Pdf::view('partials.pdf.dies.pengukuranAwalPDF', $data)
-                ->format('A4')
-                ->withBrowsershot(function (Browsershot $browsershot) {
-                    $browsershot->newHeadless()
-                        ->timeout(60000)
-                        ->scale(0.6); // Increase timeout to 60 seconds
-                });
         }
     }
 }

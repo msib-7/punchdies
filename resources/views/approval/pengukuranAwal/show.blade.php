@@ -420,11 +420,22 @@
                     url: url.replace(':id', id),
                     data: { pass: result.value.pass },
                     beforeSend: function() {
+                        Swal.fire({
+                            title: 'processing...',
+                            text: 'Please wait while we process your request.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) { // Added parentheses and a parameter
                         let timerInterval;
                         Swal.fire({
                             icon: 'success',
                             title: 'Successfull',
-                            text: 'Please wait while we process your request.',
+                            text: response.message + response.by,
                             allowOutsideClick: false,
                             showConfirmButton: false,
                             timer: 2000,
@@ -434,11 +445,9 @@
                             },
                             willClose: () => {
                                 clearInterval(timerInterval);
+                                window.location.href = '{{ route("pnd.approval.pa.index") }}';
                             }
                         });
-                    },
-                    success: function() { // Added parentheses and a parameter
-                        window.location.href = '{{ route("pnd.approval.pa.index") }}';
                     },
                     error: function() { // Added parentheses and parameters
                         Swal.fire({

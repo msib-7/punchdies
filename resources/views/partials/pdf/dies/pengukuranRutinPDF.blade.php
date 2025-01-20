@@ -143,25 +143,13 @@
                 <thead>
                     <tr>
                         <th class="table-header text-center">No Dies</th>
-                        <th class="table-header text-center">Outer Diameter</th>
-                        <th class="table-header text-center">Inner Diameter 1</th>
-                        <th class="table-header text-center">Inner Diameter 2</th>
-                        <th class="table-header text-center">Ketinggian Dies</th>
-                        <th class="table-header text-center">Visual</th>
-                        <th class="table-header text-center">Kesesuaian Dies</th>
-                        <th class="table-header text-center">Status</th>
+                        <th class="table-header text-center">Visual Dies/Segment Dies</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($chunk as $item)
                         <tr>
                             <td class="text-center">{{ $no }}</td>
-                            <td class="text-center">{{ $item['outer_diameter'] }}</td>
-                            <td class="text-center">{{ $item['inner_diameter_1'] }}</td>
-                            <td class="text-center">{{ $item['inner_diameter_2'] }}</td>
-                            <td class="text-center">{{ $item['ketinggian_dies'] }}</td>
-                            <td class="text-center">{{ $item['visual'] }}</td>
-                            <td class="text-center">{{ $item['kesesuaian_dies'] }}</td>
                             <td class="text-center">{{ $item['status'] }}</td>
                         </tr>
                         <?php $no++; ?>

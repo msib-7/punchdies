@@ -250,6 +250,13 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 text: xhr.responseJSON.error,
                             });
                         }
+                        if (xhr.status === 403) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Account Blocked',
+                                text: xhr.responseJSON.error,
+                            });
+                        }
                         $('#kt_sign_in_submit').attr('disabled', false);
                         $('#kt_sign_in_submit').html(
                             '<span class="indicator-label">Log in Accout</span>'

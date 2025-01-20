@@ -70,6 +70,10 @@ class ApprovalPengukuranAwalController extends Controller
             if($pass == 'true'){
                 $this->approved_update($id);
             }
+            return response()->json([
+                'message' => 'Data Successfully Approved by, ',
+                'by' => auth()->user()->nama
+            ]);
         }else{
             return redirect()->back()->with('error', 'You are not authorized to approve this request.');
         }
@@ -81,6 +85,10 @@ class ApprovalPengukuranAwalController extends Controller
             if ($pass == 'true') {
                 $this->rejected_update($id);
             }
+            return response()->json([
+                'message' => 'Data Successfully Rejeected by, ',
+                'by' => auth()->user()->nama
+            ]);
         } else {
             return redirect()->back()->with('error', 'You are not authorized to approve this request.');
         }

@@ -11,14 +11,16 @@
     <!--begin::Engage-->
 	<div class="app-engage " id="kt_app_engage">  
 		<!--begin::Prebuilts toggle-->
-        <button class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
-            <i class="ki-duotone ki-information fs-1 pt-1 mb-2">
+        <a href="{{route('pnd.'.$masaPengukuran.'.'.$route.'.print', $labelDies->dies_id)}}" class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
+            <i class="ki-duotone ki-printer fs-1 pt-1 mb-2">
                 <span class="path1"></span>
                 <span class="path2"></span>
                 <span class="path3"></span>
+                <span class="path4"></span>
+                <span class="path5"></span>
             </i>
-            Bantuan
-        </button>
+            Print/PDF
+        </a>
 	</div>
 	<!--end::Engage-->
     <!--begin::Content container-->
@@ -296,35 +298,6 @@
     </div>
     <!--end::Content container-->
 </div>
-
-<!--Bantuan Pengukuran-->
-<div
-    id="kt_drawer_example_basic"
-
-    class="bg-white"
-    data-kt-drawer="true"
-    data-kt-drawer-activate="true"
-    data-kt-drawer-toggle="#kt_drawer_example_basic_button"
-    data-kt-drawer-close="#kt_drawer_example_basic_close"
-    data-kt-drawer-width="300px">
-    <div class="card">
-        <!--begin::Card header-->
-        <div class="card-header pe-5">
-            <!--begin::Title-->
-            <div class="card-title">
-                Bantuan Pengukuran Punch
-            </div>
-            <!--end::Title-->
-        </div>
-        <!--end::Card header-->
-        <div class="card-body">
-            <div class="d-flex align-items-center justify-content-center">
-                <img src="{{asset('assets/img/guide_dies.png')}}" style="height: -webkit-fill-available" alt="helper">
-            </div>
-        </div>
-    </div>
-</div>
-<!--end::Bantuan Pengukuran-->
 
 {{-- Confirm Data Pengukuran --}}
 <div class="modal fade" tabindex="-1" id="modal_confirm_pengukuran">

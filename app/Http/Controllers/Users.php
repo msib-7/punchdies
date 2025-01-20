@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lines;
 use App\Models\Roles;
 use App\Models\User;
+use App\Services\LogService;
 use DB;
 use Illuminate\Http\Request;
 use Log;
@@ -122,5 +123,59 @@ class Users extends Controller
         }
         User::where('id',  $id)->delete();
         return redirect(route('admin.users.index'))->with('success', 'User deleted successfully');
+    }
+    
+    public function unblock_user($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return redirect(route('admin.users.index'))->with('error', 'User not found!');
+        }
+        
+        $data = [
+            'failed_attempts' => 0,
+            'is_blocked' => false
+        ];
+        User::where('id', $id)->update($data);
+
+        return redirect(route('admin.users.index'))->with('success', 'User is Active!');
+    }
+
+    public function reset_all_password()
+    {
+        try {
+            DB::beginTransaction();
+
+            User::query()->update(['password' => bcrypt('password'), 'failed_attempts' => 0]);
+
+            $logData = [
+                'model' => null,
+                'model_id' => null,
+                'user_id' => auth()->user()->id,
+                'action' => 'Reset Password',
+                'location' => request()->ip(),
+                'reason' => 'Semua password user direset oleh, '. auth()->user()->nama,
+                'how' => 'Reset Password',
+                'timestamp' => now(),
+                'old_data' => null,
+                'new_data' => null,
+            ];
+            (new LogService)->handle($logData);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'All User Password Successfully Reset by,',
+                'by' => auth()->user()->nama
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error('Error Resetting Passwords: ' . $th->getMessage());
+
+            return response()->json([
+                'message' => 'Error Resetting Passwords by,',
+                'by' => auth()->user()->nama
+            ]);
+        }
     }
 }

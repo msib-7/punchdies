@@ -9,6 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
-    use HasFactory, UUIDAsPrimaryKey, AuditTrailable;
+    use HasFactory, UUIDAsPrimaryKey;
     protected $guarded;
 }
