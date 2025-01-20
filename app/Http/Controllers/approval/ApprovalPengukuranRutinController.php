@@ -70,7 +70,42 @@ class ApprovalPengukuranRutinController extends Controller
 
     }
 
-    public function approve($id) {
+    public function approve(Request $request, $id) {
+
+        $pass = $request->pass;
+        if ($request->ajax()) {
+            if ($pass == 'true') {
+                $this->approved_update($id);
+            }
+            return response()->json([
+                'message' => 'Data Successfully Approved by, ',
+                'by' => auth()->user()->nama
+            ]);
+            // return redirect(route('pnd.approval.pr.index'))->with('success', 'Data Approved Successfully! by ' . auth()->user()->nama);
+        } else {
+            return redirect(route('dashboard'))->with('error', 'You are not authorized to approve this request.');
+        }
+
+    }
+    public function reject(Request $request, $id)
+    {
+        $pass = $request->pass;
+        if ($request->ajax()) {
+            if ($pass == 'true') {
+                $this->rejected_update($id);
+            }
+            return response()->json([
+                'message' => 'Data Successfully Rejeected by, ',
+                'by' => auth()->user()->nama
+            ]);
+            // return redirect(route('pnd.approval.pr.index'))->with('success', 'Data Approved Successfully! by ' . auth()->user()->nama);
+        } else {
+            return redirect(route('dashboard'))->with('error', 'You are not authorized to approve this request.');
+        }
+    }
+
+    private function approved_update($id)
+    {
         $data = ApprovalPengukuran::find($id);
 
         try {
@@ -96,10 +131,10 @@ class ApprovalPengukuranRutinController extends Controller
             //periksa apakah dies_id kosong/null
             $isNullDiesId = is_null($data->dies_id);
 
-            if(!$isNullPunchId){ //JIka Tidak Kosong update status approved pada table punch
+            if (!$isNullPunchId) { //JIka Tidak Kosong update status approved pada table punch
                 Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
                 PengukuranRutinPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
-            }elseif(!$isNullDiesId){ //JIka Tidak Kosong update status approved pada table diess
+            } elseif (!$isNullDiesId) { //JIka Tidak Kosong update status approved pada table diess
                 Dies::where(['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
                 PengukuranRutinDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
             }
@@ -114,16 +149,19 @@ class ApprovalPengukuranRutinController extends Controller
 
             DB::commit();
 
-            return redirect(route('pnd.approval.pr.index'))->with('success', 'Data Approved Successfully! by '.auth()->user()->nama);
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error('Error Approving Data : ' . $th->getMessage());
-            return redirect(route('pnd.approval.pr.index'))->with('error', 'Error Approving Data!');
-        }
 
+            return response()->json([
+                'message' => 'Error Approving Data!',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
-    public function reject($id)
+    private function rejected_update($id)
     {
+
         $data = ApprovalPengukuran::find($id);
 
         try {
@@ -204,11 +242,14 @@ class ApprovalPengukuranRutinController extends Controller
 
             DB::commit();
 
-            return redirect(route('pnd.approval.pr.index'))->with('success', 'Data Approved Successfully! by ' . auth()->user()->nama);
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error('Error Approving Data : ' . $th->getMessage());
-            return redirect(route('pnd.approval.pr.index'))->with('error', 'Error Approving Data!');
+
+            return response()->json([
+                'message' => 'Error Rejeected Data!',
+                'error' => $th->getMessage()
+            ], 500);
         }
 
     }

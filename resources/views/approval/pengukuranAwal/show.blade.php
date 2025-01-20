@@ -158,23 +158,12 @@
                                                             <div class="col-12 d-flex align-items-center justify-content-center border border-3 rounded-3 h-100 d-inline-block">
                                                                 @if ($data->is_approved == '0' && $data->is_rejected == '0')
                                                                     <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
-                                                                        {{-- <a href="{{route('pnd.approval.pa.approve', $data->id)}}"> --}}
-                                                                            <button class="btn btn-success btn-lg w-100 mx-5" style="height: 100%; min-height: 5vh; max-height: 8vh;" onclick="checkUser('approve')">
-                                                                                Approve
-                                                                            </button>
-                                                                        {{-- <a href="{{route('pnd.approval.pa.approve', $data->id)}}">
-                                                                            <button class="btn btn-success btn-lg w-100" style="height: 100%; min-height: 5vh; max-height: 8vh;">
-                                                                                Approve
-                                                                            </button>
-                                                                        </a> --}}
+                                                                        <button class="btn btn-success btn-lg w-100 mx-5" style="height: 100%; min-height: 5vh; max-height: 8vh;" onclick="checkUser('approve', '{{$data->id}}')">
+                                                                            Approve
+                                                                        </button>
                                                                     </div>
                                                                     <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
-                                                                        {{-- <a href="{{route('pnd.approval.pa.reject', $data->id)}}">
-                                                                            <button class="btn btn-danger btn-lg w-100" style="height: 100%; min-height: 5vh; max-height: 8vh;">
-                                                                                Rejected
-                                                                            </button>
-                                                                        </a> --}}
-                                                                        <button class="btn btn-danger btn-lg w-100 mx-5" style="height: 100%; min-height: 5vh; max-height: 8vh;" onclick="checkUser('reject')">
+                                                                        <button class="btn btn-danger btn-lg w-100 mx-5" style="height: 100%; min-height: 5vh; max-height: 8vh;" onclick="checkUser('reject', '{{$data->id}}')">
                                                                             Reject
                                                                         </button>
                                                                     </div>
@@ -374,9 +363,9 @@
     <!--end::Content container-->
 </div>
 
-{{-- Modal Konfirmasi Data Pengukuran --}}
 <script>
-    function checkUser (action) {
+    function checkUser (action, id) 
+    {
         Swal.fire({
             title: '<i class="ki-duotone ki-lock-2 fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>',
             text: 'hai {{ auth()->user()->nama }}! enter your credential to confirm approval!',
@@ -398,12 +387,14 @@
                     url: '{{url("approval/check-password")}}',
                     data: {
                         password: password,
+                        action: action,
+                        id: id,
                         _token: csrfToken // Include the CSRF token
                     }
                 }).then((data) => {
                     // Assuming the server returns a success response when the password is correct
                     if (data.success) {
-                        return true; // Resolve the promise to indicate success
+                        return data; // Resolve the promise to indicate success
                     } else {
                         Swal.showValidationMessage('Incorrect password!'); // Show validation message
                         throw new Error('Incorrect password!'); // Reject the promise
@@ -415,7 +406,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Credential Error',
-                        text: `There was an error with your credentials. Please try again. ${xhr.responseText}`
+                        html: `There was an error with your credentials. <br> Please try again. <br> ${xhr.responseText}`
                     })
                     throw new Error(xhr.responseText); // Reject the promise to stop loading
                 });
@@ -423,20 +414,39 @@
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    willOpen: () => {
-                        Swal.showLoading();
-                    }
+                const url = action === 'approve' ? '{{ route("pnd.approval.pa.approve", ":id") }}' : '{{ route("pnd.approval.pa.reject", ":id") }}';
+                $.ajax({
+                    type: 'GET',
+                    url: url.replace(':id', id),
+                    data: { pass: result.value.pass },
+                    beforeSend: function() {
+                        let timerInterval;
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Successfull',
+                            text: 'Please wait while we process your request.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        });
+                    },
+                    success: function() { // Added parentheses and a parameter
+                        window.location.href = '{{ route("pnd.approval.pa.index") }}';
+                    },
+                    error: function() { // Added parentheses and parameters
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Something went wrong!', // Fixed typo "when" to "went"
+                        });
+                    },
                 });
-                if (action === 'approve') {
-                    window.location.href = '{{ route("pnd.approval.pa.approve", $data->id) }}';
-                } else {
-                    window.location.href = '{{ route("pnd.approval.pa.reject", $data->id) }}';
-                }
             }
         });
     }

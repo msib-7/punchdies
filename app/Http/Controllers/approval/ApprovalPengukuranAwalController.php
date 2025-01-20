@@ -63,7 +63,31 @@ class ApprovalPengukuranAwalController extends Controller
         return view('approval.pengukuranAwal.show', compact('labelIdentitas', 'dataPengukuran', 'tglPengukuran', 'status', 'data', 'show'));
     }
 
-    public function approve($id) {
+    public function approve(Request $request,$id) {
+
+        $pass = $request->pass;
+        if ($request->ajax()) {
+            if($pass == 'true'){
+                $this->approved_update($id);
+            }
+        }else{
+            return redirect(route('dashboard'))->with('error', 'You are not authorized to approve this request.');
+        }
+        
+    }
+    public function reject(Request $request, $id) {
+        $pass = $request->pass;
+        if ($request->ajax()) {
+            if ($pass == 'true') {
+                $this->rejected_update($id);
+            }
+        } else {
+                return redirect(route('dashboard'))->with('error', 'You are not authorized to approve this request.');
+        }
+    }
+
+    private function approved_update($id)
+    {
         $data = ApprovalPengukuran::find($id);
         // dd($data);
         //Set Status to approved
@@ -81,6 +105,7 @@ class ApprovalPengukuranAwalController extends Controller
             'by' => auth()->user()->nama,
             'at' => date('Y-m-d H:i:s'),
         ];
+
         ApprovalPengukuran::where('req_id', $data->req_id)->update($update);
 
         //periksa apakah punch_id kosong/null
@@ -89,10 +114,10 @@ class ApprovalPengukuranAwalController extends Controller
         //periksa apakah dies_id kosong/null
         $isNullDiesId = is_null($data->dies_id);
 
-        if(!$isNullPunchId){ //JIka Tidak Kosong update status approved pada table punch
+        if (!$isNullPunchId) { //JIka Tidak Kosong update status approved pada table punch
             Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
             PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
-        }elseif(!$isNullDiesId){ //JIka Tidak Kosong update status approved pada table diess
+        } elseif (!$isNullDiesId) { //JIka Tidak Kosong update status approved pada table diess
             Dies::where(['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
             PengukuranAwalDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
         }
@@ -104,10 +129,10 @@ class ApprovalPengukuranAwalController extends Controller
             'Pengukuran Awal telah approved oleh Supervisor ' . auth()->user()->nama,
             route('pnd.pa.atas.index')
         ));
-        
-        return redirect(route('pnd.approval.pa.index'))->with('success', 'Data Approved Successfully! by '.auth()->user()->nama);
     }
-    public function reject($id) {
+
+    private function rejected_update($id)
+    {
         $data = ApprovalPengukuran::find($id);
 
         $updateStatusApproved = [
@@ -154,7 +179,7 @@ class ApprovalPengukuranAwalController extends Controller
             route('pnd.approval.pa.show', $data->id)
         ));
 
-        $userEmail = $data->users->email; 
+        $userEmail = $data->users->email;
         $userName = $data->users->nama; // Array to store user emails
         $failedEmail = []; // Array to store emails that failed to send
 
@@ -184,7 +209,5 @@ class ApprovalPengukuranAwalController extends Controller
         if (!empty($failedEmails)) {
             Log::warning('Failed to send email to: ', $failedEmail);
         }
-        
-        return redirect(route('pnd.approval.pa.index'))->with('success', 'Data Rejected! by '.auth()->user()->nama);
     }
 }

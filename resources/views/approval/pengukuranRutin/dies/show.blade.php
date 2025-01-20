@@ -156,36 +156,49 @@
                                                     <div class="col-12 col-md-3">
                                                         <div class="row">
                                                             <div class="col-12 d-flex align-items-center justify-content-center border border-3 rounded-3 h-100 d-inline-block">
-                                                                @if ($data->is_approved != 1 || $data->is_rejected != 1)
+                                                                @if ($data->is_approved == '0' && $data->is_rejected == '0')
                                                                     <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
-                                                                        <a href="{{route('pnd.approval.pr.approve', $data->id)}}">
-                                                                            <button class="btn btn-success btn-lg w-100" style="height: 100%; min-height: 5vh; max-height: 8vh;">
-                                                                                Approve
-                                                                            </button>
-                                                                        </a>
-                                                                    </div>
-                                                                    <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
-                                                                        <a href="{{route('pnd.approval.pr.reject', $data->id)}}">
-                                                                            <button class="btn btn-danger btn-lg w-100" style="height: 100%; min-height: 5vh; max-height: 8vh;">
-                                                                                Rejected
-                                                                            </button>
-                                                                        </a>
-                                                                    </div>
-                                                                @else
-                                                                    <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
-                                                                        <button class="btn btn-success btn-lg w-100 p-2" style="height: 100%; min-height: 5vh; max-height: 8vh;">
-                                                                            <div class="col-12 py-2">
-                                                                                <span class='badge badge-light-success fs-5'>
-                                                                                    diApprove oleh:
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="col-12">
-                                                                                <span class='badge badge-light-success fs-5'>
-                                                                                    {{$data->approved_by}}
-                                                                                </span>
-                                                                            </div>
+                                                                        <button class="btn btn-success btn-lg w-100 mx-5" style="height: 100%; min-height: 5vh; max-height: 8vh;" onclick="checkUser('approve', '{{$data->id}}')">
+                                                                            Approve
                                                                         </button>
                                                                     </div>
+                                                                    <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
+                                                                        <button class="btn btn-danger btn-lg w-100 mx-5" style="height: 100%; min-height: 5vh; max-height: 8vh;" onclick="checkUser('reject', '{{$data->id}}')">
+                                                                            Reject
+                                                                        </button>
+                                                                    </div>
+                                                                @else
+                                                                    @if ($data->is_approved == '1' && $data->is_rejected == '0')
+                                                                        <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
+                                                                            <button class="btn btn-success btn-lg w-100 p-2" style="height: 100%; min-height: 5vh; max-height: 8vh;">
+                                                                                <div class="col-12 py-2">
+                                                                                    <span class='badge badge-light-success fs-5'>
+                                                                                        diApprove oleh:
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div class="col-12">
+                                                                                    <span class='badge badge-light-success fs-5'>
+                                                                                        {{$data->by}}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </button>
+                                                                        </div>
+                                                                    @elseif ($data->is_approved == '0' && $data->is_rejected == '1')
+                                                                        <div class="flex-fill d-flex align-items-center justify-content-center" style="height: 180px">
+                                                                            <button class="btn btn-danger btn-lg w-100 p-2" style="height: 100%; min-height: 5vh; max-height: 8vh;">
+                                                                                <div class="col-12 py-2">
+                                                                                    <span class='badge badge-light-danger fs-5'>
+                                                                                        Rejected oleh:
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div class="col-12">
+                                                                                    <span class='badge badge-light-danger fs-5'>
+                                                                                        {{$data->by}}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </button>
+                                                                        </div>
+                                                                    @endif
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -310,8 +323,102 @@
     <!--end::Content container-->
 </div>
 
-{{-- Modal Konfirmasi Data Pengukuran --}}
 <script>
+    function checkUser (action, id) 
+    {
+        Swal.fire({
+            title: '<i class="ki-duotone ki-lock-2 fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>',
+            text: 'hai {{ auth()->user()->nama }}! enter your credential to confirm approval!',
+            input: "password",
+            inputPlaceholder: "...",
+            inputAttributes: {
+                autocapitalize: "off",
+                autocorrect: "off"
+            },
+            showCancelButton: true,
+            confirmButtonText: "Confirm",
+            showLoaderOnConfirm: true,
+            preConfirm: async (password) => {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                // Return a promise that resolves or rejects based on the AJAX response
+                return $.ajax({
+                    type: 'POST',
+                    url: '{{url("approval/check-password")}}',
+                    data: {
+                        password: password,
+                        action: action,
+                        id: id,
+                        _token: csrfToken // Include the CSRF token
+                    }
+                }).then((data) => {
+                    // Assuming the server returns a success response when the password is correct
+                    if (data.success) {
+                        return data; // Resolve the promise to indicate success
+                    } else {
+                        Swal.showValidationMessage('Incorrect password!'); // Show validation message
+                        throw new Error('Incorrect password!'); // Reject the promise
+                    }
+                }).catch((xhr) => {
+                    // Handle error
+                    Swal.showValidationMessage(`Request failed: ${xhr.responseText}`);
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Credential Error',
+                        html: `There was an error with your credentials. <br> Please try again. <br> ${xhr.responseText}`
+                    })
+                    throw new Error(xhr.responseText); // Reject the promise to stop loading
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const url = action === 'approve' ? '{{ route("pnd.approval.pr.approve", ":id") }}' : '{{ route("pnd.approval.pr.reject", ":id") }}';
+                $.ajax({
+                    type: 'GET',
+                    url: url.replace(':id', id),
+                    data: { pass: result.value.pass },
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'processing...',
+                            text: 'Please wait while we process your request.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) { // Added parentheses and a parameter
+                        let timerInterval;
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Successfull',
+                            text: response.message + response.by,
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                                window.location.href = '{{ route("pnd.approval.pr.index") }}';
+                            }
+                        });
+                    },
+                    error: function() { // Added parentheses and parameters
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Something went wrong!', // Fixed typo "when" to "went"
+                        });
+                    },
+                });
+            }
+        });
+    }
 </script>
 <!--end::Content-->
 @endsection

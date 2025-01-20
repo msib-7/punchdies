@@ -164,10 +164,16 @@ class AuthController extends Controller
     public function checkPasswordApproval(Request $request)
     {
         $password = $request->password;
+        $action = $request->action;
+
         $user = Auth::user();
 
         if (Auth::attempt(['username' => $user->username, 'password' => $password])) {
-            return response()->json(['success' => 'Password is correct'], 200);
+            if ($action === 'approve') {
+                return response()->json(['success' => 'Password is correct','pass' => 'true'], 200);
+            }elseif($action == 'reject'){
+                return response()->json(['success' => 'Password is correct','pass' => 'true'], 200);
+            }
         } else {
             return response()->json(['error' => 'Password is incorrect'], 401);
         }
