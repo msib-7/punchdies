@@ -24,7 +24,7 @@ class MesinController extends Controller
             'description' => $request->description,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.mesin.index')->with('success', 'Mesin created successfully.');
+        return redirect()->route('admin.system.mesin.index')->with('success', 'Mesin created successfully.');
     }
 
     public function edit($id){
@@ -48,12 +48,12 @@ class MesinController extends Controller
             'description' => $request->description_edit,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.mesin.index')->with('success', 'Mesin updated successfully.');
+        return redirect()->route('admin.system.mesin.index')->with('success', 'Mesin updated successfully.');
     }
 
     public function destroy($id){
         $mesin = Mesin::findOrFail($id);
         $mesin->delete();
-        return redirect()->route('admin.mesin.index')->with('success', 'Mesin deleted successfully.');
+        return redirect()->route('admin.system.mesin.index')->with('success', 'Mesin deleted successfully.');
     }
 }

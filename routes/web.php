@@ -38,7 +38,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['auth', 'CheckRoleUser']);
 
-Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->group(function(){
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->group(function(){
     Route::prefix('users')->name('users.')->group(function(){
         Route::get('', [Users::class, 'manajemen_user'])->name('index');
         Route::post('add-user', [Users::class, 'add_user'])->name('create');
@@ -68,7 +68,7 @@ Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
     });
 
     
-    Route::prefix('system')->name('system')->group(function () {
+    Route::prefix('system')->name('system.')->group(function () {
         Route::prefix('mesin')->name('mesin.')->group(function () {
             Route::get('', [MesinController::class, 'index'])->name('index');
             Route::post('create-mesin', [MesinController::class, 'store'])->name('create');

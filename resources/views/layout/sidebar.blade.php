@@ -361,7 +361,7 @@
                             <!--end:Menu item-->
                             {{-- Master Machine --}}
                             <!--begin:Menu item-->
-                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('Admin*') ? 'here show' : '' }}">
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('admin/system*') ? 'here show' : '' }}">
                                 <!--begin:Menu link-->
                                 <span class="menu-link">
                                     <span class="menu-icon">
@@ -376,7 +376,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('Admin/mesin*') ? 'active' : '' }}" href="{{route('admin.mesin.index')}}">
+                                        <a class="menu-link {{ request()->is('admin/system/mesin*') ? 'active' : '' }}" href="{{route('admin.system.mesin.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -388,7 +388,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('Admin/nama-produk*') ? 'active' : '' }}" href="{{route('admin.namaProduk.index')}}">
+                                        <a class="menu-link {{ request()->is('admin/system/nama-produk*') ? 'active' : '' }}" href="{{route('admin.system.namaProduk.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -400,7 +400,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('Admin/kode-produk*') ? 'active' : '' }}" href="{{route('admin.kodeProduk.index')}}">
+                                        <a class="menu-link {{ request()->is('admin/system/kode-produk*') ? 'active' : '' }}" href="{{route('admin.system.kodeProduk.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -412,7 +412,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('Admin/tools-kalibrasi*') ? 'active' : '' }}" href="{{route('admin.kalibrasi.index')}}">
+                                        <a class="menu-link {{ request()->is('admin/system/tools-kalibrasi*') ? 'active' : '' }}" href="{{route('admin.system.kalibrasi.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -428,7 +428,7 @@
 
                             {{-- Manajemen User --}}
                             <!--begin:Menu item-->
-                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('Admin*') ? 'here show' : '' }}">
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('admin*') ? 'here show' : '' }}">
                                 <!--begin:Menu link-->
                                 <span class="menu-link">
                                     <span class="menu-icon">
@@ -443,7 +443,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('Admin/users*') ? 'active' : '' }}" href="{{route('admin.users.index')}}">
+                                        <a class="menu-link {{ request()->is('admin/users*') ? 'active' : '' }}" href="{{route('admin.users.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -455,7 +455,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('Admin/line*') ? 'active' : '' }}" href="{{route('admin.line.index')}}">
+                                        <a class="menu-link {{ request()->is('admin/line*') ? 'active' : '' }}" href="{{route('admin.line.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -467,7 +467,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('Admin/role*') ? 'active' : '' }}" href="{{route('admin.role.index')}}">
+                                        <a class="menu-link {{ request()->is('admin/role*') ? 'active' : '' }}" href="{{route('admin.role.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
@@ -479,7 +479,7 @@
                                     <!--begin:Menu item-->
                                     <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <a class="menu-link {{ request()->is('Admin/permission*') ? 'active' : '' }}" href="{{route('admin.permission.index')}}">
+                                        <a class="menu-link {{ request()->is('admin/permission*') ? 'active' : '' }}" href="{{route('admin.permission.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>

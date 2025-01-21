@@ -26,7 +26,7 @@ class KodeProdukController extends Controller
             'description' => $request->description,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.kodeProduk.index')->with('success', 'Nama Produk created successfully.');
+        return redirect()->route('admin.system.kodeProduk.index')->with('success', 'Nama Produk created successfully.');
     }
 
     public function edit($id)
@@ -52,13 +52,13 @@ class KodeProdukController extends Controller
             'description' => $request->description_edit,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.kodeProduk.index')->with('success', 'Nama Produk updated successfully.');
+        return redirect()->route('admin.system.kodeProduk.index')->with('success', 'Nama Produk updated successfully.');
     }
 
     public function destroy($id)
     {
         $kodeProduk = KodeProduk::findOrFail($id);
         $kodeProduk->delete();
-        return redirect()->route('admin.kodeProduk.index')->with('success', 'Nama Produk deleted successfully.');
+        return redirect()->route('admin.system.kodeProduk.index')->with('success', 'Nama Produk deleted successfully.');
     }
 }

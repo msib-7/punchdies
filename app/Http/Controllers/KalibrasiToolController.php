@@ -10,7 +10,7 @@ class KalibrasiToolController extends Controller
     public function index()
     {
         $data = KalibrasiTool::all();
-        return view('admin.system.Kalibrasi.index',compact('data'));
+        return view('admin.system.kalibrasi.index',compact('data'));
     }
 
     public function store(Request $request)
@@ -26,7 +26,7 @@ class KalibrasiToolController extends Controller
             'description' => $request->description,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.kalibrasi.index')->with('success', 'Kalibasi Tool created successfully.');
+        return redirect()->route('admin.system.kalibrasi.index')->with('success', 'Kalibasi Tool created successfully.');
     }
 
     public function edit($id)
@@ -52,13 +52,13 @@ class KalibrasiToolController extends Controller
             'description' => $request->description_edit,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.kalibrasi.index')->with('success', 'Kalibrasi Tool updated successfully.');
+        return redirect()->route('admin.system.kalibrasi.index')->with('success', 'Kalibrasi Tool updated successfully.');
     }
 
     public function destroy($id)
     {
         $mesin = KalibrasiTool::findOrFail($id);
         $mesin->delete();
-        return redirect()->route('admin.kalibrasi.index')->with('success', 'Kalibrasi Tool deleted successfully.');
+        return redirect()->route('admin.system.kalibrasi.index')->with('success', 'Kalibrasi Tool deleted successfully.');
     }
 }

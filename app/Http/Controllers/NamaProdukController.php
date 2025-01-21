@@ -26,7 +26,7 @@ class NamaProdukController extends Controller
             'description' => $request->description,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.namaProduk.index')->with('success', 'Nama Produk created successfully.');
+        return redirect()->route('admin.system.namaProduk.index')->with('success', 'Nama Produk created successfully.');
     }
 
     public function edit($id)
@@ -52,13 +52,13 @@ class NamaProdukController extends Controller
             'description' => $request->description_edit,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.namaProduk.index')->with('success', 'Nama Produk updated successfully.');
+        return redirect()->route('admin.system.namaProduk.index')->with('success', 'Nama Produk updated successfully.');
     }
 
     public function destroy($id)
     {
         $namaProduk = NamaProduk::findOrFail($id);
         $namaProduk->delete();
-        return redirect()->route('admin.namaProduk.index')->with('success', 'Nama Produk deleted successfully.');
+        return redirect()->route('admin.system.namaProduk.index')->with('success', 'Nama Produk deleted successfully.');
     }
 }

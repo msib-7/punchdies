@@ -100,7 +100,7 @@
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="{{route('admin.mesin.delete', $item->id)}}" class="menu-link px-3"
+                                        <a href="{{route('admin.system.mesin.delete', $item->id)}}" class="menu-link px-3"
                                             data-kt-users-table-filter="delete_row">Delete</a>
                                     </div>
                                     <!--end::Menu item-->
@@ -142,7 +142,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5">
                 <!--begin::Form-->
-                <form id="kt_modal_add_user_form" action="{{route('admin.mesin.create')}}" method="POST" class="form">
+                <form id="kt_modal_add_user_form" action="{{route('admin.system.mesin.create')}}" method="POST" class="form">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll"
@@ -214,7 +214,7 @@
             <!--begin::Modal body-->
             <div class="modal-body px-5">
                 <!--begin::Form-->
-                <form id="kt_modal_add_user_form" action="{{route('admin.mesin.update')}}" method="POST">
+                <form id="kt_modal_add_user_form" action="{{route('admin.system.mesin.update')}}" method="POST">
                     @csrf
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll"
@@ -277,7 +277,7 @@
 
         //fetch detail post with ajax
         $.ajax({
-            url: "{{route('admin.mesin.edit', ':id')}}".replace(':id', edit_id),
+            url: "{{route('admin.system.mesin.edit', ':id')}}".replace(':id', edit_id),
             type: "GET",
             cache: false,
             success: function (response) {
