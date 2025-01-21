@@ -248,12 +248,3 @@ Route::post('approval/check-password', [AuthController::class, 'checkPasswordApp
 Route::post('user/update-password', [Users::class, 'updatePassword']);
 
 Route::post('user/clear-notifications', [NotificationController::class, 'clear']);
-
-// Route::middleware(['auth', 'verified'])->group(function () {
-//     //QA
-//     //Approval Pengukuran
-        
-//         //Approval Disposal
-//         Route::get('/data/approval/disposal', [ApprovalController::class, 'show_data_approval']);
-    
-// });
