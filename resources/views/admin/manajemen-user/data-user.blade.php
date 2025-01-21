@@ -40,7 +40,16 @@
         <!--begin::Actions-->
         <div class="d-flex align-items-center gap-2 gap-lg-3">
             <!--begin::Primary button-->
-            <button class="btn btn-sm fw-bold btn-secondary" onclick="resetPasswords()">Reset Users password</button>
+            <button class="btn btn-sm fw-bold btn-danger btn-reset2" onclick="resetPasswords()">Reset</button>
+            <!--end::Primary button-->
+            <!--begin::Primary button-->
+            <button class="btn btn-sm fw-bold btn-primary btn-select-all">Select All</button>
+            <!--end::Primary button-->
+            <!--begin::Primary button-->
+            <button class="btn btn-sm fw-bold btn-secondary btn-cancel">Cancel</button>
+            <!--end::Primary button-->
+            <!--begin::Primary button-->
+            <button class="btn btn-sm fw-bold btn-secondary btn-reset">Reset Password</button>
             <!--end::Primary button-->
             <!--begin::Primary button-->
             <a href="#" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal"
@@ -61,6 +70,7 @@
                 <table id="table_user" class="table align-middle table-row-dashed fs-6 gy-5" style="width:100%">
                     <thead>
                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                            <th></th>
                             <th class="text-center w-100px">No</th>
                             <th class="min-w-130px">User</th>
                             <th class="min-w-130px">Role</th>
@@ -73,6 +83,11 @@
                         <?php $no=1?>
                         @foreach ($dataUser as $data)
                         <tr>
+                            <td> 
+                                <div class="form-check">
+                                    <input class="form-check-input user-checkbox" type="checkbox" id="flexCheckDefault" data-id="{{ $data->id }}"/>
+                                </div>
+                            </td>
                             <td class="text-center">{{$no++}}</td>
                             <td class="d-flex align-items-center">
                                 <!--begin::User details-->
@@ -458,86 +473,158 @@
 <!--end::Modal - Edit User-->
 
 <script>
-    //button create post event
-    $('body').on('click', '#btn-edit', function () {
+    $(document).ready(function(){
+         // Hide checkboxes initially
+        $('.user-checkbox').hide();
+        $('.btn-reset2').hide();
+        $('.btn-select-all').hide();
+        $('.btn-cancel').hide();
 
-        let edit_id = $(this).data('id');
+        // Show checkboxes when the reset button is clicked
+        $('body').on('click', '.btn-reset', function() {
+            $('.user-checkbox').toggle(); // Toggle visibility of checkboxes
+            $('.btn-reset2').toggle();
+            $('.btn-select-all').toggle();
+            $('.btn-cancel').toggle();
+            $('.btn-reset').hide();
+        });
 
-        //fetch detail post with ajax
-        $.ajax({
-            url: "{{route('admin.users.edit', ':id')}}".replace(':id', edit_id),
-            type: "GET",
-            cache: false,
-            success: function (response) {
+        $('body').on('click', '.btn-cancel', function() {
+            $('.user-checkbox').hide(); // Toggle visibility of checkboxes
+            $('.btn-reset2').hide();
+            $('.btn-select-all').hide();
+            $('.btn-cancel').hide();
+            $('.btn-reset').toggle();
+        });
 
-                //fill data to form
-                $('#id_user').val(response.data.id);
-                $('#nama_edit').val(response.data.nama);
-                $('#username_edit').val(response.data.username);
-                $('#email_edit').val(response.data.email);
-                $('#line_id_edit').val(response.data.line_id);
-                $('input[name="user_role_edit"][value="' + response.data.role_id + '"]').prop('checked', true);
+        // Select all checkboxes
+        $('body').on('click', '.btn-select-all', function() {
+            // Check if all checkboxes are checked
+            const allChecked = $('.user-checkbox:checked').length === $('.user-checkbox').length;
 
-                //open modal
-                $('#kt_modal_edit_user').modal('show');
-            }
+            // Toggle checkboxes based on the current state
+            $('.user-checkbox').prop('checked', !allChecked);
+        });
+
+        // Uncheck all checkboxes when the cancel button is clicked
+        $('.btn-cancel').click(function() {
+            $('.user-checkbox').prop('checked', false);
+        });
+
+        //button create post event
+        $('body').on('click', '#btn-edit', function () {
+
+            let edit_id = $(this).data('id');
+
+            //fetch detail post with ajax
+            $.ajax({
+                url: "{{route('admin.users.edit', ':id')}}".replace(':id', edit_id),
+                type: "GET",
+                cache: false,
+                success: function (response) {
+
+                    //fill data to form
+                    $('#id_user').val(response.data.id);
+                    $('#nama_edit').val(response.data.nama);
+                    $('#username_edit').val(response.data.username);
+                    $('#email_edit').val(response.data.email);
+                    $('#line_id_edit').val(response.data.line_id);
+                    $('input[name="user_role_edit"][value="' + response.data.role_id + '"]').prop('checked', true);
+
+                    //open modal
+                    $('#kt_modal_edit_user').modal('show');
+                }
+            });
         });
     });
 
-    function resetPasswords()
-    {
+    function resetPasswords() {
+        // Gather selected user IDs
+        let selectedUsers = [];
+        $('.user-checkbox:checked').each(function() {
+            selectedUsers.push($(this).data('id'));
+        });
+
+        if (selectedUsers.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No users selected',
+                text: 'Please select at least one user to reset the password.'
+            });
+            return;
+        }
+        
         Swal.fire({
             icon: 'question',
             title: 'Are You Sure?',
-            text: 'this action will reset all users password.',
+            text: 'This action will reset the passwords for the selected users.',
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, reset all"
+            confirmButtonText: "Yes, reset selected"
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                    type: 'GET',
-                    url: '{{ route("admin.users.reset_all_password") }}',
-                    cache: false,
-                    beforeSend: function() {
-                        Swal.fire({
-                            title: 'processing...',
-                            text: 'Please wait while we process your request.',
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            willOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
+                Swal.fire({
+                    title: "Set New Password",
+                    input: "text",
+                    inputAttributes: {
+                        autocapitalize: "off"
                     },
-                    success: function(response) {
-                        if (response.success == false) {
+                    showCancelButton: true,
+                    confirmButtonText: "Update password",
+                    allowOutsideClick: false,
+                    
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                        type: 'POST',
+                        url: '{{ route("admin.users.reset_selected_password") }}', // Update this route
+                        data: {
+                            user_ids: selectedUsers,
+                            new_password: result.value,
+                            _token: '{{ csrf_token() }}' // Include CSRF token
+                        },
+                        cache: false,
+                        beforeSend: function() {
                             Swal.fire({
-                                icon: 'error',
-                                title: 'Something went wrong!',
-                                text: response.message + ' ' + response.by
-                            });
-                        }else{
-                            let timerInterval;
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Successfull',
-                                text: response.message + ' ' + response.by,
+                                title: 'Processing...',
+                                text: 'Please wait while we process your request.',
                                 allowOutsideClick: false,
                                 showConfirmButton: false,
-                                timer: 2000,
-                                timerProgressBar: true,
                                 willOpen: () => {
                                     Swal.showLoading();
-                                },
-                                willClose: () => {
-                                    clearInterval(timerInterval);
-                                    window.location.href = '{{ route("admin.users.index") }}';
                                 }
                             });
-                        }
-                    },
+                        },
+                        success: function(response) {
+                            if (response.success == false) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Something went wrong!',
+                                    text: response.message + ' ' + response.by
+                                });
+                            } else {
+                                let timerInterval;
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Successful',
+                                    text: response.message + ' ' + response.by,
+                                    allowOutsideClick: false,
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    willOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                        window.location.href = '{{ route("admin.users.index") }}';
+                                    }
+                                });
+                            }
+                        },
+                    });
+                    }
                 });
             }
         });

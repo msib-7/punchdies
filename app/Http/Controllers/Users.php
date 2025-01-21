@@ -141,31 +141,37 @@ class Users extends Controller
         return redirect(route('admin.users.index'))->with('success', 'User is Active!');
     }
 
-    public function reset_all_password()
+    public function reset_selected_password(Request $request)
     {
+        $userIds = $request->user_ids;
+        $new_password = $request->new_password;
         try {
             DB::beginTransaction();
 
-            User::query()->update(['password' => bcrypt('password'), 'failed_attempts' => 0]);
+            foreach ($userIds as $user_id) {
+                $users = User::find($user_id);
 
-            $logData = [
-                'model' => null,
-                'model_id' => null,
-                'user_id' => auth()->user()->id,
-                'action' => 'Reset Password',
-                'location' => request()->ip(),
-                'reason' => 'Semua password user direset oleh, '. auth()->user()->nama,
-                'how' => 'Reset Password',
-                'timestamp' => now(),
-                'old_data' => null,
-                'new_data' => null,
-            ];
-            (new LogService)->handle($logData);
+                User::where('id', $user_id)->update(['password' => bcrypt($new_password), 'failed_attempts' => 0]);
+
+                $logData = [
+                    'model' => null,
+                    'model_id' => null,
+                    'user_id' => auth()->user()->id,
+                    'action' => 'Reset Password',
+                    'location' => request()->ip(),
+                    'reason' => 'Password User '. $users->nama .' telah direset oleh, ' . auth()->user()->nama,
+                    'how' => 'Reset Password',
+                    'timestamp' => now(),
+                    'old_data' => null,
+                    'new_data' => null,
+                ];
+                (new LogService)->handle($logData);
+            }
 
             DB::commit();
 
             return response()->json([
-                'message' => 'All User Password Successfully Reset by,',
+                'message' => 'Selected User Password Successfully Reset by,',
                 'by' => auth()->user()->nama
             ]);
         } catch (\Throwable $th) {

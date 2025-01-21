@@ -44,7 +44,7 @@ Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
         Route::post('update-user', [Users::class, 'update_user'])->name('update');
         Route::get('/delete-user/{id}', [Users::class, 'delete_user'])->name('delete');
         Route::get('/unblock-user/{id}', [Users::class, 'unblock_user'])->name('unblock');
-        Route::get('/reset-all-password', [Users::class, 'reset_all_password'])->name('reset_all_password');
+        Route::post('/reset-selected-password', [Users::class, 'reset_selected_password'])->name('reset_selected_password');
     });
     Route::prefix('role')->name('role.')->group(function(){
         Route::get('', [Role::class, 'manajemen_role'])->name('index');
