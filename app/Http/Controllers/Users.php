@@ -192,4 +192,68 @@ class Users extends Controller
             ]);
         }
     }
+
+    public function updatePassword(Request $request)
+    {
+        $id = $request->id;
+        $new_password = $request->new_password;
+
+        try {
+            DB::beginTransaction();
+
+            $users = User::find($id);
+
+            User::where('id', $id)
+                ->update([
+                    'password' => bcrypt($new_password),
+                    'failed_attempts' => 0,
+                    'last_update_password' => now(),
+                    'next_update_password' => now()->addDays(89)
+                ]);
+
+            $logData = [
+                'model' => null,
+                'model_id' => null,
+                'user_id' => auth()->user()->id,
+                'action' => 'Change Password',
+                'location' => request()->ip(),
+                'reason' => 'User ' . $users->nama . ' telah mengganti password',
+                'how' => 'Change Password',
+                'timestamp' => now(),
+                'old_data' => null,
+                'new_data' => null,
+            ];
+            (new LogService)->handle($logData);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Password Updated Successfully!',
+                'by' => auth()->user()->nama
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error('Error Updating Passwords: ' . $th->getMessage());
+
+            $logData = [
+                'model' => null,
+                'model_id' => null,
+                'user_id' => auth()->user()->id,
+                'action' => 'Change Password',
+                'location' => request()->ip(),
+                'reason' => 'Error Updating Password by, ' . auth()->user()->nama,
+                'how' => 'Change Password',
+                'timestamp' => now(),
+                'old_data' => null,
+                'new_data' => null,
+            ];
+            (new LogService)->handle($logData);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error Updating Passwords by,',
+                'by' => auth()->user()->nama
+            ]);
+        }
+    }
 }
