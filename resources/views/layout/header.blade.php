@@ -131,9 +131,11 @@
                                                         <h5 class="text-body mb-2 mt-2">{{ $notif->title }}</h5>
                                                         <p class="mb-0">{{ $notif->message }}</p>
                                                         <p class="mb-0">
-                                                            <a href="{{ $notif->url }}">
-                                                                <button class="btn btn-secondary btn-sm float-end">direct</button>
-                                                            </a>
+                                                            @if($notif->url)
+                                                                <a href="{{ $notif->url }}">
+                                                                    <button class="btn btn-secondary btn-sm float-end">direct</button>
+                                                                </a>
+                                                            @endif
                                                         </p>
                                                     </div>
                                                 </div>
