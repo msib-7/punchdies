@@ -256,27 +256,33 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                $micrometer = $labelDies->kalibrasi_micrometer ? new DateTime($labelDies->kalibrasi_micrometer) : null;
-                                                                $caliper = $labelDies->kalibrasi_caliper ? new DateTime($labelDies->kalibrasi_caliper) : null;
-                                                                $dial_indicator = $labelDies->kalibrasi_dial_indicator ? new DateTime($labelDies->kalibrasi_dial_indicator) : null;
+                                                                $tgl_kalibrasi_1 = $labelDies->tgl_kalibrasi_tools_1 ? new DateTime($labelDies->tgl_kalibrasi_tools_1) : null;
+                                                                $tgl_kalibrasi_2 = $labelDies->tgl_kalibrasi_tools_2 ? new DateTime($labelDies->tgl_kalibrasi_tools_2) : null;
+                                                                $tgl_kalibrasi_3 = $labelDies->tgl_kalibrasi_tools_3 ? new DateTime($labelDies->tgl_kalibrasi_tools_3) : null;
                                                                 ?>
 
                                                                 <tr>
-                                                                    <td>Micrometer Digital</td>
                                                                     <td>
-                                                                        <input type="text" value="{{ $micrometer ? date_format($micrometer, 'd M Y') : '' }}" name="micrometer_digital" id="micrometer_digital" class="form-control" readonly>
+                                                                        <input type="text" value="{{ $labelDies->kalibrasi1->title }}" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ $tgl_kalibrasi_1 ? date_format($tgl_kalibrasi_1, 'd M Y') : '' }}" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" readonly>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Caliper Digital</td>
                                                                     <td>
-                                                                        <input type="text" value="{{ $caliper ? date_format($caliper, 'd M Y') : '' }}" name="caliper_digital" id="caliper_digital" class="form-control" @readonly(true)>
+                                                                        <input type="text" value="{{ $labelDies->kalibrasi2->title }}" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ $tgl_kalibrasi_2 ? date_format($tgl_kalibrasi_2, 'd M Y') : '' }}" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" @readonly(true)>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Dial Indicator Digital</td>
                                                                     <td>
-                                                                        <input type="text" value="{{ $dial_indicator ? date_format($dial_indicator, 'd M Y') : '' }}" name="dial_indicator_digital" id="dial_indicator_digital" class="form-control" @readonly(true)>
+                                                                        <input type="text" value="{{ $labelDies->kalibrasi3->title }}" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ $tgl_kalibrasi_3 ? date_format($tgl_kalibrasi_3, 'd M Y') : '' }}" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" @readonly(true)>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>

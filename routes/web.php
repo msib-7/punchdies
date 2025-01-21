@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiesController;
 use App\Http\Controllers\disposal\DisposalController;
+use App\Http\Controllers\KalibrasiToolController;
 use App\Http\Controllers\KodeProdukController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\MesinController;
@@ -84,6 +85,13 @@ Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
         Route::get('/edit-produk/{id}', [KodeProdukController::class, 'edit'])->name('edit');
         Route::post('update-produk', [KodeProdukController::class, 'update'])->name('update');
         Route::get('/delete-produk/{id}', [KodeProdukController::class, 'destroy'])->name('delete');
+    });
+    Route::prefix('tools-kalibrasi')->name('kalibrasi.')->group(function () {
+        Route::get('', [KalibrasiToolController::class, 'index'])->name('index');
+        Route::post('create-tools', [KalibrasiToolController::class, 'store'])->name('create');
+        Route::get('/edit-tools/{id}', [KalibrasiToolController::class, 'edit'])->name('edit');
+        Route::post('update-tools', [KalibrasiToolController::class, 'update'])->name('update');
+        Route::get('/delete-tools/{id}', [KalibrasiToolController::class, 'destroy'])->name('delete');
     });
 });
 

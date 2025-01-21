@@ -405,21 +405,42 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>Micrometer Digital</td>
                                                         <td>
-                                                            <input type="date" name="micrometer_digital" id="micrometer_digital" class="form-control" required>
+                                                            <select name="kalibrasi_tools_1" aria-label="Select a Tool" data-control="select2" data-dropdown-parent="#modal_confirm_pengukuran" data-placeholder="Select a item..." class="form-select fw-bold" required>
+                                                                <option value="">Select Tool</option>
+                                                                @foreach ($kalibrasiTools as $item)
+                                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="date" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" required>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Caliper Digital</td>
                                                         <td>
-                                                            <input type="date" name="caliper_digital" id="caliper_digital" class="form-control" required>
+                                                            <select name="kalibrasi_tools_2" aria-label="Select a Tool" data-control="select2" data-dropdown-parent="#modal_confirm_pengukuran" data-placeholder="Select a item..." class="form-select fw-bold" required>
+                                                                <option value="">Select Tool</option>
+                                                                @foreach ($kalibrasiTools as $item)
+                                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="date" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" required>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Dial Indicator Digital</td>
                                                         <td>
-                                                            <input type="date" name="dial_indicator_digital" id="dial_indicator_digital" class="form-control" required>
+                                                            <select name="kalibrasi_tools_3" aria-label="Select a Tool" data-control="select2" data-dropdown-parent="#modal_confirm_pengukuran" data-placeholder="Select a item..." class="form-select fw-bold" required>
+                                                                <option value="">Select Tool</option>
+                                                                @foreach ($kalibrasiTools as $item)
+                                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="date" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" required>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -469,21 +490,39 @@
                 isValid = false;
             }
 
-            // Check Micrometer Digital
-            if ($('#micrometer_digital').val() === '') {
-                alert('Micrometer Digital calibration date is required.');
+            // Check kalibrasi tool 1
+            if ($('select[name="kalibrasi_tools_1"]').val() === '') {
+                alert('Kalibrasi tool 1 is required.');
                 isValid = false;
             }
 
-            // Check Caliper Digital
-            if ($('#caliper_digital').val() === '') {
-                alert('Caliper Digital calibration date is required.');
+            // Check kalibrasi tool 2
+            if ($('select[name="kalibrasi_tools_2"]').val() === '') {
+                alert('Kalibrasi tool 2 is required.');
                 isValid = false;
             }
 
-            // Check Dial Indicator Digital
-            if ($('#dial_indicator_digital').val() === '') {
-                alert('Dial Indicator Digital calibration date is required.');
+            // Check kalibrasi tool 3
+            if ($('select[name="kalibrasi_tools_3"]').val() === '') {
+                alert('Kalibrasi tool 3 is required.');
+                isValid = false;
+            }
+
+            // Check 1
+            if ($('#tgl_kalibrasi_1').val() === '') {
+                alert('Calibration date is required.');
+                isValid = false;
+            }
+
+            // Check 2
+            if ($('#tgl_kalibrasi_2').val() === '') {
+                alert('Calibration date is required.');
+                isValid = false;
+            }
+
+            // Check 3
+            if ($('#tgl_kalibrasi_3').val() === '') {
+                alert('Calibration date is required.');
                 isValid = false }
 
             // If all fields are valid, submit the form

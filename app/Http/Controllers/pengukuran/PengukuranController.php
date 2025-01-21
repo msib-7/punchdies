@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Dies;
 use App\Models\ApprovalDisposal;
 use App\Models\ApprovalPengukuran;
+use App\Models\KalibrasiTool;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranAwalDies;
 use App\Models\PengukuranRutinDies;
@@ -433,6 +434,9 @@ class PengukuranController extends Controller
             session()->remove('start_count');
             session()->put('start_count', $count);
 
+            //Master Kalibrasi Tools
+            $data['kalibrasiTools'] = KalibrasiTool::get();
+
             return view('engineer.data.form.pengukuran-punch', $data);
 
         }elseif($request->segment(3) == 'dies'){
@@ -484,6 +488,9 @@ class PengukuranController extends Controller
             // session()->remove('show_id');
             session()->remove('start_count');
             session()->put('start_count', $count);
+
+            //Master Kalibrasi Tools
+            $data['kalibrasiTools'] = KalibrasiTool::get();
 
             return view('engineer.data.form.pengukuran-dies', $data);
         }
@@ -663,11 +670,14 @@ class PengukuranController extends Controller
         $referensi_drawing = $request->referensi_drawing;
         $catatan = $request->catatan;
         $kesimpulan = $request->kesimpulan;
-        $micrometer_digital = $request->micrometer_digital;
-        $caliper_digital = $request->caliper_digital;
-        $dial_indicator_digital = $request->dial_indicator_digital;
+        $kalibrasi_tools_1 = $request->kalibrasi_tools_1;
+        $kalibrasi_tools_2 = $request->kalibrasi_tools_2;
+        $kalibrasi_tools_3 = $request->kalibrasi_tools_3;
+        $tgl_kalibrasi_1 = $request->tgl_kalibrasi_1;
+        $tgl_kalibrasi_2 = $request->tgl_kalibrasi_2;
+        $tgl_kalibrasi_3 = $request->tgl_kalibrasi_3;
 
-        return (new ServicePengukuranAwal)->addNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital);
+        return (new ServicePengukuranAwal)->addNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
     }
 
     //Pengukuran Rutin
@@ -1464,6 +1474,9 @@ class PengukuranController extends Controller
             session()->remove('start_count');
             session()->put('start_count', $count);
 
+            //Master Kalibrasi Tools
+            $data['kalibrasiTools'] = KalibrasiTool::get();
+
             return view('operator.data.form.pengukuran-punch', $data);
 
         } elseif ($request->segment(3) == 'dies') {
@@ -1527,6 +1540,9 @@ class PengukuranController extends Controller
             // session()->remove('show_id');
             session()->remove('start_count');
             session()->put('start_count', $count);
+
+            //Master Kalibrasi Tools
+            $data['kalibrasiTools'] = KalibrasiTool::get();
 
             return view('operator.data.form.pengukuran-dies', $data);
         }

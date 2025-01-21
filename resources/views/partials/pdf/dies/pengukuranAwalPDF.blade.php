@@ -238,29 +238,29 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Micrometer Digital</td>
+                                <td>{{ $labelDies->kalibrasi1->title }}</td>
                                 <td>
                                     <?php 
-                                    $micrometerDate = $labelDies->kalibrasi_micrometer ? new DateTime($labelDies->kalibrasi_micrometer) : null;
-                                    echo $micrometerDate ? date_format($micrometerDate, 'd M Y') : ''; 
+                                    $tgl_kalibrasi_1 = $labelDies->tgl_kalibrasi_tools_1 ? new DateTime($labelDies->tgl_kalibrasi_tools_1) : null;
+                                    echo $tgl_kalibrasi_1 ? date_format($tgl_kalibrasi_1, 'd M Y') : ''; 
                                     ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Caliper Digital</td>
+                                <td>{{$labelDies->kalibrasi2->title}}</td>
                                 <td>
                                     <?php 
-                                    $caliperDate = $labelDies->kalibrasi_caliper ? new DateTime($labelDies->kalibrasi_caliper) : null;
-                                    echo $caliperDate ? date_format($caliperDate, 'd M Y') : ''; 
+                                    $tgl_kalibrasi_2 = $labelDies->tgl_kalibrasi_tools_2 ? new DateTime($labelDies->tgl_kalibrasi_tools_2) : null;
+                                    echo $tgl_kalibrasi_2 ? date_format($tgl_kalibrasi_2, 'd M Y') : ''; 
                                     ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Dial Indicator Digital</td>
+                                <td>{{$labelDies->kalibrasi3->title}}</td>
                                 <td>
                                     <?php 
-                                    $dialIndicatorDate = $labelDies->kalibrasi_dial_indicator ? new DateTime($labelDies->kalibrasi_dial_indicator) : null;
-                                    echo $dialIndicatorDate ? date_format($dialIndicatorDate, 'd M Y') : ''; 
+                                    $tgl_kalibrasi_3 = $labelDies->tgl_kalibrasi_tools_3 ? new DateTime($labelDies->tgl_kalibrasi_tools_3) : null;
+                                    echo $tgl_kalibrasi_3 ? date_format($tgl_kalibrasi_3, 'd M Y') : ''; 
                                     ?>
                                 </td>
                             </tr>

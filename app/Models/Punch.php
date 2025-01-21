@@ -25,4 +25,17 @@ class Punch extends Model
         $builder->limit(1);
         return $query = $builder->get();
     }
+
+    public function kalibrasi1()
+    {
+        return $this->belongsTo(KalibrasiTool::class, 'kalibrasi_tools_1', 'id');
+    }
+    public function kalibrasi2()
+    {
+        return $this->belongsTo(KalibrasiTool::class, 'kalibrasi_tools_2', 'id');
+    }
+    public function kalibrasi3()
+    {
+        return $this->belongsTo(KalibrasiTool::class, 'kalibrasi_tools_3', 'id');
+    }
 }

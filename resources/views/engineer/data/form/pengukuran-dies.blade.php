@@ -390,21 +390,42 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>Micrometer Digital</td>
                                                         <td>
-                                                            <input type="date" name="micrometer_digital" id="micrometer_digital" class="form-control" required>
+                                                            <select name="kalibrasi_tools_1" aria-label="Select a Tool" data-control="select2" data-dropdown-parent="#modal_confirm_pengukuran" data-placeholder="Select a item..." class="form-select fw-bold" required>
+                                                                <option value="">Select Tool</option>
+                                                                @foreach ($kalibrasiTools as $item)
+                                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="date" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" required>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Caliper Digital</td>
                                                         <td>
-                                                            <input type="date" name="caliper_digital" id="caliper_digital" class="form-control" required>
+                                                            <select name="kalibrasi_tools_2" aria-label="Select a Tool" data-control="select2" data-dropdown-parent="#modal_confirm_pengukuran" data-placeholder="Select a item..." class="form-select fw-bold" required>
+                                                                <option value="">Select Tool</option>
+                                                                @foreach ($kalibrasiTools as $item)
+                                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="date" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" required>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Dial Indicator Digital</td>
                                                         <td>
-                                                            <input type="date" name="dial_indicator_digital" id="dial_indicator_digital" class="form-control" required>
+                                                            <select name="kalibrasi_tools_3" aria-label="Select a Tool" data-control="select2" data-dropdown-parent="#modal_confirm_pengukuran" data-placeholder="Select a item..." class="form-select fw-bold" required>
+                                                                <option value="">Select Tool</option>
+                                                                @foreach ($kalibrasiTools as $item)
+                                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="date" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" required>
                                                         </td>
                                                     </tr>
                                                 </tbody>
