@@ -89,7 +89,7 @@ class AuthController extends Controller
                 return response()->json([
                     'reminder' => true,
                     'success' => true,
-                    'message' => 'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera.'
+                    'message' => 'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. lihat detail pada notifikasi'
                 ], 200);
             }
 
