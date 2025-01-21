@@ -80,11 +80,11 @@
                         @endif
                     </div>
                     <!--begin::Menu-->
-                    <div class="menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px" data-kt-menu="true"
+                    <div class="menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-500px" data-kt-menu="true"
                         id="kt_menu_notifications">
                         <!--begin::Heading-->
                         <div class="d-flex flex-column bgi-no-repeat rounded-top"
-                            style="background-image:url('/assets/media/misc/menu-header-bg.jpg')">
+                            style="background-image: url('/assets/media/misc/menu-header-bg.jpg'); background-size: cover; background-position: center;">
                             <!--begin::Title-->
                             <div class="d-flex flex-stack p-5">
                                 <div class="d-flex">
@@ -92,19 +92,13 @@
                                         {{-- <span class="fs-8 opacity-75 ps-3">24 reports</span> --}}
                                     </h3>
                                 </div>
-                                <div class="d-flex">
-                                    <button class="btn btn-bg-body hover-rotate-end">
-                                        <i class="bi bi-arrow-clockwise text-light fs-2x"></i>
-                                    </button>
-                                </div>
-
                             </div>
                             <!--end::Title-->
                             <!--begin::Tabs-->
                             <ul class="nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-semibold px-9">
                                 <li class="nav-item">
                                     <a class="nav-link text-white opacity-75 opacity-state-100 pb-4 active"
-                                        data-bs-toggle="tab" href="#kt_topbar_notifications_3">Logs</a>
+                                        data-bs-toggle="tab" href="#kt_topbar_notifications_3"></a>
                                 </li>
                             </ul>
                             <!--end::Tabs-->
@@ -116,8 +110,7 @@
                             <div class="tab-pane fade show active" id="kt_topbar_notifications_3" role="tabpanel">
                                 <!--begin::Items-->
                                 <div class="scroll-y mh-325px my-5 px-8">
-
-                                    @foreach (auth()->user()->notify() as $notif)
+                                    @forelse (auth()->user()->notify() as $notif)
                                         @php
                                         // Cek apakah notifikasi dari hari ini
                                         $isToday = Carbon\Carbon::parse($notif->created_at)->isToday();
@@ -148,9 +141,22 @@
                                             <!--end::Section-->
                                         </div>
                                         <!--end::Item-->
-                                    @endforeach
+                                    @empty
+                                        <div class="d-flex flex-stack">
+                                            <div class="d-flex align-items-center w-100 justify-content-center">
+                                                <h6 class="text-body mb-2 mt-2 text-gray-600">Tidak Ada Notifikasi</h6>
+                                            </div>
+                                        </div>
+                                    @endforelse
                                 </div>
                                 <!--end::Items-->
+                                <!--begin::View more-->
+                                <div class="py-1 text-center border-top">
+                                    <button class="btn btn-color-gray-600 btn-active-color-danger w-100" onclick="clearNotif()">
+                                        Clear all notification
+                                    </button>
+                                </div>
+                                <!--end::View more-->
                             </div>
                             <!--end::Tab panel-->
                         </div>
@@ -296,7 +302,7 @@
                         <!--end::Menu separator-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
-                            <button onclick="test()" class="btn menu-link w-100 px-5">
+                            <button onclick="changePassword()" class="btn menu-link w-100 px-5">
                                 <span class="menu-title position-relative">Change Password
                                     <span class="ms-5 position-absolute translate-middle-y top-50 end-0">
                                         <i class="ki-duotone ki-arrows-loop fs-2">
@@ -338,7 +344,7 @@
 </div>
 
 <script>
-    function test(){
+    function changePassword(){
         Swal.fire({
             icon: 'question',
             title: 'Are You Sure?',
@@ -411,6 +417,53 @@
                     }
                 });
             }
+        });
+    }
+
+    function clearNotif() 
+    {
+        $.ajax({
+            type: 'POST',
+            url: '{{ url("user/clear-notifications") }}', // Update this route
+            data: {
+                _token: '{{ csrf_token() }}' // Include CSRF token
+            },
+            cache: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            success: function(response) {
+                if (response.success == true) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notifications Cleared',
+                        text: response.message,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Something went wrong!',
+                        text: response.message
+                    });
+                }
+            },
         });
     }
 </script>

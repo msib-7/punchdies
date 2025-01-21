@@ -16,6 +16,7 @@ use App\Http\Controllers\KodeProdukController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\MesinController;
 use App\Http\Controllers\NamaProdukController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\pengukuran\PengukuranController;
 use App\Http\Controllers\Permission;
 use App\Http\Controllers\PunchController;
@@ -245,6 +246,8 @@ Route::post('pnd/pa/{route}/get-data', [PengukuranController::class, 'preview'])
 Route::post('approval/check-password', [AuthController::class, 'checkPasswordApproval']);
 
 Route::post('user/update-password', [AuthController::class, 'updatePassword']);
+
+Route::post('user/clear-notifications', [NotificationController::class, 'clear']);
 
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     //QA
