@@ -66,33 +66,37 @@ Route::prefix('Admin')->name('admin.')->middleware(['auth', 'CheckRoleUser'])->g
         Route::post('update-line', [LineController::class, 'update_line'])->name('update');
         Route::get('/delete-permission/{id}', [LineController::class, 'delete_line'])->name('delete');
     });
-    Route::prefix('mesin')->name('mesin.')->group(function () {
-        Route::get('', [MesinController::class, 'index'])->name('index');
-        Route::post('create-mesin', [MesinController::class, 'store'])->name('create');
-        Route::get('/edit-mesin/{id}', [MesinController::class, 'edit'])->name('edit');
-        Route::post('update-mesin', [MesinController::class, 'update'])->name('update');
-        Route::get('/delete-mesin/{id}', [MesinController::class, 'destroy'])->name('delete');
-    });
-    Route::prefix('nama-produk')->name('namaProduk.')->group(function () {
-        Route::get('', [NamaProdukController::class, 'index'])->name('index');
-        Route::post('create-produk', [NamaProdukController::class, 'store'])->name('create');
-        Route::get('/edit-produk/{id}', [NamaProdukController::class, 'edit'])->name('edit');
-        Route::post('update-produk', [NamaProdukController::class, 'update'])->name('update');
-        Route::get('/delete-produk/{id}', [NamaProdukController::class, 'destroy'])->name('delete');
-    });
-    Route::prefix('kode-produk')->name('kodeProduk.')->group(function () {
-        Route::get('', [KodeProdukController::class, 'index'])->name('index');
-        Route::post('create-produk', [KodeProdukController::class, 'store'])->name('create');
-        Route::get('/edit-produk/{id}', [KodeProdukController::class, 'edit'])->name('edit');
-        Route::post('update-produk', [KodeProdukController::class, 'update'])->name('update');
-        Route::get('/delete-produk/{id}', [KodeProdukController::class, 'destroy'])->name('delete');
-    });
-    Route::prefix('tools-kalibrasi')->name('kalibrasi.')->group(function () {
-        Route::get('', [KalibrasiToolController::class, 'index'])->name('index');
-        Route::post('create-tools', [KalibrasiToolController::class, 'store'])->name('create');
-        Route::get('/edit-tools/{id}', [KalibrasiToolController::class, 'edit'])->name('edit');
-        Route::post('update-tools', [KalibrasiToolController::class, 'update'])->name('update');
-        Route::get('/delete-tools/{id}', [KalibrasiToolController::class, 'destroy'])->name('delete');
+
+    
+    Route::prefix('system')->name('system')->group(function () {
+        Route::prefix('mesin')->name('mesin.')->group(function () {
+            Route::get('', [MesinController::class, 'index'])->name('index');
+            Route::post('create-mesin', [MesinController::class, 'store'])->name('create');
+            Route::get('/edit-mesin/{id}', [MesinController::class, 'edit'])->name('edit');
+            Route::post('update-mesin', [MesinController::class, 'update'])->name('update');
+            Route::get('/delete-mesin/{id}', [MesinController::class, 'destroy'])->name('delete');
+        });
+        Route::prefix('nama-produk')->name('namaProduk.')->group(function () {
+            Route::get('', [NamaProdukController::class, 'index'])->name('index');
+            Route::post('create-produk', [NamaProdukController::class, 'store'])->name('create');
+            Route::get('/edit-produk/{id}', [NamaProdukController::class, 'edit'])->name('edit');
+            Route::post('update-produk', [NamaProdukController::class, 'update'])->name('update');
+            Route::get('/delete-produk/{id}', [NamaProdukController::class, 'destroy'])->name('delete');
+        });
+        Route::prefix('kode-produk')->name('kodeProduk.')->group(function () {
+            Route::get('', [KodeProdukController::class, 'index'])->name('index');
+            Route::post('create-produk', [KodeProdukController::class, 'store'])->name('create');
+            Route::get('/edit-produk/{id}', [KodeProdukController::class, 'edit'])->name('edit');
+            Route::post('update-produk', [KodeProdukController::class, 'update'])->name('update');
+            Route::get('/delete-produk/{id}', [KodeProdukController::class, 'destroy'])->name('delete');
+        });
+        Route::prefix('tools-kalibrasi')->name('kalibrasi.')->group(function () {
+            Route::get('', [KalibrasiToolController::class, 'index'])->name('index');
+            Route::post('create-tools', [KalibrasiToolController::class, 'store'])->name('create');
+            Route::get('/edit-tools/{id}', [KalibrasiToolController::class, 'edit'])->name('edit');
+            Route::post('update-tools', [KalibrasiToolController::class, 'update'])->name('update');
+            Route::get('/delete-tools/{id}', [KalibrasiToolController::class, 'destroy'])->name('delete');
+        });
     });
 });
 
