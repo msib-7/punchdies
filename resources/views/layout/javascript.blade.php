@@ -360,7 +360,7 @@
         
         idleDisplay.textContent = `Idle Time: ${formattedMinutes}:${formattedSeconds}`;
 
-        if (minutes >= 59) { 
+        if (minutes > 59) { 
             window.location.href = '{{ route("logout") }}'; // Update this route as needed
         }
     }, 1000); // Check every second
