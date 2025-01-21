@@ -171,10 +171,8 @@ class AuthController extends Controller
         $user = Auth::user();
 
         if (Auth::attempt(['username' => $user->username, 'password' => $password])) {
-            if ($action === 'approve') {
-                return response()->json(['success' => 'Password is correct','pass' => 'true'], 200);
-            }elseif($action == 'reject'){
-                return response()->json(['success' => 'Password is correct','pass' => 'true'], 200);
+            if (in_array($action, ['approve', 'reject', 'revisi'])) {
+                return response()->json(['success' => 'Password is correct', 'pass' => 'true', 'action' => $action], 200);
             }
         } else {
             return response()->json(['error' => 'Password is incorrect'], 401);

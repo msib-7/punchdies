@@ -227,7 +227,7 @@
                                             </div>
                                         @endif
                                     @else
-                                        <form action="{{ route('pnd.approval.dis.setStatus', $dataApproval->id) }}" id="formApprovalDisposal" method="post" enctype="multipart/form-data">
+                                        <form id="formApprovalDisposal" method="post" enctype="multipart/form-data">
                                             @csrf
                                             {{-- Status --}}
                                             <div class="col-12 my-3">
@@ -293,7 +293,7 @@
 
                                             {{-- Button --}}
                                             <div class="col-12 my-3" id="submitButtonContainer" style="display: {{ $dataApproval->is_approved == '1' || $dataApproval->is_rejected == '1' || $dataApproval->is_revisi == '1' ? 'none' : 'block' }};">
-                                                <button id="submitButton" type="button" class="btn btn-primary w-100 btn-sm">Submit</button>
+                                                <button id="submitButton" type="button" class="btn btn-primary w-100 btn-sm" onclick="checkUser('{{$dataApproval->id}}')">Submit</button>
                                             </div>
                                         </form>
                                     @endif
@@ -392,107 +392,113 @@
         });
     });
 
-
-    form = document.getElementById('formApprovalDisposal');
-    // Handle submit button click event
-    document.getElementById('submitButton').addEventListener('click', function () {
-        var selectedMethod = document.querySelector('input[name="status"]:checked');
+    function checkUser(id) 
+    {
+        var action = document.querySelector('input[name="status"]:checked');
         
-        if (selectedMethod) {
-            // Check if the selected radio button is "Approve"
-            if (selectedMethod.value === 'approve') { // Assuming '1' is the value for Approve
-                // Show SweetAlert confirmation dialog
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You are about to approve this data.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, approve it!',
-                    cancelButtonText: 'No, cancel!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Proceed with the approval process
-                        Swal.fire({
-                            icon: 'success',
-                            title: "Data Successfull Approved!",
-                            html: "redirect in 3 seconds.",
-                            allowOutsideClick: false, // Tidak bisa ditutup dengan klik luar
-                            allowEscapeKey: false, // Tidak bisa ditutup dengan klik esc
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            },
-                            willClose: () => {
-                                form.submit(); // Submit the form
-                            }
-                        });
+
+        Swal.fire({
+            title: '<i class="ki-duotone ki-lock-2 fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>',
+            text: 'hai {{ auth()->user()->nama }}! enter your credential to confirm approval!',
+            input: "password",
+            inputPlaceholder: "...",
+            inputAttributes: {
+                autocapitalize: "off",
+                autocorrect: "off"
+            },
+            showCancelButton: true,
+            confirmButtonText: "Confirm",
+            showLoaderOnConfirm: true,
+            preConfirm: async (password) => {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                // Return a promise that resolves or rejects based on the AJAX response
+                return $.ajax({
+                    type: 'POST',
+                    url: '{{url("approval/check-password")}}',
+                    data: {
+                        password: password,
+                        action: action.value,
+                        id: id,
+                        _token: csrfToken // Include the CSRF token
                     }
+                }).then((data) => {
+                    // Assuming the server returns a success response when the password is correct
+                    if (data.success) {
+                        return data; // Resolve the promise to indicate success
+                    } else {
+                        Swal.showValidationMessage('Incorrect password!'); // Show validation message
+                        throw new Error('Incorrect password!'); // Reject the promise
+                    }
+                }).catch((xhr) => {
+                    // Handle error
+                    Swal.showValidationMessage(`Request failed: ${xhr.responseText}`);
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Credential Error',
+                        html: `There was an error with your credentials. <br> Please try again. <br> ${xhr.responseText}`
+                    })
+                    throw new Error(xhr.responseText); // Reject the promise to stop loading
                 });
-            } else if(selectedMethod.value === 'reject') {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You are about to Reject this data.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, Reject it!',
-                    cancelButtonText: 'No, cancel!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Proceed with the approval process
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const note = document.querySelector('textarea[name="note"]').value;
+                const url = result.value.action === 'approve' ? '{{ route("pnd.approval.dis.approve", ":id") }}' : result.value.action === 'reject' ? '{{ route("pnd.approval.dis.reject", ":id") }}' : '{{ route("pnd.approval.dis.revisi", ":id") }}';
+                $.ajax({
+                    type: 'GET',
+                    url: url.replace(':id', id),
+                    data: { pass: result.value.pass, id: id, note: note, },
+                    beforeSend: function() {
                         Swal.fire({
-                            icon: 'success',
-                            title: "Data Successfull Rejected!",
-                            html: "redirect in 3 seconds.",
-                            allowOutsideClick: false, // Tidak bisa ditutup dengan klik luar
-                            allowEscapeKey: false, // Tidak bisa ditutup dengan klik esc
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: () => {
+                            title: 'processing...',
+                            text: 'Please wait while we process your request.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
                                 Swal.showLoading();
-                            },
-                            willClose: () => {
-                                form.submit(); // Submit the form
                             }
                         });
-                    }
-                });
-            }else if(selectedMethod.value === 'revisi'){
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You are about to Turning Back this data.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, Submit it!',
-                    cancelButtonText: 'No, cancel!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Proceed with the approval process
+                    },
+                    success: function(response) { // Added parentheses and a parameter
+                        if(response.success == false){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Something went wrong',
+                                text: response.message
+                            });
+                        }else{
+                            let timerInterval;
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Successfull',
+                                text: response.message + response.by,
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                timerProgressBar: true,
+                                willOpen: () => {
+                                    Swal.showLoading();
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                    window.location.href = '{{ route("pnd.approval.dis.index") }}';
+                                }
+                            });
+                        }
+                    },
+                    error: function() { // Added parentheses and parameters
                         Swal.fire({
-                            icon: 'success',
-                            title: "Data Successfull Submited!",
-                            html: "redirect in 3 seconds.",
-                            allowOutsideClick: false, // Tidak bisa ditutup dengan klik luar
-                            allowEscapeKey: false, // Tidak bisa ditutup dengan klik esc
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            },
-                            willClose: () => {
-                                form.submit(); // Submit the form
-                            }
+                            icon: 'error',
+                            title: 'Something went wrong!', // Fixed typo "when" to "went"
                         });
-                    }
+                    },
                 });
             }
-        } else {
-            Swal.fire({
-                icon: 'error',
-                text: 'Please select an option before submitting.'
-            })
-        }
-    });
+        });
+    }
 </script>
 <!--end::Content-->
 @endsection

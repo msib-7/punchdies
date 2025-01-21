@@ -86,7 +86,7 @@ class ApprovalPengukuranAwalController extends Controller
                 $this->rejected_update($id);
             }
             return response()->json([
-                'message' => 'Data Successfully Rejeected by, ',
+                'message' => 'Data Successfully Rejected by, ',
                 'by' => auth()->user()->nama
             ]);
         } else {

@@ -189,7 +189,7 @@ class DisposalController extends Controller
             // Buat NOtifikasi Ke Penerima
             event(new NotificationEvent(
                 $user->user_id,
-                'Waiting!, Approval Pengukuran Awal',
+                'Waiting!, Approval Disposal',
                 'User ' . auth()->user()->nama . ' telah mengirim data approval dan menunggu persetujuan Anda.',
                 route('pnd.approval.dis.show', $newId)
             ));

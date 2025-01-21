@@ -209,7 +209,10 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
         Route::prefix('disposal')->name('dis.')->group(function(){
             Route::get('index', [ApprovalDisposalController::class, 'index'])->name('index');
             Route::get('show/{id}', [ApprovalDisposalController::class, 'show'])->name('show');
-            Route::post('status/{id}', [ApprovalDisposalController::class, 'setStatus'])->name('setStatus');
+            Route::get('approve/{id}', [ApprovalDisposalController::class, 'approve'])->name('approve');
+            Route::get('reject/{id}', [ApprovalDisposalController::class, 'reject'])->name('reject');
+            Route::get('revisi/{id}', [ApprovalDisposalController::class, 'revisi'])->name('revisi');
+            // Route::post('status/{id}', [ApprovalDisposalController::class, 'setStatus'])->name('setStatus');
         });
         Route::prefix('histori')->name('histori.')->group(function(){
             Route::get('', [ApprovalController::class, 'show_history'])->name('index');
