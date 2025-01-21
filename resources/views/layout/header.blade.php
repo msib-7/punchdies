@@ -203,6 +203,7 @@
                             </div>
                         </div>
                         <!--end::Menu item-->
+
                         <!--begin::Menu separator-->
                         <div class="separator my-2"></div>
                         <!--end::Menu separator-->
@@ -228,7 +229,8 @@
                                             <span class="path1"></span>
                                             <span class="path2"></span>
                                         </i>
-                                    </span></span>
+                                    </span>
+                                </span>
                             </a>
                             <!--begin::Menu-->
                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-title-gray-700 menu-icon-gray-500 menu-active-bg menu-state-color fw-semibold py-4 fs-base w-150px"
@@ -292,7 +294,20 @@
                         <!--begin::Menu separator-->
                         <div class="separator my-2"></div>
                         <!--end::Menu separator-->
-
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-5">
+                            <button onclick="test()" class="btn menu-link w-100 px-5">
+                                <span class="menu-title position-relative">Change Password
+                                    <span class="ms-5 position-absolute translate-middle-y top-50 end-0">
+                                        <i class="ki-duotone ki-arrows-loop fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </span>
+                                </span>
+                            </button>
+                        </div>
+                        <!--end::Menu item-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
                             <a href="{{route('logout')}}" class="menu-link px-5">Sign Out</a>
@@ -321,3 +336,81 @@
     </div>
     <!--end::Header container-->
 </div>
+
+<script>
+    function test(){
+        Swal.fire({
+            icon: 'question',
+            title: 'Are You Sure?',
+            text: 'This action will change your current password.',
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Set New Password",
+                    input: "text",
+                    inputAttributes: {
+                        autocapitalize: "off"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Update password",
+                    allowOutsideClick: false,
+                    
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                        type: 'POST',
+                        url: '{{ url("user/update-password") }}', // Update this route
+                        data: {
+                            id: '{{ auth()->user()->id }}',
+                            new_password: result.value,
+                            _token: '{{ csrf_token() }}' // Include CSRF token
+                        },
+                        cache: false,
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Processing...',
+                                text: 'Please wait while we process your request.',
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                                willOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function(response) {
+                            if (response.success == false) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Something went wrong!',
+                                    text: response.message + ' ' + response.by
+                                });
+                            } else {
+                                let timerInterval;
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Successful',
+                                    text: response.message + ' ' + response.by,
+                                    allowOutsideClick: false,
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    willOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                    }
+                                });
+                            }
+                        },
+                    });
+                    }
+                });
+            }
+        });
+    }
+</script>

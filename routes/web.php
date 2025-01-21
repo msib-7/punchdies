@@ -233,6 +233,8 @@ Route::post('pnd/pa/{route}/get-data', [PengukuranController::class, 'preview'])
 
 Route::post('approval/check-password', [AuthController::class, 'checkPasswordApproval']);
 
+Route::post('user/update-password', [AuthController::class, 'updatePassword']);
+
 // Route::middleware(['auth', 'verified'])->group(function () {
 //     //QA
 //     //Approval Pengukuran
