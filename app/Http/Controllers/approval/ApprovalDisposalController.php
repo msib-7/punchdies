@@ -129,16 +129,16 @@ class ApprovalDisposalController extends Controller
         // Buat NOtifikasi Ke Penerima
         event(new NotificationEvent(
             $data->user_id,
-            'Rejected, Pengukuran Awal',
-            'Pengukuran Awal telah rejected oleh Supervisor ' . auth()->user()->nama,
-            route('pnd.pa.atas.index')
+            'Rejected, Disposal',
+            'Disposal telah rejected oleh Supervisor ' . auth()->user()->nama,
+            route('pnd.request.disposal.show', $data->id)
         ));
         // Buat NOtifikasi Ke Pengirim
         event(new NotificationEvent(
             auth()->user()->id,
-            'Success Rejected Pengukuran Awal',
-            'Pengukuran Awal telah rejected oleh Supervisor ' . auth()->user()->nama,
-            route('pnd.approval.pa.show', $data->id)
+            'Success Rejected Disposal',
+            'Disposal telah rejected oleh Supervisor ' . auth()->user()->nama,
+            route('pnd.approval.dis.show', $data->id)
         ));
 
         $userEmail = $data->users->email;
@@ -148,7 +148,7 @@ class ApprovalDisposalController extends Controller
         $message = 'Halo, Supervisor telah menolak approval Anda. Silakan periksa kembali data yang telah Anda ajukan dan lakukan perbaikan jika diperlukan.';
         $data = [
             'status' => 'Rejected',
-            'link' => route('pnd.pa.atas.index'),
+            'link' => route('pnd.request.disposal.show', $data->id),
             'penerima' => $userName,
             'body' => $message
         ];
@@ -177,7 +177,8 @@ class ApprovalDisposalController extends Controller
         if ($note == null || $note == '') {
             $note = '-';
         }
-        $data = [
+        $data = ApprovalDisposal::find($id);
+        $dataUpdate = [
             'is_draft' => '0',
             'is_waiting' => '0',
             'is_approved' => '0',
@@ -187,6 +188,52 @@ class ApprovalDisposalController extends Controller
             'at' => now(),
             'approved_note' => $note
         ];
-        ApprovalDisposal::updateOrCreate(['id' => $id], $data);
+        ApprovalDisposal::updateOrCreate(['id' => $id], $dataUpdate);
+
+        // Buat NOtifikasi Ke Penerima
+        event(new NotificationEvent(
+            $data->user_id,
+            'Revisi, Approval Disposal!',
+            'Permintaan Revisi Approval Disposal oleh Supervisor ' . auth()->user()->nama,
+            route('pnd.request.disposal.show', $data->id)
+        ));
+        // Buat NOtifikasi Ke Pengirim
+        event(new NotificationEvent(
+            auth()->user()->id,
+            'Revisi, Approval Disposal Succesfull!',
+            'Permintaan Revisi untuk Approval Disposal oleh, ' . auth()->user()->nama,
+            route('pnd.approval.dis.show', $data->id)
+        ));
+
+        $userEmail = $data->users->email;
+        $userName = $data->users->nama; // Array to store user emails
+        $failedEmail = []; // Array to store emails that failed to send
+
+        $message = 'Halo, Supervisor telah menolak approval Anda. Silakan periksa kembali data yang telah Anda ajukan dan lakukan perbaikan jika diperlukan.';
+        $data = [
+            'status' => 'Rejected',
+            'link' => route('pnd.request.disposal.show', $data->id),
+            'penerima' => $userName,
+            'body' => $message
+        ];
+
+        try {
+            // // Attempt to send notification to the user
+            Mail::to($userEmail)->send(new \App\Mail\SendApproval($data));
+        } catch (\Exception $e) {
+            // Log the error message
+            Log::error('Failed to send email to ' . $userEmail . ': ' . $e->getMessage());
+
+            // Optionally, store the failed email for further processing or reporting
+            $failedEmails[] = $userEmail;
+        }
+
+        // Optionally, log the successful emails sent
+        Log::info('Emails sent to: ', [$userEmail]);
+
+        // Optionally, log the failed emails
+        if (!empty($failedEmails)) {
+            Log::warning('Failed to send email to: ', $failedEmail);
+        }
     }
 }
