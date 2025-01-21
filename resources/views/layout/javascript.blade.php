@@ -339,6 +339,45 @@
     });
 </script>
 <script>
+    let idleTime = 0;
+    let idleMin = 0;
+    const idleLimit = 3540; // 60 minutes in seconds
+    const idleDisplay = document.getElementById('idle_time');
+
+    // Increment the idle time counter every second
+    const idleInterval = setInterval(() => {
+        idleTime++;
+        
+        // Calculate total idle time in minutes and seconds
+        const totalIdleTime = idleTime % 3600; // Total seconds in an hour
+        const minutes = Math.floor(totalIdleTime / 60);
+        const seconds = totalIdleTime % 60;
+
+        // Format minutes and seconds to always show two digits
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(seconds).padStart(2, '0');
+        
+        idleDisplay.textContent = `Idle Time: ${formattedMinutes}:${formattedSeconds}`;
+
+        if (minutes >= 59) { 
+            window.location.href = '{{ route("logout") }}'; // Update this route as needed
+        }
+    }, 1000); // Check every second
+
+    // Reset the idle timer on user activity
+    const resetIdleTime = () => {
+        idleTime = 0;
+        idleDisplay.textContent = 'Idle Time: 00:00'; // Reset display
+    };
+
+    // Listen for user activity
+    document.addEventListener('mousemove', resetIdleTime);
+    document.addEventListener('keypress', resetIdleTime);
+    document.addEventListener('click', resetIdleTime);
+    document.addEventListener('scroll', resetIdleTime);
+    document.addEventListener('touchstart', resetIdleTime);
+</script>
+<script>
     // Function to check orientation and update display
     function checkOrientation() {
         if (window.innerHeight > window.innerWidth) {

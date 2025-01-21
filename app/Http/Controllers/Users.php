@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lines;
 use App\Models\Roles;
+use App\Models\Session;
 use App\Models\User;
 use App\Services\LogService;
 use DB;
@@ -14,12 +15,17 @@ use Validator;
 class Users extends Controller
 {
     //Start User
-    public function manajemen_user()
+    public function manajemen_user(Request $request)
     {
         $modelUser = new User();
         // $dataUser = User::all();
         // $dataUser = $modelUser->getUserRole()->all();
-        $dataUser = User::with('roles')->get();
+        // if ($request->session()->has('users')) {
+        //     // ...
+        // }
+        // $dataSession = Session::all();
+
+        $dataUser = User::with('roles')->with('sessions')->get();
         $dataRoles = Roles::orderBy('role_name', 'asc')->get();
         $dataLines = Lines::orderBy('nama_line', 'asc')->get();
         $data['dataUser'] = $dataUser;

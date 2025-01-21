@@ -73,4 +73,8 @@ class User extends Authenticatable
     {
         return $this->notifications()->orderBy('created_at', 'desc')->get();
     }
+    public function sessions()
+    {
+        return $this->belongsTo(Session::class, 'id', 'user_id');
+    }
 }

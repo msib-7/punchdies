@@ -110,8 +110,13 @@
                                 @if ($data->is_blocked == true)
                                     <span class="badge badge-light-danger fs-5">blocked</span>
                                 @else
-                                    <span class="badge badge-light-success fs-5">active</span>
+                                    @if ($data->sessions && $data->sessions->user_id == $data->id)
+                                        <span class="badge badge-light-success fs-5">active</span>
+                                    @else
+                                        <span class="badge badge-light-secondary fs-5">logout</span>
+                                    @endif
                                 @endif
+                                
                             </td>
                             <td class="text-center">
                                 <a href="#" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"

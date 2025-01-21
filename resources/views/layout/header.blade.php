@@ -68,6 +68,9 @@
             <!--end::Menu wrapper-->
             <!--begin::Navbar-->
             <div class="app-navbar flex-shrink-0">
+                <div class="app-navbar-item ms-1 ms-md-4" id="idle_time_display">
+                    <span id="idle_time" class="text-muted">Idle Time: 00:00</span>
+                </div>
                 <!--begin::Notifications-->
                 <div class="app-navbar-item ms-1 ms-md-4">
                     <!--begin::Menu- wrapper-->

@@ -14,6 +14,8 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        // $data = $request->session()->all();
+        // dd($data);
         $selectedLineId = $request->input('line_id');
 
         // Define a method to fetch punch data
