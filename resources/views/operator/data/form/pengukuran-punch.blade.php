@@ -516,9 +516,9 @@
         //    
 
         //Create Button Cancel
-            var btn_cancel = document.createElement("BUTTON");
+            var btn_cancel = document.createElement("a");
             btn_cancel.setAttribute("class", "btn btn-secondary btn-small");
-            btn_cancel.setAttribute("type", "button");
+            btn_cancel.setAttribute("href", "{{route('pnd.pr.'. $route .'.index')}}");
             var title1 = document.createTextNode("Cancel");
             btn_cancel.appendChild(title1);
             document.getElementById("btn-cancel").appendChild(btn_cancel);

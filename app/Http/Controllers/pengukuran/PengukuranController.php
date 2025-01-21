@@ -1697,12 +1697,15 @@ class PengukuranController extends Controller
         $referensi_drawing = $request->referensi_drawing;
         $catatan = $request->catatan;
         $kesimpulan = $request->kesimpulan;
-        $micrometer_digital = $request->micrometer_digital;
-        $caliper_digital = $request->caliper_digital;
-        $dial_indicator_digital = $request->dial_indicator_digital;
+        $kalibrasi_tools_1 = $request->kalibrasi_tools_1;
+        $kalibrasi_tools_2 = $request->kalibrasi_tools_2;
+        $kalibrasi_tools_3 = $request->kalibrasi_tools_3;
+        $tgl_kalibrasi_1 = $request->tgl_kalibrasi_1;
+        $tgl_kalibrasi_2 = $request->tgl_kalibrasi_2;
+        $tgl_kalibrasi_3 = $request->tgl_kalibrasi_3;
         $masa_pengukuran = session('masa_pengukuran');
 
-        return (new ServicePengukuranRutin)->addNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $micrometer_digital, $caliper_digital, $dial_indicator_digital, $masa_pengukuran);
+        return (new ServicePengukuranRutin)->addNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3, $masa_pengukuran);
 
         // if ($request->segment(3) == 'punch-atas') {
         //     $route = 'atas';
