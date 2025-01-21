@@ -71,6 +71,8 @@ class Users extends Controller
                         'role_id' => $role,
                         'line_id' => $line,
                         'last_login_at' => null,
+                        'last_update_password' => now(),
+                        'next_update_password' => now()->addDays(89)
                     ]);
 
                     DB::commit();
@@ -151,7 +153,13 @@ class Users extends Controller
             foreach ($userIds as $user_id) {
                 $users = User::find($user_id);
 
-                User::where('id', $user_id)->update(['password' => bcrypt($new_password), 'failed_attempts' => 0]);
+                User::where('id', $user_id)
+                    ->update([
+                        'password' => bcrypt($new_password), 
+                        'failed_attempts' => 0, 
+                        'last_update_password' => now(),
+                        'next_update_password' => now()->addDays(89)
+                    ]);
 
                 $logData = [
                     'model' => null,

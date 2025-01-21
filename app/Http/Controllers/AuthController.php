@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lines;
 use App\Models\User;
 use App\Services\LogService;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,6 +64,24 @@ class AuthController extends Controller
     }
 
     if (Auth::attempt($infoLogin)) {
+
+            $nextUpdatePassword = Carbon::parse(Auth::user()->next_update_password);
+            $daysUntilNextUpdate = $nextUpdatePassword->diffInDays(now());
+
+            if (now()->greaterThan($nextUpdatePassword)) {
+                // Blokir akun jika sudah melewati tanggal pembaruan
+                Auth::user()->update(['is_blocked' => true]);
+                return response()->json(['error' => 'Akun Anda telah diblokir karena tidak memperbarui password. Silakan hubungi admin!'], 403);
+            } elseif ($daysUntilNextUpdate < 7) {
+                // Kirim pengingat jika kurang dari 7 hari
+                return response()->json([
+                    'reminder' => true,
+                    'success' => true,
+                    'message' => 'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera.'
+                ], 200);
+            }
+
+
         // Reset failed_attempts setelah login berhasil
         $users->update(['failed_attempts' => 0]);
 
@@ -96,7 +115,7 @@ class AuthController extends Controller
         ];
         session()->put($infoLogin);
         session()->put($dataUser);
-        return redirect(route('dashboard'))->with('success', 'Login Berhasil!');
+
     } else {
         // Login gagal: Password salah
         $users->increment('failed_attempts');
@@ -188,7 +207,13 @@ class AuthController extends Controller
 
             $users = User::find($id);
 
-            User::where('id', $id)->update(['password' => bcrypt($new_password), 'failed_attempts' => 0]);
+            User::where('id', $id)
+                ->update([
+                    'password' => bcrypt($new_password), 
+                    'failed_attempts' => 0,
+                    'last_update_password' => now(),
+                    'next_update_password' => now()->addDays(89)
+                ]);
 
             $logData = [
                 'model' => null,

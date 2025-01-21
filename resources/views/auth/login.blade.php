@@ -215,7 +215,9 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                 $.ajax({
                     url: "{{ url('/login-auth') }}",
                     type: "POST",
-                    data: $(this).serialize(),
+                    data: 
+                        $(this).serialize()
+                    ,
                     beforeSend: function() {
                         $('#kt_sign_in_submit').attr('disabled', true);
                         $('#kt_sign_in_submit').html(
@@ -223,11 +225,30 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                         );
                     },
                     success: function(response) {
-                        let timerInterval;
+                        if (response.reminder == true) {
+                            let timerInterval;
+                            Swal.fire({
+                                icon: 'info',
+                                title: "Password Reminder!",
+                                html: response.message,
+                                allowOutsideClick: false, // Tidak bisa ditutup dengan klik luar
+                                allowEscapeKey: false, // Tidak bisa ditutup dengan klik esc
+                                timer: 5000,
+                                timerProgressBar: true,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                    window.location.href = "{{ route('dashboard') }}";
+                                }
+                            });
+                        } else {
+                            let timerInterval;
                         Swal.fire({
                             icon: 'success',
                             title: "Login Successfully!",
-                            html: "auto close in 3 seconds.",
+                            html: "you will redirect in 3 second....",
                             allowOutsideClick: false, // Tidak bisa ditutup dengan klik luar
                             allowEscapeKey: false, // Tidak bisa ditutup dengan klik esc
                             timer: 3050,
@@ -240,6 +261,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 window.location.href = "{{ route('dashboard') }}";
                             }
                         });
+                        }
                     },
                     error: function(xhr) {
                         // Show alert if login fails
