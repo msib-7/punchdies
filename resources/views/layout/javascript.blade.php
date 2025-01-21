@@ -338,6 +338,7 @@
         });
     });
 </script>
+
 <script>
     let idleTime = 0;
     let idleMin = 0;
@@ -377,6 +378,7 @@
     document.addEventListener('scroll', resetIdleTime);
     document.addEventListener('touchstart', resetIdleTime);
 </script>
+
 <script>
     // Function to check orientation and update display
     function checkOrientation() {
