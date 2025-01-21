@@ -29,7 +29,7 @@ class SendApproval extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Send Approval',
+            subject: 'Approval Punch n Dies',
         );
     }
 
