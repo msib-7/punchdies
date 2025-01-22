@@ -66,32 +66,32 @@ class AuthController extends Controller
 
     if (Auth::attempt($infoLogin)) {
 
-            $nextUpdatePassword = Carbon::parse(Auth::user()->next_update_password);
-            $daysUntilNextUpdate = $nextUpdatePassword->diffInDays(now());
+        $nextUpdatePassword = Carbon::parse(Auth::user()->next_update_password);
+        $daysUntilNextUpdate = $nextUpdatePassword->diffInDays(now());
 
-            // Convert to absolute value and round up to the nearest whole number
-            $daysUntilNextUpdate = ceil(abs($daysUntilNextUpdate));
+        // Convert to absolute value and round up to the nearest whole number
+        $daysUntilNextUpdate = ceil(abs($daysUntilNextUpdate));
 
-            if (now()->greaterThan($nextUpdatePassword)) {
-                // Blokir akun jika sudah melewati tanggal pembaruan
-                Auth::user()->update(['is_blocked' => true]);
-                return response()->json(['error' => 'Akun Anda telah diblokir karena tidak memperbarui password. Silakan hubungi admin!'], 403);
-            } elseif ($daysUntilNextUpdate < 7) {
+        if (now()->greaterThan($nextUpdatePassword)) {
+            // Blokir akun jika sudah melewati tanggal pembaruan
+            Auth::user()->update(['is_blocked' => true]);
+            return response()->json(['error' => 'Akun Anda telah diblokir karena tidak memperbarui password. Silakan hubungi admin!'], 403);
+        } elseif ($daysUntilNextUpdate < 7) {
 
-                // Buat NOtifikasi Ke Pengirim
-                event(new NotificationEvent(
-                    auth()->user()->id,
-                    'Password Reminder!',
-                    'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. Kadaluarsa Setelah: ' . $daysUntilNextUpdate . ' hari.',
-                    null,
-                ));
-                // Kirim pengingat jika kurang dari 7 hari
-                return response()->json([
-                    'reminder' => true,
-                    'success' => true,
-                    'message' => 'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. lihat detail pada notifikasi'
-                ], 200);
-            }
+            // Buat NOtifikasi Ke Pengirim
+            event(new NotificationEvent(
+                auth()->user()->id,
+                'Password Reminder!',
+                'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. Kadaluarsa Setelah: ' . $daysUntilNextUpdate . ' hari.',
+                null,
+            ));
+            // Kirim pengingat jika kurang dari 7 hari
+            return response()->json([
+                'reminder' => true,
+                'success' => true,
+                'message' => 'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. lihat detail pada notifikasi'
+            ], 200);
+        }
 
 
         // Reset failed_attempts setelah login berhasil
