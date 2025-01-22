@@ -65,15 +65,15 @@ class PunchController extends Controller
     {
         if($request->segment(2) == 'pengukuran-rutin'){
             if(auth()->user()->lines->nama_line == 'All Line'){
-                $dataPunch = Punch::query()
+                $dataPunch = Punch::query()->with('kode_produks')->with('nama_produks')
                     ->select(
                         'punch_id',
                         DB::raw('MAX(merk) as merk'),
                         DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'),
                         DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'),
                         DB::raw('MAX(nama_mesin_cetak) as nama_mesin_cetak'),
-                        DB::raw('MAX(nama_produk) as nama_produk'),
-                        DB::raw('MAX(kode_produk) as kode_produk'),
+                        DB::raw('MAX(nama_produk::text) as nama_produk'),
+                        DB::raw('MAX(kode_produk::text) as kode_produk'),
                         DB::raw('MAX(line_id) as line_id'),
                         DB::raw('MAX(jenis) as jenis'),
                         DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
@@ -167,7 +167,7 @@ class PunchController extends Controller
 
                                     // dd($dataPunch);
             }else{
-                $dataPunch = Punch::query()
+                $dataPunch = Punch::query()->with('kode_produks')->with('nama_produks')
                     ->select(
                         'punch_id',
                         DB::raw('MAX(merk) as merk'),

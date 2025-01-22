@@ -20,10 +20,11 @@ class DatabaseSeeder extends Seeder
             RoleSeed::class,
             PermissionSeed::class,
             UserSeeder::class,
+            MesinSeeder::class,
+            KodeProdukSeeder::class,
+            NamaProdukSeeder::class,
             PunchSeeder::class,
             PengukuranAwalPunchSeeder::class,
-            MesinSeeder::class,
-            ProdukSeeder::class,
         ]);
     }
 }
