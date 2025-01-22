@@ -64,6 +64,7 @@
                             <th class="text-center w-100px">No</th>
                             <th class="min-w-130px">Kode Produk</th>
                             <th>Description</th>
+                            <th>Masa Waktu Pengukuran Rutin</th>
                             <th class="w-50px">Actions</th>
                         </tr>
                     </thead>
@@ -85,6 +86,7 @@
                                     {{ $item->description }}
                                 </span>
                             </td>
+                            <td> {{ $item->waktu_rutin ? $item->waktu_rutin . ' bulan' : 'N/A' }} </td>
                             <td class="text-center">
                                 <a href="#" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"
                                     data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
@@ -158,10 +160,26 @@
                                 <!--end::Label-->
                                 <!--begin::Input-->
                                 <input type="text" name="title" class="form-control form-control-solid mb-3 mb-lg-0"
-                                    placeholder="e.g JCMCO" />
+                                    placeholder="e.g JCMCO" required/>
                                 <!--end::Input-->
                             </div>
                             <!--end::Input group-->
+                            
+                            <!--begin::Input group-->
+                            <div class="col-12 fv-row mb-7">
+                                <!--begin::Label-->
+                                <label class="required fw-semibold fs-6 mb-2">Masa Pengukuran</label>
+                                <!--end::Label-->
+                                <!--begin::Input group-->
+                                <div class="input-group mb-5">
+                                    <input type="text" name="waktu_rutin" class="form-control" placeholder="00" aria-label="12" aria-describedby="basic-addon2" 
+                                         oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = Math.max(0, Math.min(12, this.value));" min="0" max="12"/>
+                                    <span class="input-group-text" id="basic-addon2">bulan</span>
+                                </div>
+                                <!--end::Input group-->
+                            </div>
+                            <!--end::Input group-->
+
                             <!--begin::Input group-->
                             <div class="col-12 fv-row">
                                 <!--begin::Label-->
@@ -235,6 +253,22 @@
                                 <!--end::Input-->
                             </div>
                             <!--end::Input group-->
+
+                            <!--begin::Input group-->
+                            <div class="col-12 fv-row mb-7">
+                                <!--begin::Label-->
+                                <label class="required fw-semibold fs-6 mb-2">Masa Pengukuran</label>
+                                <!--end::Label-->
+                                <!--begin::Input group-->
+                                <div class="input-group mb-5">
+                                    <input type="text" name="waktu_rutin_edit" class="form-control" placeholder="00" aria-label="12" aria-describedby="basic-addon2" 
+                                         oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = Math.max(0, Math.min(12, this.value));" min="0" max="12"/>
+                                    <span class="input-group-text" id="basic-addon2">bulan</span>
+                                </div>
+                                <!--end::Input group-->
+                            </div>
+                            <!--end::Input group-->
+
                             <!--begin::Input group-->
                             <div class="col-12 fv-row  mb-7">
                                 <!--begin::Label-->

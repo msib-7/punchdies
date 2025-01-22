@@ -64,6 +64,7 @@
                             <th class="text-center w-100px">No</th>
                             <th class="min-w-130px">Nama Produk</th>
                             <th>Description</th>
+                            <th>Masa Waktu Pengukuran Rutin</th>
                             <th class="w-50px">Actions</th>
                         </tr>
                     </thead>
@@ -85,6 +86,7 @@
                                     {{ $item->description }}
                                 </span>
                             </td>
+                            <td> - </td>
                             <td class="text-center">
                                 <a href="#" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"
                                     data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
@@ -158,7 +160,7 @@
                                 <!--end::Label-->
                                 <!--begin::Input-->
                                 <input type="text" name="title" class="form-control form-control-solid mb-3 mb-lg-0"
-                                    placeholder="e.g JCMCO" />
+                                    placeholder="e.g JCMCO" required />
                                 <!--end::Input-->
                             </div>
                             <!--end::Input group-->

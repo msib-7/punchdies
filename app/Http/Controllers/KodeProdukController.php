@@ -17,12 +17,14 @@ class KodeProdukController extends Controller
     {
         $request->validate([
             'title' => 'required',
+            'waktu_rutin' => 'required',
             'description' => 'required',
             // Add other validation rules as needed
         ]);
 
         KodeProduk::create([
             'title' => $request->title,
+            'waktu_rutin' => $request->waktu_rutin,
             'description' => $request->description,
             'user_id' => auth()->user()->id
         ]);
@@ -43,12 +45,14 @@ class KodeProdukController extends Controller
     {
         $request->validate([
             'title_edit' => 'required',
+            'waktu_rutin_edit' => 'required',
             'description_edit' => 'required',
             // Add other validation rules as needed
         ]);
 
         KodeProduk::where('id', $request->id_KodeProduk)->update([
             'title' => $request->title_edit,
+            'waktu_rutin' => $request->waktu_rutin_edit,
             'description' => $request->description_edit,
             'user_id' => auth()->user()->id
         ]);
