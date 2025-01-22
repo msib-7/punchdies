@@ -77,7 +77,6 @@ class AuthController extends Controller
             Auth::user()->update(['is_blocked' => true]);
             return response()->json(['error' => 'Akun Anda telah diblokir karena tidak memperbarui password. Silakan hubungi admin!'], 403);
         } elseif ($daysUntilNextUpdate < 7) {
-
             // Buat NOtifikasi Ke Pengirim
             event(new NotificationEvent(
                 auth()->user()->id,
@@ -85,12 +84,48 @@ class AuthController extends Controller
                 'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. Kadaluarsa Setelah: ' . $daysUntilNextUpdate . ' hari.',
                 null,
             ));
+
+            // Reset failed_attempts setelah login berhasil
+            $users->update(['failed_attempts' => 0]);
+
+            $last_login = [
+                'last_login_at' => date('Y-m-d H:i:s'),
+            ];
+            User::where('username', $username)->update($last_login);
+
+            $newData = Auth::user();
+            $logData = [
+                'model' => null,
+                'model_id' => null,
+                'user_id' => $newData->id,
+                'action' => 'Login Auth',
+                'location' => $ip,
+                'reason' => 'Berhasil Login ' . $newData->nama,
+                'how' => 'Login',
+                'timestamp' => now(),
+                'old_data' => $infoLogin,
+                'new_data' => $newData,
+            ];
+            (new LogService)->handle($logData);
+
+            $user = User::where('username', '=', $username)->first();
+            $line = Lines::where(['id' => $user->line_id])->first();
+            $dataUser = [
+                'user_id' => $user->id,
+                'line_user' => $line->nama_line,
+                'nama_user' => $user->nama,
+                'email_user' => $user->email,
+            ];
+            session()->put($infoLogin);
+            session()->put($dataUser);
+
             // Kirim pengingat jika kurang dari 7 hari
             return response()->json([
                 'reminder' => true,
                 'success' => true,
                 'message' => 'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. lihat detail pada notifikasi'
             ], 200);
+
         }
 
 
