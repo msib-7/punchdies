@@ -18,15 +18,15 @@ class DiesController extends Controller
     {
         if ($request->segment(2) == 'pengukuran-rutin') {
             if (auth()->user()->lines->nama_line == 'All Line') {
-                $dataDies = Dies::query()
+                $dataDies = Dies::query()->with('kode_produks')->with('nama_produks')
                     ->select(
                         'dies_id',
                         DB::raw('MAX(merk) as merk'),
                         DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'),
                         DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'),
                         DB::raw('MAX(nama_mesin_cetak) as nama_mesin_cetak'),
-                        DB::raw('MAX(nama_produk) as nama_produk'),
-                        DB::raw('MAX(kode_produk) as kode_produk'),
+                        DB::raw('MAX(nama_produk::text) as nama_produk'),
+                        DB::raw('MAX(kode_produk::text) as kode_produk'),
                         DB::raw('MAX(jenis) as jenis'),
                         DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
                         DB::raw('MAX(is_delete_dies) as is_delete_dies'),
@@ -35,7 +35,8 @@ class DiesController extends Controller
                         DB::raw('MAX(is_edit) as is_edit'),
                         DB::raw('MAX(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
-                        DB::raw('MAX(created_at) as created_at')
+                        DB::raw('MAX(created_at) as created_at'),
+                        DB::raw('MAX(next_pengukuran) as next_pengukuran'),
                     )
                     ->where(function ($query) use ($request) {
                         $query->where('jenis', $request->segment(3))
@@ -94,15 +95,15 @@ class DiesController extends Controller
                     ->orderBy('created_at', "desc")
                     ->get();
             } else {
-                $dataDies = Dies::query()
+                $dataDies = Dies::query()->with('kode_produks')->with('nama_produks')
                     ->select(
                         'dies_id',
                         DB::raw('MAX(merk) as merk'),
                         DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'),
                         DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'),
                         DB::raw('MAX(nama_mesin_cetak) as nama_mesin_cetak'),
-                        DB::raw('MAX(nama_produk) as nama_produk'),
-                        DB::raw('MAX(kode_produk) as kode_produk'),
+                        DB::raw('MAX(nama_produk::text) as nama_produk'),
+                        DB::raw('MAX(kode_produk::text) as kode_produk'),
                         DB::raw('MAX(jenis) as jenis'),
                         DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
                         DB::raw('MAX(is_delete_dies) as is_delete_dies'),
@@ -111,7 +112,8 @@ class DiesController extends Controller
                         DB::raw('MAX(is_edit) as is_edit'),
                         DB::raw('MAX(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
-                        DB::raw('MAX(created_at) as created_at')
+                        DB::raw('MAX(created_at) as created_at'),
+                        DB::raw('MAX(next_pengukuran) as next_pengukuran'),
                     )
                     ->where(function ($query) use ($request) {
                         $query->where('jenis', $request->segment(3))
@@ -300,6 +302,11 @@ class DiesController extends Controller
             'line_id' => $line_id,
             'jenis' => $jenis,
         ])->first();
+
+        //get masa pengukuran dari kode_produk
+        $kodeProduk = KodeProduk::where('id', $kode_produk)->first();
+        $waktu_rutin = $kodeProduk ? $kodeProduk->waktu_rutin : '-';
+        
         if (!$cekDataDies) {
             $createData = [
                 'dies_id' => $id,
@@ -317,6 +324,7 @@ class DiesController extends Controller
                 'is_edit' => '0',
                 'is_approved' => '-',
                 'is_rejected' => '-',
+                'next_pengukuran' => Carbon::now()->addMonths($waktu_rutin),
             ];
             session()->put('dies_id', $id);
             Dies::create($createData);

@@ -75,10 +75,10 @@
                                                                                         </td>
                                                                                         <td style="border: none;"
                                                                                             class="fs-5 px-4 my-4">
-                                                                                            <?php if(strtoupper($labelIdentitas->nama_produk) == strtoupper($labelIdentitas->kode_produk)) {?>
-                                                                                                {{ strtoupper($labelIdentitas->nama_produk)}}
+                                                                                            <?php if(strtoupper($labelIdentitas->nama_produks->title) == strtoupper($labelIdentitas->kode_produks->title)) {?>
+                                                                                                {{ strtoupper($labelIdentitas->nama_produks->title)}}
                                                                                             <?php } else {?>
-                                                                                                {{ strtoupper($labelIdentitas->nama_produk)."/".strtoupper($labelIdentitas->kode_produk)}}
+                                                                                                {{ strtoupper($labelIdentitas->nama_produks->title)."/".strtoupper($labelIdentitas->kode_produks->title)}}
                                                                                             <?php }?>
                                                                                         </td>
                                                                                     </tr>
@@ -321,27 +321,33 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                $micrometer = $labelIdentitas->kalibrasi_micrometer ? new DateTime($labelIdentitas->kalibrasi_micrometer) : null;
-                                                                $caliper = $labelIdentitas->kalibrasi_caliper ? new DateTime($labelIdentitas->kalibrasi_caliper) : null;
-                                                                $dial_indicator = $labelIdentitas->kalibrasi_dial_indicator ? new DateTime($labelIdentitas->kalibrasi_dial_indicator) : null;
+                                                                $tgl_kalibrasi_1 = $labelIdentitas->tgl_kalibrasi_tools_1 ? new DateTime($labelIdentitas->tgl_kalibrasi_tools_1) : null;
+                                                                $tgl_kalibrasi_2 = $labelIdentitas->tgl_kalibrasi_tools_2 ? new DateTime($labelIdentitas->tgl_kalibrasi_tools_2) : null;
+                                                                $tgl_kalibrasi_3 = $labelIdentitas->tgl_kalibrasi_tools_3 ? new DateTime($labelIdentitas->tgl_kalibrasi_tools_3) : null;
                                                                 ?>
 
                                                                 <tr>
-                                                                    <td>Micrometer Digital</td>
                                                                     <td>
-                                                                        <input type="text" value="{{ $micrometer ? date_format($micrometer, 'd M Y') : '' }}" name="micrometer_digital" id="micrometer_digital" class="form-control" readonly>
+                                                                        <input type="text" value="{{ $labelIdentitas->kalibrasi1->title }}" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ $tgl_kalibrasi_1 ? date_format($tgl_kalibrasi_1, 'd M Y') : '' }}" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" readonly>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Caliper Digital</td>
                                                                     <td>
-                                                                        <input type="text" value="{{ $caliper ? date_format($caliper, 'd M Y') : '' }}" name="caliper_digital" id="caliper_digital" class="form-control" @readonly(true)>
+                                                                        <input type="text" value="{{ $labelIdentitas->kalibrasi2->title }}" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ $tgl_kalibrasi_2 ? date_format($tgl_kalibrasi_2, 'd M Y') : '' }}" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" @readonly(true)>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Dial Indicator Digital</td>
                                                                     <td>
-                                                                        <input type="text" value="{{ $dial_indicator ? date_format($dial_indicator, 'd M Y') : '' }}" name="dial_indicator_digital" id="dial_indicator_digital" class="form-control" @readonly(true)>
+                                                                        <input type="text" value="{{ $labelIdentitas->kalibrasi3->title }}" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ $tgl_kalibrasi_3 ? date_format($tgl_kalibrasi_3, 'd M Y') : '' }}" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" @readonly(true)>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>

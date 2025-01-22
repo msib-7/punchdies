@@ -84,7 +84,8 @@ class PunchController extends Controller
                         DB::raw('MAX(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
                         DB::raw('MAX(created_at) as created_at'),
-                        DB::raw('MAX(updated_at) as updated_at')
+                        DB::raw('MAX(updated_at) as updated_at'),
+                        DB::raw('MAX(next_pengukuran) as next_pengukuran'),
                     )
                     ->where(function ($query) use ($request) {
                         $query->where('jenis', $request->segment(3))
@@ -185,7 +186,8 @@ class PunchController extends Controller
                         DB::raw('MAX(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
                         DB::raw('MAX(created_at) as created_at'),
-                        DB::raw('MAX(updated_at) as updated_at')
+                        DB::raw('MAX(updated_at) as updated_at'),
+                        DB::raw('MAX(next_pengukuran) as next_pengukuran'),
                     )
                     ->where(function ($query) use ($request) {
                         $query->where('jenis', $request->segment(3))
@@ -396,6 +398,10 @@ class PunchController extends Controller
             'line_id' => $line_id,
             'jenis' => $jenis,
         ])->first();
+
+        //get masa pengukuran dari kode_produk
+        $kodeProduk = KodeProduk::where('id', $kode_produk)->first();
+        $waktu_rutin = $kodeProduk ? $kodeProduk->waktu_rutin : '-';
         
         if (!$cekDataPunch) {
             $createData = [
@@ -414,6 +420,7 @@ class PunchController extends Controller
                 'is_edit' => '0',
                 'is_approved' => '-',
                 'is_rejected' => '-',
+                'next_pengukuran' => Carbon::now()->addMonths($waktu_rutin),
             ];
             session()->put('punch_id', $id);
             Punch::create($createData);
