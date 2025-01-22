@@ -29,6 +29,7 @@ class AdminSeeder extends Seeder
             'nama' => 'Administrator',
             'role_id' => $adminRole->id,
             'line_id' => $Line->id,
+            'next_update_password' => now()->addDays(3),
         ]);
 
         $routes = Route::getRoutes()->getRoutesByName();
