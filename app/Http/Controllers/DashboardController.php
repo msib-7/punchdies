@@ -27,7 +27,7 @@ class DashboardController extends Controller
                     DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'),
                     DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'),
                     DB::raw('MAX(nama_mesin_cetak) as nama_mesin_cetak'),
-                    DB::raw('MAX(nama_produk) as nama_produk'),
+                    DB::raw('MAX(nama_produk::text) as nama_produk'),
                     DB::raw('MAX(jenis) as jenis'),
                     DB::raw('MAX(line_id) as line_id'),
                     DB::raw('MAX(is_delete_punch) as is_delete_punch')
@@ -53,7 +53,7 @@ class DashboardController extends Controller
                 DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'),
                 DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'),
                 DB::raw('MAX(nama_mesin_cetak) as nama_mesin_cetak'),
-                DB::raw('MAX(nama_produk) as nama_produk'),
+                DB::raw('MAX(nama_produk::text) as nama_produk'),
                 DB::raw('MAX(jenis) as jenis'),
                 DB::raw('MAX(line_id) as line_id'),
                 DB::raw('MAX(is_delete_dies) as is_delete_dies')
