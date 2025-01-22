@@ -211,22 +211,48 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $ip = request()->ip();
-        $logData = [
-            'model' => null,
-            'model_id' => null,
-            'user_id' => null,
-            'old_data' => $request->all(),
-            'new_data' => null,
-            'action' => 'LogOut Auth',
-            'location' => $ip,
-            'reason' => 'Berhasil Logout ' . auth()->user()->nama,
-            'how' => 'Logout',
-            'timestamp' => now(),
-        ];
+        $user = auth()->user(); // Get the authenticated user
+
+        if ($user === null) {
+            // No user is authenticated
+            $logData = [
+                'model' => null,
+                'model_id' => null,
+                'user_id' => null,
+                'old_data' => $request->all(),
+                'new_data' => null,
+                'action' => 'Logout',
+                'location' => $ip,
+                'reason' => 'User  Logging out by System.',
+                'how' => 'Logout',
+                'timestamp' => now(),
+            ];
+        } else {
+            // User is authenticated
+            $logData = [
+                'model' => null,
+                'model_id' => null,
+                'user_id' => $user->id, // Assuming you want to log the user ID
+                'old_data' => $request->all(),
+                'new_data' => null,
+                'action' => 'Logout',
+                'location' => $ip,
+                'reason' => 'Berhasil Logout ' . $user->nama,
+                'how' => 'Logout',
+                'timestamp' => now(),
+            ];
+        }
+
         (new LogService)->handle($logData);
 
+        $this->destroy();
+        return redirect('/login')->with('success', 'Logout Berhasil');
+
+    }
+    
+    private function destroy()
+    {
         Auth::logout();
-        return redirect('/')->with('success', 'Logout Berhasil');
     }
 
     public function checkPasswordApproval(Request $request)

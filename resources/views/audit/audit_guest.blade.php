@@ -128,15 +128,18 @@
                                                                 </div>
 
                                                                 <div class="mb-3">
-                                                                    <p><strong>Status:</strong>
-                                                                        @if(isset($allChanges[$data->id]['is_draft']) && $allChanges[$data->id]['is_draft'] == 1)
-                                                                            <span class="badge bg-warning">Draft</span>
-                                                                        @elseif(isset($allChanges[$data->id]['is_waiting']) && $allChanges[$data->id]['is_waiting'] == 1)
-                                                                            <span class="badge bg-info">Sending Approval / Waiting</span>
-                                                                        @elseif(isset($allChanges[$data->id]['is_revisi']) && $allChanges[$data->id]['is_revisi'] == 1)
-                                                                            <span class="badge bg-danger">Update Status To "Revisi"</span>
-                                                                        @elseif(isset($allChanges[$data->id]['is_approve']) && $allChanges[$data->id]['is_approve'] == 1)
+                                                                    <p>
+                                                                        <strong>Status:</strong>
+                                                                        @if(isset($allChanges[$data->id]['is_draft']['new']) && $allChanges[$data->id]['is_draft']['new'] == '1')
+                                                                            <span class="badge bg-light-warning">Draft</span>
+                                                                        @elseif(isset($allChanges[$data->id]['is_waiting']['new']) && $allChanges[$data->id]['is_waiting']['new'] == '1')
+                                                                            <span class="badge bg-warning">Sending Approval / Waiting</span>
+                                                                        @elseif(isset($allChanges[$data->id]['is_revisi']['new']) && $allChanges[$data->id]['is_revisi']['new'] == '1')
+                                                                            <span class="badge bg-info">Update Status To "Revisi"</span>
+                                                                        @elseif(isset($allChanges[$data->id]['is_approved']['new']) && $allChanges[$data->id]['is_approved']['new'] == '1')
                                                                             <span class="badge bg-success">Data is Approved</span>
+                                                                        @elseif(isset($allChanges[$data->id]['is_rejected']['new']) && $allChanges[$data->id]['is_rejected']['new'] == '1')
+                                                                            <span class="badge bg-danger">Data is Approved</span>
                                                                         @else
                                                                             <span class="badge bg-secondary">No status available</span>
                                                                         @endif

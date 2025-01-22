@@ -114,7 +114,10 @@ class ApprovalPengukuranAwalController extends Controller
             'at' => date('Y-m-d H:i:s'),
         ];
 
-        ApprovalPengukuran::where('req_id', $data->req_id)->update($update);
+        ApprovalPengukuran::updateOrCreate(
+            ['req_id' => $data->req_id],
+            $update
+        );
 
         //periksa apakah punch_id kosong/null
         $isNullPunchId = is_null($data->punch_id);
@@ -123,11 +126,23 @@ class ApprovalPengukuranAwalController extends Controller
         $isNullDiesId = is_null($data->dies_id);
 
         if (!$isNullPunchId) { //JIka Tidak Kosong update status approved pada table punch
-            Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
-            PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+            Punch::updateOrCreate(
+            ['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran],
+            $updateStatusApproved
+            );
+            PengukuranAwalPunch::updateOrCreate(
+            ['punch_id' => $data->punch_id],
+            $updateStatusApproved
+            );
         } elseif (!$isNullDiesId) { //JIka Tidak Kosong update status approved pada table diess
-            Dies::where(['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
-            PengukuranAwalDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
+            Dies::updateOrCreate(
+            ['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran],
+            $updateStatusApproved
+            );
+            PengukuranAwalDies::updateOrCreate(
+            ['dies_id' => $data->dies_id],
+            $updateStatusApproved
+            );
         }
 
         // Buat NOtifikasi Ke Penerima
@@ -156,7 +171,10 @@ class ApprovalPengukuranAwalController extends Controller
             'by' => auth()->user()->nama,
             'at' => date('Y-m-d H:i:s'),
         ];
-        ApprovalPengukuran::where('req_id', $data->req_id)->update($update);
+        ApprovalPengukuran::updateOrCreate(
+            ['req_id' => $data->req_id],
+            $update
+        );
 
         //periksa apakah punch_id kosong/null
         $isNullPunchId = is_null($data->punch_id);
@@ -165,11 +183,23 @@ class ApprovalPengukuranAwalController extends Controller
         $isNullDiesId = is_null($data->dies_id);
 
         if (!$isNullPunchId) { //JIka Tidak Kosong update status approved pada table punch
-            Punch::where(['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
-            PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
+            Punch::updateOrCreate(
+            ['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran],
+            $updateStatusApproved
+            );
+            PengukuranAwalPunch::updateOrCreate(
+            ['punch_id' => $data->punch_id],
+            $updateStatusApproved
+            );
         } elseif (!$isNullDiesId) { //JIka Tidak Kosong update status approved pada table diess
-            Dies::where(['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran])->update($updateStatusApproved);
-            PengukuranAwalDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
+            Dies::updateOrCreate(
+                ['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran],
+                $updateStatusApproved
+            );
+            PengukuranAwalDies::updateOrCreate(
+                ['dies_id' => $data->dies_id],
+                $updateStatusApproved
+            );
         }
 
         // Buat NOtifikasi Ke Penerima
