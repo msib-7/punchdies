@@ -76,6 +76,7 @@
                             <th class="min-w-130px">Role</th>
                             <th class="min-w-100px">Last login</th>
                             <th class="min-w-100px">Status</th>
+                            <th class="min-w-100px">Update Password before</th>
                             <th class="w-50px">Actions</th>
                         </tr>
                     </thead>
@@ -117,6 +118,9 @@
                                     @endif
                                 @endif
                                 
+                            </td>
+                            <td>
+                                {{ date('d M Y H:i:s', strtotime($data->next_update_password))}}
                             </td>
                             <td class="text-center">
                                 <a href="#" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm"

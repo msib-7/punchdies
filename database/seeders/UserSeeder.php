@@ -40,6 +40,7 @@ class UserSeeder extends Seeder
                 'password' => $user['password'],
                 'role_id' => $roleIds[$user['nama']],
                 'line_id' => $lineIds['All Line'], // Set the line ID to the 'All Line' line
+                'next_update_password' => now()->addDays(3),
             ]);
         }
     }
