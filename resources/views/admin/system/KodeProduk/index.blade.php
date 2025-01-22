@@ -261,7 +261,7 @@
                                 <!--end::Label-->
                                 <!--begin::Input group-->
                                 <div class="input-group mb-5">
-                                    <input type="text" name="waktu_rutin_edit" class="form-control" placeholder="00" aria-label="12" aria-describedby="basic-addon2" 
+                                    <input type="text" id="waktu_rutin_edit" name="waktu_rutin_edit" class="form-control" placeholder="00" aria-label="12" aria-describedby="basic-addon2" 
                                          oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = Math.max(0, Math.min(12, this.value));" min="0" max="12"/>
                                     <span class="input-group-text" id="basic-addon2">bulan</span>
                                 </div>
@@ -320,6 +320,7 @@
                 //fill data to form
                 $('#id_KodeProduk').val(response.data.id);
                 $('#title_edit').val(response.data.title);
+                $('#waktu_rutin_edit').val(response.data.waktu_rutin);
                 $('#description_edit').val(response.data.description);
 
                 //open modal

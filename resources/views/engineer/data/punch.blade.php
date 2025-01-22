@@ -152,12 +152,12 @@
                                         <tr>
                                             <td><strong>Kode Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->kode_produk) }}</td>
+                                            <td>{{ strtoupper($data->kode_produks->title) }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Nama Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->nama_produk) }}</td>
+                                            <td>{{ strtoupper($data->nama_produks->title) }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Pengukuran Terakhir</strong></td>
@@ -361,7 +361,7 @@
                                             <select name="nama_produk" aria-label="Select a Nama Produk" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
                                                 <option value="">Select</option>
                                                 @foreach ($DataNamaProduk as $item)
-                                                    <option value="{{$item->title}}">{{$item->title}}</option>
+                                                    <option value="{{$item->id}}">{{$item->title}}</option>
                                                 @endforeach
                                             </select>
                                             {{-- <input type="text" class="form-control" placeholder="Masukkan Nama Produk" name="nama_produk" /> --}}
@@ -373,7 +373,7 @@
                                             <select name="kode_produk" aria-label="Select a Kode Produk" data-control="select2" data-dropdown-parent="#modal_create_data_punch" data-placeholder="Select a item..." class="form-select fw-bold">
                                                 <option value="">Select</option>
                                                 @foreach ($DataKodeProduk as $item)
-                                                    <option value="{{$item->title}}">{{$item->title}}</option>
+                                                    <option value="{{$item->id}}">{{$item->title}}</option>
                                                 @endforeach
                                             </select>
                                             {{-- <input type="text" class="form-control" placeholder="Masukkan Kode Produk" name="kode_produk" /> --}}
