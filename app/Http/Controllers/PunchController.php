@@ -258,9 +258,16 @@ class PunchController extends Controller
                 return $punch->created_at >= $oneYearAgo;
             });
 
+             // Reminder logic for next_pengukuran
+            $currentDate = Carbon::now();
+            $reminderData = $dataPunch->filter(function ($punch) use ($currentDate) {
+                return $punch->next_pengukuran && $punch->next_pengukuran <= $currentDate;
+            });
+
             // Add the separated data to the data array
             $data['dataPunchOlderThanOneYear'] = $dataPunchOlderThanOneYear;
             $data['dataPunchRecent'] = $dataPunchRecent;
+            $data['reminderData'] = $reminderData;
             
             // $data['dataPunch'] = $dataPunch;
 
@@ -323,9 +330,16 @@ class PunchController extends Controller
                 return $punch->created_at >= $oneYearAgo;
             });
 
+            // Reminder logic for next_pengukuran
+            $currentDate = Carbon::now();
+            $reminderData = $dataPunch->filter(function ($punch) use ($currentDate) {
+                return $punch->next_pengukuran && $punch->next_pengukuran <= $currentDate;
+            });
+
             // Add the separated data to the data array
             $data['dataPunchOlderThanOneYear'] = $dataPunchOlderThanOneYear;
             $data['dataPunchRecent'] = $dataPunchRecent;
+            $data['reminderData'] = $reminderData;
 
             // $data['dataPunch'] = $dataPunch;
             
