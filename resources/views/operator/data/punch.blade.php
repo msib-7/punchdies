@@ -161,12 +161,12 @@
                                         <tr>
                                             <td><strong>Kode Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->kode_produks->title) }}</td>
+                                            <td>{{ strtoupper($data->kode_produks->title ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Nama Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->nama_produks->title) }}</td>
+                                            <td>{{ strtoupper($data->nama_produks->title ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Pengukuran Terakhir</strong></td>
@@ -252,12 +252,12 @@
                                         <tr>
                                             <td><strong>Kode Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->kode_produk) }}</td>
+                                            <td>{{ strtoupper($data->kode_produks->title ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Nama Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->nama_produk) }}</td>
+                                            <td>{{ strtoupper($data->nama_produks->title ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Pengukuran Terakhir</strong></td>
@@ -453,6 +453,59 @@
     </div>
 </div>
 
+{{-- Update Kode & NamaProduk --}}
+<div class="modal fade" tabindex="-1" id="modal_update_kode_produk">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Update Kode & Nama Produk</h6>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+
+            <div class="modal-body">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-5">
+                                <label for="exampleFormControlInput1" class="required form-label">Nama Produk</label>
+                                <select name="nama_produk_update" aria-label="Select a Nama Produk" data-control="select2" data-dropdown-parent="#modal_update_kode_produk" data-placeholder="Select a item..." class="form-select fw-bold">
+                                    <option value="">Select</option>
+                                    @foreach ($DataNamaProduk as $item)
+                                        <option value="{{$item->id}}">{{$item->title}}</option>
+                                    @endforeach
+                                </select>
+                                {{-- <input type="text" class="form-control" placeholder="Masukkan Nama Produk" name="nama_produk" /> --}}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-5">
+                                <label for="exampleFormControlInput1" class="required form-label">Kode Produk</label>
+                                <select name="kode_produk_update" aria-label="Select a Kode Produk" data-control="select2" data-dropdown-parent="#modal_update_kode_produk" data-placeholder="Select a item..." class="form-select fw-bold">
+                                    <option value="">Select</option>
+                                    @foreach ($DataKodeProduk as $item)
+                                        <option value="{{$item->id}}">{{$item->title}}</option>
+                                    @endforeach
+                                </select>
+                                {{-- <input type="text" class="form-control" placeholder="Masukkan Kode Produk" name="kode_produk" /> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" onclick="updateProduk()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{asset('assets/js/date.format.js')}}"></script>
 {{-- Filter Tools --}}
 <script>
@@ -631,8 +684,57 @@
                 $('#form_create_pengukuran').attr('action', "{{route('pnd.pr.'.$route.'.create', ':id')}}".replace(':id', id_create_rutin));
                 $('#modal_option_pengukuran').modal('hide');
                 $('#modal_info_pengukuran').modal('show');  
+            },
+            error: function(xhr) {
+                $('#modal_option_pengukuran').modal('hide');
+                // Show alert if login fails
+                if (xhr.status === 401) {
+                    Swal.fire({
+                        title: "Failed Create Pengukuran Rutin",
+                        text: xhr.responseJSON.error,
+                        icon: "error",
+                        showCancelButton: true,
+                        showConfirmButton: true,
+                        confirmButtonText: "lanjutkan",
+                        allowOutsideClick: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#modal_update_kode_produk').modal('show');  
+                        }
+                    });
+                }
             }
         })
+    }
+
+    function updateProduk()
+    {
+        var namaProdukUpdate = $('select[name="nama_produk_update"]').val();
+        var kodeProdukUpdate = $('select[name="kode_produk_update"]').val();
+        var id_create_rutin = document.getElementById("id_create_rutin").value;
+
+        $.ajax({
+            type: "POST",
+            url: "{{ url('pnd/update-produk') }}",
+            data: {
+            _token: '{{ csrf_token() }}',
+            nama_produk: namaProdukUpdate,
+            kode_produk: kodeProdukUpdate,
+            id: id_create_rutin,
+            jenis: '{{ $route }}',
+            },
+            success: function(response) {
+                $('#modal_update_kode_produk').modal('hide');
+                getInfoPengukuran();
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    title: "Error",
+                    text: xhr.responseJSON.message,
+                    icon: "error"
+                });
+            }
+        });
     }
 
     $(document).ready(function () {

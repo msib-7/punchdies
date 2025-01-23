@@ -7,6 +7,7 @@ use App\Models\Dies;
 use App\Models\ApprovalDisposal;
 use App\Models\ApprovalPengukuran;
 use App\Models\KalibrasiTool;
+use App\Models\KodeProduk;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranAwalDies;
 use App\Models\PengukuranRutinDies;
@@ -20,6 +21,7 @@ use App\Services\Rumus\GetRumusPengukuranAwalPunch;
 use App\Services\Rumus\GetRumusPengukuranRutinDies;
 use App\Services\Rumus\GetRumusPengukuranRutinPunch;
 // use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Constraint\IsNull;
@@ -922,12 +924,23 @@ class PengukuranController extends Controller
                                         ->orderBy('punchs.id', 'desc')
                                         ->first();
             }
+
+            //cek kode produk tersedia atau tidak
+            $kodeProduk = KodeProduk::where('id', $dataPunch->kode_produk)->first();
+            if(!$kodeProduk){
+                return response()->json([
+                    'error' => 'Kode Produk Tidak Ditemukan / Sudah Dihapus. klik lanjutkan untuk memilih Nama & Kode Produk.',
+                ], 401);
+            };
+
             // dd($dataPengukuran);
             if ($pengukuran == "pengukuran awal") {
                 $masa_pengukuran = "pengukuran rutin 1";
             } else {
-                $noUrut = (int) substr($pengukuran, 17);
-                $masa_pengukuran = 'pengukuran rutin ' . $noUrut + 1;
+                // Menggunakan regex untuk mengekstrak angka dari string
+                preg_match('/\d+/', $pengukuran, $matches);
+                $noUrut = isset($matches[0]) ? (int) $matches[0] : 0; // Mengambil angka yang ditemukan
+                $masa_pengukuran = 'pengukuran rutin ' . ($noUrut + 1); // Increment angka
             }
             // dd($dataPengukuran);
             return response()->json([
@@ -954,11 +967,23 @@ class PengukuranController extends Controller
                     ->orderBy('diess.created_at', 'desc')
                     ->first();
             }
+            //cek kode produk tersedia atau tidak
+            $kodeProduk = KodeProduk::where('id', $dataDies->kode_produk)->first();
+            if (!$kodeProduk) {
+                return response()->json([
+                    'error' => 'Kode Produk Tidak Ditemukan / Sudah Dihapus. klik lanjutkan untuk memilih Nama & Kode Produk.',
+                ], 401);
+            }
+            ;
+
+            // dd($dataPengukuran);
             if ($pengukuran == "pengukuran awal") {
                 $masa_pengukuran = "pengukuran rutin 1";
             } else {
-                $noUrut = (int) substr($pengukuran, 17);
-                $masa_pengukuran = 'pengukuran rutin ' . $noUrut + 1;
+                // Menggunakan regex untuk mengekstrak angka dari string
+                preg_match('/\d+/', $pengukuran, $matches);
+                $noUrut = isset($matches[0]) ? (int) $matches[0] : 0; // Mengambil angka yang ditemukan
+                $masa_pengukuran = 'pengukuran rutin ' . ($noUrut + 1); // Increment angka
             }
             // dd($dataPengukuran);
             return response()->json([
@@ -970,6 +995,44 @@ class PengukuranController extends Controller
                 'data' => $dataPengukuran
             ]);
         }
+    }
+
+    public function updateProduk(Request $request) 
+    {
+        $nama_produk = $request->nama_produk;
+        $kode_produk = $request->kode_produk;
+        $id = $request->id;
+        $jenis = $request->jenis;
+
+        if ($jenis == 'atas' || $jenis == 'bawah') {
+            $punch = Punch::where('punch_id', $id)->first();
+            if ($punch) {
+            $punch->update([
+                'nama_produk' => $nama_produk,
+                'kode_produk' => $kode_produk,
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk Punch berhasil diperbarui',
+            ]);
+            }
+        } elseif ($jenis == 'dies') {
+            $dies = Dies::where('dies_id', $id)->first();
+            if ($dies) {
+            $dies->update([
+                'nama_produk' => $nama_produk,
+                'kode_produk' => $kode_produk,
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk Dies berhasil diperbarui',
+            ]);
+            }
+        }
+
+        return response()->json([
+            'error' => 'Produk tidak ditemukan',
+        ], 404);
     }
     public function pilih_pengukuran(Request $request, $id) 
     {
@@ -1205,19 +1268,28 @@ class PengukuranController extends Controller
 
             if ($pengukuran == "pengukuran awal") {
                 $masa_pengukuran_pre = "pengukuran awal";
-
                 $masa_pengukuran = "pengukuran rutin 1";
-                $updateMasaPengukuran = [
-                    'masa_pengukuran' => $masa_pengukuran,
-                ];
             } else {
-                $noUrut = (int) substr($pengukuran, 17);
+                // Menggunakan regex untuk mengekstrak angka dari string
+                preg_match('/\d+/', $pengukuran, $matches);
+                $noUrut = isset($matches[0]) ? (int) $matches[0] : 0; // Mengambil angka yang ditemukan
                 $masa_pengukuran_pre = $pengukuran;
-                $masa_pengukuran = 'pengukuran rutin ' . $noUrut + 1;
-                $updateMasaPengukuran = [
-                    'masa_pengukuran' => $masa_pengukuran,
-                ];
+                $masa_pengukuran = 'pengukuran rutin ' . ($noUrut + 1); // Increment angka
             }
+
+            // Update data
+            $updateMasaPengukuran = [
+                'masa_pengukuran' => $masa_pengukuran,
+            ];
+
+            //get masa pengukuran dari kode_produk
+            $kodeProduk = KodeProduk::where('id', $dataPunch->kode_produk)->first();
+            if(!$kodeProduk){
+                return response()->json([
+                    'message' => 'Kode Produk Tidak Ditemukan / Sudah Dihapus. klik lanjutkan untuk memilih Nama & Kode Produk.',
+                ], 401);
+            };
+            $waktu_rutin = $kodeProduk ? $kodeProduk->waktu_rutin : '-';
 
             $createData = [
                 'punch_id' => $dataPunch->punch_id,
@@ -1235,6 +1307,7 @@ class PengukuranController extends Controller
                 'is_edit' => '0',
                 'is_approved' => '0',
                 'is_rejected' => '0',
+                'next_pengukuran' => Carbon::now()->addMonths($waktu_rutin),
             ];
             session()->put('punch_id', $dataPunch->punch_id);
             Punch::updateOrCreate($createData);

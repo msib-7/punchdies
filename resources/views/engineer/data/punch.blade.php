@@ -152,12 +152,12 @@
                                         <tr>
                                             <td><strong>Kode Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->kode_produks->title) }}</td>
+                                            <td>{{ strtoupper($data->kode_produks->title ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Nama Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->nama_produks->title) }}</td>
+                                            <td>{{ strtoupper($data->nama_produks->title ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Pengukuran Terakhir</strong></td>
@@ -242,12 +242,12 @@
                                         <tr>
                                             <td><strong>Kode Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->kode_produks->title) }}</td>
+                                            <td>{{ strtoupper($data->kode_produks->title ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Nama Produk</strong></td>
                                             <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->nama_produks->title) }}</td>
+                                            <td>{{ strtoupper($data->nama_produks->title ?? '-') }}</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Pengukuran Terakhir</strong></td>

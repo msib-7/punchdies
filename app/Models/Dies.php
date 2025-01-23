@@ -37,4 +37,12 @@ class Dies extends Model
     {
         return $this->belongsTo(KalibrasiTool::class, 'kalibrasi_tools_3', 'id');
     }
+    public function kode_produks()
+    {
+        return $this->belongsTo(KodeProduk::class, 'kode_produk', 'id');
+    }
+    public function nama_produks()
+    {
+        return $this->belongsTo(NamaProduk::class, 'nama_produk', 'id');
+    }
 }

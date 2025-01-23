@@ -203,6 +203,7 @@ class DiesController extends Controller
             $data['DataLine'] = $Dataline;
 
             $data['jenis'] = 'dies';
+            $data['route'] = 'dies';
 
             // dd($dataDies);
 
@@ -262,6 +263,7 @@ class DiesController extends Controller
             $data['DataLine'] = $Dataline;
 
             $data['jenis'] = 'dies';
+            $data['route'] = 'dies';
 
             return view('engineer.data.dies', $data);
         }

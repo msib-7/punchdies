@@ -252,3 +252,5 @@ Route::post('approval/check-password', [AuthController::class, 'checkPasswordApp
 Route::post('user/update-password', [Users::class, 'updatePassword']);
 
 Route::post('user/clear-notifications', [NotificationController::class, 'clear']);
+
+Route::post('pnd/update-produk', [PengukuranController::class, 'updateProduk']);
