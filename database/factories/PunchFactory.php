@@ -25,8 +25,8 @@ class PunchFactory extends Factory
     {
         // Generate a punch_id using your custom logic
         $punch_id = $this->generatePunchId();
-        $kodeProduk = KodeProduk::first();
-        $namaProduk = NamaProduk::first();
+        $kodeProduk = KodeProduk::inRandomOrder()->first();
+        $namaProduk = NamaProduk::inRandomOrder()->first();
 
         return [
             'id' => (string) Str::uuid(),
@@ -35,8 +35,8 @@ class PunchFactory extends Factory
             'bulan_pembuatan' => '06',
             'tahun_pembuatan' => '2024',
             'nama_mesin_cetak' => 'JCMCO',
-            'nama_produk' => $kodeProduk->id,
-            'kode_produk' => $namaProduk->id,
+            'nama_produk' => $namaProduk->id,
+            'kode_produk' => $kodeProduk->id,
             'line_id' => Lines::all()->random()->id, // Assuming you want to create a new line for each punch
             'jenis' => $this->faker->randomElement(['punch-atas','punch-bawah']),
             'masa_pengukuran' => 'pengukuran awal', // Randomly select between the two values,
