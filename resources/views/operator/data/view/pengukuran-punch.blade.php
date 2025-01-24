@@ -88,10 +88,10 @@
                                                                                 </td>
                                                                                 <td style="border: none;"
                                                                                     class="fs-5 px-4 my-4">
-                                                                                    <?php if(strtoupper($labelPunch->nama_produk) == strtoupper($labelPunch->kode_produk)) {?>
-                                                                                        {{ strtoupper($labelPunch->nama_produk)}}
+                                                                                    <?php if(strtoupper($labelPunch->nama_produks->title) == strtoupper($labelPunch->kode_produks->title)) {?>
+                                                                                        {{ strtoupper($labelPunch->nama_produks->title)}}
                                                                                     <?php } else {?>
-                                                                                        {{ strtoupper($labelPunch->nama_produk)."/".strtoupper($labelPunch->kode_produk)}}
+                                                                                        {{ strtoupper($labelPunch->nama_produks->title)."/".strtoupper($labelPunch->kode_produks->title)}}
                                                                                     <?php }?>
                                                                                 </td>
                                                                             </tr>

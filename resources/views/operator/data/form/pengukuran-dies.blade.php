@@ -92,10 +92,10 @@
                                                                                 </td>
                                                                                 <td style="border: none;"
                                                                                     class="fs-5 px-4 my-4">
-                                                                                    <?php if(strtoupper($labelDies->nama_produk) == strtoupper($labelDies->kode_produk)) {?>
-                                                                                        {{ strtoupper($labelDies->nama_produk)}}
+                                                                                    <?php if(strtoupper($labelDies->nama_produks->title) == strtoupper($labelDies->kode_produks->title)) {?>
+                                                                                        {{ strtoupper($labelDies->nama_produks->title)}}
                                                                                     <?php } else {?>
-                                                                                        {{ strtoupper($labelDies->nama_produk)."/".strtoupper($labelDies->kode_produk)}}
+                                                                                        {{ strtoupper($labelDies->nama_produks->title)."/".strtoupper($labelDies->kode_produks->title)}}
                                                                                     <?php }?>
                                                                                 </td>
                                                                             </tr>
