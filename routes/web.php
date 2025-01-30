@@ -9,6 +9,7 @@ use App\Http\Controllers\approval\ApprovalPengukuranRutinController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\DiesController;
 use App\Http\Controllers\disposal\DisposalController;
 use App\Http\Controllers\KalibrasiToolController;
@@ -254,3 +255,18 @@ Route::post('user/update-password', [Users::class, 'updatePassword']);
 Route::post('user/clear-notifications', [NotificationController::class, 'clear']);
 
 Route::post('pnd/update-produk', [PengukuranController::class, 'updateProduk']);
+
+
+//dev send otp
+Route::post('dev/otp', [DeveloperController::class, 'otp']);
+
+//dev password
+Route::post('dev/auth', [DeveloperController::class, 'authOTP']);
+
+//dev check expired otp
+Route::post('dev/checkOtp', [DeveloperController::class, 'checkOtp']);
+
+//Developer Route
+Route::prefix('dev')->name('dev.')->middleware(['auth','CheckRoleUser'])->group( function(){
+    Route::get('', [DeveloperController::class, 'index'])->name('index');
+});
