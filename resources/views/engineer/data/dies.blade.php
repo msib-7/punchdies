@@ -102,7 +102,7 @@
                 <a class="btn btn-light-warning   mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">
                     Perlu Pengukuran
                     <span class="badge badge-circle badge-light "
-                        id="badgePerluPengukuran">{{ count($dataDiesOlderThanOneYear) }}</span>
+                        id="badgePerluPengukuran">{{ count($reminderData) }}</span>
                 </a>
             </li>
         </ul>
@@ -208,7 +208,7 @@
                 {{-- Data Perlu Pengukuran --}}
                 {{-- Content --}}
                 <div class="row g-5 gx-xl-10" id="cardContainer">
-                    @foreach ($dataDiesOlderThanOneYear as $data)
+                    @foreach ($reminderData as $data)
                         <div class="col-12 col-md-6 col-lg-4 card-item mb-4"
                             data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_draft == '1' ? 'draft' : ($data->is_draft == '0' ? 'waiting' : 'success')) }}"
                             data-merk="{{ strtolower($data->merk) }}"
@@ -301,7 +301,7 @@
     </div>
     <!--end::Content-->
 
-    {{-- Create Data Punch Modal --}}
+    {{-- Create Data Dies Modal --}}
     <div class="modal fade" tabindex="-1" id="modal_create_data_dies">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -774,7 +774,7 @@
         }
 
         $(document).ready(function() {
-            if ({{ count($dataDiesOlderThanOneYear) }} > 0) {
+            if ({{ count($reminderData) }} > 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Attention!',

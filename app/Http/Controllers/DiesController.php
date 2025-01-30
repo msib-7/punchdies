@@ -184,9 +184,16 @@ class DiesController extends Controller
                 return $dies->created_at >= $oneYearAgo;
             });
 
+            // Reminder logic for next_pengukuran
+            $currentDate = Carbon::now();
+            $reminderData = $dataDies->filter(function ($dies) use ($currentDate) {
+                return $dies->next_pengukuran && $dies->next_pengukuran <= $currentDate;
+            });
+
             // Add the separated data to the data array
             $data['dataDiesOlderThanOneYear'] = $dataDiesOlderThanOneYear;
             $data['dataDiesRecent'] = $dataDiesRecent;
+            $data['reminderData'] = $reminderData;
             // $data['dataDies'] = $dataDies;
             // dd($dataDies);
 
@@ -240,9 +247,18 @@ class DiesController extends Controller
                 return $dies->created_at >= $oneYearAgo;
             });
 
+            // Reminder logic for next_pengukuran
+            $currentDate = Carbon::now();
+            $reminderData = $dataDies->filter(function ($dies) use ($currentDate) {
+                return $dies->next_pengukuran && $dies->next_pengukuran <= $currentDate;
+            });
+
+            // dd($reminderData);
+
             // Add the separated data to the data array
             $data['dataDiesOlderThanOneYear'] = $dataDiesOlderThanOneYear;
             $data['dataDiesRecent'] = $dataDiesRecent;
+            $data['reminderData'] = $reminderData;
             // $data['dataDies'] = $dataDies;
 
             $hasPengukuranAwal = Dies::where('masa_pengukuran', 'pengukuran awal')

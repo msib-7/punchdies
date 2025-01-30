@@ -88,7 +88,7 @@
         <li class="nav-item">
             <a class="btn btn-light-warning   mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">
                 Perlu Pengukuran
-                <span class="badge badge-circle badge-light " id="badgePerluPengukuran">{{ count($dataDiesOlderThanOneYear) }}</span>
+                <span class="badge badge-circle badge-light " id="badgePerluPengukuran">{{ count($reminderData) }}</span>
             </a>
         </li>
     </ul>
@@ -193,7 +193,7 @@
             {{-- Data Perlu Pengukuran --}}
             {{-- Content --}}
             <div class="row g-5 gx-xl-10" id="cardContainer">
-                @foreach ($dataDiesOlderThanOneYear as $data)
+                @foreach ($reminderData as $data)
                 <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
                     data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_draft == '1' ? 'draft' : ($data->is_draft == '0' ? 'waiting' : 'success')) }}" 
                     data-merk="{{ strtolower($data->merk) }}" 
@@ -259,8 +259,10 @@
                                 </tbody>
                             </table>
                             <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
-                                @if($hasPengukuranAwal) <!-- Check if there's no pengukuran awal -->
-                                <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="buatPengukuran(this)">Buat Pengukuran</button>
+                                @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal -->
+                                    <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="opsiPengukuran(this)">
+                                        <span class="fs-7">Pengukuran</span>
+                                    </button>
                                 @endif
                                 <button class="btn btn-secondary" id="{{$data->dies_id}}" onclick="pilihPengukuran(this)">
                                     <i class="ki-outline ki-eye fs-2"></i>
@@ -327,7 +329,7 @@
 
 {{-- Option Pengukuran --}}
 <div class="modal fade" tabindex="-1" id="modal_option_pengukuran">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Action</h4>
@@ -341,7 +343,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-6">
+                    {{-- <div class="col-6">
                         <a href="#">
                             <div class="card">
                                 <div class="card-body text-center shadow">
@@ -355,8 +357,8 @@
                                 </div>
                             </div>
                         </a>
-                    </div>
-                    <div class="col-6">
+                    </div> --}}
+                    <div class="col-12">
                         <div class="card">
                             <div class="card-body text-center shadow">
                                 <input type="hidden" id="id_create_rutin">
@@ -847,6 +849,15 @@
     }
 
     $(document).ready(function () {
+        if ({{ count($reminderData) }} > 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Attention!',
+                    text: 'Terdapat data yang memerlukan pengukuran rutin!',
+                    confirmButtonText: 'Okay'
+                });
+            }
+
         var start = 2010;
         var now = new Date().getFullYear();
         var options = "";

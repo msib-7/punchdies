@@ -101,7 +101,7 @@
         <li class="nav-item">
             <a class="btn btn-light-warning shadow shadow-sm mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">
                 Perlu Pengukuran 
-                <span class="badge badge-circle badge-light " id="badgePerluPengukuran">{{ count($dataPunchOlderThanOneYear) ?? '' }}</span>
+                <span class="badge badge-circle badge-light " id="badgePerluPengukuran">{{ count($reminderData) ?? '' }}</span>
             </a>
         </li>
     </ul>
@@ -206,7 +206,7 @@
             {{-- Data Perlu Pengukuran --}}
             {{-- Content --}}
             <div class="row g-5 gx-xl-10" id="cardContainer">
-                @foreach ($dataPunchOlderThanOneYear as $data)
+                @foreach ($reminderData as $data)
                     <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
                         data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_rejected == '1' ? 'rejected' : ($data->is_draft == '1' ? 'draft' : 'waiting')) }}" 
                         data-merk="{{ strtolower($data->merk) }}" 
@@ -272,7 +272,7 @@
                                     </tbody>
                                 </table>
                                 <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
-                                    @if($data->masa_pengukuran == '-') <!-- Check if there's no pengukuran awal -->
+                                    @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal -->
                                         <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->punch_id}}" onclick="opsiPengukuran(this)">Pengukuran</button>
                                     @endif
                                     <button class="btn btn-secondary" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
@@ -509,7 +509,8 @@
 <script src="{{asset('assets/js/date.format.js')}}"></script>
 {{-- Filter Tools --}}
 <script>
-    let currentPage = 1;
+    let currentPageAllData = 1;
+    let currentPagePerluPengukuran = 1;
     const itemsPerPage = 9;
 
     function filterCards() {
@@ -517,9 +518,12 @@
         const status = document.getElementById('statusFilter').value.toLowerCase();
         const merk = document.getElementById('merkFilter').value.toLowerCase();
         const tanggalPengukuran = document.getElementById('tanggalPengukuranFilter').value;
-        const namaMesin = document.getElementById('namaMesinFilter').value.toLowerCase();
+        const namaMesin = document.getElementById('namaMesinFilter').value; // Get the selected value
         const line = document.getElementById('lineFilter').value;
-        const cards = document.querySelectorAll('.card-item');
+
+        // Get the currently active tab
+        const activeTab = document.querySelector('.nav-tabs .active').getAttribute('href').substring(1);
+        const cards = document.querySelectorAll(`#${activeTab} .card-item`);
 
         // Hide all cards initially
         cards.forEach(card => {
@@ -538,7 +542,7 @@
             const matchesSearch = title.includes(input) || bodyText.includes(input);
             const matchesStatus = status === '' || cardStatus === status;
             const matchesMerk = cardMerk.includes(merk);
-            const matchesNamaMesin = cardNamaMesin.includes(namaMesin);
+            const matchesNamaMesin = cardNamaMesin.includes(namaMesin); // Check against the selected machine name
             const matchesTanggal = tanggalPengukuran === '' || cardTanggalPengukuran === tanggalPengukuran;
             const matchesLine = line === '' || cardLine === line;
 
@@ -550,24 +554,35 @@
             card.style.display = '';
         });
 
-        setupPagination(visibleCards);
-        showPage(currentPage, visibleCards);
+        // Setup pagination based on the active tab
+        if (activeTab === 'all_data_tab') {
+            setupPagination(visibleCards, 'paginationAllData');
+            showPage(currentPageAllData, visibleCards, 'paginationAllData');
+        } else if (activeTab === 'perlu_ukur_tab') {
+            setupPagination(visibleCards, 'paginationPerluPengukuran');
+            showPage(currentPagePerluPengukuran, visibleCards, 'paginationPerluPengukuran');
+        }
     }
 
-    function setupPagination(visibleCards) {
+    function setupPagination(visibleCards, paginationId) {
         const totalPages = Math.ceil(visibleCards.length / itemsPerPage);
-        const paginationLinks = document.querySelector('.pagination');
+        const paginationLinks = document.querySelector(`#${paginationId} .pagination`);
         paginationLinks.innerHTML = '';
 
         for (let i = 1; i <= totalPages; i++) {
-            const link = document.createElement('a');
+            const link = document .createElement('a');
             link.textContent = i;
             link.className = 'page-link';
             link.href = '#';
             link.onclick = (e) => {
                 e.preventDefault();
-                currentPage = i;
-                showPage(currentPage, visibleCards);
+                if (paginationId === 'paginationAllData') {
+                    currentPageAllData = i;
+                    showPage(currentPageAllData, visibleCards, paginationId);
+                } else {
+                    currentPagePerluPengukuran = i;
+                    showPage(currentPagePerluPengukuran, visibleCards, paginationId);
+                }
             };
             const listItem = document.createElement('li');
             listItem.className = 'page-item';
@@ -576,13 +591,17 @@
         }
     }
 
-    function showPage(page, visibleCards) {
+    function showPage(page, visibleCards, paginationId) {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
         visibleCards.forEach((card, index) => {
             card.style.display = (index >= start && index < end) ? '' : 'none';
         });
+
+        // Show or hide the pagination based on the number of visible cards
+        const paginationContainer = document.getElementById(paginationId);
+        paginationContainer.style.display = visibleCards.length > itemsPerPage ? 'flex' : 'none';
     }
 
     window.onload = () => {
@@ -738,6 +757,16 @@
     }
 
     $(document).ready(function () {
+
+        if ({{ count($reminderData) }} > 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Attention!',
+                text: 'Terdapat data yang memerlukan pengukuran rutin!',
+                confirmButtonText: 'Okay'
+            });
+        }
+
         var start = 2010;
         var now = new Date().getFullYear();
         var options = "";
