@@ -93,7 +93,7 @@
         <li class="nav-item">
             <a class="btn btn-light-warning shadow shadow-sm mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">
                 Perlu Pengukuran 
-                <span class="badge badge-circle badge-light " id="badgePerluPengukuran">{{ count($dataPunchOlderThanOneYear) ?? '' }}</span>
+                <span class="badge badge-circle badge-light " id="badgePerluPengukuran">{{ count($reminderData) ?? '' }}</span>
             </a>
         </li>
     </ul>
@@ -194,7 +194,7 @@
             {{-- Data Perlu Pengukuran --}}
             {{-- Content --}}
             <div class="row g-5 gx-xl-10" id="cardContainer">
-                @foreach ($dataPunchOlderThanOneYear as $data)
+                @foreach ($reminderData as $data)
                     <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
                         data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_rejected == '1' ? 'rejected' : ($data->is_draft == '1' ? 'draft' : 'waiting')) }}" 
                         data-merk="{{ strtolower($data->merk) }}" 
@@ -736,7 +736,7 @@
 
     $(document).ready(function () {
 
-        if ({{ count($dataPunchOlderThanOneYear) }} > 0) {
+        if ({{ count($reminderData) }} > 0) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Attention!',
