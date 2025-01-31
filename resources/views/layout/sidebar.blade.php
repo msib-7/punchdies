@@ -471,19 +471,6 @@
     <!--end::sidebar menu-->
     <!--begin::Footer-->
     <div class="app-sidebar-footer flex-column-auto pt-2 pb-6 px-6" id="kt_app_sidebar_footer">
-        <button onclick="devMenu('{{auth()->user()->id}}')" class="btn btn-flex flex-center btn-custom btn-secondary overflow-hidden text-nowrap px-0 h-40px w-100">
-            <i class="ki-duotone ki-code fs-2">
-                <span class="path1"></span>
-                <span class="path2"></span>
-                <span class="path3"></span>
-                <span class="path4"></span>
-            </i>
-            <span class="btn-label">Developer Menu</span>
-        </button>
-    </div>
-    <!--end::Footer-->
-    <!--begin::Footer-->
-    <div class="app-sidebar-footer flex-column-auto pt-2 pb-6 px-6" id="kt_app_sidebar_footer">
         <a href="{{ route('audit') }}" class="btn btn-flex flex-center btn-custom btn-primary overflow-hidden text-nowrap px-0 h-40px w-100">
             <span class="btn-label">Audit Trail</span>
             <i class="ki-duotone ki-document btn-icon fs-2 m-0">
@@ -494,14 +481,3 @@
     </div>
     <!--end::Footer-->
 </div>
-<script src="{{ asset('assets/js/check.js') }}"></script>
-<script>
-    function DeveloperMenu(){
-        Swal.fire({
-                icon: 'warning',
-                title: 'Attention!',
-                text: 'Terdapat data yang memerlukan pengukuran rutin!',
-                confirmButtonText: 'Okay'
-            });
-    }
-</script>
