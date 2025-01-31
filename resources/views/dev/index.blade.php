@@ -23,20 +23,39 @@
     <div id="kt_app_content_container" class="app-container container-xxl">
         <div class="card card-flush">
             <div class="card-header">
-                <h3 class="card-title">Form Settings</h3>
+                <h3 class="card-title">Developers Email</h3>
             </div>
             <div class="card-body">
-                @include('dev.settings.form.index')
+                @include('dev.settings.mail.index')
             </div>
         </div>
-        <div class="card card-flush">
-            <div class="card-header">
-                <h3 class="card-title">Apps Settings</h3>
+        <hr>
+        <form action="{{ route('dev.store') }}" method="POST">
+            @csrf
+            <div class="card card-flush">
+                <div class="card-header">
+                    <h3 class="card-title">Form Settings</h3>
+                </div>
+                <div class="card-body">
+                    @include('dev.settings.form.index')
+                </div>
             </div>
-            <div class="card-body">
-                @include('dev.settings.apps.index')
+            <div class="card card-flush">
+                <div class="card-header">
+                    <h3 class="card-title">Apps Settings</h3>
+                </div>
+                <div class="card-body">
+                    @include('dev.settings.apps.index')
+                </div>
             </div>
-        </div>
+            <div class="card card-flush">
+                <div class="card-footer ">
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
     <!--end::Content container-->
 </div>

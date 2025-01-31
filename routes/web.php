@@ -267,6 +267,12 @@ Route::post('dev/auth', [DeveloperController::class, 'authOTP']);
 Route::post('dev/checkOtp', [DeveloperController::class, 'checkOtp']);
 
 //Developer Route
-Route::prefix('dev')->name('dev.')->middleware(['auth','CheckRoleUser'])->group( function(){
+Route::prefix('dev')->name('dev.')->middleware(['auth'])->group( function(){
     Route::get('', [DeveloperController::class, 'index'])->name('index');
+    Route::post('store', [DeveloperController::class, 'store'])->name('store');
+    
+    Route::prefix('m')->name('email.')->group(function(){
+        Route::post('store', [DeveloperController::class, 'store_email'])->name('store');
+
+    });
 });

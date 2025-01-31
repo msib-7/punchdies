@@ -339,6 +339,10 @@
     });
 </script>
 
+@php
+    $idleTimeSetting = \App\Models\SettingIdleTime::first();
+    $idleMinutes = $idleTimeSetting ? $idleTimeSetting->idle_time : 59; // Default to 60 minutes if not set
+@endphp
 <script>
     let idleTime = 0;
     let idleMin = 0;
@@ -360,7 +364,7 @@
         
         idleDisplay.textContent = `Idle Time: ${formattedMinutes}:${formattedSeconds}`;
 
-        if (minutes > 59) { 
+        if (minutes >= {{ $idleMinutes }}) { 
             window.location.href = '{{ route("logout") }}'; // Update this route as needed
         }
     }, 1000); // Check every second

@@ -8,7 +8,7 @@ function devMenu (id)
       url: "/dev/checkOtp",
       data: { _token: csrfToken },
       success: function (response) {
-        window.location.href = 'dev';
+        window.location.href = '/dev';
       },
       error: function (xhr) {
         // Show alert if login fails
@@ -168,6 +168,8 @@ function devMenu (id)
                       });
                     }
                   });
+                }else{
+                  window.location.href = '/dashboard';
                 }
               });
             }
