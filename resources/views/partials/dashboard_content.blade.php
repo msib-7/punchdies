@@ -62,21 +62,27 @@
 {{-- Total Draft --}}
 <div class="col-12 col-md-4">
     <!--begin::Card widget for Dies-->
-    <div class="card h-lg-100 mb-3 shadow-sm">
+    <div class="card text-bg-light h-lg-100 mb-3 shadow-sm">
         <!--begin::Body-->
-        <div class="card-body d-flex justify-content-between align-items-start flex-column">
+        <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="badge badge-square badge-outline badge-dark fs-2">Draft</span>
+                    <span class="fs-2 fw-bold text-gray-800">Draft</span>
                 </span>
             </div>
-            <div class="d-flex flex-column mt-5">
-                <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{$draftCount['draftCount']}}</span>
-                <div class="m-0">
-                    <span class="fw-semibold fs-6 text-gray-400">Pengukuran Awal: {{$draftCount['draftPengukuranAwalCount']}}</span>
-                </div>
-                <div class="m-0">
-                    <span class="fw-semibold fs-6 text-gray-400">Pengukuran Rutin: {{$draftCount['draftPengukuranRutinCount']}}</span>
+            <div class="d-flex flex-column mt-10">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$draftCount['draftCount']}}</span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="m-2">
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Awal: {{$draftCount['draftPengukuranAwalCount']}}</span>
+                        </div>
+                        <div class="m-2">
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Rutin: {{$draftCount['draftPengukuranRutinCount']}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,21 +93,27 @@
 {{-- Total Waiting --}}
 <div class="col-12 col-md-4">
     <!--begin::Card widget for Dies-->
-    <div class="card h-lg-100 mb-3 shadow-sm">
+    <div class="card text-bg-warning h-lg-100 mb-3 shadow">
         <!--begin::Body-->
-        <div class="card-body d-flex justify-content-between align-items-start flex-column">
+        <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="badge badge-square badge-outline badge-warning fs-2">Waiting Approval</span>
+                    <span class="fs-2 fw-bold text-gray-800">Waiting Approval</span>
                 </span>
             </div>
-            <div class="d-flex flex-column mt-5">
-                <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{$waitingCount['waitingCount']}}</span>
-                <div class="m-0">
-                    <span class="fw-semibold fs-6 text-gray-400">Pengukuran Awal: {{$waitingCount['waitingPengukuranAwalCount']}}</span>
-                </div>
-                <div class="m-0">
-                    <span class="fw-semibold fs-6 text-gray-400">Pengukuran Rutin: {{$waitingCount['waitingPengukuranRutinCount']}}</span>
+            <div class="d-flex flex-column mt-10">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$waitingCount['waitingCount']}}</span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="m-2">
+                            <span class="fw-semibold fs-6  text-gray-800">Pengukuran Awal: {{$waitingCount['waitingPengukuranAwalCount']}}</span>
+                        </div>
+                        <div class="m-2">
+                            <span class="fw-semibold fs-6  text-gray-800">Pengukuran Rutin: {{$waitingCount['waitingPengukuranRutinCount']}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,21 +124,27 @@
 {{-- Total Approved --}}
 <div class="col-12 col-md-4">
     <!--begin::Card widget for Dies-->
-    <div class="card h-lg-100 mb-3 shadow-sm">
+    <div class="card text-bg-success h-lg-100 mb-3 shadow-sm">
         <!--begin::Body-->
-        <div class="card-body d-flex justify-content-between align-items-start flex-column">
+        <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="badge badge-square badge-outline badge-success fs-2">Approved</span>
+                    <span class="fs-2 fw-bold text-gray-800">Approved</span>
                 </span>
             </div>
-            <div class="d-flex flex-column mt-5">
-                <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{$approvedCount['approvedCount']}}</span>
-                <div class="m-0">
-                    <span class="fw-semibold fs-6 text-gray-400">Pengukuran Awal: {{$approvedCount['approvedPengukuranAwalCount']}}</span>
-                </div>
-                <div class="m-0">
-                    <span class="fw-semibold fs-6 text-gray-400">Pengukuran Rutin: {{$approvedCount['approvedPengukuranRutinCount']}}</span>
+            <div class="d-flex flex-column mt-10">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$approvedCount['approvedCount']}}</span>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="m-2">
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Awal: {{$approvedCount['approvedPengukuranAwalCount']}}</span>
+                        </div>
+                        <div class="m-2">
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Rutin: {{$approvedCount['approvedPengukuranRutinCount']}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
