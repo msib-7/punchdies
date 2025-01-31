@@ -5,7 +5,7 @@ function devMenu (id)
                         .getAttribute("content");
     $.ajax({
       type: "POST",
-      url: "dev/checkOtp",
+      url: "/dev/checkOtp",
       data: { _token: csrfToken },
       success: function (response) {
         window.location.href = 'dev';

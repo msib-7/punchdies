@@ -56,7 +56,7 @@
                             <span class="menu-icon">
                                 <i class="ki-outline ki-element-11 fs-2"></i>
                             </span>
-                            <span class="menu-title text-gray-600">Dashboard</span>
+                            <span class="menu-title">Dashboard</span>
                         </a>
                         <!--end:Menu link-->
                     </div>
@@ -86,51 +86,34 @@
                                             <span class="path3"></span>
                                         </i>
                                     </span>
-                                    <span class="menu-title text-gray-600">Data Pengukuran Awal</span>
+                                    <span class="menu-title">Data Pengukuran Awal</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
                                 <!--begin:Menu sub-->
                                 <div class="menu-sub menu-sub-accordion">
                                     <!--begin:Menu item-->
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/pengukuran-awal/punch*') ? 'here show' : '' }}">
+                                    <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <span class="menu-link">
+                                        <a class="menu-link {{ request()->is('pnd/pengukuran-awal/punch-atas*') ? 'active' : '' }}" href="{{route('pnd.pa.atas.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Punch</span>
-                                            <span class="menu-arrow"></span>
-                                        </span>
+                                            <span class="menu-title">Punch Atas</span>
+                                        </a>
                                         <!--end:Menu link-->
-                                        <!--begin:Menu sub-->
-                                        <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                            <!--begin:Menu item-->
-                                            <div class="menu-item">
-                                                <!--begin:Menu link-->
-                                                <a class="menu-link {{ request()->is('pnd/pengukuran-awal/punch-atas*') ? 'active' : '' }}" href="{{route('pnd.pa.atas.index')}}">
-                                                    <span class="menu-bullet">
-                                                        <span class="bullet bullet-dot"></span>
-                                                    </span>
-                                                    <span class="menu-title text-gray-600">Punch Atas</span>
-                                                </a>
-                                                <!--end:Menu link-->
-                                            </div>
-                                            <!--end:Menu item-->
-                                            <!--begin:Menu item-->
-                                            <div class="menu-item">
-                                                <!--begin:Menu link-->
-                                                <a class="menu-link {{ request()->is('pnd/pengukuran-awal/punch-bawah*') ? 'active' : '' }}" href="{{route('pnd.pa.bawah.index')}}">
-                                                    <span class="menu-bullet">
-                                                        <span class="bullet bullet-dot"></span>
-                                                    </span>
-                                                    <span class="menu-title text-gray-600">Punch Bawah</span>
-                                                </a>
-                                                <!--end:Menu link-->
-                                            </div>
-                                            <!--end:Menu item-->
-                                        </div>
-                                        <!--end:Menu sub-->
+                                    </div>
+                                    <!--end:Menu item-->
+                                    <!--begin:Menu item-->
+                                    <div class="menu-item">
+                                        <!--begin:Menu link-->
+                                        <a class="menu-link {{ request()->is('pnd/pengukuran-awal/punch-bawah*') ? 'active' : '' }}" href="{{route('pnd.pa.bawah.index')}}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Punch Bawah</span>
+                                        </a>
+                                        <!--end:Menu link-->
                                     </div>
                                     <!--end:Menu item-->
                                     <!--begin:Menu item-->
@@ -140,7 +123,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Dies</span>
+                                            <span class="menu-title">Dies</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -169,51 +152,34 @@
                                             <span class="path4"></span>
                                         </i>
                                     </span>
-                                    <span class="menu-title text-gray-600">Data Pengukuran Rutin</span>
+                                    <span class="menu-title">Data Pengukuran Rutin</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
                                 <!--begin:Menu sub-->
                                 <div class="menu-sub menu-sub-accordion">
                                     <!--begin:Menu item-->
-                                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->is('pnd/pengukuran-rutin/punch*') ? 'here show' : '' }}">
+                                    <div class="menu-item">
                                         <!--begin:Menu link-->
-                                        <span class="menu-link">
+                                        <a class="menu-link  {{ request()->is('pnd/pengukuran-rutin/punch-atas*') ? 'active' : '' }}" href="{{route('pnd.pr.atas.index')}}">
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Punch</span>
-                                            <span class="menu-arrow"></span>
-                                        </span>
+                                            <span class="menu-title">Punch Atas</span>
+                                        </a>
                                         <!--end:Menu link-->
-                                        <!--begin:Menu sub-->
-                                        <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                            <!--begin:Menu item-->
-                                            <div class="menu-item">
-                                                <!--begin:Menu link-->
-                                                <a class="menu-link  {{ request()->is('pnd/pengukuran-rutin/punch-atas*') ? 'active' : '' }}" href="{{route('pnd.pr.atas.index')}}">
-                                                    <span class="menu-bullet">
-                                                        <span class="bullet bullet-dot"></span>
-                                                    </span>
-                                                    <span class="menu-title text-gray-600">Punch Atas</span>
-                                                </a>
-                                                <!--end:Menu link-->
-                                            </div>
-                                            <!--end:Menu item-->
-                                            <!--begin:Menu item-->
-                                            <div class="menu-item">
-                                                <!--begin:Menu link-->
-                                                <a class="menu-link  {{ request()->is('pnd/pengukuran-rutin/punch-bawah*') ? 'active' : '' }}" href="{{route('pnd.pr.bawah.index')}}">
-                                                    <span class="menu-bullet">
-                                                        <span class="bullet bullet-dot"></span>
-                                                    </span>
-                                                    <span class="menu-title text-gray-600">Punch Bawah</span>
-                                                </a>
-                                                <!--end:Menu link-->
-                                            </div>
-                                            <!--end:Menu item-->
-                                        </div>
-                                        <!--end:Menu sub-->
+                                    </div>
+                                    <!--end:Menu item-->
+                                    <!--begin:Menu item-->
+                                    <div class="menu-item">
+                                        <!--begin:Menu link-->
+                                        <a class="menu-link  {{ request()->is('pnd/pengukuran-rutin/punch-bawah*') ? 'active' : '' }}" href="{{route('pnd.pr.bawah.index')}}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">Punch Bawah</span>
+                                        </a>
+                                        <!--end:Menu link-->
                                     </div>
                                     <!--end:Menu item-->
                                     <!--begin:Menu item-->
@@ -223,7 +189,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Dies</span>
+                                            <span class="menu-title">Dies</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -256,7 +222,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-information-3 fs-2"></i>
                                     </span>
-                                    <span class="menu-title text-gray-600">Waiting List</span>
+                                    <span class="menu-title">Waiting List</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
@@ -270,7 +236,7 @@
                                                 <span class="menu-bullet">
                                                     <span class="bullet bullet-dot"></span>
                                                 </span>
-                                                <span class="menu-title text-gray-600">Approval Pengukuran Awal</span>
+                                                <span class="menu-title">Approval Pengukuran Awal</span>
                                             </a>
                                             <!--end:Menu link-->
                                         </div>
@@ -283,7 +249,7 @@
                                                 <span class="menu-bullet">
                                                     <span class="bullet bullet-dot"></span>
                                                 </span>
-                                                <span class="menu-title text-gray-600">Approval Pengukuran Rutin</span>
+                                                <span class="menu-title">Approval Pengukuran Rutin</span>
                                             </a>
                                             <!--end:Menu link-->
                                         </div>
@@ -296,7 +262,7 @@
                                                 <span class="menu-bullet">
                                                     <span class="bullet bullet-dot"></span>
                                                 </span>
-                                                <span class="menu-title text-gray-600">Approval Disposal</span>
+                                                <span class="menu-title">Approval Disposal</span>
                                             </a>
                                             <!--end:Menu link-->
                                         </div>
@@ -320,7 +286,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-archive fs-2"></i>
                                     </span>
-                                    <span class="menu-title text-gray-600">History</span>
+                                    <span class="menu-title">History</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -339,7 +305,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-disconnect fs-2"></i>
                                     </span>
-                                    <span class="menu-title text-gray-600">Request Disposal</span>
+                                    <span class="menu-title">Request Disposal</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -367,7 +333,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-more-2 fs-2"></i>
                                     </span>
-                                    <span class="menu-title text-gray-600">Systems</span>
+                                    <span class="menu-title">Systems</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
@@ -380,7 +346,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Master Mesin</span>
+                                            <span class="menu-title">Master Mesin</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -392,7 +358,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Master Nama Produk</span>
+                                            <span class="menu-title">Master Nama Produk</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -404,7 +370,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Master Kode Produk</span>
+                                            <span class="menu-title">Master Kode Produk</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -416,7 +382,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Master Tools Kalibrasi</span>
+                                            <span class="menu-title">Master Tools Kalibrasi</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -434,7 +400,7 @@
                                     <span class="menu-icon">
                                         <i class="ki-outline ki-user fs-2"></i>
                                     </span>
-                                    <span class="menu-title text-gray-600">User Management</span>
+                                    <span class="menu-title">User Management</span>
                                     <span class="menu-arrow"></span>
                                 </span>
                                 <!--end:Menu link-->
@@ -447,7 +413,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">User</span>
+                                            <span class="menu-title">User</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -459,7 +425,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Line</span>
+                                            <span class="menu-title">Line</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -471,7 +437,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Role</span>
+                                            <span class="menu-title">Role</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>
@@ -483,7 +449,7 @@
                                             <span class="menu-bullet">
                                                 <span class="bullet bullet-dot"></span>
                                             </span>
-                                            <span class="menu-title text-gray-600">Permission</span>
+                                            <span class="menu-title">Permission</span>
                                         </a>
                                         <!--end:Menu link-->
                                     </div>

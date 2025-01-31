@@ -29,6 +29,14 @@
                 @include('dev.settings.form.index')
             </div>
         </div>
+        <div class="card card-flush">
+            <div class="card-header">
+                <h3 class="card-title">Apps Settings</h3>
+            </div>
+            <div class="card-body">
+                @include('dev.settings.apps.index')
+            </div>
+        </div>
     </div>
     <!--end::Content container-->
 </div>
