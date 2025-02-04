@@ -74,7 +74,7 @@
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$draftCount['draftCount']}}</span>
-                        <div class="m-0">
+                        <div class="mx-1">
                             <span class="fw-semibold fs-6 text-gray-400">Items</span>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$waitingCount['waitingCount']}}</span>
-                        <div class="m-0">
+                        <div class="mx-1">
                             <span class="fw-semibold fs-6 text-gray-400">Items</span>
                         </div>
                     </div>
@@ -142,7 +142,7 @@
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$approvedCount['approvedCount']}}</span>
-                        <div class="m-0">
+                        <div class="mx-1">
                             <span class="fw-semibold fs-6 text-gray-400">Items</span>
                         </div>
                     </div>
