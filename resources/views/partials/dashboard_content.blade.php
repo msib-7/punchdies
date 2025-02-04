@@ -62,7 +62,7 @@
 {{-- Total Draft --}}
 <div class="col-12 col-md-4">
     <!--begin::Card widget for Dies-->
-    <div class="card text-bg-light h-lg-100 mb-3 shadow-sm">
+    <div class="card h-lg-100 mb-3 shadow-sm">
         <!--begin::Body-->
         <div class="card-body">
             <div class="m-0">
@@ -74,6 +74,9 @@
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$draftCount['draftCount']}}</span>
+                        <div class="m-0">
+                            <span class="fw-semibold fs-6 text-gray-400">Items</span>
+                        </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="m-2">
@@ -98,14 +101,16 @@
         <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="fs-2 fw-bold btn btn-warning">
-                        Waiting Approval</span>
+                    <span class="fs-2 fw-bold btn btn-warning">Waiting Approval</span>
                 </span>
             </div>
             <div class="d-flex flex-column mt-10">
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$waitingCount['waitingCount']}}</span>
+                        <div class="m-0">
+                            <span class="fw-semibold fs-6 text-gray-400">Items</span>
+                        </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="m-2">
@@ -137,6 +142,9 @@
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$approvedCount['approvedCount']}}</span>
+                        <div class="m-0">
+                            <span class="fw-semibold fs-6 text-gray-400">Items</span>
+                        </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="m-2">
