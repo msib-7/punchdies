@@ -67,7 +67,7 @@
         <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="fs-2 fw-bold text-gray-800">Draft</span>
+                    <span class="fs-2 fw-bold btn btn-secondary">Draft</span>
                 </span>
             </div>
             <div class="d-flex flex-column mt-10">
@@ -93,12 +93,13 @@
 {{-- Total Waiting --}}
 <div class="col-12 col-md-4">
     <!--begin::Card widget for Dies-->
-    <div class="card text-bg-warning h-lg-100 mb-3 shadow">
+    <div class="card h-lg-100 mb-3 shadow">
         <!--begin::Body-->
         <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="fs-2 fw-bold text-gray-800">Waiting Approval</span>
+                    <span class="fs-2 fw-bold btn btn-warning">
+                        Waiting Approval</span>
                 </span>
             </div>
             <div class="d-flex flex-column mt-10">
@@ -124,12 +125,12 @@
 {{-- Total Approved --}}
 <div class="col-12 col-md-4">
     <!--begin::Card widget for Dies-->
-    <div class="card text-bg-success h-lg-100 mb-3 shadow-sm">
+    <div class="card h-lg-100 mb-3 shadow-sm">
         <!--begin::Body-->
         <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="fs-2 fw-bold text-gray-800">Approved</span>
+                    <span class="fs-2 fw-bold btn btn-success">Approved</span>
                 </span>
             </div>
             <div class="d-flex flex-column mt-10">
