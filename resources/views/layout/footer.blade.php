@@ -18,9 +18,6 @@
                         <i class="ki-solid ki-setting-2 fs-3 m-0 p-0"></i>
                     </button>
                 @endif
-                <a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">
-                    
-                </a>
             </li>
         </ul>
         <!--end::Menu-->
