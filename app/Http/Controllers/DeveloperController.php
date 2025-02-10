@@ -152,11 +152,11 @@ class DeveloperController extends Controller
             'idle_time' => 'required|numeric',
         ]);
 
-        $data = $request->all();
+        $data = $request->idle_time;
         if (SettingIdleTime::first() === null) {
             SettingIdleTime::create($data);
         } else {
-            SettingIdleTime::first()->update($data);
+            SettingIdleTime::first()->update(['idle_time' => $data]);
         }
 
         return redirect()->route('dev.index')->with('success', 'Idle Time has been updated.');

@@ -59,12 +59,50 @@ class AuthController extends Controller
         return response()->json(['error' => 'User tidak terdaftar'], 401);
     }
 
-    // Periksa apakah akun diblokir
-    if ($users->is_blocked) {
-        return response()->json(['error' => 'Akun Anda diblokir. Silakan hubungi administrator.'], 403);
-    }
-
     if (Auth::attempt($infoLogin)) {
+
+        if (stripos($users->roles->role_name, 'Administrator') !== false) {
+            // Abaikan next update password untuk Administrator
+            $users->update(['failed_attempts' => 0, 'is_blocked' => false, 'next_update_password' => '0000-00-00 00:00:00']);
+
+            $last_login = [
+            'last_login_at' => date('Y-m-d H:i:s'),
+            ];
+            User::where('username', $username)->update($last_login);
+
+            $newData = Auth::user();
+            $logData = [
+            'model' => null,
+            'model_id' => null,
+            'user_id' => $newData->id,
+            'action' => 'Login Auth',
+            'location' => $ip,
+            'reason' => 'Berhasil Login ' . $newData->nama,
+            'how' => 'Login',
+            'timestamp' => now(),
+            'old_data' => $infoLogin,
+            'new_data' => $newData,
+            ];
+            (new LogService)->handle($logData);
+
+            $user = User::where('username', '=', $username)->first();
+            $line = Lines::where(['id' => $user->line_id])->first();
+            $dataUser = [
+            'user_id' => $user->id,
+            'line_user' => $line->nama_line,
+            'nama_user' => $user->nama,
+            'email_user' => $user->email,
+            ];
+            session()->put($infoLogin);
+            session()->put($dataUser);
+
+            return response()->json(['success' => true, 'message' => 'Login berhasil'], 200);
+        }
+
+        // Periksa apakah akun diblokir
+        if ($users->is_blocked) {
+            return response()->json(['error' => 'Akun Anda diblokir. Silakan hubungi administrator.'], 403);
+        }
 
         $nextUpdatePassword = Carbon::parse(Auth::user()->next_update_password);
         $daysUntilNextUpdate = $nextUpdatePassword->diffInDays(now());

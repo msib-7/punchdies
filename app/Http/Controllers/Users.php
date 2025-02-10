@@ -142,7 +142,8 @@ class Users extends Controller
         
         $data = [
             'failed_attempts' => 0,
-            'is_blocked' => false
+            'is_blocked' => false,
+            'next_update_password' => now()->addDays(1)
         ];
         User::where('id', $id)->update($data);
 
