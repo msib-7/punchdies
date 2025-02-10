@@ -223,6 +223,36 @@
             <div class="col-12 col-md-4">
                 <div class="row">
                     <div class="col-12">Punch Bawah</div>
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <th>Column Name</th>
+                                    <th>Value</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Overall Length</td>
+                                        <td>
+                                            <input type="number" class="form-control" name="outer_diameter_bawah" id="outer_diameter">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Working Length <b>(Rutin)</b></td>
+                                        <td>
+                                            <input type="number" class="form-control" name="inner_diameter_1_bawah" id="inner_diameter_1">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cup Depth</td>
+                                        <td>
+                                            <input type="number" class="form-control" name="inner_diameter_2_bawah" id="inner_diameter_2">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-md-4">
