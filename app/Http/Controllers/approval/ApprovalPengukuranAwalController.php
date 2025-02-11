@@ -90,7 +90,7 @@ class ApprovalPengukuranAwalController extends Controller
                 'by' => auth()->user()->nama
             ]);
         } else {
-            return redirect()->back()->with('error', 'You are not authorized to approve this request.');
+            return redirect()->back()->with('error', 'You are not authorized to reject this request.');
         }
     }
 

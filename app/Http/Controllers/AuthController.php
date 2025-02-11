@@ -113,7 +113,7 @@ class AuthController extends Controller
         if (now()->greaterThan($nextUpdatePassword)) {
             // Blokir akun jika sudah melewati tanggal pembaruan
             Auth::user()->update(['is_blocked' => true]);
-            return response()->json(['error' => 'Akun Anda telah diblokir karena tidak memperbarui password. Silakan hubungi admin!'], 403);
+            return response()->json(['error' => 'Akun Anda telah diblokir karena tidak memperbarui password. Silahkan hubungi admin!'], 403);
         } elseif ($daysUntilNextUpdate < 7) {
             // Buat NOtifikasi Ke Pengirim
             event(new NotificationEvent(

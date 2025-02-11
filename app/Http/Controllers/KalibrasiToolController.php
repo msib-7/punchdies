@@ -26,7 +26,7 @@ class KalibrasiToolController extends Controller
             'description' => $request->description,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.system.kalibrasi.index')->with('success', 'Kalibasi Tool created successfully.');
+        return redirect()->route('admin.system.kalibrasi.index')->with('success', 'Kalibrasi Tool created successfully.');
     }
 
     public function edit($id)

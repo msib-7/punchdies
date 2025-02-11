@@ -30,7 +30,7 @@ class KodeProdukController extends Controller
             'description' => $request->description,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.system.kodeProduk.index')->with('success', 'Nama Produk created successfully.');
+        return redirect()->route('admin.system.kodeProduk.index')->with('success', 'Kode Produk created successfully.');
     }
 
     public function edit($id)
@@ -65,7 +65,7 @@ class KodeProdukController extends Controller
         $this->updateNextPengukuran(Punch::class, $id, $request->waktu_rutin_edit);
         $this->updateNextPengukuran(Dies::class, $id, $request->waktu_rutin_edit);
 
-        return redirect()->route('admin.system.kodeProduk.index')->with('success', 'Nama Produk updated successfully.');
+        return redirect()->route('admin.system.kodeProduk.index')->with('success', 'Kode Produk updated successfully.');
     }
 
     private function updateNextPengukuran($modelClass, $kodeProdukId, $waktuRutin)
@@ -84,6 +84,6 @@ class KodeProdukController extends Controller
     {
         $kodeProduk = KodeProduk::findOrFail($id);
         $kodeProduk->delete();
-        return redirect()->route('admin.system.kodeProduk.index')->with('success', 'Nama Produk deleted successfully.');
+        return redirect()->route('admin.system.kodeProduk.index')->with('success', 'Kode Produk deleted successfully.');
     }
 }

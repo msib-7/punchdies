@@ -99,6 +99,12 @@ class SetDraftStatusServiceAwal
         if ($cekStatus > 0) {
             $alert = 'warning';
             $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
+
+            // dd('oke');
+            return response()->json([
+                'alert' => $alert,
+                'msg' => $msg,
+            ], 200);
         } else {
             $alert = 'success';
             $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval'; 
