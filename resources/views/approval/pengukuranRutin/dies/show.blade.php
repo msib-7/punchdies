@@ -75,10 +75,10 @@
                                                                                         </td>
                                                                                         <td style="border: none;"
                                                                                             class="fs-5 px-4 my-4">
-                                                                                            <?php if(strtoupper($labelIdentitas->nama_produk) == strtoupper($labelIdentitas->kode_produk)) {?>
-                                                                                                {{ strtoupper($labelIdentitas->nama_produk)}}
+                                                                                            <?php if(strtoupper($labelIdentitas->nama_produks->title) == strtoupper($labelIdentitas->kode_produks->title)) {?>
+                                                                                                {{ strtoupper($labelIdentitas->nama_produks->title)}}
                                                                                             <?php } else {?>
-                                                                                                {{ strtoupper($labelIdentitas->nama_produk)."/".strtoupper($labelIdentitas->kode_produk)}}
+                                                                                                {{ strtoupper($labelIdentitas->nama_produks->title)."/".strtoupper($labelIdentitas->kode_produks->title)}}
                                                                                             <?php }?>
                                                                                         </td>
                                                                                     </tr>
