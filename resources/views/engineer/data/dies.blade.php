@@ -778,7 +778,7 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Attention!',
-                    text: 'Terdapat data yang memerlukan pengukuran rutin!',
+                    text: 'Terdapat data yang memerlukan pengukuran ulang!',
                     confirmButtonText: 'Okay'
                 });
             }

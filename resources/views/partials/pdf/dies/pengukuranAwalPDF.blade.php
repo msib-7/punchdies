@@ -126,10 +126,10 @@
                 <tr>
                     <th>Kode/Nama Produk</th>
                     <td>
-                        <?php if(strtoupper($labelDies->nama_produk) == strtoupper($labelDies->kode_produk)) {?>
-                            {{ strtoupper($labelDies->nama_produk) }}
+                        <?php if(strtoupper($labelDies->nama_produks->title) == strtoupper($labelDies->kode_produks->title)) {?>
+                            {{ strtoupper($labelDies->nama_produks->title)}}
                         <?php } else {?>
-                            {{ strtoupper($labelDies-> nama_produk) . "/" . strtoupper($labelDies->kode_produk) }}
+                            {{ strtoupper($labelDies->nama_produks->title)."/".strtoupper($labelDies->kode_produks->title)}}
                         <?php }?>
                     </td>
                 </tr>

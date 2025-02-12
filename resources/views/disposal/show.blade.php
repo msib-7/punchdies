@@ -172,7 +172,7 @@
                                                 <div class="row">
                                                     <div class="col">:</div>
                                                     <div class="col-11">
-                                                        {{ $dataApproval->by }}
+                                                        {{ $dataApproval->user_by->nama }}
                                                     </div>
                                                 </div>
                                             </div>
