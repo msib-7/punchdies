@@ -38,8 +38,11 @@
                         </a>
                     </div>
                     <div class="app-navbar flex-shrink-0">
+                        <div class="app-navbar-item ms-1 ms-md-4" id="idle_time_display">
+                            <span id="idle_time" class="text-muted">Idle Time: 00:00</span>
+                        </div>
                         <div class="app-navbar-item ms-1 ms-md-4">
-                            <button id="btnBack" class="btn btn-light-danger btn-lg" data-route="{{ route('dashboard') }}">
+                            <button class="btn btn-light-danger btn-lg" onclick="backTo('dashboard')">
                                 <i class="ki-solid ki-exit-left fs-1"></i> Back
                             </button>
                         </div>
@@ -193,12 +196,10 @@
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
-        document.getElementById('btnBack').addEventListener('click', function() {
-            // Get the route from the data-route attribute
-            var route = this.getAttribute('data-route');
+        function backTo(route) {
             // Redirect to the dashboard route
             window.location.href = route;
-        });
+        }
     </script>
     @include('layout.javascript')
 </body>
