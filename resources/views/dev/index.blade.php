@@ -30,7 +30,7 @@
             </div>
         </div>
         <hr>
-        <form action="{{ route('dev.store') }}" method="POST">
+        <form action="{{ route('dev.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card card-flush">
                 <div class="card-header">

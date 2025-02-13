@@ -158,16 +158,111 @@ class DeveloperController extends Controller
 
         $request->validate([
             'idle_time' => 'required|numeric',
+            //
+            'head_outer_diameter_atas' => 'required|numeric',
+            'neck_diameter_atas' => 'required|numeric',
+            'barrel_atas' => 'required|numeric',
+            'overall_length_atas' => 'required|numeric',
+            'tip_diameter_1_atas' => 'required|numeric',
+            'tip_diameter_2_atas' => 'required|numeric',
+            'cup_depth_atas' => 'required|numeric',
+            'working_length_atas' => 'required|numeric',
+            //
+            'head_outer_diameter_bawah' => 'required|numeric',
+            'neck_diameter_bawah' => 'required|numeric',
+            'barrel_bawah' => 'required|numeric',
+            'overall_length_bawah' => 'required|numeric',
+            'tip_diameter_1_bawah' => 'required|numeric',
+            'tip_diameter_2_bawah' => 'required|numeric',
+            'cup_depth_bawah' => 'required|numeric',
+            'working_length_bawah' => 'required|numeric',
+            //
+            'outer_diameter' => 'required|numeric',
+            'inner_diameter_1' => 'required|numeric',
+            'inner_diameter_2' => 'required|numeric',
+            'ketinggian_dies' => 'required|numeric',
+            //
+            'overall_length_rutin_atas' => 'required|numeric',
+            'working_length_rutin_atas' => 'required|numeric',
+            'cup_depth_rutin_atas' => 'required|numeric',
+            //
+            'overall_length_rutin_bawah' => 'required|numeric',
+            'working_length_rutin_bawah' => 'required|numeric',
+            'cup_depth_rutin_bawah' => 'required|numeric',
+
         ]);
 
-        $data = $request->idle_time;
+        $idle_time = $request->idle_time;
+        $punch_atas_awal = [
+            'head_outer_diameter' => $request->head_outer_diameter_atas,
+            'neck_diameter' => $request->neck_diameter_atas,
+            'barrel' => $request->barrel_atas,
+            'overall_length' => $request->overall_length_atas,
+            'tip_diameter_1' => $request->tip_diameter_1_atas,
+            'tip_diameter_2' => $request->tip_diameter_2_atas,
+            'cup_depth' => $request->cup_depth_atas,
+            'working_length' => $request->working_length_atas,
+        ];
+        $punch_bawah_awal = [
+            'head_outer_diameter' => $request->head_outer_diameter_bawah,
+            'neck_diameter' => $request->neck_diameter_bawah,
+            'barrel' => $request->barrel_bawah,
+            'overall_length' => $request->overall_length_bawah,
+            'tip_diameter_1' => $request->tip_diameter_1_bawah,
+            'tip_diameter_2' => $request->tip_diameter_2_bawah,
+            'cup_depth' => $request->cup_depth_bawah,
+            'working_length' => $request->working_length_bawah,
+        ];
+        $punch_atas_rutin = [
+            'overall_length' => $request->overall_length_rutin_atas,
+            'working_length' => $request->working_length_rutin_atas,
+            'cup_depth' => $request->cup_depth_rutin_atas,
+        ];
+        $punch_bawah_rutin = [
+            'overall_length' => $request->overall_length_rutin_bawah,
+            'working_length' => $request->working_length_rutin_bawah,
+            'cup_depth' => $request->cup_depth_rutin_bawah,
+        ];
+        $dies_awal = [
+            'outer_diameter' => $request->outer_diameter,
+            'inner_diameter_1' => $request->inner_diameter_1,
+            'inner_diameter_2' => $request->inner_diameter_2,
+            'ketinggian_dies' => $request->ketinggian_dies,
+        ];
+
+        // dd($punch_atas_awal);
+        FormPunchAwalSetting::updateOrCreate(
+            ['jenis' => 'atas'],
+            $punch_atas_awal
+        );
+
+        FormPunchAwalSetting::updateOrCreate(
+            ['jenis' => 'bawah'],
+            $punch_bawah_awal
+        );
+
+        FormPunchRutinSetting::updateOrCreate(
+            ['jenis' => 'atas'],
+            $punch_atas_rutin
+        );
+
+        FormPunchRutinSetting::updateOrCreate(
+            ['jenis' => 'bawah'],
+            $punch_bawah_rutin
+        );
+
+        FormDiesAwalSetting::updateOrCreate(
+            [],
+            $dies_awal
+        );
+
         if (SettingIdleTime::first() === null) {
-            SettingIdleTime::create($data);
+            SettingIdleTime::create($idle_time);
         } else {
-            SettingIdleTime::first()->update(['idle_time' => $data]);
+            SettingIdleTime::first()->update(['idle_time' => $idle_time]);
         }
 
-        return redirect()->route('dev.index')->with('success', 'Idle Time has been updated.');
+        return redirect()->route('dev.index')->with('success', 'Dev Setting has been updated.');
 
     }
     public function store_email(Request $request)
