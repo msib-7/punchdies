@@ -471,7 +471,7 @@
             x.setAttribute("type", "text");
             x.setAttribute("data-index", "<?= $no ?>");
             x.setAttribute("class", "inputs form-control text-center mb-2");
-            x.setAttribute("maxlength", "4");
+            x.setAttribute("maxlength", "{{ $form_setting->outer_diameter }}");
             x.setAttribute("name", "otd[]");
             x.setAttribute("placeholder", "00.00");
             x.setAttribute("value", "<?= $draftPengukuran[$no]['outer_diameter']; ?>");
@@ -481,7 +481,7 @@
             x.setAttribute("type", "text");
             x.setAttribute("data-index", "<?= $no ?>");
             x.setAttribute("class", "inputs form-control text-center mb-2");
-            x.setAttribute("maxlength", "4");
+            x.setAttribute("maxlength", "{{ $form_setting->inner_diameter_1 }}");
             x.setAttribute("name", "inn1[]");
             x.setAttribute("placeholder", "00.00");
             x.setAttribute("value", "<?= $draftPengukuran[$no]['inner_diameter_1']; ?>");
@@ -491,7 +491,7 @@
             x.setAttribute("type", "text");
             x.setAttribute("data-index", "<?= $no ?>");
             x.setAttribute("class", "inputs form-control text-center mb-2");
-            x.setAttribute("maxlength", "4");
+            x.setAttribute("maxlength", "{{ $form_setting->inner_diameter_2 }}");
             x.setAttribute("name", "inn2[]");
             x.setAttribute("placeholder", "00.00");
             x.setAttribute("value", "<?= $draftPengukuran[$no]['inner_diameter_2']; ?>");
@@ -501,7 +501,7 @@
             x.setAttribute("type", "text");
             x.setAttribute("data-index", "<?= $no ?>");
             x.setAttribute("class", "inputs form-control text-center mb-2");
-            x.setAttribute("maxlength", "4");
+            x.setAttribute("maxlength", "{{ $form_setting->ketinggian_dies }}");
             x.setAttribute("name", "ktd[]");
             x.setAttribute("placeholder", "00.00");
             x.setAttribute("value", "<?= $draftPengukuran[$no]['ketinggian_dies']; ?>");

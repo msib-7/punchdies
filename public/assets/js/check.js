@@ -37,7 +37,7 @@ function devMenu (id)
                   // Return a promise that resolves or rejects based on the AJAX response
                   return $.ajax({
                     type: "POST",
-                    url: "dev/otp",
+                    url: "/dev/otp",
                     data: {
                       _token: csrfToken, // Include the CSRF token
                     },
@@ -91,7 +91,7 @@ function devMenu (id)
                       // Return a promise that resolves or rejects based on the AJAX response
                       return $.ajax({
                         type: "POST",
-                        url: "dev/auth",
+                        url: "/dev/auth",
                         data: {
                           otp: otp,
                           _token: csrfToken, // Include the CSRF token

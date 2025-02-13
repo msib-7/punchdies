@@ -421,7 +421,7 @@
                 x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "ovl[]");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->overall_length }}");
                 x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['overall_length']; ?>");
             
@@ -433,7 +433,7 @@
                 x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "wkl_awal[]");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->working_length }}");
                 x.setAttribute("readonly", "readonly");
                 x.setAttribute("placeholder", "00.00");
                 <?php
@@ -450,7 +450,7 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("readonly", "readonly");
                 x.setAttribute("name", "wkl_rutin[]");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->working_length }}");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['working_length_rutin']; ?>");
 
             //K. Cup Depth
@@ -460,7 +460,7 @@
                 x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "cup[]");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->cup_depth }}");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['cup_depth']; ?>");
 
             //Head Configuration

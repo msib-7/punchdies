@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Mail\SendDevOTP;
 use App\Models\DevEmail;
+use App\Models\FormDiesAwalSetting;
+use App\Models\FormPunchAwalSetting;
+use App\Models\FormPunchRutinSetting;
 use App\Models\OtpAccess;
 use App\Models\SettingIdleTime;
 use App\Services\DevAccessService;
@@ -85,7 +88,7 @@ class DeveloperController extends Controller
             $json = [
                 'success' => 'OTP is correct',
                 'isPass' => true,
-                'url' => 'dev',
+                'url' => '/dev',
             ];
 
             OtpAccess::query()
@@ -138,6 +141,11 @@ class DeveloperController extends Controller
 
         $data['email_dev'] = DevEmail::all();
         $data['IdleTime'] = SettingIdleTime::first();
+        $data['punch_atas_awal'] = FormPunchAwalSetting::where('jenis', 'atas')->first();
+        $data['punch_bawah_awal'] = FormPunchAwalSetting::where('jenis', 'bawah')->first();
+        $data['punch_atas_rutin'] = FormPunchRutinSetting::where('jenis', 'atas')->first();
+        $data['punch_bawah_rutin'] = FormPunchRutinSetting::where('jenis', 'bawah')->first();
+        $data['dies_awal'] = FormDiesAwalSetting::first();
         return view('dev.index', $data);
     }
     public function store(Request $request)

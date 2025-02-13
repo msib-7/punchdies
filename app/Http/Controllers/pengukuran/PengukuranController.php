@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Dies;
 use App\Models\ApprovalDisposal;
 use App\Models\ApprovalPengukuran;
+use App\Models\FormDiesAwalSetting;
+use App\Models\FormPunchAwalSetting;
+use App\Models\FormPunchRutinSetting;
 use App\Models\KalibrasiTool;
 use App\Models\KodeProduk;
 use App\Models\PengukuranAwalPunch;
@@ -372,10 +375,13 @@ class PengukuranController extends Controller
     }
     public function form_pengukuran(Request $request)
     {
+        
         if ($request->segment(3) == 'punch-atas') {
             $route = 'atas';
+            $data['form_setting'] = FormPunchAwalSetting::where('jenis', 'atas')->first();
         } elseif ($request->segment(3) == 'punch-bawah') {
             $route = 'bawah';
+            $data['form_setting'] = FormPunchAwalSetting::where('jenis', 'bawah')->first();
         }
         session()->remove('create_id');
         if($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah'){
@@ -442,6 +448,7 @@ class PengukuranController extends Controller
             return view('engineer.data.form.pengukuran-punch', $data);
 
         }elseif($request->segment(3) == 'dies'){
+            $data['form_setting'] = FormDiesAwalSetting::first();
             $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
                 ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
                 ->where('diess.dies_id', session('dies_id'))->first();
@@ -1443,8 +1450,10 @@ class PengukuranController extends Controller
     {
         if ($request->segment(3) == 'punch-atas') {
             $route = 'atas';
+            $data['form_setting'] = FormPunchRutinSetting::where('jenis', 'atas')->first();
         } elseif ($request->segment(3) == 'punch-bawah') {
             $route = 'bawah';
+            $data['form_setting'] = FormPunchRutinSetting::where('jenis', 'bawah')->first();
         }
         $pengukuran_pre = session('masa_pengukuran_pre');
         $pengukuran = session('masa_pengukuran');

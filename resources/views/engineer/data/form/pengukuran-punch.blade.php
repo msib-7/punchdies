@@ -561,7 +561,7 @@
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
                 x.setAttribute("class", "inputs form-control text-center mb-2");
-                x.setAttribute("maxlength", "6");
+                x.setAttribute("maxlength", "{{ $form_setting->head_outer_diameter }}");
                 x.setAttribute("id", "hdo<?=$no?>");
                 x.setAttribute("name", "hdo[]");    
                 // x.setAttribute("placeholder", "00.00");
@@ -581,7 +581,7 @@
                 x.setAttribute("name", "ned[]");
                 x.setAttribute("id", "ned<?=$no?>");
                 // x.setAttribute("placeholder", "00.00");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->neck_diameter }}");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['neck_diameter']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
                 x.setAttribute("style", "cursor: pointer;");
@@ -597,7 +597,7 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "bar[]");
                 x.setAttribute("id", "bar<?=$no?>");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->barrel }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['barrel']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
@@ -614,7 +614,7 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "ovl[]");
                 x.setAttribute("id", "ovl<?=$no?>");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->overall_length }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['overall_length']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
@@ -631,7 +631,7 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "tip1[]");
                 x.setAttribute("id", "tip1<?=$no?>");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->tip_diameter_1 }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_1']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
@@ -648,7 +648,7 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "tip2[]");
                 x.setAttribute("id", "tip2<?=$no?>");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->tip_diameter_2 }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_2']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
@@ -665,7 +665,7 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "cup[]");
                 x.setAttribute("id", "cup<?=$no?>");
-                x.setAttribute("maxlength", "4");
+                x.setAttribute("maxlength", "{{ $form_setting->cup_depth }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['cup_depth']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
@@ -682,7 +682,7 @@
                 x.setAttribute("class", "inputs form-control text-center mb-2");
                 x.setAttribute("name", "wkl[]");
                 x.setAttribute("id", "wkl<?=$no?>");
-                x.setAttribute("maxlength", "6");
+                x.setAttribute("maxlength", "{{ $form_setting->working_length }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['working_length']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
