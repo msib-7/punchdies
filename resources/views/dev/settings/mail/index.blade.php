@@ -20,15 +20,21 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($email_dev as $email)
+                @if ($email_dev->isEmpty())
                     <tr>
-                        <td>
-                            <span class="d-flex align-items-center">
-                                - {{ $email->email }} <a href="" class="mx-5"><i class="ki-solid ki-trash-square text-danger fs-2x"></i></a>
-                            </span>
-                        </td>
+                        <td>No emails registered.</td>
                     </tr>
-                @endforeach
+                @else
+                    @foreach ($email_dev as $email)
+                        <tr>
+                            <td>
+                                <span class="d-flex align-items-center">
+                                    - {{ $email->email }} <a href="" class="mx-5"><i class="ki-solid ki-trash-square text-danger fs-2x"></i></a>
+                                </span>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>
