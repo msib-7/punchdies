@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             NamaProdukSeeder::class,
             PunchSeeder::class,
             PengukuranAwalPunchSeeder::class,
+            FormSettingsSeeder::class,
         ]);
     }
 }
