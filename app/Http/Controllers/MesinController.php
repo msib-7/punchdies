@@ -9,7 +9,7 @@ class MesinController extends Controller
 {
     public function index(){
         $data = Mesin::all();
-        return view('admin.system.Mesin.index', compact('data'));
+        return view('admin.system.mesin.index', compact('data'));
     }
 
     public function store(Request $request){
