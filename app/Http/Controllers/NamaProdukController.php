@@ -10,7 +10,7 @@ class NamaProdukController extends Controller
     public function index()
     {
         $data = NamaProduk::all();
-        return view('admin.system.namaProduk.index', compact('data'));
+        return view('admin.system.NamaProduk.index', compact('data'));
     }
 
     public function store(Request $request)
@@ -26,7 +26,7 @@ class NamaProdukController extends Controller
             'description' => $request->description,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.system.namaProduk.index')->with('success', 'Nama Produk created successfully.');
+        return redirect()->route('admin.system.NamaProduk.index')->with('success', 'Nama Produk created successfully.');
     }
 
     public function edit($id)
@@ -52,13 +52,13 @@ class NamaProdukController extends Controller
             'description' => $request->description_edit,
             'user_id' => auth()->user()->id
         ]);
-        return redirect()->route('admin.system.namaProduk.index')->with('success', 'Nama Produk updated successfully.');
+        return redirect()->route('admin.system.NamaProduk.index')->with('success', 'Nama Produk updated successfully.');
     }
 
     public function destroy($id)
     {
         $namaProduk = NamaProduk::findOrFail($id);
         $namaProduk->delete();
-        return redirect()->route('admin.system.namaProduk.index')->with('success', 'Nama Produk deleted successfully.');
+        return redirect()->route('admin.system.NamaProduk.index')->with('success', 'Nama Produk deleted successfully.');
     }
 }
