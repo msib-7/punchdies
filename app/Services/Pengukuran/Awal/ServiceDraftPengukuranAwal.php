@@ -18,24 +18,6 @@ use Mail;
  */
 class ServiceDraftPengukuranAwal
 {
-    public function addNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3)
-    {
-        // $route = $this->getRoute($route);
-        if (in_array($route, ['punch-atas', 'punch-bawah', 'dies'])) {
-            $this->removeSessionVariables();
-
-            if (in_array($route, ['punch-atas', 'punch-bawah'])) {
-                $this->updatePunchNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
-            } elseif ($route == 'dies') {
-                $this->updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
-            }
-        }
-
-        // return redirect(route('pnd.pa.'. $this->getRoute($route) .'.view', $id));
-        return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'));
-    }
-
-
     private function getRoute($segment)
     {
         if ($segment == 'punch-atas') {
@@ -47,6 +29,121 @@ class ServiceDraftPengukuranAwal
         }
     }
 
+    private function getSegment($route)
+    {
+        if ($route == 'atas') {
+            return 'punch-atas';
+        } elseif ($route == 'bawah') {
+            return 'punch-bawah';
+        }
+    }
+
+    public function addNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3)
+    {
+        // $route = $this->getRoute($route);
+        if (in_array($route, ['punch-atas', 'punch-bawah', 'dies'])) {
+            $this->removeSessionVariables();
+
+            if (in_array($route, ['punch-atas', 'punch-bawah'])) {
+                // $this->updatePunchNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
+                Punch::updateOrCreate([
+                    'punch_id' => session('punch_id'),
+                    'masa_pengukuran' => 'pengukuran awal'
+                ], [
+                    'referensi_drawing' => $referensi_drawing,
+                    'catatan' => $catatan,
+                    'kesimpulan' => $kesimpulan,
+                    'kalibrasi_tools_1' => $kalibrasi_tools_1,
+                    'kalibrasi_tools_2' => $kalibrasi_tools_2,
+                    'kalibrasi_tools_3' => $kalibrasi_tools_3,
+                    'tgl_kalibrasi_tools_1' => $tgl_kalibrasi_1,
+                    'tgl_kalibrasi_tools_2' => $tgl_kalibrasi_2,
+                    'tgl_kalibrasi_tools_3' => $tgl_kalibrasi_3,
+                ]);
+                // $this->handle($id, $jenis, $route);
+                session()->remove('first_id');
+
+                $updateDraftStatus = [
+                    'is_draft' => 0,
+                    'is_waiting' => 1,
+                    'is_approved' => 0,
+                    'is_rejected' => 0,
+                ];
+
+                if ($jenis == 'pengukuran-awal') {
+                    // return $this->updatePunchDraftStatus($id, $updateDraftStatus, $this->getRoute($route));
+                    $getData = PengukuranAwalPunch::query()
+                        ->where('punch_id', '=', session('punch_id'))
+                        ->where('masa_pengukuran', '=', 'pengukuran awal')
+                        ->where('head_outer_diameter', '!=', '0')
+                        ->where('neck_diameter', '!=', '0')
+                        ->where('barrel', '!=', '0')
+                        ->where('overall_length', '!=', '0')
+                        ->where('tip_diameter_1', '!=', '0')
+                        ->where('tip_diameter_2', '!=', '0')
+                        ->where('cup_depth', '!=', '0')
+                        ->where('working_length', '!=', '0')
+                        //
+                        ->orWhere('punch_id', '=', session('punch_id'))
+                        ->where('masa_pengukuran', '=', 'pengukuran awal')
+                        ->where('head_outer_diameter', '!=', null)
+                        ->where('neck_diameter', '!=', null)
+                        ->where('barrel', '!=', null)
+                        ->where('overall_length', '!=', null)
+                        ->where('tip_diameter_1', '!=', null)
+                        ->where('tip_diameter_2', '!=', null)
+                        ->where('cup_depth', '!=', null)
+                        ->where('working_length', '!=', null);
+
+                    $getData->update($updateDraftStatus);
+
+                    $cekStatus = PengukuranAwalPunch::where([
+                        'punch_id' => session('punch_id'),
+                        'masa_pengukuran' => 'pengukuran awal',
+                        'is_draft' => '1'
+                    ])->count();
+
+                    if ($cekStatus > 0) {
+                        $alert = 'info';
+                        $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
+
+                        // dd('oke');
+                        // return response()->json([
+                        //     'alert' => $alert,
+                        //     'msg' => $msg,
+                        // ], 200);
+                        return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'))->with($alert, $msg);
+                    } else {
+                        $alert = 'success';
+                        $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
+
+                        Punch::updateOrCreate([
+                            'punch_id' => session('punch_id'),
+                            'masa_pengukuran' => 'pengukuran awal'
+                        ], [
+                            'is_draft' => 0,
+                            'is_waiting' => 1,
+                            'is_approved' => 0,
+                            'is_rejected' => 0,
+                        ]);
+
+                        $this->sendToApproval($this->getSegment($route));
+
+                        return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'))->with($alert, $msg);
+
+                    }
+                }
+
+
+            } elseif ($route == 'dies') {
+                $this->updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
+            }
+        }
+
+        // return redirect(route('pnd.pa.'. $this->getRoute($route) .'.view', $id));
+        // return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'));
+    }
+
     private function removeSessionVariables()
     {
         session()->remove('show_id');
@@ -54,27 +151,13 @@ class ServiceDraftPengukuranAwal
         session()->remove('count_num');
     }
 
-    private function updatePunchNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3)
-    {
-        Punch::updateOrCreate([
-            'punch_id' => session('punch_id'),
-            'masa_pengukuran' => 'pengukuran awal'
-        ], [
-            'referensi_drawing' => $referensi_drawing,
-            'catatan' => $catatan,
-            'kesimpulan' => $kesimpulan,
-            'kalibrasi_tools_1' => $kalibrasi_tools_1,
-            'kalibrasi_tools_2' => $kalibrasi_tools_2,
-            'kalibrasi_tools_3' => $kalibrasi_tools_3,
-            'tgl_kalibrasi_tools_1' => $tgl_kalibrasi_1,
-            'tgl_kalibrasi_tools_2' => $tgl_kalibrasi_2,
-            'tgl_kalibrasi_tools_3' => $tgl_kalibrasi_3,
-        ]);
-        $this->handle($id, $jenis, $route);
-        // (new SetDraftStatusServiceAwal)->handle($id, $jenis, $route);
+    // private function updatePunchNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3)
+    // {
+        
+    //     // (new SetDraftStatusServiceAwal)->handle($id, $jenis, $route);
 
-        // return redirect(route('pnd.pa.'. $this->getRoute($route) .'.view', $id));
-    }
+    //     // return redirect(route('pnd.pa.'. $this->getRoute($route) .'.view', $id));
+    // }
 
     private function updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3)
     {
@@ -97,99 +180,90 @@ class ServiceDraftPengukuranAwal
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public function handle($id, $jenis, $route)
-    {
-        // dd($jenis);
-        session()->remove('first_id');
+    // public function handle($id, $jenis, $route)
+    // {
+    //     // dd($jenis);
+    //     session()->remove('first_id');
 
-        $updateDraftStatus = [
-            'is_draft' => 0,
-            'is_waiting' => 1,
-            'is_approved' => 0,
-            'is_rejected' => 0,
-        ];
+    //     $updateDraftStatus = [
+    //         'is_draft' => 0,
+    //         'is_waiting' => 1,
+    //         'is_approved' => 0,
+    //         'is_rejected' => 0,
+    //     ];
 
-        if ($jenis == 'pengukuran-awal') {
-            if (in_array($route, ['punch-atas', 'punch-bawah'])) {
-                return $this->updatePunchDraftStatus($id, $updateDraftStatus, $this->getRoute($route));
-            } elseif ($route == 'dies') {
-                return $this->updateDiesDraftStatus($id, $updateDraftStatus);
-            }
-        }
-    }
+    //     if ($jenis == 'pengukuran-awal') {
+    //         if (in_array($route, ['punch-atas', 'punch-bawah'])) {
+    //             return $this->updatePunchDraftStatus($id, $updateDraftStatus, $this->getRoute($route));
+    //         } elseif ($route == 'dies') {
+    //             return $this->updateDiesDraftStatus($id, $updateDraftStatus);
+    //         }
+    //     }
+    // }
 
-    private function getSegment($route)
-    {
-        if ($route == 'atas') {
-            return 'punch-atas';
-        } elseif ($route == 'bawah') {
-            return 'punch-bawah';
-        }
-    }
+    // private function updatePunchDraftStatus($id, $updateDraftStatus, $route)
+    // {
+    //     $getData = PengukuranAwalPunch::query()
+    //         ->where('punch_id', '=', session('punch_id'))
+    //         ->where('masa_pengukuran', '=', 'pengukuran awal')
+    //         ->where('head_outer_diameter', '!=', '0')
+    //         ->where('neck_diameter', '!=', '0')
+    //         ->where('barrel', '!=', '0')
+    //         ->where('overall_length', '!=', '0')
+    //         ->where('tip_diameter_1', '!=', '0')
+    //         ->where('tip_diameter_2', '!=', '0')
+    //         ->where('cup_depth', '!=', '0')
+    //         ->where('working_length', '!=', '0')
+    //         //
+    //         ->orWhere('punch_id', '=', session('punch_id'))
+    //         ->where('masa_pengukuran', '=', 'pengukuran awal')
+    //         ->where('head_outer_diameter', '!=', null)
+    //         ->where('neck_diameter', '!=', null)
+    //         ->where('barrel', '!=', null)
+    //         ->where('overall_length', '!=', null)
+    //         ->where('tip_diameter_1', '!=', null)
+    //         ->where('tip_diameter_2', '!=', null)
+    //         ->where('cup_depth', '!=', null)
+    //         ->where('working_length', '!=', null);
 
-    private function updatePunchDraftStatus($id, $updateDraftStatus, $route)
-    {
-        $getData = PengukuranAwalPunch::query()
-            ->where('punch_id', '=', session('punch_id'))
-            ->where('masa_pengukuran', '=', 'pengukuran awal')
-            ->where('head_outer_diameter', '!=', '0')
-            ->where('neck_diameter', '!=', '0')
-            ->where('barrel', '!=', '0')
-            ->where('overall_length', '!=', '0')
-            ->where('tip_diameter_1', '!=', '0')
-            ->where('tip_diameter_2', '!=', '0')
-            ->where('cup_depth', '!=', '0')
-            ->where('working_length', '!=', '0')
-            //
-            ->orWhere('punch_id', '=', session('punch_id'))
-            ->where('masa_pengukuran', '=', 'pengukuran awal')
-            ->where('head_outer_diameter', '!=', null)
-            ->where('neck_diameter', '!=', null)
-            ->where('barrel', '!=', null)
-            ->where('overall_length', '!=', null)
-            ->where('tip_diameter_1', '!=', null)
-            ->where('tip_diameter_2', '!=', null)
-            ->where('cup_depth', '!=', null)
-            ->where('working_length', '!=', null);
+    //     $getData->update($updateDraftStatus);
 
-        $getData->update($updateDraftStatus);
+    //     $cekStatus = PengukuranAwalPunch::where([
+    //         'punch_id' => session('punch_id'),
+    //         'masa_pengukuran' => 'pengukuran awal',
+    //         'is_draft' => '1'
+    //     ])->count();
 
-        $cekStatus = PengukuranAwalPunch::where([
-            'punch_id' => session('punch_id'),
-            'masa_pengukuran' => 'pengukuran awal',
-            'is_draft' => '1'
-        ])->count();
+    //     if ($cekStatus > 0) {
+    //         $alert = 'warning';
+    //         $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
 
-        if ($cekStatus > 0) {
-            $alert = 'warning';
-            $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
+    //         // dd('oke');
+    //         return response()->json([
+    //             'alert' => $alert,
+    //             'msg' => $msg,
+    //         ], 200);
+    //     } else {
+    //         $alert = 'success';
+    //         $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
 
-            // dd('oke');
-            return response()->json([
-                'alert' => $alert,
-                'msg' => $msg,
-            ], 200);
-        } else {
-            $alert = 'success';
-            $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
+    //         Punch::updateOrCreate([
+    //             'punch_id' => session('punch_id'),
+    //             'masa_pengukuran' => 'pengukuran awal'
+    //         ], [
+    //             'is_draft' => 0,
+    //             'is_waiting' => 1,
+    //             'is_approved' => 0,
+    //             'is_rejected' => 0,
+    //         ]);
 
-            Punch::updateOrCreate([
-                'punch_id' => session('punch_id'),
-                'masa_pengukuran' => 'pengukuran awal'
-            ], [
-                'is_draft' => 0,
-                'is_waiting' => 1,
-                'is_approved' => 0,
-                'is_rejected' => 0,
-            ]);
+    //         $this->sendToApproval($this->getSegment($route));
 
-            $this->sendToApproval($this->getSegment($route));
+    //         return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'));
 
-            return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'));
+    //     }
 
-        }
-
-    }
+    // }
 
     private function updateDiesDraftStatus($id, $updateDraftStatus)
     {
@@ -345,7 +419,6 @@ class ServiceDraftPengukuranAwal
 
             // Log error untuk debugging
             Log::error('Error added create Approval : ' . $th->getMessage());
-
         }
     }
 

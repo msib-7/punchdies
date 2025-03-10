@@ -177,11 +177,26 @@ class ApprovalController extends Controller
 
             if ($dataRequest->punch_id != null) {
                 $id = $dataRequest->punch_id;
-                $labelIdentitas = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
-                    ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
-                    ->where('punchs.punch_id', $id)->first();
-                $dataPengukuran = PengukuranAwalPunch::where('punch_id', $id)->get();
-                $tglPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
+                if ($dataRequest->masa_pengukuran == 'pengukuran awal') {
+                    $labelIdentitas = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
+                        ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
+                        ->where('punchs.punch_id', $id)
+                        ->where('punchs.masa_pengukuran', $dataRequest->masa_pengukuran)
+                        ->first();
+                    $dataPengukuran = PengukuranAwalPunch::where('punch_id', $id)->get();
+                    $tglPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
+                    $mp = 'awal';
+                } else {
+                    $labelIdentitas = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
+                        ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
+                        ->where('punchs.punch_id', $id)
+                        ->where('punchs.masa_pengukuran', $dataRequest->masa_pengukuran)
+                        ->latest('punchs')
+                        ->first();
+                    $dataPengukuran = PengukuranRutinPunch::where('punch_id', $id)->get();
+                    $tglPengukuran = PengukuranRutinPunch::where('punch_id', '=', $id)->first();
+                    $mp = 'rutin';
+                }
 
                 $checkStatus = ApprovalPengukuran::where(['req_id' => $req_id])->first();
                 if ($checkStatus->is_approved == '-' && $checkStatus->is_rejected == '-' || $checkStatus->is_approved == '0' && $checkStatus->is_rejected == '0') {
@@ -200,6 +215,7 @@ class ApprovalController extends Controller
                 $data['statusPengukuran'] = $status;
                 $data['req_id'] = $req_id;
                 $data['jenis'] = 'punch';
+                $data['mp'] = $mp;
 
                 return view('qa.form.detail-pengukuran', $data);
             } elseif ($dataRequest->dies_id != null) {

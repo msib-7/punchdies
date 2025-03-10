@@ -925,13 +925,15 @@ class PengukuranController extends Controller
                                         ->orderby('pengukuran_awal_punchs.punch_id', 'desc')
                                         ->first();
             }else{
-                $dataPengukuran = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=','pengukuran_rutin_punchs.punch_id')
-                                        ->leftJoin('users', 'pengukuran_rutin_punchs.user_id','=','users.id')
-                                        ->where('punchs.punch_id',$id)
-                                        ->orderby('punchs.punch_id', 'desc')
-                                        ->orderBy('punchs.id', 'desc')
-                                        ->first();
+                $dataPengukuran = Punch::query()
+                    ->leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
+                    ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
+                    ->where('punchs.punch_id', $id)
+                    ->select('punchs.*', 'users.nama as user_nama') // Menambahkan select untuk field yang diinginkan
+                    ->latest('punchs.created_at') // Pastikan untuk menggunakan kolom yang tepat untuk latest
+                    ->first();
             }
+            // dd($dataPengukuran);
 
             //cek kode produk tersedia atau tidak
             $kodeProduk = KodeProduk::where('id', $dataPunch->kode_produk)->first();

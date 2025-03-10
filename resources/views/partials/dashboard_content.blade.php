@@ -8,7 +8,7 @@
                 <span class="fw-semibold fs-3">Total Punch Atas</span>
             </div>
             <div class="d-flex flex-column mt-5">
-                <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{ count($dataPunchAtas) }}</span>
+                <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2" data-kt-countup="true" data-kt-countup-value="{{ count($dataPunchAtas) }}" data-kt-countup-prefix="">{{ count($dataPunchAtas) }}</span>
                 <div class="m-0">
                     <span class="fw-semibold fs-6 text-gray-400">Items</span>
                 </div>
@@ -28,7 +28,7 @@
                 <span class="fw-semibold fs-3">Total Punch Bawah</span>
             </div>
             <div class="d-flex flex-column mt-5">
-                <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{ count($dataPunchBawah) }}</span>
+                <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2" data-kt-countup="true" data-kt-countup-value="{{ count($dataPunchBawah) }}" data-kt-countup-prefix="">{{ count($dataPunchBawah) }}</span>
                 <div class="m-0">
                     <span class="fw-semibold fs-6 text-gray-400">Items</span>
                 </div>
@@ -48,7 +48,7 @@
                 <span class="fw-semibold fs-3">Total Dies</span>
             </div>
             <div class="d-flex flex-column mt-5">
-                <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2">{{ count($dataDies) }}</span>
+                <span class="fw-semibold fs-3x text-gray-800 lh-1 ls-n2" data-kt-countup="true" data-kt-countup-value="{{ count($dataDies) }}" data-kt-countup-prefix="">{{ count($dataDies) }}</span>
                 <div class="m-0">
                     <span class="fw-semibold fs-6 text-gray-400">Items</span>
                 </div>
@@ -73,17 +73,19 @@
             <div class="d-flex flex-column mt-10">
                 <div class="row">
                     <div class="col-12 col-md-6">
-                        <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$draftCount['draftCount']}}</span>
+                        <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2" data-kt-countup="true" data-kt-countup-value="{{$draftCount['draftCount']}}" data-kt-countup-prefix="">{{$draftCount['draftCount']}}</span>
                         <div class="mx-1">
                             <span class="fw-semibold fs-6 text-gray-400">Items</span>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="m-2">
-                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Awal: {{$draftCount['draftPengukuranAwalCount']}}</span>
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Awal: </span>
+                            <span class="fw-semibold fs-6 text-gray-800" data-kt-countup="true" data-kt-countup-value="{{$draftCount['draftPengukuranAwalCount']}}">{{$draftCount['draftPengukuranAwalCount']}}</span>
                         </div>
                         <div class="m-2">
-                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Rutin: {{$draftCount['draftPengukuranRutinCount']}}</span>
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Rutin: </span>
+                            <span class="fw-semibold fs-6 text-gray-800" data-kt-countup="true" data-kt-countup-value="{{$draftCount['draftPengukuranRutinCount']}}">{{$draftCount['draftPengukuranRutinCount']}}</span>
                         </div>
                     </div>
                 </div>
@@ -107,17 +109,19 @@
             <div class="d-flex flex-column mt-10">
                 <div class="row">
                     <div class="col-12 col-md-6">
-                        <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2">{{$waitingCount['waitingCount']}}</span>
+                        <span class="fw-semibold fs-4x text-gray-800 lh-1 ls-n2" data-kt-countup="true" data-kt-countup-value="{{$waitingCount['waitingCount']}}">{{$waitingCount['waitingCount']}}</span>
                         <div class="mx-1">
                             <span class="fw-semibold fs-6 text-gray-400">Items</span>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="m-2">
-                            <span class="fw-semibold fs-6  text-gray-800">Pengukuran Awal: {{$waitingCount['waitingPengukuranAwalCount']}}</span>
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Awal: </span>
+                            <span class="fw-semibold fs-6  text-gray-800" data-kt-countup="true" data-kt-countup-value="{{$waitingCount['waitingPengukuranAwalCount']}}">{{$waitingCount['waitingPengukuranAwalCount']}}</span>
                         </div>
                         <div class="m-2">
-                            <span class="fw-semibold fs-6  text-gray-800">Pengukuran Rutin: {{$waitingCount['waitingPengukuranRutinCount']}}</span>
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Rutin: </span>
+                            <span class="fw-semibold fs-6  text-gray-800" data-kt-countup="true" data-kt-countup-value="{{$waitingCount['waitingPengukuranRutinCount']}}">{{$waitingCount['waitingPengukuranRutinCount']}}</span>
                         </div>
                     </div>
                 </div>
@@ -148,10 +152,12 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="m-2">
-                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Awal: {{$approvedCount['approvedPengukuranAwalCount']}}</span>
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Awal: </span>
+                            <span class="fw-semibold fs-6 text-gray-800" data-kt-countup="true" data-kt-countup-value="{{$approvedCount['approvedPengukuranAwalCount']}}">{{$approvedCount['approvedPengukuranAwalCount']}}</span>
                         </div>
                         <div class="m-2">
-                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Rutin: {{$approvedCount['approvedPengukuranRutinCount']}}</span>
+                            <span class="fw-semibold fs-6 text-gray-800">Pengukuran Rutin: </span>
+                            <span class="fw-semibold fs-6 text-gray-800" data-kt-countup="true" data-kt-countup-value="{{$approvedCount['approvedPengukuranRutinCount']}}">{{$approvedCount['approvedPengukuranRutinCount']}}</span>
                         </div>
                     </div>
                 </div>

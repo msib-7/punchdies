@@ -212,33 +212,35 @@
                             <div class="col-12 mt-5">
                                 <div class="card">
                                     <div class="card-body">
-                                        <table id="dboard_Table1" class="display" style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">No Dies</th>
-                                                    <th class="text-center">Cincin Tidak Berbayang</th>
-                                                    <th class="text-center">Tidak Gompal</th>
-                                                    <th class="text-center">Tidak Retak</th>
-                                                    <th class="text-center">Tidak Pecah</th>
-                                                    <th class="text-center">Visual/Segment Dies</th>
-                                                    <th class="text-center">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php $no = 1; ?>
-                                                @foreach ($dataPengukuran as $item)
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" style="width:100%">
+                                                <thead>
                                                     <tr>
-                                                        <td class="text-center">{{ $no++ }}</td>
-                                                        <td class="text-center">{{ $item->is_cincin_berbayang }}</td>
-                                                        <td class="text-center">{{ $item->is_gompal }}</td>
-                                                        <td class="text-center">{{ $item->is_retak }}</td>
-                                                        <td class="text-center">{{ $item->is_pecah }}</td>
-                                                        <td class="text-center">{{ $item->visual_dies }}</td>
-                                                        <td class="text-center">{{ $item->status }}</td>
+                                                        <th class="text-center">No Dies</th>
+                                                        <th class="text-center">Cincin Tidak Berbayang</th>
+                                                        <th class="text-center">Tidak Gompal</th>
+                                                        <th class="text-center">Tidak Retak</th>
+                                                        <th class="text-center">Tidak Pecah</th>
+                                                        <th class="text-center">Visual/Segment Dies</th>
+                                                        <th class="text-center">Status</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    <?php $no = 1; ?>
+                                                    @foreach ($dataPengukuran as $item)
+                                                        <tr>
+                                                            <td class="text-center">{{ $no++ }}</td>
+                                                            <td class="text-center">{{ $item->is_cincin_berbayang }}</td>
+                                                            <td class="text-center">{{ $item->is_gompal }}</td>
+                                                            <td class="text-center">{{ $item->is_retak }}</td>
+                                                            <td class="text-center">{{ $item->is_pecah }}</td>
+                                                            <td class="text-center">{{ $item->visual_dies }}</td>
+                                                            <td class="text-center">{{ $item->status }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -281,27 +283,33 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                $micrometer = $labelIdentitas->kalibrasi_micrometer ? new DateTime($labelIdentitas->kalibrasi_micrometer) : null;
-                                                                $caliper = $labelIdentitas->kalibrasi_caliper ? new DateTime($labelIdentitas->kalibrasi_caliper) : null;
-                                                                $dial_indicator = $labelIdentitas->kalibrasi_dial_indicator ? new DateTime($labelIdentitas->kalibrasi_dial_indicator) : null;
+                                                                $tgl_kalibrasi_1 = $labelIdentitas->tgl_kalibrasi_tools_1 ? new DateTime($labelIdentitas->tgl_kalibrasi_tools_1) : null;
+                                                                $tgl_kalibrasi_2 = $labelIdentitas->tgl_kalibrasi_tools_2 ? new DateTime($labelIdentitas->tgl_kalibrasi_tools_2) : null;
+                                                                $tgl_kalibrasi_3 = $labelIdentitas->tgl_kalibrasi_tools_3 ? new DateTime($labelIdentitas->tgl_kalibrasi_tools_3) : null;
                                                                 ?>
 
                                                                 <tr>
-                                                                    <td>Micrometer Digital</td>
                                                                     <td>
-                                                                        <input type="text" value="{{ $micrometer ? date_format($micrometer, 'd M Y') : '' }}" name="micrometer_digital" id="micrometer_digital" class="form-control" readonly>
+                                                                        <input type="text" value="{{ $labelIdentitas->kalibrasi1->title }}" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ $tgl_kalibrasi_1 ? date_format($tgl_kalibrasi_1, 'd M Y') : '' }}" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" readonly>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Caliper Digital</td>
                                                                     <td>
-                                                                        <input type="text" value="{{ $caliper ? date_format($caliper, 'd M Y') : '' }}" name="caliper_digital" id="caliper_digital" class="form-control" @readonly(true)>
+                                                                        <input type="text" value="{{ $labelIdentitas->kalibrasi2->title }}" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ $tgl_kalibrasi_2 ? date_format($tgl_kalibrasi_2, 'd M Y') : '' }}" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" @readonly(true)>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>Dial Indicator Digital</td>
                                                                     <td>
-                                                                        <input type="text" value="{{ $dial_indicator ? date_format($dial_indicator, 'd M Y') : '' }}" name="dial_indicator_digital" id="dial_indicator_digital" class="form-control" @readonly(true)>
+                                                                        <input type="text" value="{{ $labelIdentitas->kalibrasi3->title }}" class="form-control" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" value="{{ $tgl_kalibrasi_3 ? date_format($tgl_kalibrasi_3, 'd M Y') : '' }}" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" @readonly(true)>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>

@@ -198,7 +198,9 @@
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr style="background-color: ">
-                                                        <th class="min-width-responsive text-center">No</th>
+                                                        @if ($mp == 'awal')
+                                                            {{-- Pengukuran Awal --}}
+                                                            <th class="min-width-responsive text-center">No</th>
                                                             <th class="min-width-responsive text-center">A. Head Outer Diameter</th>
                                                             <th class="min-width-responsive text-center">E. Neck Diameter</th>
                                                             <th class="min-width-responsive text-center">F. Barrel</th>
@@ -207,23 +209,44 @@
                                                             <th class="min-width-responsive text-center">J. Tip Diameter 2</th>
                                                             <th class="min-width-responsive text-center">K. Cup Depth</th>
                                                             <th class="min-width-responsive text-center">L. Working Length</th>
-                                                        <th class="text-center">Status</th>
+                                                            <th class="text-center">Status</th>
+                                                        @elseif ($mp == 'rutin')
+                                                            {{-- Pengukuran Rutin --}}
+                                                            <th class="min-width-responsive text-center">No</th>
+                                                            <th class="min-width-responsive text-center">G. Overall Length</th>
+                                                            <th class="min-width-responsive text-center">L. Working Length <b>(AWAL)</b></th>
+                                                            <th class="min-width-responsive text-center">L. Working Length <b>(RUTIN)</b></th>
+                                                            <th class="min-width-responsive text-center">K. Cup Depth</th>
+                                                            <th class="min-width-responsive text-center">Head Configuration</th>
+                                                            <th class="text-center">Status</th>
+
+                                                        @endif
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php $no = 1; ?>
                                                     @foreach ($dataPengukuran as $item)
                                                         <tr>
-                                                            <td class="text-center">{{ $no++ }}</td>
-                                                            <td class="text-center">{{ $item->head_outer_diameter }}</td>
-                                                            <td class="text-center">{{ $item->neck_diameter }}</td>
-                                                            <td class="text-center">{{ $item->barrel }}</td>
-                                                            <td class="text-center">{{ $item->overall_length }}</td>
-                                                            <td class="text-center">{{ $item->tip_diameter_1 }}</td>
-                                                            <td class="text-center">{{ $item->tip_diameter_2 }}</td>
-                                                            <td class="text-center">{{ $item->cup_depth }}</td>
-                                                            <td class="text-center">{{ $item->working_length }}</td>
-                                                            <td class="text-center">{{ $item->status }}</td>
+                                                            @if ($mp == 'awal')
+                                                                <td class="text-center">{{ $no++ }}</td>
+                                                                <td class="text-center">{{ $item->head_outer_diameter }}</td>
+                                                                <td class="text-center">{{ $item->neck_diameter }}</td>
+                                                                <td class="text-center">{{ $item->barrel }}</td>
+                                                                <td class="text-center">{{ $item->overall_length }}</td>
+                                                                <td class="text-center">{{ $item->tip_diameter_1 }}</td>
+                                                                <td class="text-center">{{ $item->tip_diameter_2 }}</td>
+                                                                <td class="text-center">{{ $item->cup_depth }}</td>
+                                                                <td class="text-center">{{ $item->working_length }}</td>
+                                                                <td class="text-center">{{ $item->status }}</td>
+                                                            @elseif ($mp == 'rutin')
+                                                                <td class="text-center">{{ $no++ }}</td>
+                                                                <td class="text-center">{{ $item->overall_length }}</td>
+                                                                <td class="text-center">{{ $item->working_length_awal }}</td>
+                                                                <td class="text-center">{{ $item->working_length_rutin }}</td>
+                                                                <td class="text-center">{{ $item->cup_depth }}</td>
+                                                                <td class="text-center">{{ $item->head_configuration }}</td>
+                                                                <td class="text-center">{{ $item->status }}</td>
+                                                            @endif
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
