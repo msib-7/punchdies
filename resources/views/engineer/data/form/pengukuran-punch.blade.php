@@ -67,22 +67,19 @@
 <style>
     /* Custom styles for the table */
     #form_table {
-        border-collapse: collapse;
         width: 100%;
-        border-radius: 10px;
+        border-radius: 5px;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     #form_table thead {
-        background-color: #007bff; /* Bootstrap primary color */
+        background-color: #074282; /* Bootstrap primary color */
         color: white;
     }
 
     #form_table th, #form_table td {
-        padding: 12px 15px; /* Increased padding for better spacing */
+        padding: 10px 10px; /* Increased padding for better spacing */
         text-align: center;
-        border: 0.5px solid #dee2e6; /* Light border */
     }
 
     #form_table tbody tr {
@@ -295,19 +292,19 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table id="" class="table table-rounded table-striped border">
+                                                {{-- <table id="form_table" class="table table-rounded table-bordered table-striped border"> --}}
+                                                <table id="form_table" class="display row-border">
                                                     <thead>
                                                         <tr class="fw-semibold fs-6 border-bottom border-gray-200">
-                                                            <td class="hidden"></td>
-                                                            <th class="min-width-responsive text-center">No</th>
-                                                            <th class="min-width-responsive text-center">A. Head Outer Diameter</th>
-                                                            <th class="min-width-responsive text-center">E. Neck Diameter</th>
-                                                            <th class="min-width-responsive text-center">F. Barrel</th>
-                                                            <th class="min-width-responsive text-center">G. Overall Length</th>
-                                                            <th class="min-width-responsive text-center">I. Tip Diameter 1</th>
-                                                            <th class="min-width-responsive text-center">J. Tip Diameter 2</th>
-                                                            <th class="min-width-responsive text-center">K. Cup Depth</th>
-                                                            <th class="min-width-responsive text-center">L. Working Length</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">No</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">A. Head Outer Diameter</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">E. Neck Diameter</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">F. Barrel</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">G. Overall Length</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">I. Tip Diameter 1</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">J. Tip Diameter 2</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">K. Cup Depth</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">L. Working Length</th>
                                                             <td class="hidden"></td>
                                                         </tr>
                                                     </thead>
@@ -583,19 +580,13 @@
             $no = 0;
             foreach($draftPengukuran as $data){ ?>
 
-                // Update Id
-                var tr = document.createElement('tr'); // Create a new row
-                var td = tr.appendChild(document.createElement('td'));
-                var a = td.appendChild(document.createElement('INPUT'));
-                    a.setAttribute("type", "hidden");
-                    a.setAttribute("readonly", "readonly");
-
                 // No Punch
+                var tr = document.createElement('tr'); // Create a new row
                 var td = tr.appendChild(document.createElement('td')); // Create a new column
                 var x = td.appendChild(document.createElement('INPUT')); // Create a new input
                 x.setAttribute("class", "form-control text-center");
                 x.setAttribute("type", "button");
-                x.setAttribute("style", "cursor: pointer; font-size: 14px; font-weight: bold; background-color: #2FBD2F; color: white;");
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer; font-size: 14px; font-weight: bold; ");
                 x.setAttribute("value", "Punch <?= $ch++?>");
                 x.setAttribute("readonly", "readonly");
                 // var td = tr.appendChild(document.createElement('td')); // Create a new column
@@ -611,15 +602,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control bg-secondary text-center mx-0");
+                x.setAttribute("class", "inputs form-control text-center mx-0");
                 x.setAttribute("maxlength", "{{ $form_setting->head_outer_diameter }}");
                 x.setAttribute("id", "hdo<?=$no?>");
                 x.setAttribute("name", "hdo[]");
                 x.setAttribute("autocomplete", "off");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['head_outer_diameter']; ?>");
-                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer; box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;"); 
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer; box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -629,15 +620,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control bg-secondary text-center");
+                x.setAttribute("class", "inputs form-control text-center");
                 x.setAttribute("name", "ned[]");
                 x.setAttribute("id", "ned<?=$no?>");
                 x.setAttribute("autocomplete", "off");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("maxlength", "{{ $form_setting->neck_diameter }}");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['neck_diameter']; ?>");
-                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer; box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;"); 
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer; box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -647,15 +638,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control bg-secondary text-center");
+                x.setAttribute("class", "inputs form-control text-center");
                 x.setAttribute("name", "bar[]");
                 x.setAttribute("id", "bar<?=$no?>");
                 x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->barrel }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['barrel']; ?>");
-                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;"); 
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -665,15 +656,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control bg-secondary text-center");
+                x.setAttribute("class", "inputs form-control text-center");
                 x.setAttribute("name", "ovl[]");
                 x.setAttribute("id", "ovl<?=$no?>");
                 x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->overall_length }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['overall_length']; ?>");
-                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;"); 
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -683,15 +674,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control bg-secondary text-center");
+                x.setAttribute("class", "inputs form-control text-center");
                 x.setAttribute("name", "tip1[]");
                 x.setAttribute("id", "tip1<?=$no?>");
                 x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->tip_diameter_1 }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_1']; ?>");
-                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;"); 
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -701,15 +692,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control bg-secondary text-center");
+                x.setAttribute("class", "inputs form-control text-center");
                 x.setAttribute("name", "tip2[]");
                 x.setAttribute("id", "tip2<?=$no?>");
                 x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->tip_diameter_2 }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_2']; ?>");
-                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;"); 
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -719,15 +710,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control bg-secondary text-center");
+                x.setAttribute("class", "inputs form-control text-center");
                 x.setAttribute("name", "cup[]");
                 x.setAttribute("id", "cup<?=$no?>");
                 x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->cup_depth }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['cup_depth']; ?>");
-                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;"); 
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -737,15 +728,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control bg-secondary text-center");
+                x.setAttribute("class", "inputs form-control text-center");
                 x.setAttribute("name", "wkl[]");
                 x.setAttribute("id", "wkl<?=$no?>");
                 x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->working_length }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['working_length']; ?>");
-                // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+                // x.setAttribute("onkeypress", "return event.keyCode != 13;"); 
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>

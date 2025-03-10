@@ -101,7 +101,12 @@
         <li class="nav-item">
             <a class="btn btn-light-warning shadow shadow-sm mx-1" data-bs-toggle="tab" href="#perlu_ukur_tab">
                 Perlu Pengukuran 
-                <span class="badge badge-circle badge-light " id="badgePerluPengukuran">{{ count($reminderData) ?? '' }}</span>
+                <span class="badge badge-circle badge-light {{ count($reminderData) > 0 ? 'pulse pulse-warning' : '' }}" id="badgePerluPengukuran">
+                    {{ count($reminderData) ?? '' }}
+                    @if (count($reminderData) > 0)
+                    <span class="pulse-ring"></span>
+                    @endif
+                </span>
             </a>
         </li>
     </ul>
