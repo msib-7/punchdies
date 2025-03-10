@@ -1,6 +1,6 @@
 @extends('layout.metronic')
 @section('main-content')
-<style>
+{{-- <style>
     @media (max-width: 576px) { /* Bootstrap's sm breakpoint */
         .min-width-responsive {
             min-width: 150px;
@@ -14,16 +14,14 @@
     }
 
     /* Style for odd rows */
-    #form_table tbody tr:nth-child(odd) {
-        background-color: gainsboro; /* Darker gray for odd rows */
-        border-radius: 10px; /* Adjust the value as needed for rounding */
-    }
+    /* #form_table tbody tr:nth-child(odd) {
+        background-color: gainsboro;
+    } */
 
     /* Style for even rows */
-    #form_table tbody tr:nth-child(even) {
-        background-color: whitesmoke; /* Light gray for even rows */
-        border-radius: 10px; /* Adjust the value as needed for rounding */
-    }
+    /* #form_table tbody tr:nth-child(even) {
+        background-color: whitesmoke;
+    } */
 
     /* To ensure the rounded corners are visible, you may need to add this */
     #form_table tbody tr {
@@ -39,7 +37,7 @@
 
     /* Style for the table header */
     #form_table thead {
-        background-color: burlywood; /* Change this to your desired header background color */
+        background-color: green; /* Change this to your desired header background color */
         color: white; /* Change this to your desired text color */
     }
 
@@ -50,20 +48,56 @@
     }
 
     /* Optional: Add rounded corners to the first and last cells of the header and body */
-    #form_table thead th:first-child {
-        border-top-left-radius: 10px; /* Top left corner */
+    /* #form_table thead th:first-child {
+        border-top-left-radius: 10px; 
     }
 
     #form_table thead th:last-child {
-        border-top-right-radius: 10px; /* Top right corner */
+        border-top-right-radius: 10px; 
     }
 
     #form_table tbody tr:last-child td:first-child {
-        border-bottom-left-radius: 10px; /* Bottom left corner */
+        border-bottom-left-radius: 10px;
     }
 
     #form_table tbody tr:last-child td:last-child {
-        border-bottom-right-radius: 10px; /* Bottom right corner */
+        border-bottom-right-radius: 10px;
+    } */
+</style> --}}
+<style>
+    /* Custom styles for the table */
+    #form_table {
+        border-collapse: collapse;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #form_table thead {
+        background-color: #007bff; /* Bootstrap primary color */
+        color: white;
+    }
+
+    #form_table th, #form_table td {
+        padding: 12px 15px; /* Increased padding for better spacing */
+        text-align: center;
+        border: 0.5px solid #dee2e6; /* Light border */
+    }
+
+    #form_table tbody tr {
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    #form_table tbody tr:hover {
+        background-color: #f1f1f1; /* Light gray background on hover */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        #form_table th, #form_table td {
+            font-size: 12px; /* Smaller font size on small screens */
+        }
     }
 </style>
 <!--begin::Content-->
@@ -261,22 +295,23 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table id="form_table" class="display" style="width:100%">
-                                                    <thead id="table_head">
+                                                <table id="" class="table table-stripped table-bordered">
+                                                    <thead>
                                                         <tr>
-                                                            <th class="min-width-responsive text-center">No</th>
-                                                            <th class="min-width-responsive text-center">A. Head Outer Diameter</th>
-                                                            <th class="min-width-responsive text-center">E. Neck Diameter</th>
-                                                            <th class="min-width-responsive text-center">F. Barrel</th>
-                                                            <th class="min-width-responsive text-center">G. Overall Length</th>
-                                                            <th class="min-width-responsive text-center">I. Tip Diameter 1</th>
-                                                            <th class="min-width-responsive text-center">J. Tip Diameter 2</th>
-                                                            <th class="min-width-responsive text-center">K. Cup Depth</th>
-                                                            <th class="min-width-responsive text-center">L. Working Length</th>
-                                                            <td class="text-center hidden"></td>
+                                                            <th class="min-width-responsive text-center text-white bg-dark">No</th>
+                                                            <th class="min-width-responsive text-center text-white bg-dark">A. Head Outer Diameter</th>
+                                                            <th class="min-width-responsive text-center text-white bg-dark">E. Neck Diameter</th>
+                                                            <th class="min-width-responsive text-center text-white bg-dark">F. Barrel</th>
+                                                            <th class="min-width-responsive text-center text-white bg-dark">G. Overall Length</th>
+                                                            <th class="min-width-responsive text-center text-white bg-dark">I. Tip Diameter 1</th>
+                                                            <th class="min-width-responsive text-center text-white bg-dark">J. Tip Diameter 2</th>
+                                                            <th class="min-width-responsive text-center text-white bg-dark">K. Cup Depth</th>
+                                                            <th class="min-width-responsive text-center text-white bg-dark">L. Working Length</th>
+                                                            <td class="hidden"></td>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="table_body">
+                                                        <!-- Dynamic rows will be inserted here -->
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -373,7 +408,7 @@
                                 <div class="col-12">
                                     <div class="d-flex flex-column mx-2">
                                         <label for="referensi_drawing" class="required form-label">Referensi Drawing</label>
-                                        <input type="text" class="form-control" id="referensi_drawing" name="referensi_drawing" placeholder="Insert Reference Drawing" required />
+                                        <input type="text" class="form-control" id="referensi_drawing" name="referensi_drawing" placeholder="Insert Reference Drawing" value="{{ $labelPunch->referensi_drawing ?? '' }}" required />
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -381,13 +416,13 @@
                                         <div class="col-12 mt-3">
                                             <div class="d-flex flex-column mx-2">
                                                 <label for="catatan" class="required form-label">Catatan</label>
-                                                <textarea class="form-control" id="catatan" name="catatan" rows="3" placeholder="Insert Your Message" required></textarea>
+                                                <textarea class="form-control" id="catatan" name="catatan" rows="3" placeholder="Insert Your Message" required>{{ $labelPunch->catatan ?? '' }}</textarea>
                                             </div>
                                         </div>
                                         <div class="col-12 mt-3">
                                             <div class="d-flex flex-column mx-2">
                                                 <label for="kesimpulan" class="required form-label">Kesimpulan</label>
-                                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" rows="3" placeholder="Insert Your Message" required></textarea>
+                                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" rows="3" placeholder="Insert Your Message" required>{{ $labelPunch->kesimpulan ?? '' }}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -409,12 +444,12 @@
                                                             <select name="kalibrasi_tools_1" aria-label="Select a Tool" data-control="select2" data-dropdown-parent="#modal_confirm_pengukuran" data-placeholder="Select a item..." class="form-select fw-bold" required>
                                                                 <option value="">Select Tool</option>
                                                                 @foreach ($kalibrasiTools as $item)
-                                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                                    <option value="{{$item->id}}" {{ $labelPunch->kalibrasi_tools_1 == $item->id ? 'selected' : '' }}>{{$item->title}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <input type="date" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" required>
+                                                            <input type="date" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" value="{{ $labelPunch->tgl_kalibrasi_1 ?? '' }}" required>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -422,12 +457,12 @@
                                                             <select name="kalibrasi_tools_2" aria-label="Select a Tool" data-control="select2" data-dropdown-parent="#modal_confirm_pengukuran" data-placeholder="Select a item..." class="form-select fw-bold" required>
                                                                 <option value="">Select Tool</option>
                                                                 @foreach ($kalibrasiTools as $item)
-                                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                                    <option value="{{$item->id}}" {{ $labelPunch->kalibrasi_tools_2 == $item->id ? 'selected' : '' }}>{{$item->title}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <input type="date" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" required>
+                                                            <input type="date" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" value="{{ $labelPunch->tgl_kalibrasi_2 ?? '' }}" required>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -435,12 +470,12 @@
                                                             <select name="kalibrasi_tools_3" aria-label="Select a Tool" data-control="select2" data-dropdown-parent="#modal_confirm_pengukuran" data-placeholder="Select a item..." class="form-select fw-bold" required>
                                                                 <option value="">Select Tool</option>
                                                                 @foreach ($kalibrasiTools as $item)
-                                                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                                                    <option value="{{$item->id}}" {{ $labelPunch->kalibrasi_tools_3 == $item->id ? 'selected' : '' }}>{{$item->title}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <input type="date" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" required>
+                                                            <input type="date" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" value="{{ $labelPunch->tgl_kalibrasi_3 ?? '' }}" required>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -549,25 +584,33 @@
                 var tr = document.createElement('tr'); // Create a new row
                 var td = tr.appendChild(document.createElement('td')); // Create a new column
                 var x = td.appendChild(document.createElement('INPUT')); // Create a new input
-                x.setAttribute("class", "form-control text-center mb-2 ");
-                x.setAttribute("type", "text");
-                x.setAttribute("readonly", "readonly");
-                x.setAttribute("style", "cursor: not-allowed;");
+                x.setAttribute("class", "form-control text-center");
+                x.setAttribute("type", "button");
+                x.setAttribute("style", "cursor: pointer; font-size: 14px; font-weight: bold; background-color: #1f8bff; color: white;");
                 x.setAttribute("value", "Punch <?= $ch++?>");
+                x.setAttribute("readonly", "readonly");
+                // var td = tr.appendChild(document.createElement('td')); // Create a new column
+                // var x = td.appendChild(document.createElement('INPUT')); // Create a new input
+                // x.setAttribute("class", "form-control text-center");
+                // x.setAttribute("type", "button");
+                // x.setAttribute("style", "cursor: pointer; font-size: 14px; font-weight: bold; background-color: #1f8bff; color: white;");
+                // x.setAttribute("readonly", "readonly");
+                
 
                 // Head Outer Diameter
                 var td = tr.appendChild(document.createElement('td'));
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control bg-secondary text-center mx-0");
                 x.setAttribute("maxlength", "{{ $form_setting->head_outer_diameter }}");
                 x.setAttribute("id", "hdo<?=$no?>");
-                x.setAttribute("name", "hdo[]");    
+                x.setAttribute("name", "hdo[]");
+                x.setAttribute("autocomplete", "off");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['head_outer_diameter']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer; box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -577,14 +620,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control bg-secondary text-center");
                 x.setAttribute("name", "ned[]");
                 x.setAttribute("id", "ned<?=$no?>");
+                x.setAttribute("autocomplete", "off");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("maxlength", "{{ $form_setting->neck_diameter }}");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['neck_diameter']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer; box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -594,14 +638,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control bg-secondary text-center");
                 x.setAttribute("name", "bar[]");
                 x.setAttribute("id", "bar<?=$no?>");
+                x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->barrel }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['barrel']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -611,14 +656,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control bg-secondary text-center");
                 x.setAttribute("name", "ovl[]");
                 x.setAttribute("id", "ovl<?=$no?>");
+                x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->overall_length }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['overall_length']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -628,14 +674,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control bg-secondary text-center");
                 x.setAttribute("name", "tip1[]");
                 x.setAttribute("id", "tip1<?=$no?>");
+                x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->tip_diameter_1 }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_1']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -645,14 +692,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control bg-secondary text-center");
                 x.setAttribute("name", "tip2[]");
                 x.setAttribute("id", "tip2<?=$no?>");
+                x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->tip_diameter_2 }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['tip_diameter_2']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -662,14 +710,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control bg-secondary text-center");
                 x.setAttribute("name", "cup[]");
                 x.setAttribute("id", "cup<?=$no?>");
+                x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->cup_depth }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['cup_depth']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -679,14 +728,15 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control bg-secondary text-center");
                 x.setAttribute("name", "wkl[]");
                 x.setAttribute("id", "wkl<?=$no?>");
+                x.setAttribute("autocomplete", "off");
                 x.setAttribute("maxlength", "{{ $form_setting->working_length }}");
                 // x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['working_length']; ?>");
                 // x.setAttribute("onkeypress", "return event.keyCode != 13;");
-                x.setAttribute("style", "cursor: pointer;");
+                x.setAttribute("style", "cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 <?php if($no == 10){ ?>
                     x.setAttribute("onkeyup", "saveData()");
                 <?php } ?>
@@ -729,7 +779,8 @@
             btn_next.setAttribute("type", "button");
             btn_next.setAttribute("onclick", "checkInvalid()");
             
-            var title2 = document.createTextNode("Next");
+            var title2 = document.createElement('span');
+            title2.innerHTML = 'Next <i class="ki-duotone ki-arrow-right fw-bold"><span class="path1"></span><span class="path2"></span></i>';
             btn_next.appendChild(title2);
 
             // Append the button to the DOM

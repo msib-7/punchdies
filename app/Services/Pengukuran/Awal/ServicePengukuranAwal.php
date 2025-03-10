@@ -17,13 +17,14 @@ class ServicePengukuranAwal
             $this->removeSessionVariables();
             
             if (in_array($route, ['punch-atas', 'punch-bawah'])) {
-                return $this->updatePunchNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
+                $this->updatePunchNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
             } elseif ($route == 'dies') {
-                return $this->updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
+                $this->updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
             }
         }
         
-        return redirect(route('pnd.pa.'. $this->getRoute($route) .'.view', $id));
+        // return redirect(route('pnd.pa.'. $this->getRoute($route) .'.view', $id));
+        return redirect(route('pnd.pa.'. $this->getRoute($route) .'.index'));
     }
 
     private function getRoute($segment)

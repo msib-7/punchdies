@@ -17,6 +17,7 @@ use App\Models\PengukuranRutinDies;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
 use App\Services\GetJenisPunch;
+use App\Services\Pengukuran\Awal\ServiceDraftPengukuranAwal;
 use App\Services\Pengukuran\Awal\ServicePengukuranAwal;
 use App\Services\Pengukuran\Rutin\ServicePengukuranRutin;
 use App\Services\Rumus\GetRumusPengukuranAwalDies;
@@ -686,7 +687,7 @@ class PengukuranController extends Controller
         $tgl_kalibrasi_2 = $request->tgl_kalibrasi_2;
         $tgl_kalibrasi_3 = $request->tgl_kalibrasi_3;
 
-        return (new ServicePengukuranAwal)->addNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
+        return (new ServiceDraftPengukuranAwal)->addNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
     }
 
     //Pengukuran Rutin
