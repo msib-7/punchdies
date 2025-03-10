@@ -295,18 +295,19 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table id="" class="table table-stripped table-bordered">
+                                                <table id="" class="table table-rounded table-striped border">
                                                     <thead>
-                                                        <tr>
-                                                            <th class="min-width-responsive text-center text-white bg-dark">No</th>
-                                                            <th class="min-width-responsive text-center text-white bg-dark">A. Head Outer Diameter</th>
-                                                            <th class="min-width-responsive text-center text-white bg-dark">E. Neck Diameter</th>
-                                                            <th class="min-width-responsive text-center text-white bg-dark">F. Barrel</th>
-                                                            <th class="min-width-responsive text-center text-white bg-dark">G. Overall Length</th>
-                                                            <th class="min-width-responsive text-center text-white bg-dark">I. Tip Diameter 1</th>
-                                                            <th class="min-width-responsive text-center text-white bg-dark">J. Tip Diameter 2</th>
-                                                            <th class="min-width-responsive text-center text-white bg-dark">K. Cup Depth</th>
-                                                            <th class="min-width-responsive text-center text-white bg-dark">L. Working Length</th>
+                                                        <tr class="fw-semibold fs-6 border-bottom border-gray-200">
+                                                            <td class="hidden"></td>
+                                                            <th class="min-width-responsive text-center">No</th>
+                                                            <th class="min-width-responsive text-center">A. Head Outer Diameter</th>
+                                                            <th class="min-width-responsive text-center">E. Neck Diameter</th>
+                                                            <th class="min-width-responsive text-center">F. Barrel</th>
+                                                            <th class="min-width-responsive text-center">G. Overall Length</th>
+                                                            <th class="min-width-responsive text-center">I. Tip Diameter 1</th>
+                                                            <th class="min-width-responsive text-center">J. Tip Diameter 2</th>
+                                                            <th class="min-width-responsive text-center">K. Cup Depth</th>
+                                                            <th class="min-width-responsive text-center">L. Working Length</th>
                                                             <td class="hidden"></td>
                                                         </tr>
                                                     </thead>
@@ -582,13 +583,19 @@
             $no = 0;
             foreach($draftPengukuran as $data){ ?>
 
-                // No Punch
+                // Update Id
                 var tr = document.createElement('tr'); // Create a new row
+                var td = tr.appendChild(document.createElement('td'));
+                var a = td.appendChild(document.createElement('INPUT'));
+                    a.setAttribute("type", "hidden");
+                    a.setAttribute("readonly", "readonly");
+
+                // No Punch
                 var td = tr.appendChild(document.createElement('td')); // Create a new column
                 var x = td.appendChild(document.createElement('INPUT')); // Create a new input
                 x.setAttribute("class", "form-control text-center");
                 x.setAttribute("type", "button");
-                x.setAttribute("style", "cursor: pointer; font-size: 14px; font-weight: bold; background-color: #1f8bff; color: white;");
+                x.setAttribute("style", "cursor: pointer; font-size: 14px; font-weight: bold; background-color: #2FBD2F; color: white;");
                 x.setAttribute("value", "Punch <?= $ch++?>");
                 x.setAttribute("readonly", "readonly");
                 // var td = tr.appendChild(document.createElement('td')); // Create a new column

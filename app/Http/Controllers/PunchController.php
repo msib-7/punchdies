@@ -165,6 +165,7 @@ class PunchController extends Controller
                             });
                     })
                     ->groupBy('punch_id')
+                    ->latest()
                     ->get();
 
                                     // dd($dataPunch);
