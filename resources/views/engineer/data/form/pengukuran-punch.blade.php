@@ -449,7 +449,9 @@
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <input type="date" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" value="{{ $labelPunch->tgl_kalibrasi_1 ?? '' }}" required>
+                                                            <input type="date" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" value="{{ date('Y-m-d', strtotime($labelPunch->tgl_kalibrasi_tools_1)) }}" required>
+                                                            {{-- <input type="text" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" value="{{ date('d/m/Y',strtotime($labelPunch->tgl_kalibrasi_1)) }}" required> --}}
+                                                            {{-- <input type="text" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" value="{{ $labelPunch->tgl_kalibrasi_tools_1 }}" required> --}}
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -462,7 +464,7 @@
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <input type="date" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" value="{{ $labelPunch->tgl_kalibrasi_2 ?? '' }}" required>
+                                                            <input type="date" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" value="{{ date('Y-m-d', strtotime($labelPunch->tgl_kalibrasi_tools_2)) }}" required>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -475,7 +477,7 @@
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <input type="date" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" value="{{ $labelPunch->tgl_kalibrasi_3 ?? '' }}" required>
+                                                            <input type="date" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" value="{{ date('Y-m-d', strtotime($labelPunch->tgl_kalibrasi_tools_3)) }}" required>
                                                         </td>
                                                     </tr>
                                                 </tbody>
