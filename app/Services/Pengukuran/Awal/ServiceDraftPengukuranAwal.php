@@ -111,7 +111,11 @@ class ServiceDraftPengukuranAwal
                     } else {
                         $alert = 'success';
                         $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
-
+                        $prefix = 'RPU';
+                        $punchId = session('punch_id');
+                        $diesId = null;
+                        $jenis = $this->getRoute($route);
+                        
                         Punch::updateOrCreate([
                             'punch_id' => session('punch_id'),
                             'masa_pengukuran' => 'pengukuran awal'
@@ -121,10 +125,9 @@ class ServiceDraftPengukuranAwal
                             'is_approved' => 0,
                             'is_rejected' => 0,
                         ]);
-
-                        $this->sendToApproval($this->getSegment($route));
-
-                        return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'))->with($alert, $msg);
+                        
+                        return $this->sendToApproval($jenis, $prefix, $punchId, $diesId, $alert, $msg);
+                        // return $this->sendToApproval($this->getRoute($route), new ApprovalPengukuran(), 'RPU', session('punch_id'), null, $alert, $msg);
 
                     }
                 }
@@ -191,6 +194,10 @@ class ServiceDraftPengukuranAwal
                     } else {
                         $alert = 'success';
                         $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
+                        $prefix = 'RDI';
+                        $punchId = null;
+                        $diesId = session('dies_id');
+                        $jenis = $this->getRoute($route);
 
                         Dies::updateOrCreate([
                             'dies_id' => session('dies_id'),
@@ -201,15 +208,12 @@ class ServiceDraftPengukuranAwal
                             'is_approved' => 0,
                             'is_rejected' => 0,
                         ]);
-
-                        $this->sendToApproval('dies');
                         
-                        return redirect(route('pnd.pa.dies.index'))->with($alert, $msg);
+                        return $this->sendToApproval($jenis, $prefix, $punchId, $diesId, $alert, $msg);
                     }
-                    }
+                }
             }
         }
-
         // return redirect(route('pnd.pa.'. $this->getRoute($route) .'.view', $id));
         // return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'));
     }
@@ -220,7 +224,7 @@ class ServiceDraftPengukuranAwal
         session()->remove('count');
         session()->remove('count_num');
     }
-
+    
     // private function updatePunchNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3)
     // {
         
@@ -372,21 +376,14 @@ class ServiceDraftPengukuranAwal
 
     // }
 
-    private function sendToApproval($jenis)
+    
+    private function sendToApproval($jenis, $prefix, $punchId, $diesId, $alert, $msg)
     {
-        $ApprovalPengukuran = new ApprovalPengukuran();
-
-        if (in_array($jenis, ['punch-atas', 'punch-bawah'])) {
-            $this->createApprovalRequest($ApprovalPengukuran, 'RPU', session('punch_id'), null, $jenis);
-        } elseif ($jenis == 'dies') {
-            $this->createApprovalRequest($ApprovalPengukuran, 'RDI', null, session('dies_id'), $jenis);
-        }
-    }
-
-    private function createApprovalRequest($model, $prefix, $punchId, $diesId, $jenis)
-    {
+        $model = new ApprovalPengukuran();
+        // $this->createApprovalRequest($ApprovalPengukuran, 'RPU', session('punch_id'), null, $jenis);
         $autonum = $model->autonumber(["substr(req_id,3,6)" => date('ymd')])->first();
         $id = !$autonum ? $prefix . date("ymd") . "0001" : $this->generateNewId($autonum->req_id, $prefix);
+        // dd($id);
 
         try {
             DB::beginTransaction();
@@ -404,7 +401,9 @@ class ServiceDraftPengukuranAwal
                 'is_approved' => '0',
                 'is_rejected' => '0',
             ];
+            // dd($model::create($dataApproval));
             $model::create($dataApproval);
+
 
             $users = User::whereHas('roles', function ($query) {
                 $query->where('role_name', 'Supervisor Engineering');
@@ -422,7 +421,7 @@ class ServiceDraftPengukuranAwal
                 auth()->user()->id,
                 'Success Sending Approval',
                 'Data Pengukuran Awal telah dikirim oleh ' . auth()->user()->nama . ' ke Approval menunggu response dari Supervisor ',
-                route('pnd.pa.' . $this->getRoute($jenis) . '.view', $idView)
+                route('pnd.pa.' . $jenis . '.view', $idView)
             ));
 
             $userEmails = []; // Array to store user emails
@@ -476,7 +475,14 @@ class ServiceDraftPengukuranAwal
             // Log error untuk debugging
             Log::error('Error added create Approval : ' . $th->getMessage());
         }
+
+        return redirect(route('pnd.pa.' . $jenis . '.index'))->with($alert, $msg);
     }
+
+    // private function createApprovalRequest($model, $prefix, $punchId, $diesId, $jenis)
+    // {
+        
+    // }
 
     private function generateNewId($req_id, $prefix)
     {
