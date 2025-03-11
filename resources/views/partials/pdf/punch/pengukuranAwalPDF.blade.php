@@ -12,17 +12,22 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            font-size: 10;
+            font-size: 9;
             margin: 0;
             /* padding: 20px; */
             background: #f9f9f9;
         }
 
         .container {
-            margin: auto;
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin: 10px 0;
+            color: #333;
         }
 
         h3 {
@@ -35,13 +40,13 @@
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 15px;
+            padding: 20px;
             text-align: left;
         }
 
@@ -69,7 +74,7 @@
             border-top: 1px solid #ddd;
         }
         .table-header{
-            font-size: 30px;
+            font-size: 35px;
         }
 
         @media print {
@@ -104,7 +109,7 @@
 
 <body>
     <div class="container">
-        <h3>Data Pengukuran Awal {{ $jenis }}</h3>
+        <h2>Data Pengukuran Awal {{ $jenis }}</h2>
         
         <div class="section">
             <h3>Product Information</h3>
@@ -177,7 +182,7 @@
         </div>
         <div class="container mt-10">
             <div class="section">
-                <h3>Data Pengukuran Awal {{ $jenis }}</h3>
+                <h2>Data Pengukuran Awal {{ $jenis }}</h2>
         
                 <div class="section">
                     <h3>Product Information</h3>
