@@ -2078,8 +2078,6 @@ class PengukuranController extends Controller
                     ->first();
                 $data['approvalInfo'] = $approvalData;
 
-                dd($approvalData);
-
                 if ($request->segment(3) == 'punch-atas') {
                     $jenis = 'Punch Atas';
                 } elseif ($request->segment(3) == 'punch-bawah') {
@@ -2090,13 +2088,15 @@ class PengukuranController extends Controller
 
                 $data['title'] = 'Pengukuran Rutin '. $jenis . ' ' . $LabelPunch->merk;
 
-                return Pdf::view('partials.pdf.punch.pengukuranRutinPDF', $data)
-                    ->format('A4')
-                    ->withBrowsershot(function (Browsershot $browsershot) {
-                        $browsershot->newHeadless()
-                            ->timeout(60000)
-                            ->scale(0.6); // Increase timeout to 60 seconds
-                    });
+                $pdf = PDF::loadView('partials.pdf.punch.pengukuranRutinPDF', $data)->set_option('isPhpEnabled', true);
+                return $pdf->stream('Pengukuran Awal ' . $jenis . ' ' . $LabelPunch->merk . '.pdf');
+                // return Pdf::view('partials.pdf.punch.pengukuranRutinPDF', $data)
+                //     ->format('A4')
+                //     ->withBrowsershot(function (Browsershot $browsershot) {
+                //         $browsershot->newHeadless()
+                //             ->timeout(60000)
+                //             ->scale(0.6); // Increase timeout to 60 seconds
+                //     });
 
             }
         } elseif ($request->segment(3) == 'dies') {
@@ -2135,13 +2135,15 @@ class PengukuranController extends Controller
 
                 $data['title'] = 'Pengukuran Awal ' . $jenis . ' ' . $LabelDies->merk;
 
-                return Pdf::view('partials.pdf.dies.pengukuranAwalPDF', $data)
-                    ->format('A4')
-                    ->withBrowsershot(function (Browsershot $browsershot) {
-                        $browsershot->newHeadless()
-                            ->timeout(60000)
-                            ->scale(0.6); // Increase timeout to 60 seconds
-                    });
+                $pdf = PDF::loadView('partials.pdf.dies.pengukuranAwalPDF', $data)->set_option('isPhpEnabled', true);
+                return $pdf->stream('Pengukuran Awal ' . $jenis . ' ' . $LabelDies->merk . '.pdf');
+                // return Pdf::view('partials.pdf.dies.pengukuranAwalPDF', $data)
+                //     ->format('A4')
+                //     ->withBrowsershot(function (Browsershot $browsershot) {
+                //         $browsershot->newHeadless()
+                //             ->timeout(60000)
+                //             ->scale(0.6); // Increase timeout to 60 seconds
+                //     });
 
             }elseif($request->segment(2) == 'pengukuran-rutin')
             {
@@ -2175,13 +2177,15 @@ class PengukuranController extends Controller
 
                 $data['title'] = 'Pengukuran Rutin ' . $jenis . ' ' . $LabelDies->merk;
 
-                return Pdf::view('partials.pdf.dies.pengukuranRutinPDF', $data)
-                    ->format('A4')
-                    ->withBrowsershot(function (Browsershot $browsershot) {
-                        $browsershot->newHeadless()
-                            ->timeout(60000)
-                            ->scale(0.6); // Increase timeout to 60 seconds
-                    });
+                $pdf = PDF::loadView('partials.pdf.dies.pengukuranRutinPDF', $data)->set_option('isPhpEnabled', true);
+                return $pdf->stream('Pengukuran Awal ' . $jenis . ' ' . $LabelDies->merk . '.pdf');
+                // return Pdf::view('partials.pdf.dies.pengukuranRutinPDF', $data)
+                //     ->format('A4')
+                //     ->withBrowsershot(function (Browsershot $browsershot) {
+                //         $browsershot->newHeadless()
+                //             ->timeout(60000)
+                //             ->scale(0.6); // Increase timeout to 60 seconds
+                //     });
             }
         }
     }

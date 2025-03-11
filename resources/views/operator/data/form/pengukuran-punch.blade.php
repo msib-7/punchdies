@@ -1,5 +1,38 @@
 @extends('layout.metronic')
 @section('main-content')
+<style>
+    /* Custom styles for the table */
+    #form_table {
+        width: 100%;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    #form_table thead {
+        background-color: #074282; /* Bootstrap primary color */
+        color: white;
+    }
+
+    #form_table th, #form_table td {
+        padding: 10px 10px; /* Increased padding for better spacing */
+        text-align: center;
+    }
+
+    #form_table tbody tr {
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    #form_table tbody tr:hover {
+        background-color: #f1f1f1; /* Light gray background on hover */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        #form_table th, #form_table td {
+            font-size: 12px; /* Smaller font size on small screens */
+        }
+    }
+</style>
 <!--begin::Content-->
 <div id="kt_app_content" class="app-content flex-column-fluid">
     <!--begin::Engage-->
@@ -194,16 +227,16 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <table id="form_table" class="display" style="width:100%">
+                                            <table id="form_table" class="display row-border" style="width:100%">
                                                 <thead id="table_head">
-                                                    <tr class="fw-bold fs-7 text-gray-800">
-                                                        <td class="text-center">No</td>
-                                                        <td class="text-center">G. Overall Length</td>
-                                                        <td class="text-center">L. Working Length <br> <b>(AWAL)</b></td>
-                                                        <td class="text-center">L. Working Length <br> <b>(RUTIN)</b></td>
-                                                        <td class="text-center">K. Cup Depth</td>
-                                                        <td class="text-center">Head Configuration</td>
-                                                        <td class="text-center"></td>
+                                                    <tr class="fw-semibold fs-6 border-bottom border-gray-200"">
+                                                        <td class="text-center text-white align-center">No</td>
+                                                        <td class="text-center text-white align-center">G. Overall Length</td>
+                                                        <td class="text-center text-white align-center">L. Working Length <br> <b>(AWAL)</b></td>
+                                                        <td class="text-center text-white align-center">L. Working Length <br> <b>(RUTIN)</b></td>
+                                                        <td class="text-center text-white align-center">K. Cup Depth</td>
+                                                        <td class="text-center text-white align-center">Head Configuration</td>
+                                                        <td class="text-center text-white align-center"></td>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="table_body">
@@ -406,12 +439,12 @@
             
             //NO
             var td = tr.appendChild(document.createElement('td'));
-            var x = td.appendChild(document.createElement('INPUT'));
-                x.setAttribute("class", "form-control text-center mb-2");
-                x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("readonly", "readonly");
-                x.setAttribute("style", "cursor: not-allowed;");
+            var x = td.appendChild(document.createElement('INPUT')); // Create a new input
+                x.setAttribute("class", "form-control text-center");
+                x.setAttribute("type", "button");
+                x.setAttribute("style", "cursor: pointer; font-size: 16px; font-weight: bold; border: none; background: transparent;");
                 x.setAttribute("value", "Punch <?= $ch++?>");
+                x.setAttribute("readonly", "readonly");
             
 
             //G. Overall Length
@@ -419,10 +452,10 @@
             var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control text-center");
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 x.setAttribute("name", "ovl[]");
                 x.setAttribute("maxlength", "{{ $form_setting->overall_length }}");
-                x.setAttribute("placeholder", "00.00");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['overall_length']; ?>");
             
             //L. Working Length (AWAL)
@@ -431,7 +464,8 @@
                 var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control text-center");
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 x.setAttribute("name", "wkl_awal[]");
                 x.setAttribute("maxlength", "{{ $form_setting->working_length }}");
                 x.setAttribute("readonly", "readonly");
@@ -447,7 +481,8 @@
             var td = tr.appendChild(document.createElement('td'));
             var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control text-center");
+                x.setAttribute("style", "background-color: #eaeaea; cursor: not-allowed;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 x.setAttribute("readonly", "readonly");
                 x.setAttribute("name", "wkl_rutin[]");
                 x.setAttribute("maxlength", "{{ $form_setting->working_length }}");
@@ -458,7 +493,8 @@
             var x = td.appendChild(document.createElement('INPUT'));
                 x.setAttribute("type", "text");
                 x.setAttribute("data-index", "<?= $no ?>");
-                x.setAttribute("class", "inputs form-control text-center mb-2");
+                x.setAttribute("class", "inputs form-control text-center");
+                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
                 x.setAttribute("name", "cup[]");
                 x.setAttribute("maxlength", "{{ $form_setting->cup_depth }}");
                 x.setAttribute("value", "<?= $draftPengukuran[$no]['cup_depth']; ?>");
@@ -467,9 +503,10 @@
             var td = tr.appendChild(document.createElement('td'));
             // Get the head_configuration value from PHP
             var select = td.appendChild(document.createElement('select'));
-            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('class', 'form-select text-center');
             select.setAttribute('id', 'select_ok');
             select.setAttribute('name', 'hcf[]');
+            select.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
 
             // Define options
             var options = ['-', 'OK', 'NOK'];

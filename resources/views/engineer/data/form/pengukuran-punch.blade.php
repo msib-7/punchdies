@@ -586,7 +586,7 @@
                 var x = td.appendChild(document.createElement('INPUT')); // Create a new input
                 x.setAttribute("class", "form-control text-center");
                 x.setAttribute("type", "button");
-                x.setAttribute("style", "background-color: #eaeaea; cursor: pointer; font-size: 14px; font-weight: bold; ");
+                x.setAttribute("style", "cursor: pointer; font-size: 16px; font-weight: bold; border: none; background: transparent;");
                 x.setAttribute("value", "Punch <?= $ch++?>");
                 x.setAttribute("readonly", "readonly");
                 // var td = tr.appendChild(document.createElement('td')); // Create a new column

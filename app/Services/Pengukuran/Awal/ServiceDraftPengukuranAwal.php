@@ -107,11 +107,6 @@ class ServiceDraftPengukuranAwal
                         $alert = 'info';
                         $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
 
-                        // dd('oke');
-                        // return response()->json([
-                        //     'alert' => $alert,
-                        //     'msg' => $msg,
-                        // ], 200);
                         return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'))->with($alert, $msg);
                     } else {
                         $alert = 'success';
@@ -136,7 +131,82 @@ class ServiceDraftPengukuranAwal
 
 
             } elseif ($route == 'dies') {
-                $this->updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
+                // $this->updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3);
+                Dies::updateOrCreate([
+                    'dies_id' => session('dies_id'),
+                    'masa_pengukuran' => 'pengukuran awal'
+                ], [
+                    'referensi_drawing' => $referensi_drawing,
+                    'catatan' => $catatan,
+                    'kesimpulan' => $kesimpulan,
+                    'kalibrasi_tools_1' => $kalibrasi_tools_1,
+                    'kalibrasi_tools_2' => $kalibrasi_tools_2,
+                    'kalibrasi_tools_3' => $kalibrasi_tools_3,
+                    'tgl_kalibrasi_tools_1' => $tgl_kalibrasi_1,
+                    'tgl_kalibrasi_tools_2' => $tgl_kalibrasi_2,
+                    'tgl_kalibrasi_tools_3' => $tgl_kalibrasi_3,
+                ]);
+                session()->remove('first_id');
+
+                    $updateDraftStatus = [
+                        'is_draft' => 0,
+                        'is_waiting' => 1,
+                        'is_approved' => 0,
+                        'is_rejected' => 0,
+                    ];
+
+                    if ($jenis == 'pengukuran-awal') {
+                    $getData = PengukuranAwalDies::query()
+                        ->where('dies_id', session('dies_id'))
+                        ->where('masa_pengukuran', 'pengukuran awal')
+                        ->where('outer_diameter', '!=', '0')
+                        ->where('inner_diameter_1', '!=', '0')
+                        ->where('inner_diameter_2', '!=', '0')
+                        ->where('ketinggian_dies', '!=', '0')
+                        ->where('visual', '!=', '-')
+                        ->where('kesesuaian_dies', '!=', '-')
+                        //
+                        ->orWhere('dies_id', session('dies_id'))
+                        ->where('masa_pengukuran', 'pengukuran awal')
+                        ->where('outer_diameter', '!=', null)
+                        ->where('inner_diameter_1', '!=', null)
+                        ->where('inner_diameter_2', '!=', null)
+                        ->where('ketinggian_dies', '!=', null)
+                        ->where('visual', '!=', '-')
+                        ->where('kesesuaian_dies', '!=', '-');
+
+                    $getData->update($updateDraftStatus);
+
+                    $cekStatus = PengukuranAwalDies::where([
+                        'dies_id' => session('dies_id'),
+                        'masa_pengukuran' => 'pengukuran awal',
+                        'is_draft' => '1'
+                    ])->count();
+
+                    if ($cekStatus > 0) {
+                        $alert = 'info';
+                        $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
+
+                        return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'))->with($alert, $msg);
+                    } else {
+                        $alert = 'success';
+                        $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
+
+                        Dies::updateOrCreate([
+                            'dies_id' => session('dies_id'),
+                            'masa_pengukuran' => 'pengukuran awal'
+                        ], [
+                            'is_draft' => 0,
+                            'is_waiting' => 1,
+                            'is_approved' => 0,
+                            'is_rejected' => 0,
+                        ]);
+
+                        $this->sendToApproval('dies');
+                        
+                        return redirect(route('pnd.pa.dies.index'))->with($alert, $msg);
+                    }
+                    }
             }
         }
 
@@ -159,24 +229,10 @@ class ServiceDraftPengukuranAwal
     //     // return redirect(route('pnd.pa.'. $this->getRoute($route) .'.view', $id));
     // }
 
-    private function updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3)
-    {
-        Dies::updateOrCreate([
-            'dies_id' => session('dies_id'),
-            'masa_pengukuran' => 'pengukuran awal'
-        ], [
-            'referensi_drawing' => $referensi_drawing,
-            'catatan' => $catatan,
-            'kesimpulan' => $kesimpulan,
-            'kalibrasi_tools_1' => $kalibrasi_tools_1,
-            'kalibrasi_tools_2' => $kalibrasi_tools_2,
-            'kalibrasi_tools_3' => $kalibrasi_tools_3,
-            'tgl_kalibrasi_tools_1' => $tgl_kalibrasi_1,
-            'tgl_kalibrasi_tools_2' => $tgl_kalibrasi_2,
-            'tgl_kalibrasi_tools_3' => $tgl_kalibrasi_3,
-        ]);
-        $this->handle($id, $jenis, $route);
-    }
+    // private function updateDiesNote($id, $note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3)
+    // {
+        
+    // }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -265,56 +321,56 @@ class ServiceDraftPengukuranAwal
 
     // }
 
-    private function updateDiesDraftStatus($id, $updateDraftStatus)
-    {
-        $getData = PengukuranAwalDies::query()
-            ->where('dies_id', session('dies_id'))
-            ->where('masa_pengukuran', 'pengukuran awal')
-            ->where('outer_diameter', '!=', '0')
-            ->where('inner_diameter_1', '!=', '0')
-            ->where('inner_diameter_2', '!=', '0')
-            ->where('ketinggian_dies', '!=', '0')
-            ->where('visual', '!=', '-')
-            ->where('kesesuaian_dies', '!=', '-')
-            //
-            ->orWhere('dies_id', session('dies_id'))
-            ->where('masa_pengukuran', 'pengukuran awal')
-            ->where('outer_diameter', '!=', null)
-            ->where('inner_diameter_1', '!=', null)
-            ->where('inner_diameter_2', '!=', null)
-            ->where('ketinggian_dies', '!=', null)
-            ->where('visual', '!=', '-')
-            ->where('kesesuaian_dies', '!=', '-');
+    // private function updateDiesDraftStatus($id, $updateDraftStatus)
+    // {
+    //     $getData = PengukuranAwalDies::query()
+    //         ->where('dies_id', session('dies_id'))
+    //         ->where('masa_pengukuran', 'pengukuran awal')
+    //         ->where('outer_diameter', '!=', '0')
+    //         ->where('inner_diameter_1', '!=', '0')
+    //         ->where('inner_diameter_2', '!=', '0')
+    //         ->where('ketinggian_dies', '!=', '0')
+    //         ->where('visual', '!=', '-')
+    //         ->where('kesesuaian_dies', '!=', '-')
+    //         //
+    //         ->orWhere('dies_id', session('dies_id'))
+    //         ->where('masa_pengukuran', 'pengukuran awal')
+    //         ->where('outer_diameter', '!=', null)
+    //         ->where('inner_diameter_1', '!=', null)
+    //         ->where('inner_diameter_2', '!=', null)
+    //         ->where('ketinggian_dies', '!=', null)
+    //         ->where('visual', '!=', '-')
+    //         ->where('kesesuaian_dies', '!=', '-');
 
-        $getData->update($updateDraftStatus);
+    //     $getData->update($updateDraftStatus);
 
-        $cekStatus = PengukuranAwalDies::where([
-            'dies_id' => session('dies_id'),
-            'masa_pengukuran' => 'pengukuran awal',
-            'is_draft' => '1'
-        ])->count();
+    //     $cekStatus = PengukuranAwalDies::where([
+    //         'dies_id' => session('dies_id'),
+    //         'masa_pengukuran' => 'pengukuran awal',
+    //         'is_draft' => '1'
+    //     ])->count();
 
-        if ($cekStatus > 0) {
-            $alert = 'warning';
-            $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
-        } else {
-            $alert = 'success';
-            $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
+    //     if ($cekStatus > 0) {
+    //         $alert = 'warning';
+    //         $msg = 'Pengukuran Disimpan sebagai Draft karena belum terisi Sepenuhnya';
+    //     } else {
+    //         $alert = 'success';
+    //         $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
 
-            Dies::updateOrCreate([
-                'dies_id' => session('dies_id'),
-                'masa_pengukuran' => 'pengukuran awal'
-            ], [
-                'is_draft' => 0,
-                'is_waiting' => 1,
-                'is_approved' => 0,
-                'is_rejected' => 0,
-            ]);
+    //         Dies::updateOrCreate([
+    //             'dies_id' => session('dies_id'),
+    //             'masa_pengukuran' => 'pengukuran awal'
+    //         ], [
+    //             'is_draft' => 0,
+    //             'is_waiting' => 1,
+    //             'is_approved' => 0,
+    //             'is_rejected' => 0,
+    //         ]);
 
-            $this->sendToApproval('dies');
-        }
+    //         $this->sendToApproval('dies');
+    //     }
 
-    }
+    // }
 
     private function sendToApproval($jenis)
     {

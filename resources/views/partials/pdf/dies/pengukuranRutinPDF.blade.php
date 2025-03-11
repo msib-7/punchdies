@@ -6,30 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('assets/logo/logo_only.png') }}" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            font-size: 9;
             margin: 0;
-            padding: 20px;
+            /* padding: 20px; */
             background: #f9f9f9;
         }
 
         .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin: 10px 0;
+            color: #333;
         }
 
         h3 {
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0;
             color: #333;
         }
 
@@ -37,13 +40,13 @@
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
         }
 
         th, td {
             border: 1px solid #ddd;
-            padding: 15px;
+            padding: 20px;
             text-align: left;
         }
 
@@ -71,7 +74,7 @@
             border-top: 1px solid #ddd;
         }
         .table-header{
-            font-size: small;
+            font-size: 35px;
         }
 
         @media print {
@@ -157,6 +160,7 @@
                 </tbody>
             </table>
             @if (!$loop->last)
+            <div class="footer"></div>
                 @pageBreak
             </div>
         </div>
@@ -182,10 +186,10 @@
                         <tr>
                             <th>Kode/Nama Produk</th>
                             <td>
-                                <?php if(strtoupper($labelDies->nama_produk) == strtoupper($labelDies->kode_produk)) {?>
-                                    {{ strtoupper($labelDies->nama_produk) }}
+                                <?php if(strtoupper($labelDies->nama_produks->title) == strtoupper($labelDies->kode_produks->title)) {?>
+                                    {{ strtoupper($labelDies->nama_produks->title)}}
                                 <?php } else {?>
-                                    {{ strtoupper($labelDies-> nama_produk) . "/" . strtoupper($labelDies->kode_produk) }}
+                                    {{ strtoupper($labelDies->nama_produks->title)."/".strtoupper($labelDies->kode_produks->title)}}
                                 <?php }?>
                             </td>
                         </tr>
@@ -300,14 +304,30 @@
     </div>
 
     <div class="footer">
-        <span id="print-date"></span>
     </div>
 
     <script src="/assets/plugins/global/plugins.bundle.js"></script>
     <script src="/assets/js/scripts.bundle.js"></script>
-    <script>
-        // Set the print date
-        document.getElementById('print-date').innerText = 'Printed on: ' + new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    <script type="text/php">
+        if (isset($pdf)) { 
+            // Shows number center-bottom of A4 page with $x,$y values
+            $x = 500;  // X-axis i.e. vertical position 
+            $y = 810; // Y-axis horizontal position
+            $text = "Page {PAGE_NUM} of {PAGE_COUNT}";  // Format of display message
+            $font =  $fontMetrics->get_font("Inter", "bold");
+            $size = 10;
+            $color = array(0,0,0);
+            $word_space = 0.0;  // Default
+            $char_space = 0.0;  // Default
+            $angle = 0.0;   // Default
+            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
+
+            // Shows print date center-bottom of A4 page with $x,$y values
+            $x = 40;  // X-axis i.e. vertical position 
+            $y = 810; // Y-axis horizontal position
+            $printDate = "Printed on: " . date('d M Y H:i:s');  // Format of display message
+            $pdf->page_text($x, $y, $printDate, $font, $size, $color, $word_space, $char_space, $angle);
+        }
     </script>
 </body>
 </html>

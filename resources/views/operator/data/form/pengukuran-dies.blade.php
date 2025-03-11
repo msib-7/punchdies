@@ -1,9 +1,36 @@
 @extends('layout.metronic')
 @section('main-content')
 <style>
-    .table td {
-        width: 20%; /* Adjust this value based on the number of columns */
-        text-align: center; /* Center align text */
+    /* Custom styles for the table */
+    #form_table {
+        width: 100%;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    #form_table thead {
+        background-color: #074282; /* Bootstrap primary color */
+        color: white;
+    }
+
+    #form_table th, #form_table td {
+        padding: 10px 10px; /* Increased padding for better spacing */
+        text-align: center;
+    }
+
+    #form_table tbody tr {
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    #form_table tbody tr:hover {
+        background-color: #f1f1f1; /* Light gray background on hover */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        #form_table th, #form_table td {
+            font-size: 12px; /* Smaller font size on small screens */
+        }
     }
 </style>
 <!--begin::Content-->
@@ -198,13 +225,13 @@
                                             <div class="table-responsive">
                                                 <table id="form_table" class="table display" style="width:100%">
                                                     <thead id="table_head">
-                                                        <tr class="fw-bold fs-7 text-gray-800">
-                                                            <td class="text-center">No</td>
-                                                            <td class="text-center">Cincin Tidak Berbayang</td>
-                                                            <td class="text-center">Tidak Gompal</td>
-                                                            <td class="text-center">Tidak Retak</td>
-                                                            <td class="text-center">Tidak Pecah</td>
-                                                            <td class="text-center"></td>
+                                                        <tr class="fw-semibold fs-6 border-bottom border-gray-200">
+                                                            <td class="min-width-responsive text-center text-white align-center">No</td>
+                                                            <td class="min-width-responsive text-center text-white align-center">Cincin Tidak Berbayang</td>
+                                                            <td class="min-width-responsive text-center text-white align-center">Tidak Gompal</td>
+                                                            <td class="min-width-responsive text-center text-white align-center">Tidak Retak</td>
+                                                            <td class="min-width-responsive text-center text-white align-center">Tidak Pecah</td>
+                                                            <td class="min-width-responsive text-center text-white align-center"></td>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="table_body">
@@ -481,16 +508,18 @@
             var tr = document.createElement('tr');
 
             var td = tr.appendChild(document.createElement('td'));
-            var x = td.appendChild(document.createElement('INPUT'));
-            x.setAttribute("class", "form-control text-center mb-2");
-            x.setAttribute("type", "text");
-            x.setAttribute("readonly", "readonly");
-            x.setAttribute("value", "Punch <?= $ch++?>");
+            var x = td.appendChild(document.createElement('INPUT')); // Create a new input
+                x.setAttribute("class", "form-control text-center");
+                x.setAttribute("type", "button");
+                x.setAttribute("style", "cursor: pointer; font-size: 16px; font-weight: bold; border: none; background: transparent;");
+                x.setAttribute("value", "Dies <?= $ch++?>");
+                x.setAttribute("readonly", "readonly");
 
             //Cincin Berbayang
             var td = tr.appendChild(document.createElement('td'));
             var select = td.appendChild(document.createElement('select'));
-            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('class', 'form-select text-center');
+            select.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
             select.setAttribute('id', 'select_ok');
             select.setAttribute('name', 'icb[]');
             // Define options
@@ -511,7 +540,8 @@
             //Tidak Gompal
             var td = tr.appendChild(document.createElement('td'));
             var select = td.appendChild(document.createElement('select'));
-            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('class', 'form-select text-center');
+            select.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
             select.setAttribute('id', 'select_ok');
             select.setAttribute('name', 'igp[]');
 
@@ -534,7 +564,8 @@
             //Tidak Retak
             var td = tr.appendChild(document.createElement('td'));
             var select = td.appendChild(document.createElement('select'));
-            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('class', 'form-select text-center');
+            select.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
             select.setAttribute('id', 'select_ok');
             select.setAttribute('name', 'irt[]');
 
@@ -557,7 +588,8 @@
             //Tidak Pecah
             var td = tr.appendChild(document.createElement('td'));
             var select = td.appendChild(document.createElement('select'));
-            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('class', 'form-select text-center');
+            select.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
             select.setAttribute('id', 'select_ok');
             select.setAttribute('name', 'ipc[]');
 

@@ -1,69 +1,36 @@
 @extends('layout.metronic')
 @section('main-content')
 <style>
-    @media (max-width: 576px) { /* Bootstrap's sm breakpoint */
-        .min-width-responsive {
-            min-width: 150px;
-        }
-    }
-
-    @media (min-width: 576px) and (max-width: 768px) { /* Bootstrap's md breakpoint */
-        .min-width-responsive {
-            min-width: 130px;
-        }
-    }
-
-    /* Style for odd rows */
-    #form_table tbody tr:nth-child(odd) {
-        background-color: gainsboro; /* Darker gray for odd rows */
-        border-radius: 10px; /* Adjust the value as needed for rounding */
-    }
-
-    /* Style for even rows */
-    #form_table tbody tr:nth-child(even) {
-        background-color: whitesmoke; /* Light gray for even rows */
-        border-radius: 10px; /* Adjust the value as needed for rounding */
-    }
-
-    /* To ensure the rounded corners are visible, you may need to add this */
-    #form_table tbody tr {
-        overflow: hidden; /* Prevents overflow of rounded corners */
-    }
-
-    /* Style for the DataTable */
+    /* Custom styles for the table */
     #form_table {
-        border-collapse: separate; /* Ensure borders are separate for rounded corners */
-        border-radius: 10px; /* Adjust the value for desired roundness */
-        overflow: hidden; /* Prevent overflow of rounded corners */
+        width: 100%;
+        border-radius: 5px;
+        overflow: hidden;
     }
 
-    /* Style for the table header */
     #form_table thead {
-        background-color: burlywood; /* Change this to your desired header background color */
-        color: white; /* Change this to your desired text color */
+        background-color: #074282; /* Bootstrap primary color */
+        color: white;
     }
 
-    /* Style for the table cells */
     #form_table th, #form_table td {
-        border: 1px solid #dee2e6; /* Add border to cells */
-        border-radius: 0; /* Reset border-radius for cells */
+        padding: 10px 10px; /* Increased padding for better spacing */
+        text-align: center;
     }
 
-    /* Optional: Add rounded corners to the first and last cells of the header and body */
-    #form_table thead th:first-child {
-        border-top-left-radius: 10px; /* Top left corner */
+    #form_table tbody tr {
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
     }
 
-    #form_table thead th:last-child {
-        border-top-right-radius: 10px; /* Top right corner */
+    #form_table tbody tr:hover {
+        background-color: #f1f1f1; /* Light gray background on hover */
     }
 
-    #form_table tbody tr:last-child td:first-child {
-        border-bottom-left-radius: 10px; /* Bottom left corner */
-    }
-
-    #form_table tbody tr:last-child td:last-child {
-        border-bottom-right-radius: 10px; /* Bottom right corner */
+    /* Responsive adjustments */
+    @media (max-width: 576px) {
+        #form_table th, #form_table td {
+            font-size: 12px; /* Smaller font size on small screens */
+        }
     }
 </style>
 <!--begin::Content-->
@@ -256,16 +223,16 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                <table id="form_table" class="display" style="width:100%">
-                                                    <thead id="table_head">
-                                                        <tr>
-                                                            <th class="min-width-responsive text-center">No</th>
-                                                            <th class="min-width-responsive text-center">L. Outer Diameter</th>
-                                                            <th class="min-width-responsive text-center">M. Inner Diameter 1</th>
-                                                            <th class="min-width-responsive text-center">N. Inner Diameter 2</th>
-                                                            <th class="min-width-responsive text-center">O. Ketinggian Dies</th>
-                                                            <th class="min-width-responsive text-center">Visual</th>
-                                                            <th class="min-width-responsive text-center">Kesesuaian Dies</th>
+                                                <table id="form_table" class="display row-border">
+                                                    <thead>
+                                                        <tr class="fw-semibold fs-6 border-bottom border-gray-200">
+                                                            <th class="min-width-responsive text-center text-white align-center">No</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">L. Outer Diameter</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">M. Inner Diameter 1</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">N. Inner Diameter 2</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">O. Ketinggian Dies</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">Visual</th>
+                                                            <th class="min-width-responsive text-center text-white align-center">Kesesuaian Dies</th>
                                                             <th class="text-center"></th>
                                                         </tr>
                                                     </thead>
@@ -460,55 +427,65 @@
             
             var tr = document.createElement('tr');
             var td = tr.appendChild(document.createElement('td'));
-            var x = td.appendChild(document.createElement('INPUT'));
-            x.setAttribute("class", "form-control text-center mb-2");
-            x.setAttribute("type", "text");
-            x.setAttribute("readonly", "readonly");
-            x.setAttribute("value", "Dies <?= $ch++?>");
+            var x = td.appendChild(document.createElement('INPUT')); // Create a new input
+                x.setAttribute("class", "form-control text-center");
+                x.setAttribute("type", "button");
+                x.setAttribute("style", "cursor: pointer; font-size: 16px; font-weight: bold; border: none; background: transparent;");
+                x.setAttribute("value", "Dies <?= $ch++?>");
+                x.setAttribute("readonly", "readonly");
 
             var td = tr.appendChild(document.createElement('td'));
             var x = td.appendChild(document.createElement('INPUT'));
             x.setAttribute("type", "text");
             x.setAttribute("data-index", "<?= $no ?>");
-            x.setAttribute("class", "inputs form-control text-center mb-2");
+            x.setAttribute("class", "inputs form-control text-center");
             x.setAttribute("maxlength", "{{ $form_setting->outer_diameter }}");
             x.setAttribute("name", "otd[]");
-            x.setAttribute("placeholder", "00.00");
+            x.setAttribute("style", "cursor: pointer;");
+            x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+            x.setAttribute("autocomplete", "off");
             x.setAttribute("value", "<?= $draftPengukuran[$no]['outer_diameter']; ?>");
             
             var td = tr.appendChild(document.createElement('td'));
             var x = td.appendChild(document.createElement('INPUT'));
             x.setAttribute("type", "text");
             x.setAttribute("data-index", "<?= $no ?>");
-            x.setAttribute("class", "inputs form-control text-center mb-2");
+            x.setAttribute("class", "inputs form-control text-center");
             x.setAttribute("maxlength", "{{ $form_setting->inner_diameter_1 }}");
             x.setAttribute("name", "inn1[]");
-            x.setAttribute("placeholder", "00.00");
+            x.setAttribute("style", "cursor: pointer;");
+            x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+            x.setAttribute("autocomplete", "off");
             x.setAttribute("value", "<?= $draftPengukuran[$no]['inner_diameter_1']; ?>");
             
             var td = tr.appendChild(document.createElement('td'));
             var x = td.appendChild(document.createElement('INPUT'));
             x.setAttribute("type", "text");
             x.setAttribute("data-index", "<?= $no ?>");
-            x.setAttribute("class", "inputs form-control text-center mb-2");
+            x.setAttribute("class", "inputs form-control text-center");
             x.setAttribute("maxlength", "{{ $form_setting->inner_diameter_2 }}");
             x.setAttribute("name", "inn2[]");
-            x.setAttribute("placeholder", "00.00");
+            x.setAttribute("style", "cursor: pointer;");
+            x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+            x.setAttribute("autocomplete", "off");
             x.setAttribute("value", "<?= $draftPengukuran[$no]['inner_diameter_2']; ?>");
             
             var td = tr.appendChild(document.createElement('td'));
             var x = td.appendChild(document.createElement('INPUT'));
             x.setAttribute("type", "text");
             x.setAttribute("data-index", "<?= $no ?>");
-            x.setAttribute("class", "inputs form-control text-center mb-2");
+            x.setAttribute("class", "inputs form-control text-center");
             x.setAttribute("maxlength", "{{ $form_setting->ketinggian_dies }}");
             x.setAttribute("name", "ktd[]");
-            x.setAttribute("placeholder", "00.00");
+            x.setAttribute("style", "cursor: pointer;");
+            x.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
+            x.setAttribute("autocomplete", "off");
             x.setAttribute("value", "<?= $draftPengukuran[$no]['ketinggian_dies']; ?>");
             
             var td = tr.appendChild(document.createElement('td'));
             var select = td.appendChild(document.createElement('select'));
-            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('class', 'form-select text-center');
+            select.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
             select.setAttribute('id', 'select_ok');
             select.setAttribute('name', 'vis[]');
             select.setAttribute("value", "<?= $draftPengukuran[$no]['visual']; ?>");
@@ -527,7 +504,8 @@
             
             var td = tr.appendChild(document.createElement('td'));
             var select = td.appendChild(document.createElement('select'));
-            select.setAttribute('class', 'form-select text-center mb-2');
+            select.setAttribute('class', 'form-select text-center');
+            select.setAttribute("style", "background-color: #eaeaea; cursor: pointer;box-shadow: inset 0px 0px 7px 1px rgba(0, 0, 0, 0.1);");
             select.setAttribute('id', 'select_ok');
             select.setAttribute('name', 'ksd[]');
             select.setAttribute("value", "<?= $draftPengukuran[$no]['kesesuaian_dies']; ?>");
