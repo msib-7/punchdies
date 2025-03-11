@@ -24,13 +24,13 @@ use App\Services\Rumus\GetRumusPengukuranAwalDies;
 use App\Services\Rumus\GetRumusPengukuranAwalPunch;
 use App\Services\Rumus\GetRumusPengukuranRutinDies;
 use App\Services\Rumus\GetRumusPengukuranRutinPunch;
-// use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Constraint\IsNull;
 use Spatie\Browsershot\Browsershot;
-use Spatie\LaravelPdf\Facades\Pdf;
+// use Spatie\LaravelPdf\Facades\Pdf;
 
 class PengukuranController extends Controller
 {
@@ -2046,20 +2046,22 @@ class PengukuranController extends Controller
 
                 $data['title'] = 'Pengukuran Awal '. $jenis. ' ' . $LabelPunch->merk;
 
-                return Pdf::view('partials.pdf.punch.pengukuranAwalPDF', $data)
-                    ->format('A4')
-                    ->withBrowsershot(function (Browsershot $browsershot) {
-                        $browsershot->newHeadless()
-                            ->timeout(60000)
-                            ->scale(0.6); // Increase timeout to 60 seconds
-                    });
+                $pdf = PDF::loadView('partials.pdf.punch.pengukuranAwalPDF', $data)->set_option('isPhpEnabled', true);
+                return $pdf->stream('Pengukuran Awal '. $jenis. ' ' . $LabelPunch->merk . '.pdf');
+                // return Pdf::view('partials.pdf.punch.pengukuranAwalPDF', $data)
+                //     ->format('A4')
+                //     ->withBrowsershot(function (Browsershot $browsershot) {
+                //         $browsershot->newHeadless()
+                //             ->timeout(60000)
+                //             ->scale(0.6); // Increase timeout to 60 seconds
+                //     });
 
             } elseif ($request->segment(2) == 'pengukuran-rutin') {
                 $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
                     ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
                     ->where('punchs.punch_id', $id)
                     ->where('pengukuran_rutin_punchs.masa_pengukuran', session('masa_pengukuran_view'))
-                    ->orderBy('punchs.created_at', 'desc')
+                    ->latest('punchs')
                     ->first();
                 $data['labelPunch'] = $LabelPunch;
 
@@ -2075,6 +2077,8 @@ class PengukuranController extends Controller
                     ->latest()
                     ->first();
                 $data['approvalInfo'] = $approvalData;
+
+                dd($approvalData);
 
                 if ($request->segment(3) == 'punch-atas') {
                     $jenis = 'Punch Atas';

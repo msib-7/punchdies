@@ -6,22 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('assets/logo/logo_only.png') }}" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
 
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            font-size: 10;
             margin: 0;
-            padding: 20px;
+            /* padding: 20px; */
             background: #f9f9f9;
         }
 
         .container {
-            max-width: 1200px;
             margin: auto;
-            padding: 20px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -29,7 +27,7 @@
 
         h3 {
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0;
             color: #333;
         }
 
@@ -71,7 +69,7 @@
             border-top: 1px solid #ddd;
         }
         .table-header{
-            font-size: small;
+            font-size: 30px;
         }
 
         @media print {
@@ -138,7 +136,7 @@
 
         <div class="section">
             <?php $no = 1; ?>
-            @foreach (array_chunk($dataPengukuran->toArray(), 26) as $chunk)
+            @foreach (array_chunk($dataPengukuran->toArray(), 25) as $chunk)
             <table class="{{ !$loop->last ? 'new-page' : '' }}">
                 <thead>
                     <tr>
@@ -173,6 +171,7 @@
                 </tbody>
             </table>
             @if (!$loop->last)
+            <div class="footer"></div>
                 @pageBreak
             </div>
         </div>
@@ -215,15 +214,15 @@
             <table>
                 <tbody>
                     <tr>
-                        <td>Referensi Drawing</td>
+                        <th><b>Referensi Drawing</b></th>
                         <td>{{ $labelPunch->referensi_drawing }}</td>
                     </tr>
                     <tr>
-                        <td>Catatan</td>
+                        <th><b>Catatan</b></th>
                         <td>{{ $labelPunch->catatan }}</td>
                     </tr>
                     <tr>
-                        <td>Kesimpulan</td>
+                        <th><b>Kesimpulan</b></th>
                         <td>{{ $labelPunch->kesimpulan }}</td>
                     </tr>
                 </tbody>
@@ -316,14 +315,34 @@
     </div>
 
     <div class="footer">
-        <span id="print-date"></span>
     </div>
 
     <script src="/assets/plugins/global/plugins.bundle.js"></script>
     <script src="/assets/js/scripts.bundle.js"></script>
-    <script>
+    {{-- <script>
         // Set the print date
         document.getElementById('print-date').innerText = 'Printed on: ' + new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    </script> --}}
+    <script type="text/php">
+        if (isset($pdf)) { 
+            // Shows number center-bottom of A4 page with $x,$y values
+            $x = 500;  // X-axis i.e. vertical position 
+            $y = 810; // Y-axis horizontal position
+            $text = "Page {PAGE_NUM} of {PAGE_COUNT}";  // Format of display message
+            $font =  $fontMetrics->get_font("Inter", "bold");
+            $size = 10;
+            $color = array(0,0,0);
+            $word_space = 0.0;  // Default
+            $char_space = 0.0;  // Default
+            $angle = 0.0;   // Default
+            $pdf->page_text($x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle);
+
+            // Shows print date center-bottom of A4 page with $x,$y values
+            $x = 40;  // X-axis i.e. vertical position 
+            $y = 810; // Y-axis horizontal position
+            $printDate = "Printed on: " . date('d M Y H:i:s');  // Format of display message
+            $pdf->page_text($x, $y, $printDate, $font, $size, $color, $word_space, $char_space, $angle);
+        }
     </script>
 </body>
 </html>

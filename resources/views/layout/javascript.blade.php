@@ -5,13 +5,6 @@
             responsive: true,
             paging: false,
             info: false,
-            columnDefs:[
-                {
-                    searchable: true,  
-                    target: 9,
-                    visible: false,
-                }
-            ],
         });
         $('#dboard_Table1').DataTable({
             layout: {

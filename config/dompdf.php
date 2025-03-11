@@ -152,7 +152,7 @@ return [
          * the desired content might be different (e.g. screen or projection view of html file).
          * Therefore allow specification of content here.
          */
-        'default_media_type' => 'screen',
+        'default_media_type' => 'all',
 
         /**
          * The default paper size.
@@ -179,7 +179,7 @@ return [
          *
          * @var string
          */
-        'default_font' => 'serif',
+        'default_font' => 'sans-serif',
 
         /**
          * Image DPI setting
@@ -214,7 +214,7 @@ return [
          *
          * @var int
          */
-        'dpi' => 96,
+        'dpi' => 300,
 
         /**
          * Enable embedded PHP
@@ -233,7 +233,7 @@ return [
          *
          * @var bool
          */
-        'enable_php' => false,
+        'enable_php' => true,
 
         /**
          * Rnable inline JavaScript
@@ -267,7 +267,7 @@ return [
          *
          * @var bool
          */
-        'enable_remote' => false,
+        'enable_remote' => true,
 
         /**
          * List of allowed remote hosts
@@ -286,7 +286,7 @@ return [
         /**
          * A ratio applied to the fonts height to be more like browsers' line height
          */
-        'font_height_ratio' => 1.1,
+        'font_height_ratio' => 1.2,
 
         /**
          * Use the HTML5 Lib parser
