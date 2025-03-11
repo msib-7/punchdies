@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            font-size: 10;
+            font-size: 12;
             margin: 0;
             /* padding: 20px; */
             background: #f9f9f9;
@@ -192,10 +192,10 @@
                         <tr>
                             <th>Kode/Nama Produk</th>
                             <td>
-                                <?php if(strtoupper($labelPunch->nama_produk) == strtoupper($labelPunch->kode_produk)) {?>
-                                    {{ strtoupper($labelPunch->nama_produk) }}
+                                <?php if(strtoupper($labelPunch->nama_produks->title) == strtoupper($labelPunch->kode_produks->title)) {?>
+                                    {{ strtoupper($labelPunch->nama_produks->title) }}
                                 <?php } else {?>
-                                    {{ strtoupper($labelPunch-> nama_produk) . "/" . strtoupper($labelPunch->kode_produk) }}
+                                    {{ strtoupper($labelPunch->nama_produks->title) . "/" . strtoupper($labelPunch->kode_produks->title) }}
                                 <?php }?>
                             </td>
                         </tr>
