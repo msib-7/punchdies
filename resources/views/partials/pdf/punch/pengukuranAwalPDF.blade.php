@@ -291,14 +291,18 @@
                                     </p>
                                 </td>
                                 <td class="text-center">
-                                    {{ $approvalInfo->by }}
-                                    <p>
-                                        @if ($approvalInfo->at == null)
-                                            -
-                                        @else
-                                            {{ date_format(new DateTime($approvalInfo->at), 'd M Y') }}
-                                        @endif
-                                    </p>
+                                    @if ($approvalInfo == null)
+                                        -
+                                    @else
+                                        {{ $approvalInfo->by }}
+                                        <p>
+                                            @if ($approvalInfo->at == null)
+                                                -
+                                            @else
+                                                {{ date_format(new DateTime($approvalInfo->at), 'd M Y') }}
+                                            @endif
+                                        </p>
+                                    @endif
                                 </td>
                                 <td class="text-center">
                                     @if ($labelPunch->is_approved == '1')
@@ -332,7 +336,7 @@
         if (isset($pdf)) { 
             // Shows number center-bottom of A4 page with $x,$y values
             $x = 500;  // X-axis i.e. vertical position 
-            $y = 810; // Y-axis horizontal position
+            $y = 805; // Y-axis horizontal position
             $text = "Page {PAGE_NUM} of {PAGE_COUNT}";  // Format of display message
             $font =  $fontMetrics->get_font("Inter", "bold");
             $size = 10;
@@ -344,9 +348,18 @@
 
             // Shows print date center-bottom of A4 page with $x,$y values
             $x = 40;  // X-axis i.e. vertical position 
-            $y = 810; // Y-axis horizontal position
+            $y = 805; // Y-axis horizontal position
             $printDate = "Printed on: " . date('d M Y H:i:s');  // Format of display message
             $pdf->page_text($x, $y, $printDate, $font, $size, $color, $word_space, $char_space, $angle);
+
+            
+
+            
+            // Shows print id
+            $x = 40;  // X-axis i.e. vertical position 
+            $y = 815; // Y-axis horizontal position
+            $printID = "Print ID: " . "{{ $labelPunch->id }}";  
+            $pdf->page_text($x, $y, $printID, $font, $size, $color, $word_space, $char_space, $angle);
         }
     </script>
 </body>
