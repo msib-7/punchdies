@@ -156,7 +156,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 <!--end::Input group=-->
                                 <!--begin::Submit button-->
                                 <div class="d-grid mt-8">
-                                    <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+                                    <button type="submit" id="kt_sign_in_submit" class="btn btn-primary bg-primary bg-gradient">
                                         <span class="indicator-label">Log in Accout</span>
                                     </button>
                                 </div>

@@ -61,19 +61,19 @@
                                             <td>{{$item->tgl_submit}}</td>
                                             @if ($item->is_approved == '1' and $item->is_rejected == '0')
                                                 <td class="text-center">
-                                                    <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold">
+                                                    <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold bg-gradient">
                                                         Approved
                                                     </button>
                                                 </td>
                                             @elseif ($item->is_approved == '0' and $item->is_rejected == '1')
                                                 <td class="text-center">
-                                                    <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold">
+                                                    <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold bg-gradient">
                                                         Rejected
                                                     </button>
                                                 </td>
                                             @else
                                                 <td class="text-center">
-                                                    <button class="btn btn-warning btn-sm w-100 fs-5 fw-semibold">
+                                                    <button class="btn btn-warning btn-sm w-100 fs-5 fw-semibold bg-gradient">
                                                         Waiting
                                                     </button>
                                                 </td>
@@ -82,7 +82,7 @@
                                             <td>{{$item->at}}</td>
                                             <td class="text-center">
                                                 <a href="{{route('pnd.approval.histori.show-detail-pengukuran', $item->req_id)}}">
-                                                    <button class="btn btn-secondary btn-sm fw-bold">
+                                                    <button class="btn btn-secondary btn-sm fw-bold bg-gradient">
                                                         <i class="lab la-sistrix fs-2"></i>
                                                         open
                                                     </button>
@@ -151,25 +151,25 @@
                                                 </td>
                                             @elseif ($item->is_approved == '1' && $item->is_rejected == '0' && $item->is_waiting == '0' && $item->is_revisi == '0')
                                                 <td>
-                                                    <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold">
+                                                    <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold bg-gradient">
                                                         Approved
                                                     </button>
                                                 </td>
                                             @elseif ($item->is_approved == '0' && $item->is_rejected == '1' && $item->is_waiting == '0' && $item->is_revisi == '0')
                                                 <td>
-                                                    <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold">
+                                                    <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold bg-gradient">
                                                         Rejected
                                                     </button>
                                                 </td>
                                             @elseif ($item->is_approved == '0' && $item->is_rejected == '0' && $item->is_waiting == '1' && $item->is_revisi == '0')
                                                 <td>    
-                                                    <button class="btn btn-warning btn-sm w-100 fs-5 fw-semibold">
+                                                    <button class="btn btn-warning btn-sm w-100 fs-5 fw-semibold bg-gradient">
                                                         Waiting
                                                     </button>
                                                 </td>
                                             @elseif ($item->is_approved == '0' && $item->is_rejected == '0' && $item->is_waiting == '0' && $item->is_revisi == '1')
                                                 <td>
-                                                    <button class="btn btn-info btn-sm w-100 fs-5 fw-semibold">
+                                                    <button class="btn btn-info btn-sm w-100 fs-5 fw-semibold bg-gradient">
                                                         Revisi
                                                     </button>
                                                 </td>

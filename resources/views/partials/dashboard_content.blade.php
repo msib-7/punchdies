@@ -67,7 +67,7 @@
         <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="fs-2 fw-bold btn btn-secondary">Draft</span>
+                    <span class="fs-2 fw-bold btn btn-secondary bg-gradient">Draft</span>
                 </span>
             </div>
             <div class="d-flex flex-column mt-10">
@@ -103,7 +103,7 @@
         <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="fs-2 fw-bold btn btn-warning">Waiting Approval</span>
+                    <span class="fs-2 fw-bold btn btn-warning bg-gradient">Waiting Approval</span>
                 </span>
             </div>
             <div class="d-flex flex-column mt-10">
@@ -139,7 +139,7 @@
         <div class="card-body">
             <div class="m-0">
                 <span class="fw-semibold fs-3">
-                    <span class="fs-2 fw-bold btn btn-success">Approved</span>
+                    <span class="fs-2 fw-bold btn btn-success bg-gradient">Approved</span>
                 </span>
             </div>
             <div class="d-flex flex-column mt-10">
