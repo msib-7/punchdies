@@ -35,6 +35,8 @@ class ServiceDraftPengukuranAwal
             return 'punch-atas';
         } elseif ($route == 'bawah') {
             return 'punch-bawah';
+        } elseif ($route == 'dies') {
+            return 'dies';
         }
     }
 
@@ -109,8 +111,10 @@ class ServiceDraftPengukuranAwal
 
                         return redirect(route('pnd.pa.' . $this->getRoute($route) . '.index'))->with($alert, $msg);
                     } else {
-                        $alert = 'success';
-                        $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval';
+                        $status = $getData->first();
+
+                        $alert = 'success2';
+                        $msg = 'Pengukuran Awal Selesai Dilakukan! Data Dikirim ke Approval.<br/>Status Pengukuran: '. $status->status;
                         $prefix = 'RPU';
                         $punchId = session('punch_id');
                         $diesId = null;
@@ -476,7 +480,7 @@ class ServiceDraftPengukuranAwal
             Log::error('Error added create Approval : ' . $th->getMessage());
         }
 
-        return redirect(route('pnd.pa.' . $jenis . '.index'))->with($alert, $msg);
+        return redirect(route('pnd.pa.' . $jenis . '.view', $idView))->with($alert, $msg);
     }
 
     // private function createApprovalRequest($model, $prefix, $punchId, $diesId, $jenis)

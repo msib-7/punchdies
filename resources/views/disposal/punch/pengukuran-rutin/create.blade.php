@@ -271,10 +271,10 @@
                                                                             </td>
                                                                             <td style="border: none;"
                                                                                 class="fs-6 px-5 my-4">
-                                                                                @if(strtoupper($labelPunch->nama_produk) == strtoupper($labelPunch->kode_produk))
-                                                                                    {{ strtoupper($labelPunch->nama_produk)}}
+                                                                                @if(strtoupper($labelPunch->nama_produks->title) == strtoupper($labelPunch->kode_produks->title))
+                                                                                    {{ strtoupper($labelPunch->nama_produks->title)}}
                                                                                 @else
-                                                                                    {{ strtoupper($labelPunch->nama_produk)."/".strtoupper($labelPunch->kode_produk)}}
+                                                                                    {{ strtoupper($labelPunch->nama_produks->title)."/".strtoupper($labelPunch->kode_produks->title)}}
                                                                                 @endif
                                                                             </td>
                                                                         </tr>

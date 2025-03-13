@@ -216,23 +216,39 @@ class ApprovalController extends Controller
                 $data['req_id'] = $req_id;
                 $data['jenis'] = 'punch';
                 $data['mp'] = $mp;
+                $data['approvalInfo'] = $dataRequest;
 
                 return view('qa.form.detail-pengukuran', $data);
             } elseif ($dataRequest->dies_id != null) {
                 $id = $dataRequest->dies_id;
-                $labelIdentitas = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
-                    ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
-                    ->where('diess.dies_id', $id)->first();
-                $dataPengukuran = PengukuranAwalDies::where('dies_id', $id)->get();
-                $tglPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
+                if($dataRequest->masa_pengukuran == 'pengukuran awal'){
+                    $labelIdentitas = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
+                        ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
+                        ->where('diess.dies_id', $id)->first();
+                    $dataPengukuran = PengukuranAwalDies::where('dies_id', $id)->get();
+                    $tglPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
+                    $mp = 'awal';
+                } else {
+                    $labelIdentitas = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
+                        ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
+                        ->where('diess.dies_id', $id)
+                        ->where('diess.masa_pengukuran', $dataRequest->masa_pengukuran)
+                        ->latest('diess')
+                        ->first();
+                    $dataPengukuran = PengukuranRutinDies::where('dies_id', $id)->get();
+                    $tglPengukuran = PengukuranRutinDies::where('dies_id', '=', $id)->first();
+                    $mp = 'rutin';
+                }
 
                 $checkStatus = ApprovalPengukuran::where(['req_id' => $req_id])->first();
-                if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-') {
+                if ($checkStatus->is_approved == '-' and $checkStatus->is_rejected == '-' || $checkStatus->is_approved == '0' && $checkStatus->is_rejected == '0') {
                     $status = '<span class="badge badge-square badge-outline badge-light-warning fs-4">Waiting For Approval</span>';
                 } elseif ($checkStatus->is_approved == '1' and $checkStatus->is_rejected == '0') {
                     $status = "<span class='badge badge-light-success fs-3'>Approved</span>";
                 } elseif ($checkStatus->is_approved == '0' and $checkStatus->is_rejected == '1') {
                     $status = "<span class='badge badge-light-danger fs-3'>Rejected</span>";
+                } else {
+                    $status = '<span class="badge badge-square badge-outline badge-light-secondary fs-4">Belum diTinjau</span>';
                 }
 
                 $data['labelIdentitas'] = $labelIdentitas;
@@ -241,6 +257,7 @@ class ApprovalController extends Controller
                 $data['statusPengukuran'] = $status;
                 $data['req_id'] = $req_id;
                 $data['jenis'] = 'dies';
+                $data['mp'] = $mp;
 
                 return view('qa.form.detail-pengukuran', $data);
             }

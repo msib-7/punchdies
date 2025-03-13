@@ -180,8 +180,22 @@
                                                             </a>
                                                         </div>
                                                         @endif
+                                                        <?php
+                                                            $at = $approvalInfo->at ? new DateTime($approvalInfo->at) : null;
+                                                        ?>
                                                         @if ($segment == 'history')
-                                                            <?= $statusPengukuran ?>
+                                                            <div class="row text-center">
+                                                                <div class="col-12 mb-4">
+                                                                    <?= $statusPengukuran ?>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <span class="badge badge-secondary fs-6 mb-2">{{ $approvalInfo->by }}</span>
+                                                                    <br>
+                                                                    <span class="badge badge-secondary fs-6">{{ $at ? date_format($at, 'd M Y') : '' }}</span>
+                                                                    {{-- <span class="badge badge-secondary">by: </span>
+                                                                    <span class="text-dark">{{ $approvalInfo->by }}</span> --}}
+                                                                </div>
+                                                            </div>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -258,20 +272,26 @@
                                             <table class="table table-bordered" style="width:100%">
                                                 <thead>
                                                     <tr>
+                                                        @if ($mp == 'awal')
                                                         <th class="text-center">No Dies</th>
-                                                        <th class="text-center">Outer Diameter</th>
-                                                        <th class="text-center">Inner Diameter 1</th>
-                                                        <th class="text-center">Inner Diameter 2</th>
-                                                        <th class="text-center">Ketinggian Dies</th>
+                                                        <th class="text-center">L. Outer Diameter</th>
+                                                        <th class="text-center">M. Inner Diameter 1</th>
+                                                        <th class="text-center">N. Inner Diameter 2</th>
+                                                        <th class="text-center">O. Ketinggian Dies</th>
                                                         <th class="text-center">Visual</th>
                                                         <th class="text-center">Kesesuaian Dies</th>
                                                         <th class="text-center">Status</th>
+                                                        @elseif($mp == 'rutin')
+                                                        <th class="text-center">No Dies</th>
+                                                        <th class="text-center">Visual Dies/Segment Dies</th>
+                                                        @endif
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php $no = 1; ?>
                                                     @foreach ($dataPengukuran as $item)
                                                         <tr>
+                                                            @if ($mp == 'awal')
                                                             <td class="text-center">{{ $no++ }}</td>
                                                             <td class="text-center">{{ $item->outer_diameter }}</td>
                                                             <td class="text-center">{{ $item->inner_diameter_1 }}</td>
@@ -280,6 +300,10 @@
                                                             <td class="text-center">{{ $item->visual }}</td>
                                                             <td class="text-center">{{ $item->kesesuaian_dies }}</td>
                                                             <td class="text-center">{{ $item->status }}</td>
+                                                            @elseif ($mp == 'rutin')
+                                                            <td class="text-center">{{ $no++ }}</td>
+                                                            <td class="text-center">{{ $item->visual_dies }}</td>
+                                                            @endif
                                                         </tr>
                                                     @endforeach
                                                 </tbody>

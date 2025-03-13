@@ -259,6 +259,7 @@ class PengukuranController extends Controller
                     $LabelPunch = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
                         ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
                         ->where('punchs.punch_id', $id)
+                        ->where('punchs.masa_pengukuran', $pengukuran)
                         ->first();
                     $data['labelPunch'] = $LabelPunch;
                 } else {
@@ -345,11 +346,24 @@ class PengukuranController extends Controller
                 return redirect(route('pnd.pa.dies.show-form'))->with('error', 'Data Pengukuran Punch ini telah di Reject, Silahkan Periksa Kembali Data Pengukuran!');
             }else{
                 // session()->remove('count');
-                $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
-                                        ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
-                                        ->where('diess.dies_id', $id)
-                                        ->first();
-                $data['labelDies'] = $LabelDies;
+                $pengukuran = session('masa_pengukuran_view');
+                if($pengukuran == 'pengukuran awal'){
+                    $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
+                        ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
+                        ->where('diess.dies_id', $id)
+                        ->where('diess.masa_pengukuran', $pengukuran)
+                        ->latest('diess')
+                        ->first();
+                    $data['labelDies'] = $LabelDies;
+                }else{
+                    $LabelDies = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
+                        ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
+                        ->where('diess.dies_id', $id)
+                        ->where('diess.masa_pengukuran', $pengukuran)
+                        ->latest('diess')
+                        ->first();
+                    $data['labelDies'] = $LabelDies;
+                }
 
                 $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
                 $data['tglPengukuran'] = $dataPengukuran;
@@ -1117,7 +1131,8 @@ class PengukuranController extends Controller
                     $LabelPunch = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
                         ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
                         ->where('punchs.punch_id', $id)
-                        ->orderBy('punchs.created_at', 'desc')
+                        ->where('punchs.masa_pengukuran', $pengukuran)
+                        ->latest('punchs')
                         ->first();
                     $data['labelPunch'] = $LabelPunch;
                 }else{
@@ -1125,7 +1140,7 @@ class PengukuranController extends Controller
                         ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
                         ->where('punchs.punch_id', $id)
                         ->where('pengukuran_rutin_punchs.masa_pengukuran', session('masa_pengukuran_view'))
-                        ->orderBy('punchs.created_at', 'desc')
+                        ->latest('punchs')
                         ->first();
                     $data['labelPunch'] = $LabelPunch;
                 }

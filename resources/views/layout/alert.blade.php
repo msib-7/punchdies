@@ -14,6 +14,22 @@
 </script>
 @endif
 
+@if (Session::get('success2'))
+<script type="text/javascript">
+    $(document).ready(function () {
+        Swal.fire({
+            html: `<?= Session::get('success2') ?>`,
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+                confirmButton: "btn btn-primary"
+            }
+        });
+    });
+</script>
+@endif
+
 @if (Session::get('error'))
 <script type="text/javascript">
     $(document).ready(function () {
