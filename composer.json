@@ -10,6 +10,7 @@
         "its404/php-puppeteer": "^0.1.1",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "mike42/escpos-php": "^4.0",
         "spatie/laravel-pdf": "^1.5"
     },
     "require-dev": {

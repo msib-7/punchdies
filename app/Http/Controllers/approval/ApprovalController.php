@@ -209,6 +209,22 @@ class ApprovalController extends Controller
                     $status = '<span class="badge badge-square badge-outline badge-light-secondary fs-4">Belum diTinjau</span>';
                 }
 
+                if($labelIdentitas->jenis == 'punch-atas'){
+                    $route = 'atas';
+                }elseif($labelIdentitas->jenis == 'punch-bawah'){
+                    $route = 'bawah';
+                }elseif($labelIdentitas->jenis == 'dies'){
+                    $route = 'dies';
+                }
+
+                if ($dataRequest->masa_pengukuran == 'pengukuran awal') {
+                    $masaPengukuran = 'pa';
+                } else {
+                    $masaPengukuran = 'pr';
+                }
+
+                $data['masaPengukuran'] = $masaPengukuran;
+                $data['route'] = $route;
                 $data['labelIdentitas'] = $labelIdentitas;
                 $data['dataPengukuran'] = $dataPengukuran;
                 $data['tglPengukuran'] = $tglPengukuran;
@@ -251,6 +267,22 @@ class ApprovalController extends Controller
                     $status = '<span class="badge badge-square badge-outline badge-light-secondary fs-4">Belum diTinjau</span>';
                 }
 
+                if ($labelIdentitas->jenis == 'punch-atas') {
+                    $route = 'atas';
+                } elseif ($labelIdentitas->jenis == 'punch-bawah') {
+                    $route = 'bawah';
+                } elseif( $labelIdentitas->jenis == 'dies'){
+                    $route = 'dies';
+                }
+
+                if($dataRequest->masa_pengukuran == 'pengukuran awal'){
+                    $masaPengukuran = 'pa';
+                }else{
+                    $masaPengukuran = 'pr';
+                }
+
+                $data['masaPengukuran'] = $masaPengukuran;
+                $data['route'] = $route;
                 $data['labelIdentitas'] = $labelIdentitas;
                 $data['dataPengukuran'] = $dataPengukuran;
                 $data['tglPengukuran'] = $tglPengukuran;

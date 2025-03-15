@@ -13,6 +13,17 @@
             </i>
             Bantuan
         </button>
+
+        <a href="{{route('pnd.'.$masaPengukuran.'.'.$route.'.print', request()->segment(5))}}" class="app-engage-btn hover-dark" id="print_engage">
+            <i class="ki-duotone ki-printer fs-1 pt-1 mb-2">
+            <span class="path1"></span>
+            <span class="path2"></span>
+            <span class="path3"></span>
+            <span class="path4"></span>
+            <span class="path5"></span>
+            </i>
+            Print/PDF
+        </a>
 	</div>
 	<!--end::Engage-->
     <!--begin::Content container-->

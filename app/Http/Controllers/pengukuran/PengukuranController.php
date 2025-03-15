@@ -27,9 +27,14 @@ use App\Services\Rumus\GetRumusPengukuranRutinPunch;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use DB;
+use Exception;
 use Illuminate\Http\Request;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
 use PHPUnit\Framework\Constraint\IsNull;
 use Spatie\Browsershot\Browsershot;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 // use Spatie\LaravelPdf\Facades\Pdf;
 
 class PengukuranController extends Controller
@@ -2026,10 +2031,25 @@ class PengukuranController extends Controller
 
     public function print(Request $request, $id)
     {
+        $punch = Punch::where('punch_id',$id)->first();
+        $dies = Dies::where('dies_id',$id)->first();
+
+        if (!$punch && !$dies) {
+            $approval = ApprovalPengukuran::where('req_id', $id)->first();
+            if (!$approval) {
+                return response()->json(['error' => 'Data not found'], 404);
+            }
+            $id = $approval->punch_id;
+            $LabelPunch = Punch::leftJoin('pengukuran_awal_punchs', 'punchs.punch_id', '=', 'pengukuran_awal_punchs.punch_id')
+                ->leftJoin('users', 'pengukuran_awal_punchs.user_id', '=', 'users.id')
+                ->where('punchs.punch_id', $id)
+                ->first();
+
+            session()->put('masa_pengukuran_view', $LabelPunch->masa_pengukuran);
+        }
         if ($request->segment(3) == 'punch-atas' or $request->segment(3) == 'punch-bawah') {
             $checkStatus = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view'), 'is_draft' => '1'])->count();
             $status = $checkStatus != 0 ? "<span class='badge badge-light-warning fs-3'>Draft</span>" : '';
-
             $data['statusPengukuran'] = $status;
 
             if ($request->segment(2) == 'pengukuran-awal') {
@@ -2038,6 +2058,7 @@ class PengukuranController extends Controller
                     ->where('punchs.punch_id', $id)
                     ->first();
                 $data['labelPunch'] = $LabelPunch;
+
 
                 $dataPengukuran = PengukuranAwalPunch::where('punch_id', '=', $id)->first();
                 $data['tglPengukuran'] = $dataPengukuran;
@@ -2063,13 +2084,24 @@ class PengukuranController extends Controller
 
                 $pdf = PDF::loadView('partials.pdf.punch.pengukuranAwalPDF', $data)->set_option('isPhpEnabled', true);
                 return $pdf->stream('Pengukuran Awal '. $jenis. ' ' . $LabelPunch->merk . '.pdf');
-                // return Pdf::view('partials.pdf.punch.pengukuranAwalPDF', $data)
-                //     ->format('A4')
-                //     ->withBrowsershot(function (Browsershot $browsershot) {
-                //         $browsershot->newHeadless()
-                //             ->timeout(60000)
-                //             ->scale(0.6); // Increase timeout to 60 seconds
-                //     });
+                // $pdfPath = storage_path('app/public/Pengukuran_Awal_' . $jenis . '.pdf');
+                // $pdf->save($pdfPath);
+
+                
+                
+                // // Send to USB printer
+                // try {
+                //     $connector = new WindowsPrintConnector("EPSON L1300 Series");
+                //     $printer = new Printer($connector);
+                //     $printer->graphics(file_get_contents($pdfPath)); // Print the content
+                //     $printer->cut();
+                //     $printer->close();
+                // } catch (Exception $e) {
+                //     return response()->json(['error' => $e->getMessage()]);
+                // }
+                
+                // return back()->with('success', 'PDF sent to printer successfully.');
+                // // return response()->json(['message' => 'PDF sent to printer successfully.']);
 
             } elseif ($request->segment(2) == 'pengukuran-rutin') {
                 $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
