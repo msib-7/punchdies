@@ -75,8 +75,8 @@ class ApprovalController extends Controller
             ->where('is_rejected','!=', '-')
             ->orderBy('req_id', 'desc')
             ->get();
-        $dataPunch = Punch::where('is_delete_punch', '0')->get();
-        $dataDies = Dies::where('is_delete_dies', '0')->get();
+        $dataPunch = Punch::get();
+        $dataDies = Dies::get();
 
         $data['dataApprPengukuran'] = $dataApprPengukuran;
         $data['dataApprDisposal'] = $dataApprDisposal;

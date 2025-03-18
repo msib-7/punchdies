@@ -35,59 +35,60 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $no=1 ?>
+                                        <?php $no = 1; ?>
                                         @foreach ($dataApprPengukuran as $item)
                                         <tr>
                                             <td>{{$no++}}</td>
-                                            @if ($item->punch_id != null)
-                                                @foreach ($dataPunch as $punch)
-                                                    @if ($item->punch_id == $punch->punch_id && $item->masa_pengukuran == $punch->masa_pengukuran)
-                                                        <td>{{$punch->merk}}</td>
-                                                        <td>{{$punch->jenis}}</td>
-                                                        @break
+
+                                            @php
+                                                $itemData = null;
+                                                $merk = '';
+                                                $jenis = '';
+
+                                                if ($item->punch_id != null) {
+                                                    $itemData = $dataPunch;
+                                                } elseif ($item->dies_id != null) {
+                                                    $itemData = $dataDies;
+                                                }
+
+                                                if ($itemData) {
+                                                    foreach ($itemData as $data) {
+                                                        if (($item->punch_id && $item->punch_id == $data->punch_id) || 
+                                                            ($item->dies_id && $item->dies_id == $data->dies_id)) {
+                                                            if ($item->masa_pengukuran == $data->masa_pengukuran) {
+                                                                $merk = $data->merk;
+                                                                $jenis = $data->jenis;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            @endphp
+
+                                            @if ($itemData)
+                                                <td>{{$merk}}</td>
+                                                <td>{{$jenis}}</td>
+                                                <td>{{$item->nama}}</td>
+                                                <td>{{$item->tgl_submit}}</td>
+                                                <td class="text-center">
+                                                    @if ($item->is_approved == '1' && $item->is_rejected == '0')
+                                                        <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold bg-gradient">Approved</button>
+                                                    @elseif ($item->is_approved == '0' && $item->is_rejected == '1')
+                                                        <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold bg-gradient">Rejected</button>
+                                                    @else
+                                                        <button class="btn btn-warning btn-sm w-100 fs-5 fw-semibold bg-gradient">Waiting</button>
                                                     @endif
-                                                @endforeach
-                                            @endif
-                                            @if ($item->dies_id != null)
-                                                @foreach ($dataDies as $dies)
-                                                    @if ($item->dies_id == $dies->dies_id && $item->masa_pengukuran == $dies->masa_pengukuran)
-                                                        <td>{{$dies->merk}}</td>
-                                                        <td>{{$dies->jenis}}</td>
-                                                        @break
-                                                    @endif
-                                                @endforeach
-                                            @endif
-                                            <td>{{$item->nama}}</td>
-                                            <td>{{$item->tgl_submit}}</td>
-                                            @if ($item->is_approved == '1' and $item->is_rejected == '0')
-                                                <td class="text-center">
-                                                    <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold bg-gradient">
-                                                        Approved
-                                                    </button>
                                                 </td>
-                                            @elseif ($item->is_approved == '0' and $item->is_rejected == '1')
+                                                <td>{{$item->by}}</td>
+                                                <td>{{$item->at}}</td>
                                                 <td class="text-center">
-                                                    <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold bg-gradient">
-                                                        Rejected
-                                                    </button>
-                                                </td>
-                                            @else
-                                                <td class="text-center">
-                                                    <button class="btn btn-warning btn-sm w-100 fs-5 fw-semibold bg-gradient">
-                                                        Waiting
-                                                    </button>
+                                                    <a href="{{route('pnd.approval.histori.show-detail-pengukuran', $item->req_id)}}">
+                                                        <button class="btn btn-secondary btn-sm fw-bold bg-gradient">
+                                                            <i class="lab la-sistrix fs-2"></i> open
+                                                        </button>
+                                                    </a>
                                                 </td>
                                             @endif
-                                            <td>{{$item->by}}</td>
-                                            <td>{{$item->at}}</td>
-                                            <td class="text-center">
-                                                <a href="{{route('pnd.approval.histori.show-detail-pengukuran', $item->req_id)}}">
-                                                    <button class="btn btn-secondary btn-sm fw-bold bg-gradient">
-                                                        <i class="lab la-sistrix fs-2"></i>
-                                                        open
-                                                    </button>
-                                                </a>
-                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>

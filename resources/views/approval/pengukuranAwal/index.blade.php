@@ -20,7 +20,7 @@
                                             <span>Waiting List:</span>
                                         </div>
                                         <div class="fs-2 fw-bold">
-                                            <span>{{count($approval)}}</span>
+                                            <span>{{ $approval->count() }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -42,52 +42,85 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $no=1;?>
+                                        <?php $no = 1; ?>
                                         @foreach ($approval as $item)
-                                        <tr>
-                                            <td>{{$no++}}</td>
-                                            <td>{{$item->req_id}}</td>
-                                            @if ($item->punch_id != null)
-                                                @foreach ($dataPunch as $punch)
-                                                    @if ($item->punch_id == $punch->punch_id && $item->masa_pengukuran == $punch->masa_pengukuran)
-                                                        <td>{{$punch->merk}}</td>
-                                                        <td>{{$punch->jenis}}</td>
-                                                        <td>{{$punch->masa_pengukuran}}</td>
-                                                    @endif
-                                                @endforeach
-                                            @endif
-                                            @if ($item->dies_id != null)
-                                                @foreach ($dataDies as $dies)
-                                                    @if ($item->dies_id == $dies->dies_id && $item->masa_pengukuran == $dies->masa_pengukuran)
-                                                        <td>{{$dies->merk}}</td>
-                                                        <td>{{$dies->jenis}}</td>
-                                                        <td>{{$dies->masa_pengukuran}}</td>
-                                                    @endif
-                                                @endforeach
-                                            @endif
-                                            <td>{{$item->tgl_submit}}</td>
-                                            <td>{{$item->users->nama}}</td>
-                                            <td>{{$item->users->lines->nama_line}}</td>
-                                            <td>{{$item->due_date}}</td>
-                                            <td class="text-center">
-                                                @if ($item->is_approved == '1' && $item->is_rejected == '0')
-                                                    <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold">
-                                                        Approved
-                                                    </button>
-                                                @elseif ($item->is_rejected == '1' && $item->is_approved == '0')
-                                                    <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold">
-                                                        Rejected
-                                                    </button>
-                                                @else
-                                                    <a href="{{route('pnd.approval.pa.show', $item->id)}}">
-                                                        <button class="btn btn-sm btn-primary">
-                                                            <i class="las la-search fs-2"></i>
-                                                            Open
-                                                        </button>
-                                                    </a>
+                                            <?php
+                                            // Initialize flags to check if there are valid punches and dies
+                                            $hasValidPunch = false;
+                                            $hasValidDies = false;
+
+                                            // Check if there are valid punches
+                                            if ($item->punch_id != null) {
+                                                foreach ($dataPunch as $punch) {
+                                                    if ($item->punch_id == $punch->punch_id && $item->masa_pengukuran == $punch->masa_pengukuran && $punch->is_delete_punch != 1) {
+                                                        $hasValidPunch = true; // Found a valid punch
+                                                        break; // No need to check further
+                                                    }
+                                                }
+                                            }
+
+                                            // Check if there are valid dies
+                                            if ($item->dies_id != null) {
+                                                foreach ($dataDies as $dies) {
+                                                    if ($item->dies_id == $dies->dies_id && $item->masa_pengukuran == $dies->masa_pengukuran && $dies->is_delete_dies != 1) {
+                                                        $hasValidDies = true; // Found a valid die
+                                                        break; // No need to check further
+                                                    }
+                                                }
+                                            }
+
+                                            // If there are no valid punches and no valid dies, skip this item
+                                            if (!$hasValidPunch && !$hasValidDies) {
+                                                continue; // Skip to the next iteration of the foreach loop
+                                            }
+                                            ?>
+                                            <tr>
+                                                <td>{{ $no++ }}</td>
+                                                <td>{{ $item->req_id }}</td>
+                                                
+                                                @if ($hasValidPunch)
+                                                    @foreach ($dataPunch as $punch)
+                                                        @if ($item->punch_id == $punch->punch_id && $item->masa_pengukuran == $punch->masa_pengukuran)
+                                                            <td>{{ $punch->merk }}</td>
+                                                            <td>{{ $punch->jenis }}</td>
+                                                            <td>{{ $punch->masa_pengukuran }}</td>
+                                                        @endif
+                                                    @endforeach
                                                 @endif
-                                            </td>
-                                        </tr>
+
+                                                @if ($hasValidDies)
+                                                    @foreach ($dataDies as $dies)
+                                                        @if ($item->dies_id == $dies->dies_id && $item->masa_pengukuran == $dies->masa_pengukuran)
+                                                            <td>{{ $dies->merk }}</td>
+                                                            <td>{{ $dies->jenis }}</td>
+                                                            <td>{{ $dies->masa_pengukuran }}</td>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+
+                                                <td>{{ $item->tgl_submit }}</td>
+                                                <td>{{ $item->users->nama }}</td>
+                                                <td>{{ $item->users->lines->nama_line }}</td>
+                                                <td>{{ $item->due_date }}</td>
+                                                <td class="text-center">
+                                                    @if ($item->is_approved == '1' && $item->is_rejected == '0')
+                                                        <button class="btn btn-success btn-sm w-100 fs-5 fw-semibold">
+                                                            Approved
+                                                        </button>
+                                                    @elseif ($item->is_rejected == '1' && $item->is_approved == '0')
+                                                        <button class="btn btn-danger btn-sm w-100 fs-5 fw-semibold">
+                                                            Rejected
+                                                        </button>
+                                                    @else
+                                                        <a href="{{ route('pnd.approval.pa.show', $item->id) }}">
+                                                            <button class="btn btn-sm btn-primary">
+                                                                <i class="las la-search fs-2"></i>
+                                                                Open
+                                                            </button>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>

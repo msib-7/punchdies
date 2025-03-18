@@ -210,14 +210,14 @@
                                                 <thead>
                                                     <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
                                                         <th class="text-center">No Punch</th>
-                                                        <th class="text-center">Head Outer Diamter</th>
-                                                        <th class="text-center">Neck Diameter</th>
-                                                        <th class="text-center">Barrel</th>
-                                                        <th class="text-center">Overall Length</th>
-                                                        <th class="text-center">Tip Diameter 1</th>
-                                                        <th class="text-center">Tip Diameter 2</th>
-                                                        <th class="text-center">Cup Depth</th>
-                                                        <th class="text-center">Working Length</th>
+                                                        <th class="text-center">A. Head Outer Diamter</th>
+                                                        <th class="text-center">E. Neck Diameter</th>
+                                                        <th class="text-center">F. Barrel</th>
+                                                        <th class="text-center">G. Overall Length</th>
+                                                        <th class="text-center">I. Tip Diameter 1</th>
+                                                        <th class="text-center">J. Tip Diameter 2</th>
+                                                        <th class="text-center">K. Cup Depth</th>
+                                                        <th class="text-center">L. Working Length</th>
                                                         <th class="text-center">Status</th>
                                                     </tr>
                                                 </thead>

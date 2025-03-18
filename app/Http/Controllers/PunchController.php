@@ -9,6 +9,7 @@ use App\Models\NamaProduk;
 use App\Models\PengukuranAwalPunch;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
+use App\Services\LogService;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -449,6 +450,10 @@ class PunchController extends Controller
 
     public function delete_data(Request $request, $id)
     {
+        $ip = request()->ip();
+        $user = auth()->user(); // Get the authenticated user
+        $punch = Punch::where('punch_id', $id)->first();
+
         if ($request->segment(3) == 'punch-atas') {
             $route = 'atas';
         } elseif ($request->segment(3) == 'punch-bawah') {
@@ -456,20 +461,84 @@ class PunchController extends Controller
         }
         $delPunch = [
             'is_delete_punch' => '1',
+            'is_draft' => '0',
+            'is_waiting' => '0',
+            'is_edit' => '0',
+            'is_approved' => '0',
+            'is_rejected' => '0',
+            'is_disposal' => '0',
         ];
         $delPengukuran = [
             'is_delete_pp' => '1',
         ];
 
-        Punch::where(['punch_id' => $id])->update($delPunch);
+        // Punch::where(['punch_id' => $id])->update($delPunch);
+        Punch::updateOrCreate(['punch_id' => $id], $delPunch);
 
         PengukuranAwalPunch::where(['punch_id' => $id])->update($delPengukuran);
         PengukuranRutinPunch::where(['punch_id' => $id])->update($delPengukuran);
 
+        $oldData = [
+            'punch_id' => $punch->punch_id,
+            'merk' => $punch->merk,
+            'bulan_pembuatan' => $punch->bulan_pembuatan,
+            'tahun_pembuatan' => $punch->tahun_pembuatan,
+            'nama_mesin_cetak' => $punch->nama_mesin_cetak,
+            'nama_produk' => $punch->nama_produk,
+            'kode_produk' => $punch->kode_produk,
+            'line_id' => $punch->line_id,
+            'jenis' => $punch->jenis,
+            'masa_pengukuran' => $punch->masa_pengukuran,
+            'catatan' => $punch->catatan,
+            'kesimpulan' => $punch->kesimpulan,
+            'is_draft' => $punch->is_draft,
+            'is_delete_punch' => $punch->is_delete_punch,
+            'is_edit' => $punch->is_edit,
+            'is_approved' => $punch->is_approved,
+            'is_rejected' => $punch->is_rejected,
+            'is_disposal' => $punch->is_disposal,
+            'next_pengukuran' => $punch->next_pengukuran,
+        ];
+        $newData = [
+            'punch_id' => $punch->punch_id,
+            'merk' => $punch->merk,
+            'bulan_pembuatan' => $punch->bulan_pembuatan,
+            'tahun_pembuatan' => $punch->tahun_pembuatan,
+            'nama_mesin_cetak' => $punch->nama_mesin_cetak,
+            'nama_produk' => $punch->nama_produk,
+            'kode_produk' => $punch->kode_produk,
+            'line_id' => $punch->line_id,
+            'jenis' => $punch->jenis,
+            'masa_pengukuran' => $punch->masa_pengukuran,
+            'catatan' => $punch->catatan,
+            'kesimpulan' => $punch->kesimpulan,
+            'is_draft' => '0',
+            'is_delete_punch' => '1',
+            'is_edit' => '0',
+            'is_approved' => '0',
+            'is_rejected' => '0',
+            'is_disposal' => '0',
+            'next_pengukuran' => $punch->next_pengukuran,
+        ];
+
+        $logData = [
+            'model' => Punch::class,
+            'model_id' => null,
+            'user_id' => $user->id,
+            'action' => 'deleted',
+            'location' => $ip,
+            'reason' => 'Data Removal',
+            'how' => 'User Action',
+            'timestamp' => now(),
+            'old_data' => $oldData,
+            'new_data' => $newData,
+        ];
+        (new LogService)->handle($logData);
+
         if($request->segment(2) == 'pengukuran-rutin'){
-            return redirect(route('pnd.pr.'.$route.'.index'));
+            return redirect(route('pnd.pr.'.$route.'.index'))->with('success', 'Data berhasil dihapus');
         }elseif($request->segment(2) != 'pengukuran-rutin'){
-            return redirect(route('pnd.pa.' . $route . '.index'));
+            return redirect(route('pnd.pa.' . $route . '.index'))->with('success', 'Data berhasil dihapus');
         }
 
     }

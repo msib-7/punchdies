@@ -256,6 +256,9 @@ Route::post('user/clear-notifications', [NotificationController::class, 'clear']
 
 Route::post('pnd/update-produk', [PengukuranController::class, 'updateProduk']);
 
+//
+Route::get('getAuditTrail', [AuditController::class, 'getAuditTrail']);
+
 
 //dev send otp
 Route::post('dev/otp', [DeveloperController::class, 'otp']);

@@ -15,14 +15,38 @@ use Illuminate\Support\Facades\Mail;
 
 class ApprovalPengukuranAwalController extends Controller
 {
-    public function index(){
-        $approval = ApprovalPengukuran::with('users')
-                                        ->where('masa_pengukuran', 'pengukuran awal')
-                                        ->where('is_approved', '!=', '1')
-                                        ->where('is_rejected', '!=', '1')
-                                        ->get();
-        $dataPunch = Punch::all();
-        $dataDies = Dies::all();
+    public function index()
+    {
+        // Get all punches that are not deleted
+        $validPunchIds = Punch::where('is_delete_punch', '!=', 1)->pluck('punch_id')->toArray();
+        $validDiesIds = Dies::where('is_delete_dies', '!=', 1)->pluck('dies_id')->toArray();
+
+        // Get approvals that have valid punches
+        $approval1 = ApprovalPengukuran::with('users')
+            ->where('masa_pengukuran', 'pengukuran awal')
+            ->where('is_approved', '!=', '1')
+            ->where('is_rejected', '!=', '1')
+            ->whereIn('punch_id', $validPunchIds) // Filter by valid punch IDs
+            ->latest()
+            ->get();
+
+        // Get approvals that have valid dies
+        $approval2 = ApprovalPengukuran::with('users')
+            ->where('masa_pengukuran', 'pengukuran awal')
+            ->where('is_approved', '!=', '1')
+            ->where('is_rejected', '!=', '1')
+            ->whereIn('dies_id', $validDiesIds) // Filter by valid dies IDs
+            ->latest()
+            ->get();
+
+        // Merge the two approval collections
+        $approval = $approval1->merge($approval2);
+
+        // Get only valid dies
+        $dataDies = Dies::where('is_delete_dies', '!=', 1)->get();
+
+        // Get all punches
+        $dataPunch = Punch::where('is_delete_punch', '!=', 1)->get(); // Ensure this line is included to define $dataPunch
 
         return view('approval.pengukuranAwal.index', compact('approval', 'dataPunch', 'dataDies'));
     }

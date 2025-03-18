@@ -218,10 +218,10 @@
                                                 <thead>
                                                     <tr>
                                                         <th class="text-center">No Punch</th>
-                                                        <th class="text-center">Overall Length</th>
-                                                        <th class="text-center">Working Length <b>(AWAL)</b></th>
-                                                        <th class="text-center">Working Length <b>(RUTIN)</b></th>
-                                                        <th class="text-center">Cup Depth</th>
+                                                        <th class="text-center">G. Overall Length</th>
+                                                        <th class="text-center">L. Working Length <b>(AWAL)</b></th>
+                                                        <th class="text-center">L. Working Length <b>(RUTIN)</b></th>
+                                                        <th class="text-center">K. Cup Depth</th>
                                                         <th class="text-center">Head Configuration</th>
                                                         <th class="text-center">Status</th>
                                                     </tr>

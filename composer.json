@@ -11,7 +11,8 @@
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "mike42/escpos-php": "^4.0",
-        "spatie/laravel-pdf": "^1.5"
+        "spatie/laravel-pdf": "^1.5",
+        "yajra/laravel-datatables-oracle": "^11.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -20,108 +20,152 @@ class AuthController extends Controller
     }
 
     public function login_auth(Request $request)
-{
-    $username = htmlspecialchars($request->username);
-    $password = htmlspecialchars($request->password);
-    $ip = request()->ip();
+    {
+        $username = htmlspecialchars($request->username);
+        $password = htmlspecialchars($request->password);
+        $ip = request()->ip();
 
-    $request->validate([
-        'username' => 'required',
-        'password' => 'required'
-    ], [
-        'username.required' => 'Username field is required!',
-        'password.required' => 'Password field is required',
-    ]);
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ], [
+            'username.required' => 'Username field is required!',
+            'password.required' => 'Password field is required',
+        ]);
 
-    $infoLogin = [
-        'username' => $username,
-        'password' => $password
-    ];
-
-    $users = User::where('username', $username)->first();
-
-    if (empty($users)) {
-        // Log untuk username tidak ditemukan
-        $logData = [
-            'model' => null,
-            'model_id' => null,
-            'user_id' => null,
-            'action' => 'Login Auth',
-            'location' => $ip,
-            'reason' => 'User Tidak Terdaftar ' . $username,
-            'how' => 'Login',
-            'timestamp' => now(),
-            'old_data' => $infoLogin,
-            'new_data' => null,
+        $infoLogin = [
+            'username' => $username,
+            'password' => $password
         ];
-        (new LogService)->handle($logData);
 
-        return response()->json(['error' => 'User tidak terdaftar'], 401);
-    }
+        $users = User::where('username', $username)->first();
 
-    if (Auth::attempt($infoLogin)) {
-
-        if (stripos($users->roles->role_name, 'Administrator') !== false) {
-            // Abaikan next update password untuk Administrator
-            $users->update(['failed_attempts' => 0, 'is_blocked' => false, 'next_update_password' => '0000-00-00 00:00:00']);
-
-            $last_login = [
-            'last_login_at' => date('Y-m-d H:i:s'),
-            ];
-            User::where('username', $username)->update($last_login);
-
-            $newData = Auth::user();
+        if (empty($users)) {
+            // Log untuk username tidak ditemukan
             $logData = [
-            'model' => null,
-            'model_id' => null,
-            'user_id' => $newData->id,
-            'action' => 'Login Auth',
-            'location' => $ip,
-            'reason' => 'Berhasil Login ' . $newData->nama,
-            'how' => 'Login',
-            'timestamp' => now(),
-            'old_data' => $infoLogin,
-            'new_data' => $newData,
+                'model' => null,
+                'model_id' => null,
+                'user_id' => null,
+                'action' => 'Login Auth',
+                'location' => $ip,
+                'reason' => 'User Tidak Terdaftar ' . $username,
+                'how' => 'Login',
+                'timestamp' => now(),
+                'old_data' => $infoLogin,
+                'new_data' => null,
             ];
             (new LogService)->handle($logData);
 
-            $user = User::where('username', '=', $username)->first();
-            $line = Lines::where(['id' => $user->line_id])->first();
-            $dataUser = [
-            'user_id' => $user->id,
-            'line_user' => $line->nama_line,
-            'nama_user' => $user->nama,
-            'email_user' => $user->email,
-            ];
-            session()->put($infoLogin);
-            session()->put($dataUser);
-
-            return response()->json(['success' => true, 'message' => 'Login berhasil'], 200);
+            return response()->json(['error' => 'User tidak terdaftar'], 401);
         }
 
-        // Periksa apakah akun diblokir
-        if ($users->is_blocked) {
-            return response()->json(['error' => 'Akun Anda diblokir. Silakan hubungi administrator.'], 403);
-        }
+        if (Auth::attempt($infoLogin)) {
 
-        $nextUpdatePassword = Carbon::parse(Auth::user()->next_update_password);
-        $daysUntilNextUpdate = $nextUpdatePassword->diffInDays(now());
+            if (stripos($users->roles->role_name, 'Administrator') !== false) {
+                // Abaikan next update password untuk Administrator
+                $users->update(['failed_attempts' => 0, 'is_blocked' => false, 'next_update_password' => '0000-00-00 00:00:00']);
 
-        // Convert to absolute value and round up to the nearest whole number
-        $daysUntilNextUpdate = ceil(abs($daysUntilNextUpdate));
+                $last_login = [
+                'last_login_at' => date('Y-m-d H:i:s'),
+                ];
+                User::where('username', $username)->update($last_login);
 
-        if (now()->greaterThan($nextUpdatePassword)) {
-            // Blokir akun jika sudah melewati tanggal pembaruan
-            Auth::user()->update(['is_blocked' => true]);
-            return response()->json(['error' => 'Akun Anda telah diblokir karena tidak memperbarui password. Silahkan hubungi admin!'], 403);
-        } elseif ($daysUntilNextUpdate < 7) {
-            // Buat NOtifikasi Ke Pengirim
-            event(new NotificationEvent(
-                auth()->user()->id,
-                'Password Reminder!',
-                'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. Kadaluarsa Setelah: ' . $daysUntilNextUpdate . ' hari.',
-                null,
-            ));
+                $newData = Auth::user();
+                $logData = [
+                'model' => null,
+                'model_id' => null,
+                'user_id' => $newData->id,
+                'action' => 'Login Auth',
+                'location' => $ip,
+                'reason' => 'Berhasil Login ' . $newData->nama,
+                'how' => 'Login',
+                'timestamp' => now(),
+                'old_data' => $infoLogin,
+                'new_data' => $newData,
+                ];
+                (new LogService)->handle($logData);
+
+                $user = User::where('username', '=', $username)->first();
+                $line = Lines::where(['id' => $user->line_id])->first();
+                $dataUser = [
+                'user_id' => $user->id,
+                'line_user' => $line->nama_line,
+                'nama_user' => $user->nama,
+                'email_user' => $user->email,
+                ];
+                session()->put($infoLogin);
+                session()->put($dataUser);
+
+                return response()->json(['success' => true, 'message' => 'Login berhasil'], 200);
+            }
+
+            // Periksa apakah akun diblokir
+            if ($users->is_blocked) {
+                return response()->json(['error' => 'Akun Anda diblokir. Silakan hubungi administrator.'], 403);
+            }
+
+            $nextUpdatePassword = Carbon::parse(Auth::user()->next_update_password);
+            $daysUntilNextUpdate = $nextUpdatePassword->diffInDays(now());
+
+            // Convert to absolute value and round up to the nearest whole number
+            $daysUntilNextUpdate = ceil(abs($daysUntilNextUpdate));
+
+            if (now()->greaterThan($nextUpdatePassword)) {
+                // Blokir akun jika sudah melewati tanggal pembaruan
+                Auth::user()->update(['is_blocked' => true]);
+                return response()->json(['error' => 'Akun Anda telah diblokir karena tidak memperbarui password. Silahkan hubungi admin!'], 403);
+            } elseif ($daysUntilNextUpdate < 7) {
+                // Buat NOtifikasi Ke Pengirim
+                event(new NotificationEvent(
+                    auth()->user()->id,
+                    'Password Reminder!',
+                    'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. Kadaluarsa Setelah: ' . $daysUntilNextUpdate . ' hari.',
+                    null,
+                ));
+
+                // Reset failed_attempts setelah login berhasil
+                $users->update(['failed_attempts' => 0]);
+
+                $last_login = [
+                    'last_login_at' => date('Y-m-d H:i:s'),
+                ];
+                User::where('username', $username)->update($last_login);
+
+                $newData = Auth::user();
+                $logData = [
+                    'model' => null,
+                    'model_id' => null,
+                    'user_id' => $newData->id,
+                    'action' => 'Login Auth',
+                    'location' => $ip,
+                    'reason' => 'Berhasil Login ' . $newData->nama,
+                    'how' => 'Login',
+                    'timestamp' => now(),
+                    'old_data' => $infoLogin,
+                    'new_data' => $newData,
+                ];
+                (new LogService)->handle($logData);
+
+                $user = User::where('username', '=', $username)->first();
+                $line = Lines::where(['id' => $user->line_id])->first();
+                $dataUser = [
+                    'user_id' => $user->id,
+                    'line_user' => $line->nama_line,
+                    'nama_user' => $user->nama,
+                    'email_user' => $user->email,
+                ];
+                session()->put($infoLogin);
+                session()->put($dataUser);
+
+                // Kirim pengingat jika kurang dari 7 hari
+                return response()->json([
+                    'reminder' => true,
+                    'success' => true,
+                    'message' => 'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. lihat detail pada notifikasi'
+                ], 200);
+
+            }
+
 
             // Reset failed_attempts setelah login berhasil
             $users->update(['failed_attempts' => 0]);
@@ -157,65 +201,39 @@ class AuthController extends Controller
             session()->put($infoLogin);
             session()->put($dataUser);
 
-            // Kirim pengingat jika kurang dari 7 hari
-            return response()->json([
-                'reminder' => true,
-                'success' => true,
-                'message' => 'Password Anda akan kedaluwarsa dalam kurang dari 7 hari. Silakan perbarui segera. lihat detail pada notifikasi'
-            ], 200);
+        } else {
+            // Login gagal: Password salah
+            $users->increment('failed_attempts');
 
-        }
+            // Jika gagal 3 kali, blokir akun
+            if ($users->failed_attempts >= 3) {
+                $users->update(['is_blocked' => true]);
 
+                $logData = [
+                    'model' => null,
+                    'model_id' => null,
+                    'user_id' => $users->id,
+                    'action' => 'Account Blocked',
+                    'location' => $ip,
+                    'reason' => 'Akun diblokir setelah 3 kali gagal login',
+                    'how' => 'Login',
+                    'timestamp' => now(),
+                    'old_data' => $infoLogin,
+                    'new_data' => null,
+                ];
+                (new LogService)->handle($logData);
 
-        // Reset failed_attempts setelah login berhasil
-        $users->update(['failed_attempts' => 0]);
+                return response()->json(['error' => 'Akun Anda telah diblokir karena terlalu banyak percobaan login yang gagal.'], 403);
+            }
 
-        $last_login = [
-            'last_login_at' => date('Y-m-d H:i:s'),
-        ];
-        User::where('username', $username)->update($last_login);
-
-        $newData = Auth::user();
-        $logData = [
-            'model' => null,
-            'model_id' => null,
-            'user_id' => $newData->id,
-            'action' => 'Login Auth',
-            'location' => $ip,
-            'reason' => 'Berhasil Login ' . $newData->nama,
-            'how' => 'Login',
-            'timestamp' => now(),
-            'old_data' => $infoLogin,
-            'new_data' => $newData,
-        ];
-        (new LogService)->handle($logData);
-
-        $user = User::where('username', '=', $username)->first();
-        $line = Lines::where(['id' => $user->line_id])->first();
-        $dataUser = [
-            'user_id' => $user->id,
-            'line_user' => $line->nama_line,
-            'nama_user' => $user->nama,
-            'email_user' => $user->email,
-        ];
-        session()->put($infoLogin);
-        session()->put($dataUser);
-
-    } else {
-        // Login gagal: Password salah
-        $users->increment('failed_attempts');
-
-        // Jika gagal 3 kali, blokir akun
-        if ($users->failed_attempts >= 3) {
-            $users->update(['is_blocked' => true]);
-
+            // Log untuk password salah
             $logData = [
                 'model' => null,
                 'model_id' => null,
                 'user_id' => $users->id,
-                'action' => 'Account Blocked',
+                'action' => 'Login Auth',
                 'location' => $ip,
-                'reason' => 'Akun diblokir setelah 3 kali gagal login',
+                'reason' => 'Password Salah untuk User ' . $username,
                 'how' => 'Login',
                 'timestamp' => now(),
                 'old_data' => $infoLogin,
@@ -223,27 +241,9 @@ class AuthController extends Controller
             ];
             (new LogService)->handle($logData);
 
-            return response()->json(['error' => 'Akun Anda telah diblokir karena terlalu banyak percobaan login yang gagal.'], 403);
+            return response()->json(['error' => 'Username dan Password tidak cocok!'], 401);
         }
-
-        // Log untuk password salah
-        $logData = [
-            'model' => null,
-            'model_id' => null,
-            'user_id' => $users->id,
-            'action' => 'Login Auth',
-            'location' => $ip,
-            'reason' => 'Password Salah untuk User ' . $username,
-            'how' => 'Login',
-            'timestamp' => now(),
-            'old_data' => $infoLogin,
-            'new_data' => null,
-        ];
-        (new LogService)->handle($logData);
-
-        return response()->json(['error' => 'Username dan Password tidak cocok!'], 401);
     }
-}
 
 
     public function logout(Request $request)

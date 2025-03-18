@@ -6,6 +6,15 @@
 <body id="kt_app_body" data-kt-app-layout="light-header" data-kt-app-header-fixed="true"
     data-kt-app-toolbar-enabled="true" class="app-default">
 
+    <!--begin::Page loading(append to body)-->
+    <div class="page-loading">
+        <div class="page-loader flex-column bg-dark bg-opacity-25">
+            <span class="spinner-border text-primary" role="status"></span>
+            <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        </div>
+    </div>
+    <!--end::Page loading-->
+
     <script>
         // Theme mode setup script...
         var defaultThemeMode = "light";
@@ -142,7 +151,9 @@
                                                                         @elseif(isset($allChanges[$data->id]['is_approved']['new']) && $allChanges[$data->id]['is_approved']['new'] == '1')
                                                                             <span class="badge bg-success">Data is Approved</span>
                                                                         @elseif(isset($allChanges[$data->id]['is_rejected']['new']) && $allChanges[$data->id]['is_rejected']['new'] == '1')
-                                                                            <span class="badge bg-danger">Data is Approved</span>
+                                                                            <span class="badge bg-danger">Data is Rejected</span>
+                                                                        @elseif (isset($allChanges[$data->id]['is_delete_punch']['new']) && $allChanges[$data->id]['is_delete_punch']['new'] == '1')
+                                                                            <span class="badge bg-danger">Data is Deleted</span>
                                                                         @else
                                                                             <span class="badge bg-secondary">No status available</span>
                                                                         @endif
@@ -190,8 +201,14 @@
     <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
         <i class="ki-outline ki-arrow-up"></i>
     </div>
-
     <script>
+        $(document).ready(function() {
+            $('.page-loading').fadeIn();
+            setTimeout(function() {
+                $('.page-loading').fadeOut();
+            }, 1000); // Adjust the timeout duration as needed
+        });
+
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);

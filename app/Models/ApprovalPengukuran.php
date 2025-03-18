@@ -21,6 +21,15 @@ class ApprovalPengukuran extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function punchs()
+    {
+        return $this->belongsTo(Punch::class, 'punch_id', 'punch_id');
+    }
+    public function diess()
+    {
+        return $this->belongsTo(Dies::class, 'dies_id', 'dies_id');
+    }
     
 
     public function autonumber()

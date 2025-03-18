@@ -188,10 +188,10 @@
                                             <thead>
                                                 <tr>
                                                     <th class="text-center">No Dies</th>
-                                                    <th class="text-center">Outer Diameter</th>
-                                                    <th class="text-center">Inner Diameter 1</th>
-                                                    <th class="text-center">Inner Diameter 2</th>
-                                                    <th class="text-center">Ketinggian Dies</th>
+                                                    <th class="text-center">L. Outer Diameter</th>
+                                                    <th class="text-center">M. Inner Diameter 1</th>
+                                                    <th class="text-center">N. Inner Diameter 2</th>
+                                                    <th class="text-center">O. Ketinggian Dies</th>
                                                     <th class="text-center">Visual</th>
                                                     <th class="text-center">Kesesuaian Dies</th>
                                                     <th class="text-center">Status</th>

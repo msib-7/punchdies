@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Audit_tr;
 use Illuminate\Http\Request;
 use Route;
+use Yajra\DataTables\DataTables;
 
 class AuditController extends Controller
 {
