@@ -285,7 +285,7 @@
                                             <table id="form_table" class="display row-border">
                                                 <thead>
                                                     <tr class="fw-semibold fs-6 border-bottom border-gray-200">
-                                                        <th class="min-width-responsive text-center text-white align-center">
+                                                        <th class="text-center text-white align-center" style="max-width: 50px;">
                                                             No</th>
                                                         <th class="min-width-responsive text-center text-white align-center">
                                                             A. Head Outer Diameter</th>

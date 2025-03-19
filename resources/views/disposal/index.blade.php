@@ -25,7 +25,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-12 col-md-10 order-sm-first">
+                                <div class="col-12">
                                     <table id="dboard_Table1" class="display" style="width:100%">
                                         <thead>
                                             <tr>
