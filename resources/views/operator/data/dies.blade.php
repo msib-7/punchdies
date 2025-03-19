@@ -99,12 +99,12 @@
 <div class="mb-4 mx-10">
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="all_data_tab" role="tabpanel">
-            <div class="row g-5 gx-xl-10" id="cardContainer">
+            <div class="row" id="cardContainer">
                 @foreach ($dataDiesRecent as $data)
-                <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
+                <div class="col-md-6 col-lg-4 card-item mb-4"
                         data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_draft == '1' ? 'draft' : ($data->is_draft == '0' ? 'waiting' : 'success')) }}" 
-                        data-merk="{{ strtolower($data->merk) }}" 
-                        data-nama-mesin="{{ strtolower($data->nama_mesin_cetak) }}" 
+                        data-merk="{{ strtolower($data->merk) }}"
+                        data-nama-mesin="{{ strtolower($data->nama_mesin_cetak) }}"
                         data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
                         data-bulan="{{ $data->bulan_pembuatan }}" 
                         data-tahun="{{ $data->tahun_pembuatan }}"
@@ -169,10 +169,10 @@
                             </table>
                             <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
                                 @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal and not rejected -->
-                                        <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="opsiPengukuran(this)">
-                                            <span class="fs-7">Pengukuran</span>
-                                        </button>
-                                    @endif
+                                    <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="opsiPengukuran(this)">
+                                        <span class="fs-7">Pengukuran</span>
+                                    </button>
+                                @endif
                                 <button class="btn btn-secondary" id="{{$data->dies_id}}" onclick="pilihPengukuran(this)">
                                     <i class="ki-outline ki-eye fs-2"></i>
                                     Lihat Data Pengukuran
