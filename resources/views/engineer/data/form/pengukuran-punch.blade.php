@@ -104,7 +104,7 @@
 
                 @media (min-width: 576px) and (max-width: 768px) { /* Bootstrap's md breakpoint */
                     .min-width-responsive {
-                        min-width: 130px;
+                        min-width: 200px;
                     }
                 }
             </style>
