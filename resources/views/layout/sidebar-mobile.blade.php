@@ -9,17 +9,17 @@
     <div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0"
         id="kt_app_header_menu" data-kt-menu="true">
         <!--begin:Menu item-->
-        <a href="#">
-            <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
-                class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                <!--begin:Menu link-->
+        <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
+        class="menu-item here show menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+        <!--begin:Menu link-->
+            <a href="#">
                 <span class="menu-link">
                     <span class="menu-title">Dashboards</span>
                     <span class="menu-arrow d-lg-none"></span>
                 </span>
                 <!--end:Menu link-->
-            </div>
-        </a>
+            </a>
+        </div>
         <!--end:Menu item-->
         <!--begin:Menu item-->
         <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
