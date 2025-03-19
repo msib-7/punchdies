@@ -137,7 +137,7 @@
         <!--end:Menu item-->
         <!--begin:Menu item-->
         <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start"
-            class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2 {{ request()->is('pnd/approval*') ? 'here show menu-here-bg' : '' }}">
+            class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2 {{ request()->is('pnd/approval*') || request()->is('pnd/request/dis*') ? 'here show menu-here-bg' : '' }}">
             <!--begin:Menu link-->
             <span class="menu-link">
                 <span class="menu-title">Approval Menu</span>
