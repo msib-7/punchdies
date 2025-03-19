@@ -134,13 +134,12 @@
                                     <div class="card-toolbar">
                                         @if ($data->is_approved == '1')
                                             <span class="badge badge-square badge-outline badge-success">Approved</span>
-                                        @elseif ($data->is_rejected == '1')
-                                            <!-- Check for rejection -->
+                                        @elseif ($data->is_rejected == '1') <!-- Check for rejection -->
                                             <span class="badge badge-square badge-outline badge-danger">Rejected</span>
                                         @else
                                             @if ($data->is_draft == '1')
                                                 <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                                            @elseif ($data->is_draft == '0')
+                                            @elseif ($data->is_draft == '0' && $data->is_waiting == '1')
                                                 <span class="badge badge-square badge-outline badge-warning">Waiting</span>
                                             @endif
                                         @endif

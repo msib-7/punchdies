@@ -154,19 +154,21 @@ class ApprovalPengukuranAwalController extends Controller
             ['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran],
             $updateStatusApproved
             );
-            PengukuranAwalPunch::updateOrCreate(
-            ['punch_id' => $data->punch_id],
-            $updateStatusApproved
-            );
+            // PengukuranAwalPunch::updateOrCreate(
+            // ['punch_id' => $data->punch_id],
+            // $updateStatusApproved
+            // );
+            PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
         } elseif (!$isNullDiesId) { //JIka Tidak Kosong update status approved pada table diess
             Dies::updateOrCreate(
             ['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran],
             $updateStatusApproved
             );
-            PengukuranAwalDies::updateOrCreate(
-            ['dies_id' => $data->dies_id],
-            $updateStatusApproved
-            );
+            // PengukuranAwalDies::updateOrCreate(
+            // ['dies_id' => $data->dies_id],
+            // $updateStatusApproved
+            // );
+            PengukuranAwalDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
         }
 
         // Buat NOtifikasi Ke Penerima
@@ -211,19 +213,21 @@ class ApprovalPengukuranAwalController extends Controller
             ['punch_id' => $data->punch_id, 'masa_pengukuran' => $data->masa_pengukuran],
             $updateStatusApproved
             );
-            PengukuranAwalPunch::updateOrCreate(
-            ['punch_id' => $data->punch_id],
-            $updateStatusApproved
-            );
+            // PengukuranAwalPunch::updateOrCreate(
+            // ['punch_id' => $data->punch_id],
+            // $updateStatusApproved
+            // );
+            PengukuranAwalPunch::where('punch_id', $data->punch_id)->update($updateStatusApproved);
         } elseif (!$isNullDiesId) { //JIka Tidak Kosong update status approved pada table diess
             Dies::updateOrCreate(
                 ['dies_id' => $data->dies_id, 'masa_pengukuran' => $data->masa_pengukuran],
                 $updateStatusApproved
             );
-            PengukuranAwalDies::updateOrCreate(
-                ['dies_id' => $data->dies_id],
-                $updateStatusApproved
-            );
+            // PengukuranAwalDies::updateOrCreate(
+            //     ['dies_id' => $data->dies_id],
+            //     $updateStatusApproved
+            // );
+            PengukuranAwalDies::where('dies_id', $data->dies_id)->update($updateStatusApproved);
         }
 
         // Buat NOtifikasi Ke Penerima

@@ -141,7 +141,6 @@
 
                                     <a href="#" class="btn btn-light btn-flex btn-center btn-sm mx-2 p-1"
                                         data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                        {{-- <i class="ki-duotone ki-down fs-5"></i> --}}
                                         <i class="ki-solid ki-dots-vertical fs-2"></i>
                                     </a>
                                     <!--begin::Menu-->

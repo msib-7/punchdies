@@ -337,7 +337,7 @@ class PengukuranController extends Controller
 
                 return redirect(route('pnd.pa.dies.show-form'));
             } elseif ($cekDraft->is_rejected == '1') {
-                session()->remove('jumlah_punch');
+                session()->remove('jumlah_dies');
                 session()->remove('dies_id');
                 session()->remove('count');
                 session()->remove('show_id');
@@ -349,7 +349,7 @@ class PengukuranController extends Controller
                 session()->put('jumlah_dies', $jumlahDies);
 
                 //Mengarahkan user ke tampilan form
-                return redirect(route('pnd.pa.dies.show-form'))->with('error', 'Data Pengukuran Punch ini telah di Reject, Silahkan Periksa Kembali Data Pengukuran!');
+                return redirect(route('pnd.pa.dies.show-form'))->with('error', 'Data Pengukuran Dies ini telah di Reject, Silahkan Periksa Kembali Data Pengukuran!');
             }else{
                 // session()->remove('count');
                 $pengukuran = session('masa_pengukuran_view');
@@ -358,7 +358,7 @@ class PengukuranController extends Controller
                         ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
                         ->where('diess.dies_id', $id)
                         ->where('diess.masa_pengukuran', $pengukuran)
-                        ->latest('diess')
+                        // ->latest('diess')
                         ->first();
                     $data['labelDies'] = $LabelDies;
                 }else{
@@ -366,13 +366,13 @@ class PengukuranController extends Controller
                         ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
                         ->where('diess.dies_id', $id)
                         ->where('diess.masa_pengukuran', $pengukuran)
-                        ->latest('diess')
+                        // ->latest('diess')
                         ->first();
                     $data['labelDies'] = $LabelDies;
                 }
 
-                $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
-                $data['tglPengukuran'] = $dataPengukuran;
+                // $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
+                // $data['tglPengukuran'] = $dataPengukuran;
 
                 $checkStatus = PengukuranAwalDies::where(['dies_id' => $id, 'is_draft' => '1'])->count();
                 if($checkStatus != 0){
@@ -387,10 +387,34 @@ class PengukuranController extends Controller
                 }else{
                     $start_id = session('show_id');
                 }
-                $showPengukuranAll = PengukuranAwalDies::where('dies_id','=', $id)->get();
 
-                $data['dataPengukuran'] = $showPengukuranAll;
-                return view('engineer.data.view.pengukuran-dies', $data);
+                $cekPengukuran = PengukuranRutinDies::query()
+                    ->where('dies_id', $id)
+                    ->where('masa_pengukuran', '=', session('masa_pengukuran_view'))
+                    ->exists();
+
+                if (!$cekPengukuran) {
+                    $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
+                    $data['tglPengukuran'] = $dataPengukuran;
+                    $showPengukuranAll = PengukuranAwalDies::where('dies_id', '=', $id)->get();
+                    $data['dataPengukuran'] = $showPengukuranAll;
+                    $data['masaPengukuran'] = 'pa';
+
+                    return view('engineer.data.view.pengukuran-dies', $data);
+                } else {
+                    $dataPengukuran = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->first();
+                    $data['tglPengukuran'] = $dataPengukuran;
+                    $showPengukuranAll = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view')])->get();
+                    $data['dataPengukuran'] = $showPengukuranAll;
+                    $data['masaPengukuran'] = 'pr';
+
+                    return view('operator.data.view.pengukuran-dies', $data);
+
+                }
+                // $showPengukuranAll = PengukuranAwalDies::where('dies_id','=', $id)->get();
+
+                // $data['dataPengukuran'] = $showPengukuranAll;
+                // return view('engineer.data.view.pengukuran-dies', $data);
             }
         }
     }
@@ -501,7 +525,7 @@ class PengukuranController extends Controller
                                 ->limit(10);
                                 // ->whereRaw('dies_id = ' . session('dies_id') . ' AND id > ' . $start_id)->orderBy('id')->limit(10)->get();
             $draftPengukuran = $queryPengukuran->get();
-            $masa_pengukuran = $queryPengukuran->latest()->first()->masa_pengukuran;
+            $masa_pengukuran = $draftPengukuran->last()->masa_pengukuran;
             session()->put('masa_pengukuran', $masa_pengukuran);
             $data['draftPengukuran'] = $draftPengukuran;
             $data['count'] = count($draftPengukuran);
@@ -820,7 +844,6 @@ class PengukuranController extends Controller
 
                 //Get Masa Pengukuran
                 $masaPengukuran = $query->latest()->first()->masa_pengukuran;
-                // dd($masaPengukuran);
 
                 //Get Data Pengukuran
                 if($masaPengukuran == 'pengukuran awal'){
@@ -828,15 +851,14 @@ class PengukuranController extends Controller
                 }else{
                     $pengukuran = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->get();
                 }
-                // dd($pengukuran);
+
                 //Cek status OK/NOK 
                 $hasNok = $pengukuran->contains(function ($item) {
                     return $item->status === 'NOK'; // Asumsikan 'status' adalah nama kolom
                 });
-                // dd($hasNok);
+
                 //Cek Data Approval ada / tidak
                 $cekApproval = $query->exists();
-                // dd($cekApproval);
                 if ($cekApproval) {
                     //Get Data Approval 
                     $dataApproval = $query->latest()->first();
@@ -888,6 +910,22 @@ class PengukuranController extends Controller
             $dataDies = Dies::where(['dies_id' => $id, 'is_draft' => '1'])->latest()->first();
             if ($dataDies == null) {
                 $query = ApprovalPengukuran::query()->where('dies_id', $id);
+                
+                //Get Masa Pengukuran
+                $masaPengukuran = $query->latest()->first()->masa_pengukuran;
+
+                //Get Data Pengukuran
+                if($masaPengukuran == 'pengukuran awal'){
+                    $pengukuran = PengukuranAwalDies::where(['dies_id' => $id, 'masa_pengukuran' => $masaPengukuran])->get();
+                }else{
+                    $pengukuran = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $masaPengukuran])->get();
+                }
+
+                //Cek status OK/NOK
+                $hasNok = $pengukuran->contains(function ($item) {
+                    return $item->status === 'NOK'; // Asumsikan 'status' adalah nama kolom
+                });
+
                 //Cek Data Approval ada / tidak
                 $cekApproval = $query->exists();
                 if ($cekApproval) {
@@ -903,6 +941,11 @@ class PengukuranController extends Controller
                         return response()->json([
                             'success' => false,
                             'message' => 'Pengukuran Tidak Dapat Dilakukan Karena Data Gagal diApprove!',
+                        ]);
+                    } elseif($hasNok){
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Pengukuran Berikutnya Tidak Dapat Dilakukan! Status: NOK',
                         ]);
                     } else {
                         return response()->json([
@@ -953,7 +996,6 @@ class PengukuranController extends Controller
                     ->latest('punchs.created_at') // Pastikan untuk menggunakan kolom yang tepat untuk latest
                     ->first();
             }
-            // dd($dataPengukuran);
 
             //cek kode produk tersedia atau tidak
             $kodeProduk = KodeProduk::where('id', $dataPunch->kode_produk)->first();
@@ -990,11 +1032,12 @@ class PengukuranController extends Controller
                     ->orderby('pengukuran_awal_diess.dies_id', 'desc')
                     ->first();
             } else {
-                $dataPengukuran = Dies::leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
+                $dataPengukuran = Dies::query()
+                    ->leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
                     ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
                     ->where('diess.dies_id', $id)
-                    // ->orderby('diess.dies_id', 'desc')
-                    ->orderBy('diess.created_at', 'desc')
+                    ->select('punch.*', 'users.nama as user_nama') // Menambahkan select untuk field yang diinginkan
+                    ->latest('diess.created_at') // Pastikan untuk menggunakan kolom yang tepat untuk latest
                     ->first();
             }
             //cek kode produk tersedia atau tidak
@@ -1150,8 +1193,6 @@ class PengukuranController extends Controller
                         ->first();
                     $data['labelPunch'] = $LabelPunch;
                 }
-                // dd($LabelPunch);
-                // session()->remove('count');
 
                 $checkStatus = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view'), 'is_draft' => '1'])->count();
                 if ($checkStatus != 0) {
@@ -1215,8 +1256,8 @@ class PengukuranController extends Controller
                 session()->put('first_id', 0);
                 session()->put('dies_id', $id);
 
-                $jumlahPunch = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
-                session()->put('jumlah_punch', $jumlahPunch);
+                $jumlahDies = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $pengukuran])->count();
+                session()->put('jumlah_dies', $jumlahDies);
                 session()->put('masa_pengukuran_pre', $masa_pengukuran_pre);
                 session()->put('masa_pengukuran', $masa_pengukuran);
 
@@ -1226,6 +1267,8 @@ class PengukuranController extends Controller
                     $LabelDies = Dies::leftJoin('pengukuran_awal_diess', 'diess.dies_id', '=', 'pengukuran_awal_diess.dies_id')
                         ->leftJoin('users', 'pengukuran_awal_diess.user_id', '=', 'users.id')
                         ->where('diess.dies_id', $id)
+                        ->where('diess.masa_pengukuran', $pengukuran)
+                        ->latest('diess')
                         ->first();
                     $data['labelDies'] = $LabelDies;
                 } else {
@@ -1233,8 +1276,8 @@ class PengukuranController extends Controller
                         ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
                         ->where('diess.dies_id', $id)
                         ->where('pengukuran_rutin_diess.masa_pengukuran', session('masa_pengukuran_view'))
-                        ->orderBy('diess.created_at', 'desc')
-                        // ->latest('diess')
+                        // ->orderBy('diess.created_at', 'desc')
+                        ->latest('diess')
                         ->first();
                     $data['labelDies'] = $LabelDies;
                 }
@@ -1263,6 +1306,7 @@ class PengukuranController extends Controller
                     $data['tglPengukuran'] = $dataPengukuran;
                     $showPengukuranAll = PengukuranAwalDies::where('dies_id', '=', $id)->get();
                     $data['dataPengukuran'] = $showPengukuranAll;
+                    $data['masaPengukuran'] = 'pa';
 
                     return view('engineer.data.view.pengukuran-dies', $data);
                 } else {
@@ -1393,19 +1437,28 @@ class PengukuranController extends Controller
 
             if ($pengukuran == "pengukuran awal") {
                 $masa_pengukuran_pre = "pengukuran awal";
-
                 $masa_pengukuran = "pengukuran rutin 1";
-                $updateMasaPengukuran = [
-                    'masa_pengukuran' => $masa_pengukuran,
-                ];
             } else {
-                $noUrut = (int) substr($pengukuran, 17);
+                // Menggunakan regex untuk mengekstrak angka dari string
+                preg_match('/\d+/', $pengukuran, $matches);
+                $noUrut = isset($matches[0]) ? (int) $matches[0] : 0; // Mengambil angka yang ditemukan
                 $masa_pengukuran_pre = $pengukuran;
-                $masa_pengukuran = 'pengukuran rutin ' . $noUrut + 1;
-                $updateMasaPengukuran = [
-                    'masa_pengukuran' => $masa_pengukuran,
-                ];
+                $masa_pengukuran = 'pengukuran rutin ' . ($noUrut + 1); // Increment angka
             }
+
+            // Update data
+            $updateMasaPengukuran = [
+                'masa_pengukuran' => $masa_pengukuran,
+            ];
+
+            //get masa pengukuran dari kode_produk
+            $kodeProduk = KodeProduk::where('id', $dataDies->kode_produk)->first();
+            if (!$kodeProduk) {
+                return response()->json([
+                    'message' => 'Kode Produk Tidak Ditemukan / Sudah Dihapus. klik lanjutkan untuk memilih Nama & Kode Produk.',
+                ], 401);
+            };
+            $waktu_rutin = $kodeProduk ? $kodeProduk->waktu_rutin : '-';
 
             try {
                 DB::beginTransaction();
@@ -1424,8 +1477,9 @@ class PengukuranController extends Controller
                     'is_draft' => '1',
                     'is_delete_dies' => '0',
                     'is_edit' => '0',
-                    'is_approved' => '-',
-                    'is_rejected' => '-',
+                    'is_approved' => '0',
+                    'is_rejected' => '0',
+                    'next_pengukuran' => Carbon::now()->addMonths($waktu_rutin),
                 ];
                 session()->put('dies_id', $dataDies->dies_id);
                 Dies::UpdateOrCreate($createData);
@@ -1435,7 +1489,7 @@ class PengukuranController extends Controller
                 // dd($dies_id);
                 for ($i = 1; $i <= $jmlDies; $i++) {
                     $createDraftPengukuran = [
-                        'dies_id' => $dataDies->dies_id,
+                        'dies_id' => $dies_id,
                         'user_id' => auth()->user()->id,
                         'is_cincin_berbayang' => '-',
                         'is_gompal' => '-',
@@ -1446,8 +1500,8 @@ class PengukuranController extends Controller
                         'is_draft' => '1',
                         'is_delete_pd' => '0',
                         'is_edit' => '0',
-                        'is_approved' => '-',
-                        'is_rejected' => '-',
+                        'is_approved' => '0',
+                        'is_rejected' => '0',
                     ];
                     PengukuranRutinDies::create($createDraftPengukuran);
                 }
@@ -1762,10 +1816,12 @@ class PengukuranController extends Controller
                 session()->remove('count_num');
 
                 $last_id = $request->last_id;
+                $last_id_pre = $request->last_id_pre;
                 $count_num = $request->count_num;
-                session()->put('first_id', $request->update_id[0] - 1);
+                session()->put('first_id', $request->update_id[0]);
                 session()->put('count_num', $count_num + 1);
                 session()->put('show_id', $last_id);
+                session()->put('show_id_pre', $last_id_pre);
                 $count = session('start_count') + session('count');
                 session()->put('count', $count);
 
@@ -1779,15 +1835,15 @@ class PengukuranController extends Controller
 
                 $i = 0;
                 while ($i < count($update_id)) {
-                    $createDraftPengukuran = [
-                        'is_cincin_berbayang' => $icb[$i],
-                        'is_gompal' => $igp[$i],
-                        'is_retak' => $irt[$i],
-                        'is_pecah' => $ipc[$i],
-                    ];
-
-                    // Update the PengukuranRutinDies record
-                    PengukuranRutinDies::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
+                    PengukuranRutinDies::updateOrCreate(
+                        ['no' => $update_id[$i]],
+                        [
+                            'is_cincin_berbayang' => $icb[$i],
+                            'is_gompal' => $igp[$i],
+                            'is_retak' => $irt[$i],
+                            'is_pecah' => $ipc[$i],
+                        ]
+                    );
                     $i++;
                 }
                 return redirect(route('pnd.pr.dies.form'));

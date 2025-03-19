@@ -751,6 +751,7 @@
             data: $('#form_data_pengukuran').serialize(),
             success: function(response) {
                 // Handle success (e.g., show a success message, redirect, etc.)
+                $('#kesimpulan').val(response.kesimpulan);
             },
             error: function(xhr, status, error) {
                 // Handle error (e.g., show an error message)
