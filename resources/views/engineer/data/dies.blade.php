@@ -114,7 +114,7 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="all_data_tab" role="tabpanel">
                 {{-- content --}}
-                <div class="row g-5 gx-xl-10" id="cardContainer">
+                <div class="row" id="cardContainer">
                     @foreach ($dataDiesRecent as $data)
                         <div class="col-12 col-md-6 col-lg-4 card-item mb-4"
                             data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_draft == '1' ? 'draft' : ($data->is_draft == '0' ? 'waiting' : 'success')) }}"
