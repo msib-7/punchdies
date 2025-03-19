@@ -29,7 +29,7 @@
             </span>
             <!--end:Menu link-->
             <!--begin:Menu sub-->
-            <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown p-0 w-100 w-lg-900px w-xxl-950px">
+            <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown p-0 w-100">
                 <!--begin:Dashboards menu-->
                 <div class="menu-active-bg pt-1 pb-3 px-3 py-lg-6 px-lg-6" data-kt-menu-dismiss="true">
                     <!--begin:Row-->
