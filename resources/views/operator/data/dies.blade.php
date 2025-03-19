@@ -169,13 +169,13 @@
                                     </table>
                                     <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
                                         @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal and not rejected -->
-                                            <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="opsiPengukuran(this)">
+                                            <button class="btn btn-primary mb-2 mb-md-0 py-1" id="{{$data->dies_id}}" onclick="opsiPengukuran(this)">
                                                 <span class="fs-7">Pengukuran</span>
                                             </button>
                                         @endif
                                         <button class="btn btn-secondary" id="{{$data->dies_id}}" onclick="pilihPengukuran(this)">
                                             <i class="ki-outline ki-eye fs-2"></i>
-                                            <span class="fs-8">Lihat Data Pengukuran</span>
+                                            <span class="fs-8">Lihat Data</span>
                                         </button>
                                     </div>
                                 </div>

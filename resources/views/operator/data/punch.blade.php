@@ -203,7 +203,7 @@
                                     @endif
                                     <button class="btn btn-secondary" id="{{$data->punch_id}}" onclick="pilihPengukuran(this)">
                                         <i class="ki-solid ki-eye fs-2"></i>
-                                        <span class="fs-8">Lihat Data Pengukuran</span>
+                                        <span class="fs-8">Lihat Data</span>
                                     </button>
                                 </div>
                             </div>
