@@ -44,13 +44,19 @@
         <!--begin::Page-->
         <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
             <!--begin::Header-->
-            @include('layout.header')
+            @if ($browser->isMobile())
+                @include('layout.header-mobile')
+            @else
+                @include('layout.header')
+            @endif
             <!--end::Header-->
 
             <!--begin::Wrapper-->
             <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                 <!--begin::Sidebar-->
-                @include('layout.sidebar')
+                @if (!$browser->isMobile())
+                    @include('layout.sidebar')
+                @endif
                 <!--end::Sidebar-->
 
                 <!--begin::Main-->
