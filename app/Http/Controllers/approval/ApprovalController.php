@@ -290,6 +290,7 @@ class ApprovalController extends Controller
                 $data['req_id'] = $req_id;
                 $data['jenis'] = 'dies';
                 $data['mp'] = $mp;
+                $data['approvalInfo'] = $dataRequest;
 
                 return view('qa.form.detail-pengukuran', $data);
             }

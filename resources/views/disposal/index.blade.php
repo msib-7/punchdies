@@ -8,18 +8,17 @@
             <div class="row g-5 gx-xl-10 mb-5 mb-xl-10">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header ">
                             <h3 class="card-title fs-1 fw-bold">Request Disposal</h3>
                             <div class="card-toolbar">
-                                <div class="card pulse pulse-info">
+                                <div class="card">
                                     <div class="card-body">
                                         <div class="fs-3 fw-semibold">
-                                            <span>
+                                            <span class="">
                                                 Waiting List: {{count($approval)}}
                                             </span>
                                         </div>
                                     </div>
-                                    <span class="pulse-ring"></span>
                                 </div>
                             </div>
                         </div>
