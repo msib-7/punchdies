@@ -148,7 +148,7 @@
             <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown px-lg-2 py-lg-4 w-lg-250px">
                 <!--begin:Menu item-->
                 <div data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-placement="right-start"
-                    class="menu-item menu-lg-down-accordion {{ request()->is('pnd/approval*') ? 'here' : '' }}">
+                    class="menu-item menu-lg-down-accordion {{ request()->is('pnd/approval/pengukuran*') || request()->is('pnd/approval/dis*') ? 'here' : '' }}">
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <b><span class="menu-title">Waiting List</span></b>
