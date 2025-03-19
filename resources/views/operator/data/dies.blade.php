@@ -175,7 +175,7 @@
                                         @endif
                                         <button class="btn btn-secondary" id="{{$data->dies_id}}" onclick="pilihPengukuran(this)">
                                             <i class="ki-outline ki-eye fs-2"></i>
-                                            Lihat Data Pengukuran
+                                            <span class="fs-8">Lihat Data Pengukuran</span>
                                         </button>
                                     </div>
                                 </div>
