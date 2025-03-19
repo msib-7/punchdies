@@ -81,7 +81,6 @@ class DisposalController extends Controller
     {
         // Determine if there is an existing draft
         $existingDraft = ApprovalDisposal::where('punch_id', $id)->first();
-
         // Validate the request
         $request->validate([
             'dokumen1' => $existingDraft && $existingDraft->attach_1 ? 'file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -133,8 +132,8 @@ class DisposalController extends Controller
             'user_id' => auth()->user()->id,
             'tgl_submit' => now(),
             'due_date' => now()->addDays(6),
-            'by' => '-',
-            'at' => null,
+            'by' => auth()->user()->id,
+            'at' => now(),
             'req_note' => $request->note,
             'is_draft' => '0',
             'is_waiting' => '1',
@@ -306,8 +305,8 @@ class DisposalController extends Controller
                 'user_id' => auth()->user()->id,
                 'tgl_submit' => now(),
                 'due_date' => null,
-                'by' => '-',
-                'at' => null,
+                'by' => auth()->user()->id,
+                'at' => now(),
                 'approved_note' => '-',
                 'req_note' => $request->note ?? '-',
                 'is_draft' => '1',
