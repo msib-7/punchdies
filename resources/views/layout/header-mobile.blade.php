@@ -259,6 +259,11 @@
                         <!--end::Menu separator-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
+                            <a href="{{route('audit')}}" class="menu-link px-5">Audit Trail</a>
+                        </div>
+                        <!--end::Menu item-->
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-5">
                             <button onclick="changePassword()" class="btn menu-link w-100 px-5">
                                 <span class="menu-title position-relative">Change Password
                                     <span class="ms-5 position-absolute translate-middle-y top-50 end-0">
