@@ -172,6 +172,37 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        @foreach (auth()->user()->permissions as $item)
+                                                            @if (str_starts_with($item->url, 'pnd.request.disp'))
+                                                                <div class="col-12 col-md-6 mt-5">
+                                                                    <div class="table-responsive">
+                                                                        <table style="border: none;">
+                                                                            <tbody>
+                                                                                <tr style="border: none; height: 30px;">
+                                                                                    <td style="border: none;" class="fs-5 px-4 my-4">
+                                                                                        {{-- Check if any item in the collection has a status of 'NOK' --}}
+                                                                                        @if (
+                                                                                            $dataPengukuran->contains(function ($item) {
+                                                                                                return strtoupper($item->status) === 'NOK';
+                                                                                            }) && $labelDies->is_waiting == '0'
+                                                                                        )
+                                                                                            <a href="{{ route('pnd.request.disposal.create', $labelDies->dies_id) }}" class="btn btn-danger">
+                                                                                                Disposal
+                                                                                            </a>
+                                                                                            <br>
+                                                                                            <small>
+                                                                                                <span class="text-danger">Disposal Dapat Dilakukan! <br> Status NOK</span>
+                                                                                            </small>
+                                                                                        @endif
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                @break
+                                                            @endif
+                                                        @endforeach
                                                     </div>
                                                 </div>
                                             </div>
