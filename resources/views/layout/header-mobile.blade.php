@@ -259,11 +259,6 @@
                         <!--end::Menu separator-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
-                            <a href="{{route('audit')}}" class="menu-link px-5">Audit Trail</a>
-                        </div>
-                        <!--end::Menu item-->
-                        <!--begin::Menu item-->
-                        <div class="menu-item px-5">
                             <button onclick="changePassword()" class="btn menu-link w-100 px-5">
                                 <span class="menu-title position-relative">Change Password
                                     <span class="ms-5 position-absolute translate-middle-y top-50 end-0">
@@ -279,6 +274,18 @@
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
                             <a href="{{route('logout')}}" class="menu-link px-5">Sign Out</a>
+                        </div>
+                        <!--end::Menu item-->
+                        <!--begin::Menu separator-->
+                        <div class="separator my-2"></div>
+                        <!--end::Menu separator-->
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-5">
+                            <a href="{{route('audit')}}" class="menu-link px-5">
+                                <button class="btn btn-primary bg-gradient w-100">
+                                    Audit Trail
+                                </button>
+                            </a>
                         </div>
                         <!--end::Menu item-->
                     </div>
