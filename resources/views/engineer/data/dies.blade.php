@@ -73,15 +73,17 @@
                             </select>
                             {{-- <input type="text" id="namaMesinFilter" class="form-control" placeholder="Nama Mesin..." onkeyup="filterCards()" title="Filter by machine name"> --}}
                         </div>
-                        <div class="col-6 col-md-2">
-                            <label for="lineFilter" class="form-label">Line</label>
-                            <select id="lineFilter" class="form-select" onchange="filterCards()" title="Filter by line">
-                                <option value="">All Lines</option>
-                                @foreach ($DataLine as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama_line }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if (auth()->user()->lines->nama_line === 'All Line')
+                            <div class="col-6 col-md-2">
+                                <label for="lineFilter" class="form-label">Line</label>
+                                <select id="lineFilter" class="form-select" onchange="filterCards()" title="Filter by line">
+                                    <option value="">All Lines</option>
+                                    @foreach ($DataLine as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama_line }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                         <div class="col-12">
                             <button class="btn btn-light" id="resetFilters">Reset Filters</button>
                         </div>
@@ -709,7 +711,7 @@
             document.getElementById('namaMesinFilter').value = '';
 
             // Reset the line filter
-            document.getElementById('lineFilter').value = '';
+            document.getElementById('lineFilter').value = '{{ auth()->user()->lines->nama_line }}';
 
             // Call the filterCards function to refresh the displayed cards
             filterCards();
