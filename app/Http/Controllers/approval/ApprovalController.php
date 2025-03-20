@@ -67,13 +67,13 @@ class ApprovalController extends Controller
             ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
             ->where('is_approved','!=', '-')
             ->where('is_rejected','!=', '-')
-            ->orderBy('req_id', 'desc')
+            ->orderBy('tgl_submit', 'desc')
             ->get();
         $dataApprDisposal = ApprovalDisposal::leftJoin('users', 'approval_disposals.user_id', '=', 'users.id')
             ->leftJoin('lines', 'users.line_id', '=', 'lines.id')
             ->where('is_approved','!=', '-')
             ->where('is_rejected','!=', '-')
-            ->orderBy('req_id', 'desc')
+            ->orderBy('tgl_submit', 'desc')
             ->get();
         $dataPunch = Punch::get();
         $dataDies = Dies::get();

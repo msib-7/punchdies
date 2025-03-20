@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 class DisposalController extends Controller
 {
     public function index(){
-        $approval = ApprovalDisposal::with('users')->where('is_approved', '!=', '1')->get();
+        $approval = ApprovalDisposal::with('users')->where('is_approved', '!=', '1')->orderBy('created_at', 'DESC')->get();
         $dataPunch = Punch::latest()->get();
         $dataDies = Dies::latest()->get();
 

@@ -13,13 +13,22 @@
         data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" 
         data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" 
         data-kt-app-sidebar-push-toolbar="true"
-        @if(Request::segment(4) == 'form_pengukuran' || $browser->isMobile() )
+        @if(Request::segment(4) == 'form_pengukuran' || $browser->isMobile())
         data-kt-app-sidebar-minimize="on"
         @endif
         data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" 
     @endif
     class="app-default" style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repeat-y;">
 
+    <!--begin::Page loading(append to body)-->
+    <div class="page-loading">
+        <div class="page-loader flex-column">
+            <span class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status"></span>
+            <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        </div>
+    </div>
+    <!--end::Page loading-->
+    
     <!--begin::Theme mode setup on page load-->
     <script>
         var defaultThemeMode = "light";

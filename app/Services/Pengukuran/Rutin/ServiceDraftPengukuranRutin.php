@@ -277,6 +277,7 @@ class ServiceDraftPengukuranRutin
             Log::warning('Failed to send emails to: ', $failedEmails);
         }
 
+        session()->put('masa_pengukuran_view', $masa_pengukuran);
         return redirect(route('pnd.pr.' . $jenis . '.view', $idView))->with($alert, $msg);
     }
 

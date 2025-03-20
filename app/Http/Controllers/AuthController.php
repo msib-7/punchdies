@@ -290,6 +290,7 @@ class AuthController extends Controller
     
     private function destroy()
     {
+        session()->flush();
         Auth::logout();
     }
 

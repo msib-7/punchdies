@@ -1,4 +1,17 @@
-<script>
+<script>    
+    $(document).ready(function() {
+        $('.page-loading').fadeIn();
+        $(window).on('load', function() {
+            $('.page-loading').fadeOut();
+        });
+    });
+    function showLoading(){
+        // $('#modal_confirm_pengukuran').modal('hide');
+        $('.page-loading').fadeIn();
+        $(document).ajaxStop(function() {
+            $('.page-loading').fadeOut();
+        });
+    };
     // var hostUrl = "assets/"; 
     $(document).ready(function () {
         $('#form_table').DataTable({
@@ -340,8 +353,8 @@
 </script>
 
 @php
-    $idleTimeSetting = \App\Models\SettingIdleTime::first();
-    $idleMinutes = $idleTimeSetting ? $idleTimeSetting->idle_time : 59; // Default to 60 minutes if not set
+$idleTimeSetting = \App\Models\SettingIdleTime::first();
+$idleMinutes = $idleTimeSetting ? $idleTimeSetting->idle_time : 59; // Default to 60 minutes if not set
 @endphp
 <script>
     let idleTime = 0;

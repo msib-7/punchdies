@@ -372,6 +372,7 @@ class PengukuranController extends Controller
                     $data['labelDies'] = $LabelDies;
                 }
 
+                // dd(session('masa_pengukuran_view'));
                 // $dataPengukuran = PengukuranAwalDies::where('dies_id', '=', $id)->first();
                 // $data['tglPengukuran'] = $dataPengukuran;
 

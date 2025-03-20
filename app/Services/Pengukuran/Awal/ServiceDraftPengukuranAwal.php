@@ -479,6 +479,7 @@ class ServiceDraftPengukuranAwal
             Log::error('Error added create Approval : ' . $th->getMessage());
         }
 
+        session()->put('masa_pengukuran_view', session('masa_pengukuran'));
         return redirect(route('pnd.pa.' . $jenis . '.view', $idView))->with($alert, $msg);
     }
 
