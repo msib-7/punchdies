@@ -5,13 +5,6 @@
     <!--begin::Header container-->
     <div class="app-container  container-xxl d-flex align-items-stretch justify-content-between "
         id="kt_app_header_container">
-        <!--begin::Sidebar mobile toggle-->
-        <div class="d-flex align-items-center d-lg-none ms-n3 me-1 me-md-2" title="Show sidebar menu">
-            <div class="btn btn-icon btn-active-color-primary w-35px h-35px" id="kt_app_sidebar_mobile_toggle">
-                <i class="ki-outline ki-abstract-14 fs-2 fs-md-1"></i>
-            </div>
-        </div>
-        <!--end::Sidebar mobile toggle-->
         <!--begin::Logo-->
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
             <a href="?page=index">
@@ -306,3 +299,127 @@
     <!--end::Header container-->
 </div>
 <!--end::Header-->
+
+<script>
+    function changePassword() {
+        Swal.fire({
+            icon: 'question',
+            title: 'Are You Sure?',
+            text: 'This action will change your current password.',
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Set New Password",
+                    input: "text",
+                    inputAttributes: {
+                        autocapitalize: "off"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Update password",
+                    allowOutsideClick: false,
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ url("user/update-password") }}', // Update this route
+                            data: {
+                                id: '{{ auth()->user()->id }}',
+                                new_password: result.value,
+                                _token: '{{ csrf_token() }}' // Include CSRF token
+                            },
+                            cache: false,
+                            beforeSend: function () {
+                                Swal.fire({
+                                    title: 'Processing...',
+                                    text: 'Please wait while we process your request.',
+                                    allowOutsideClick: false,
+                                    showConfirmButton: false,
+                                    willOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function (response) {
+                                if (response.success == false) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Something went wrong!',
+                                        text: response.message + ' ' + response.by
+                                    });
+                                } else {
+                                    let timerInterval;
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Successful',
+                                        text: response.message + ' ' + response.by,
+                                        allowOutsideClick: false,
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        timerProgressBar: true,
+                                        willOpen: () => {
+                                            Swal.showLoading();
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval);
+                                        }
+                                    });
+                                }
+                            },
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    function clearNotif() {
+        $.ajax({
+            type: 'POST',
+            url: '{{ url("user/clear-notifications") }}', // Update this route
+            data: {
+                _token: '{{ csrf_token() }}' // Include CSRF token
+            },
+            cache: false,
+            beforeSend: function () {
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            success: function (response) {
+                if (response.success == true) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Notifications Cleared',
+                        text: response.message,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Something went wrong!',
+                        text: response.message
+                    });
+                }
+            },
+        });
+    }
+</script>
