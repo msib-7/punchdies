@@ -8,18 +8,25 @@
         </div>
         <!--end::Copyright-->
         <!--begin::Menu-->
-        <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-            <li class="menu-item">
-                @php
-                    $isDevUrl = request()->is('dev*');
-                @endphp
-                @if (auth()->check() && auth()->user()->id !== null)
-                    <button onclick="devMenu('{{auth()->user()->id}}')" class="btn {{ $isDevUrl ? 'btn-dark' : 'btn-secondary' }} btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Developer Menu">
-                        <i class="ki-solid ki-setting-2 fs-3 m-0 p-0"></i>
-                    </button>
+        @foreach (auth()->user()->permissions as $item)
+                @if (str_starts_with($item->url, 'dev.'))
+                    <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+                        <li class="menu-item">
+                            @php
+                                $isDevUrl = request()->is('dev*');
+                            @endphp
+                            @if (auth()->check() && auth()->user()->id !== null)
+                                <button onclick="devMenu('{{auth()->user()->id}}')"
+                                    class="btn {{ $isDevUrl ? 'btn-dark' : 'btn-secondary' }} btn-sm" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="Developer Menu">
+                                    <i class="ki-solid ki-setting-2 fs-3 m-0 p-0"></i>
+                                </button>
+                            @endif
+                        </li>
+                    </ul>
+                    @break
                 @endif
-            </li>
-        </ul>
+        @endforeach
         <!--end::Menu-->
     </div>
     <!--end::Footer container-->
