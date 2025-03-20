@@ -21,78 +21,83 @@ class DiesController extends Controller
                 $dataDies = Dies::query()->with('kode_produks')->with('nama_produks')
                     ->select(
                         'dies_id',
+                        DB::raw('MAX(id::text) as id'),
                         DB::raw('MAX(merk) as merk'),
                         DB::raw('MAX(bulan_pembuatan) as bulan_pembuatan'),
                         DB::raw('MAX(tahun_pembuatan) as tahun_pembuatan'),
                         DB::raw('MAX(nama_mesin_cetak) as nama_mesin_cetak'),
                         DB::raw('MAX(nama_produk::text) as nama_produk'),
                         DB::raw('MAX(kode_produk::text) as kode_produk'),
+                        DB::raw('MAX(line_id) as line_id'),
                         DB::raw('MAX(jenis) as jenis'),
                         DB::raw('MAX(masa_pengukuran) as masa_pengukuran'),
                         DB::raw('MAX(is_delete_dies) as is_delete_dies'),
                         DB::raw('MAX(is_draft) as is_draft'),
-                        DB::raw('MAX(is_waiting) as is_waiting'),
                         DB::raw('MAX(is_edit) as is_edit'),
-                        DB::raw('MAX(is_approved) as is_approved'),
+                        DB::raw('MAX(is_waiting) as is_waiting'),
+                        DB::raw('MIN(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
                         DB::raw('MAX(created_at) as created_at'),
+                        DB::raw('MAX(updated_at) as updated_at'),
                         DB::raw('MAX(next_pengukuran) as next_pengukuran'),
                     )
-                    ->where(function ($query) use ($request) {
-                        $query->where('jenis', $request->segment(3))
-                            ->where('is_delete_dies', '0')
+                    ->where(function ($query) use ($request) {$query
+                        ->where('jenis', $request->segment(3))
+                        ->where('is_delete_dies', '0')
+                        ->where(function ($query) {
+                            $query
                             ->where(function ($query) {
                                 $query
-                                    ->where(function ($query) {
-                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                            ->where('is_approved', '=', '-');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->where('masa_pengukuran', '=', 'pengukuran awal')
-                                            ->where('is_draft', '=', '0')
-                                            ->where('is_approved', '=', '0');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                            ->where('is_draft', '1')
-                                            ->where('is_approved', '=', '-');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                            ->where('is_draft', '0')
-                                            ->where('is_approved', '=', '-');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                            ->where('is_draft', '0')
-                                            ->where('is_approved', '=', '1');
-                                    });
+                                ->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                ->where('is_draft', '1')
+                                ->where('is_waiting', '0')
+                                ->where('is_approved', '0')
+                                ->where('is_rejected', '0');
                             })
-                            ->orWhere('jenis', $request->segment(3))
-                            ->where('is_delete_dies', '0')
-                            ->where(function ($query) {
-                                $query->where(function ($query) {
-                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                        ->where('is_approved', '=', '0');
-                                })
-                                    ->orWhere(function ($query) {
-                                        $query->where('masa_pengukuran', '=', 'pengukuran awal')
-                                            ->where('is_approved', '=', '1');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->where('masa_pengukuran', '!=', 'pengukuran awal')
-                                            ->where('is_draft', '0')
-                                            ->where('is_approved', '=', '1');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                            ->where('is_draft', '1')
-                                            ->where('is_approved', '=', '-');
-                                    });
+                            ->orWhere(function ($query) {
+                                $query
+                                ->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                ->where('is_draft', '0')
+                                ->where('is_waiting', '1')
+                                ->where('is_approved', '0')
+                                ->where('is_rejected', '0');
+                            })
+                            ->orWhere(function ($query) {
+                                $query
+                                ->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                ->where('is_draft', '0')
+                                ->where('is_waiting', '0')
+                                ->where('is_approved', '1')
+                                ->where('is_rejected', '0');
+                            })
+                            ->orWhere(function ($query) {
+                                $query
+                                    ->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                    ->where('is_draft', '0')
+                                    ->where('is_waiting', '0')
+                                    ->where('is_approved', '0')
+                                    ->where('is_rejected', '1');
+                            })
+                            ->orWhere(function ($query) {
+                                $query
+                                    ->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                    ->where('is_draft', '1')
+                                    ->where('is_waiting', '0')
+                                    ->where('is_approved', '-')
+                                    ->where('is_rejected', '-');
+                            })
+                            ->orWhere(function ($query) {
+                                $query
+                                ->where('masa_pengukuran', 'pengukuran awal')
+                                ->where('is_draft', '0')
+                                ->where('is_waiting', '0')
+                                ->where('is_approved', '1')
+                                ->where('is_rejected', '0');
                             });
+                        });
                     })
                     ->groupBy('dies_id')
-                    ->orderBy('created_at', "desc")
+                    ->latest()
                     ->get();
             } else {
                 $dataDies = Dies::query()->with('kode_produks')->with('nama_produks')
@@ -206,6 +211,7 @@ class DiesController extends Controller
             $data['DataMesin'] = Mesin::select('id', 'title')->get();
             $data['DataNamaProduk'] = NamaProduk::select('id', 'title')->get();
             $data['DataKodeProduk'] = KodeProduk::select('id', 'title')->get();
+
             $Dataline = Lines::where('nama_line', '!=', 'All Line')->get();
             $data['DataLine'] = $Dataline;
 

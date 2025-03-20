@@ -1187,12 +1187,13 @@ class PengukuranController extends Controller
                     $LabelPunch = Punch::leftJoin('pengukuran_rutin_punchs', 'punchs.punch_id', '=', 'pengukuran_rutin_punchs.punch_id')
                         ->leftJoin('users', 'pengukuran_rutin_punchs.user_id', '=', 'users.id')
                         ->where('punchs.punch_id', $id)
-                        ->where('pengukuran_rutin_punchs.masa_pengukuran', session('masa_pengukuran_view'))
-                        ->latest('punchs')
+                        ->where('punchs.masa_pengukuran', $pengukuran)
+                        ->where('pengukuran_rutin_punchs.masa_pengukuran', $pengukuran)
                         ->first();
                     $data['labelPunch'] = $LabelPunch;
                 }
 
+                // dd($LabelPunch);
                 $checkStatus = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => session('masa_pengukuran_view'), 'is_draft' => '1'])->count();
                 if ($checkStatus != 0) {
                     $status = "<span class='badge badge-light-warning fs-3'>Draft</span>";

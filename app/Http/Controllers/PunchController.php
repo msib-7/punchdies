@@ -83,87 +83,58 @@ class PunchController extends Controller
                         DB::raw('MAX(is_draft) as is_draft'),
                         DB::raw('MAX(is_edit) as is_edit'),
                         DB::raw('MAX(is_waiting) as is_waiting'),
-                        DB::raw('MAX(is_approved) as is_approved'),
+                        DB::raw('MIN(is_approved) as is_approved'),
                         DB::raw('MAX(is_rejected) as is_rejected'),
                         DB::raw('MAX(created_at) as created_at'),
                         DB::raw('MAX(updated_at) as updated_at'),
                         DB::raw('MAX(next_pengukuran) as next_pengukuran'),
                     )
-                    ->where(function ($query) use ($request) {
-                        $query->where('jenis', $request->segment(3))
-                            ->where('is_delete_punch', '0')
+                    ->where(function($query) use ($request) {$query
+                        ->where('jenis', $request->segment(3))
+                        ->where('is_delete_punch', '0')
+                        ->where(function ($query) {
+                            $query
                             ->where(function ($query) {
                                 $query
-                                ->where(function ($query) {
-                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                    ->where('is_approved', '=', '-');
-                                })
-                                ->orWhere(function ($query) {
-                                    $query->where('masa_pengukuran', '=', 'pengukuran awal')
-                                        ->where('is_draft', '=', '0')
-                                        ->where('is_approved', '=', '0');
-                                })
-                                ->orWhere(function ($query) {
-                                    $query->whereLike('masa_pengukuran',  'pengukuran rutin%')
-                                        ->where('is_draft', '1')
-                                        ->where('is_approved', '=', '-');
-                                })
-                                ->orWhere(function ($query) {
-                                    $query->whereLike('masa_pengukuran',  'pengukuran rutin%')
-                                        ->where('is_draft', '0')
-                                        ->where('is_approved', '=', '-');
-                                })
-                                ->orWhere(function ($query) {
-                                    $query->whereLike('masa_pengukuran',  'pengukuran rutin%')
-                                        ->where('is_draft', '0')
-                                        ->where('is_approved', '=', '0');
-                                })
-                                ->orWhere(function ($query) {
-                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                        ->where('is_draft', '0')
-                                        ->where('is_waiting', '0')
-                                        ->where('is_approved', '=', '1');
-                                })
-                                ->orWhere(function ($query) {
-                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                        ->where('is_waiting', '1')
-                                        ->where('is_approved', '0');
-                                });
+                                ->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                ->where('is_draft', '1')
+                                ->where('is_waiting', '0')
+                                ->where('is_approved', '0')
+                                ->where('is_rejected', '0');
                             })
-                            ->orWhere('jenis', $request->segment(3))
-                            ->where('is_delete_punch', '0')
-                            ->where(function ($query) {
-                                $query->where(function ($query) {
-                                    $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                        ->where('is_approved', '=', '0');
-                                })
-                                    ->orWhere(function ($query) {
-                                        $query->where('masa_pengukuran', '!=', 'pengukuran awal')
-                                            ->where('is_draft', '0')
-                                            ->where('is_waiting', '0')
-                                            ->where('is_approved', '=', '1');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                            ->where('is_draft', '1')
-                                            ->where('is_approved', '=', '-');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                            ->where('is_draft', '0')
-                                            ->where('is_approved', '=', '0');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->whereLike('masa_pengukuran', 'pengukuran rutin%')
-                                            ->where('is_waiting', '1')
-                                            ->where('is_approved', '0');
-                                    })
-                                    ->orWhere(function ($query) {
-                                        $query->where('masa_pengukuran', '=', 'pengukuran awal')
-                                            ->where('is_approved', '=', '1')
-                                            ->where('is_waiting', '=', '0');
-                                    });
+                            ->orWhere(function ($query) {
+                                $query
+                                ->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                ->where('is_draft', '0')
+                                ->where('is_waiting', '1')
+                                ->where('is_approved', '0')
+                                ->where('is_rejected', '0');
+                            })
+                            ->orWhere(function ($query) {
+                                $query
+                                ->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                ->where('is_draft', '0')
+                                ->where('is_waiting', '0')
+                                ->where('is_approved', '1')
+                                ->where('is_rejected', '0');
+                            })
+                            ->orWhere(function ($query) {
+                                $query
+                                    ->whereLike('masa_pengukuran', 'pengukuran rutin%')
+                                    ->where('is_draft', '0')
+                                    ->where('is_waiting', '0')
+                                    ->where('is_approved', '0')
+                                    ->where('is_rejected', '1');
+                            })
+                            ->orWhere(function ($query) {
+                                $query
+                                ->where('masa_pengukuran', 'pengukuran awal')
+                                ->where('is_draft', '0')
+                                ->where('is_waiting', '0')
+                                ->where('is_approved', '1')
+                                ->where('is_rejected', '0');
                             });
+                        });
                     })
                     ->groupBy('punch_id')
                     ->latest()
@@ -252,6 +223,7 @@ class PunchController extends Controller
                     ->latest()
                     ->get();
             }
+
             // Separate dataPunch into two collections
             $oneYearAgo = Carbon::now()->subYear();
             $dataPunchOlderThanOneYear = $dataPunch->filter(function ($punch) use ($oneYearAgo) {

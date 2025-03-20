@@ -27,7 +27,7 @@ class ApprovalPengukuranAwalController extends Controller
             ->where('is_approved', '!=', '1')
             ->where('is_rejected', '!=', '1')
             ->whereIn('punch_id', $validPunchIds) // Filter by valid punch IDs
-            ->latest()
+            ->orderBy('tgl_submit', 'DESC')
             ->get();
 
         // Get approvals that have valid dies
@@ -36,11 +36,11 @@ class ApprovalPengukuranAwalController extends Controller
             ->where('is_approved', '!=', '1')
             ->where('is_rejected', '!=', '1')
             ->whereIn('dies_id', $validDiesIds) // Filter by valid dies IDs
-            ->latest()
+            ->orderBy('tgl_submit', 'DESC')
             ->get();
 
         // Merge the two approval collections
-        $approval = $approval1->merge($approval2);
+        $approval = $approval1->merge($approval2)->sortByDesc('created_at');
 
         // Get only valid dies
         $dataDies = Dies::where('is_delete_dies', '!=', 1)->get();

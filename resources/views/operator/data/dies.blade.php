@@ -217,84 +217,82 @@
                 {{-- Content --}}
                 <div class="row g-5 gx-xl-10" id="cardContainer">
                     @foreach ($reminderData as $data)
-                    <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
-                        data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_draft == '1' ? 'draft' : ($data->is_draft == '0' ? 'waiting' : 'success')) }}" 
-                        data-merk="{{ strtolower($data->merk) }}" 
-                        data-nama-mesin="{{ strtolower($data->nama_mesin_cetak) }}" 
-                        data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
-                        data-line="{{ $data->line_id }}">
-                        <div class="card shadow-sm border-0 rounded-3 h-100">
-                            <div class="card-header">
-                                <!--begin::Title-->
-                                <h3 class="card-title align-items-start flex-column">
-                                    <span class="card-label fw-bold text-gray-800">{{ strtoupper($data->merk) }}</span>
-                                </h3>
-                                <!--end::Title-->
-                                <!--begin::Toolbar-->
-                                <div class="card-toolbar">
-                                    @if ($data->is_approved == '1')
+                        <div class="col-12 col-md-6 col-lg-4 card-item mb-4" 
+                            data-status="{{ $data->is_approved == '1' ? 'approved' : ($data->is_draft == '1' ? 'draft' : ($data->is_draft == '0' ? 'waiting' : 'success')) }}" 
+                            data-merk="{{ strtolower($data->merk) }}" 
+                            data-nama-mesin="{{ strtolower($data->nama_mesin_cetak) }}" 
+                            data-tanggal-pengukuran="{{ date_format($data->created_at, 'Y-m-d') }}" 
+                            data-line="{{ $data->line_id }}">
+                            <div class="card shadow-sm border-0 rounded-3 h-100">
+                                <div class="card-header">
+                                    <!--begin::Title-->
+                                    <h3 class="card-title align-items-start flex-column">
+                                        <span class="card-label fw-bold text-gray-800">{{ strtoupper($data->merk) }}</span>
+                                    </h3>
+                                    <!--end::Title-->
+                                    <!--begin::Toolbar-->
+                                    <div class="card-toolbar">
+                                        @if ($data->is_draft == '1')
+                                            <span class="badge badge-square badge-outline badge-dark">Draft</span>
+                                        @elseif ($data->is_draft == '0' && $data->is_waiting == '1')
+                                            <span class="badge badge-square badge-outline badge-warning">Waiting</span>
+                                        @elseif ($data->is_approved == '1')
                                             <span class="badge badge-square badge-outline badge-success">Approved</span>
                                         @elseif ($data->is_rejected == '1') <!-- Check for rejection -->
                                             <span class="badge badge-square badge-outline badge-danger">Rejected</span>
-                                        @else
-                                            @if ($data->is_draft == '1')
-                                                <span class="badge badge-square badge-outline badge-dark">Draft</span>
-                                            @elseif ($data->is_draft == '0')
-                                                <span class="badge badge-square badge-outline badge-warning">Waiting</span>
-                                            @endif
                                         @endif
+                                    </div>
+                                    <!--end::Toolbar-->
                                 </div>
-                                <!--end::Toolbar-->
-                            </div>
-                            <div class="card-body">
-                                <table class="card-text">
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>Bulan/Tahun Pembuatan</strong></td>
-                                            <td><span class="px-2">:</span></td>
-                                            <td>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Nama Mesin</strong></td>
-                                            <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->nama_mesin_cetak) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Kode Produk</strong></td>
-                                            <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->kode_produks->title ?? '-') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Nama Produk</strong></td>
-                                            <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->nama_produks->title ?? '-') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Pengukuran Terakhir</strong></td>
-                                            <td><span class="px-2">:</span></td>
-                                            <td>{{ strtoupper($data->masa_pengukuran) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Tanggal Pengukuran</strong></td>
-                                            <td><span class="px-2">:</span></td>
-                                            <td>{{ date_format($data->created_at, 'd M Y')}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
-                                    @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal -->
-                                        <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="opsiPengukuran(this)">
-                                            <span class="fs-7">Pengukuran</span>
+                                <div class="card-body">
+                                    <table class="card-text">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Bulan/Tahun Pembuatan</strong></td>
+                                                <td><span class="px-2">:</span></td>
+                                                <td>{{$data->bulan_pembuatan}} {{$data->tahun_pembuatan}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Nama Mesin</strong></td>
+                                                <td><span class="px-2">:</span></td>
+                                                <td>{{ strtoupper($data->nama_mesin_cetak) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Kode Produk</strong></td>
+                                                <td><span class="px-2">:</span></td>
+                                                <td>{{ strtoupper($data->kode_produks->title ?? '-') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Nama Produk</strong></td>
+                                                <td><span class="px-2">:</span></td>
+                                                <td>{{ strtoupper($data->nama_produks->title ?? '-') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Pengukuran Terakhir</strong></td>
+                                                <td><span class="px-2">:</span></td>
+                                                <td>{{ strtoupper($data->masa_pengukuran) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Tanggal Pengukuran</strong></td>
+                                                <td><span class="px-2">:</span></td>
+                                                <td>{{ date_format($data->created_at, 'd M Y')}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="d-flex flex-column flex-md-row justify-content-between mt-3">
+                                        @if($data->masa_pengukuran != '-' && $data->is_rejected != '1') <!-- Check if there's no pengukuran awal -->
+                                            <button class="btn btn-primary mb-2 mb-md-0" id="{{$data->dies_id}}" onclick="opsiPengukuran(this)">
+                                                <span class="fs-7">Pengukuran</span>
+                                            </button>
+                                        @endif
+                                        <button class="btn btn-secondary" id="{{$data->dies_id}}" onclick="pilihPengukuran(this)">
+                                            <i class="ki-outline ki-eye fs-2"></i>
+                                            Lihat Data Pengukuran
                                         </button>
-                                    @endif
-                                    <button class="btn btn-secondary" id="{{$data->dies_id}}" onclick="pilihPengukuran(this)">
-                                        <i class="ki-outline ki-eye fs-2"></i>
-                                        Lihat Data Pengukuran
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
                 <!-- Pagination -->
