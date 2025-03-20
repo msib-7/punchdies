@@ -63,10 +63,14 @@
                         <div class="col-6 col-md-2">
                             <label for="lineFilter" class="form-label">Line</label>
                             <select id="lineFilter" class="form-select" onchange="filterCards()" title="Filter by line">
-                                <option value="">All Lines</option>
-                                @foreach ($DataLine as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nama_line }}</option>
-                                @endforeach
+                                @if (auth()->user()->lines->nama_line === 'All Line')
+                                    <option value="">All Lines</option>
+                                    @foreach ($DataLine as $item)
+                                        <option value="{{ $item->id }}">{{ $item->nama_line }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="{{ auth()->user()->lines->id }}">{{ auth()->user()->lines->nama_line }}</option>
+                                @endif
                             </select>
                         </div>
                         <div class="col-12">
