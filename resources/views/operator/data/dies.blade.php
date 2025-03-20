@@ -25,12 +25,14 @@
                     Filter Options
                 </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#filterAccordion">
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                data-bs-parent="#filterAccordion">
                 <div class="accordion-body">
                     <div class="row g-3">
-                        <div class="col-12 col-md-2">
+                        <div class="col-12 col-md-4">
                             <label for="searchInput" class="form-label">Search</label>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="filterCards()" title="Search by any keyword">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search..." onkeyup="filterCards()"
+                                title="Search by any keyword">
                         </div>
                         <div class="col-6 col-md-2">
                             <label for="statusFilter" class="form-label">Status</label>
@@ -39,26 +41,46 @@
                                 <option value="draft">Draft</option>
                                 <option value="waiting">Waiting</option>
                                 <option value="approved">Approved</option>
-                                <option value="rejected">Rejected</option>
                             </select>
                         </div>
                         <div class="col-6 col-md-2">
                             <label for="merkFilter" class="form-label">Merk</label>
-                            <input type="text" id="merkFilter" class="form-control" placeholder="Merk..." onkeyup="filterCards()" title="Filter by merk">
+                            <input type="text" id="merkFilter" class="form-control" placeholder="Merk..." onkeyup="filterCards()"
+                                title="Filter by merk">
                         </div>
                         <div class="col-6 col-md-2">
                             <label for="tanggalPengukuranFilter" class="form-label">Measurement Date</label>
-                            <input type="date" id="tanggalPengukuranFilter" class="form-control" onchange="filterCards()" title="Select the measurement date">
+                            <input type="date" id="tanggalPengukuranFilter" class="form-control" onchange="filterCards()"
+                                title="Select the measurement date">
                         </div>
                         <div class="col-6 col-md-2">
                             <label for="namaMesinFilter" class="form-label">Machine Name</label>
-                            <select id="namaMesinFilter" onchange="filterCards()" data-control="select2" data-dropdown-parent="#collapseOne" data-placeholder="Select a item..." class="form-select fw-bold">
-                                <option value=""></option>
-                                @foreach ($DataMesin as $item)
-                                    <option value="{{$item->title}}">{{$item->title}}</option>
-                                @endforeach
+                            <input type="text" id="namaMesinFilter" class="form-control" placeholder="Nama Mesin..."
+                                onkeyup="filterCards()" title="Filter by machine name">
+                        </div>
+                        <div class="col-6 col-md-2">
+                            <label for="bulanFilter" class="form-label">Month</label>
+                            <select id="bulanFilter" class="form-select" onchange="filterCards()"
+                                title="Filter by month of production">
+                                <option value="">All Months</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March </option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">August</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
                             </select>
-                            {{-- <input type="text" id="namaMesinFilter" class="form-control" placeholder="Nama Mesin..." onkeyup="filterCards()" title="Filter by machine name"> --}}
+                        </div>
+                        <div class="col-6 col-md-2">
+                            <label for="tahunFilter" class="form-label">Year</label>
+                            <input type="number" id="tahunFilter" class="form-control" placeholder="Tahun..."
+                                onkeyup="filterCards()" title="Filter by year of production">
                         </div>
                         <div class="col-6 col-md-2">
                             <label for="lineFilter" class="form-label">Line</label>
@@ -72,9 +94,6 @@
                                     <option value="{{ auth()->user()->lines->id }}">{{ auth()->user()->lines->nama_line }}</option>
                                 @endif
                             </select>
-                        </div>
-                        <div class="col-12">
-                            <button class="btn btn-light" id="resetFilters">Reset Filters</button>
                         </div>
                     </div>
                 </div>
