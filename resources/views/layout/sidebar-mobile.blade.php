@@ -417,6 +417,7 @@
                     </div>
                     <!--end:Menu sub-->
                 </div>
+                @break
             @endif
         @endforeach
         <!--end:Menu item-->
