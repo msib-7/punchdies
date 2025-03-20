@@ -408,7 +408,6 @@ class ServiceDraftPengukuranAwal
             // dd($model::create($dataApproval));
             $model::create($dataApproval);
 
-
             $users = User::whereHas('roles', function ($query) {
                 $query->where('role_name', 'Supervisor Engineering');
                 //   ->orWhere('role_name', 'Administraor');

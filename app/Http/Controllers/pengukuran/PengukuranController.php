@@ -20,6 +20,7 @@ use App\Models\Punch;
 use App\Services\GetJenisPunch;
 use App\Services\Pengukuran\Awal\ServiceDraftPengukuranAwal;
 use App\Services\Pengukuran\Awal\ServicePengukuranAwal;
+use App\Services\Pengukuran\Rutin\ServiceDraftPengukuranRutin;
 use App\Services\Pengukuran\Rutin\ServicePengukuranRutin;
 use App\Services\Rumus\GetRumusPengukuranAwalDies;
 use App\Services\Rumus\GetRumusPengukuranAwalPunch;
@@ -549,7 +550,6 @@ class PengukuranController extends Controller
             return view('engineer.data.form.pengukuran-dies', $data);
         }
     }
-
     public function simpan_pengukuran(Request $request)
     {
         if ($request->segment(3) == 'punch-atas') {
@@ -582,7 +582,6 @@ class PengukuranController extends Controller
                 $tip2 = $request->tip2;
                 $cup = $request->cup;
                 $wkl = $request->wkl;
-
 
                 $i = 0;
                 while ($i < count($update_id)) {
@@ -1749,8 +1748,10 @@ class PengukuranController extends Controller
                         'cup_depth' => $cup[$i],
                         'head_configuration' => $hcf[$i],
                     ];
-                    PengukuranRutinPunch::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
+                    PengukuranRutinPunch::updateOrCreate(['no' => $update_id[$i]], $createDraftPengukuran);
                     $i++;
+                    // PengukuranRutinPunch::where('no', $update_id[$i])->latest()->update($createDraftPengukuran);
+                    // $i++;
                 }
                 return (new GetRumusPengukuranRutinPunch)->handle($update_id, $wkl_awal);
 
@@ -1867,7 +1868,7 @@ class PengukuranController extends Controller
         $tgl_kalibrasi_3 = $request->tgl_kalibrasi_3;
         $masa_pengukuran = session('masa_pengukuran');
 
-        return (new ServicePengukuranRutin)->addNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3, $masa_pengukuran);
+        return (new ServiceDraftPengukuranRutin)->addNote($note, $jenis, $route, $referensi_drawing, $catatan, $kesimpulan, $kalibrasi_tools_1, $kalibrasi_tools_2, $kalibrasi_tools_3, $tgl_kalibrasi_1, $tgl_kalibrasi_2, $tgl_kalibrasi_3, $masa_pengukuran);
 
         // if ($request->segment(3) == 'punch-atas') {
         //     $route = 'atas';
