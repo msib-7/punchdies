@@ -601,6 +601,9 @@
                             x.setAttribute("id", "hdo<?=$no?>");
                             x.setAttribute("name", "hdo[]");
                             x.setAttribute("autocomplete", "off");
+                            @if ($browser->isMobile())
+                                x.setAttribute("inputMode", "none");
+                            @endif
                             // x.setAttribute("placeholder", "00.00");
                             x.setAttribute("value", "<?= $draftPengukuran[$no]['head_outer_diameter']; ?>");
                             // x.setAttribute("onkeypress", "return event.keyCode != 13;"); 
