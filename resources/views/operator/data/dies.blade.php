@@ -797,7 +797,7 @@
 
                     $('#masa_pengukuran_pre').val(data.masa_pengukuran_pre);
                     $('#tgl_pengukuran_pre').val(tgl_pre);
-                    $('#user_pre').val(data.data.nama);
+                    $('#user_pre').val(data.data.user_nama);
                     $('#masa_pengukuran').val(data.masa_pengukuran);
                     $('#tgl_pengukuran_now').val(now);
                     $('#user').val('{{ auth()->user()->nama }}');

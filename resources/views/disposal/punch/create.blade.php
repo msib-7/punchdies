@@ -88,9 +88,9 @@
                                 <div class="card">
                                     <div class="card-body">
                                        <!--begin::Form-->
-                                        <form class="form" action="{{ route('pnd.request.disposal.store', $labelPunch->punch_id) }}" method="post" enctype="multipart/form-data">
+                                        <form class="form" action="{{ route('pnd.request.disposal.store', $labelIdentitas->punch_id) }}" method="post" enctype="multipart/form-data">
                                             @csrf
-                                            <input type="hidden" name="id" value="{{ $labelPunch->punch_id }}">
+                                            <input type="hidden" name="id" value="{{ $labelIdentitas->punch_id }}">
                                             <div>
                                                 <label for="formFile1" class="required form-label">Dokumen 1</label>
                                                 <input class="form-control" type="file" value="{{ $draft->attach_1 ?? '-'}}" name="dokumen1" id="formFile1" accept=".pdf, .jpg, .jpeg, .png" onchange="handleFileChange(this)">
@@ -185,25 +185,6 @@
                                                 @endif
                                                     
                                             </div>
-                                            {{-- <!--begin::Input group-->
-                                            <div class="fv-row">
-                                                <!--begin::Dropzone-->
-                                                <div class="dropzone" id="kt_dropzonejs_example_1">
-                                                    <!--begin::Message-->
-                                                    <div class="dz-message needsclick">
-                                                        <i class="ki-duotone ki-file-up fs-3x text-primary"><span class="path1"></span><span class="path2"></span></i>
-
-                                                        <!--begin::Info-->
-                                                        <div class="ms-4">
-                                                            <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop files here or click to upload.</h3>
-                                                            <span class="fs-7 fw-semibold text-gray-500">Upload 5 dokumen</span>
-                                                        </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                </div>
-                                                <!--end::Dropzone-->
-                                            </div>
-                                            <!--end::Input group--> --}}
                                         </form>
                                         <!--end::Form-->
                                     </div>
@@ -232,7 +213,7 @@
                                                                             </td>
                                                                             <td style="border: none;"
                                                                                 class="fs-6 px-5 my-4">
-                                                                                {{ strtoupper($labelPunch->merk) }}
+                                                                                {{ strtoupper($labelIdentitas->merk) }}
                                                                             </td>
                                                                         </tr>
                                                                         <tr style="border: none; height: 30px;">
@@ -245,7 +226,7 @@
                                                                             </td>
                                                                             <td style="border: none;"
                                                                                 class="fs-6 px-5 my-4">
-                                                                                {{ strtoupper($labelPunch->bulan_pembuatan).' '.$labelPunch->tahun_pembuatan }}
+                                                                                {{ strtoupper($labelIdentitas->bulan_pembuatan).' '.$labelIdentitas->tahun_pembuatan }}
                                                                             </td>
                                                                         </tr>
                                                                         <tr style="border: none; height: 30px;">
@@ -258,7 +239,7 @@
                                                                             </td>
                                                                             <td style="border: none;"
                                                                                 class="fs-6 px-5 my-4">
-                                                                                {{ strtoupper($labelPunch->nama_mesin_cetak) }}
+                                                                                {{ strtoupper($labelIdentitas->nama_mesin_cetak) }}
                                                                             </td>
                                                                         </tr>
                                                                         <tr style="border: none; height: 30px;">
@@ -271,10 +252,10 @@
                                                                             </td>
                                                                             <td style="border: none;"
                                                                                 class="fs-6 px-5 my-4">
-                                                                                @if(strtoupper($labelPunch->nama_produks->title) == strtoupper($labelPunch->kode_produks->title))
-                                                                                    {{ strtoupper($labelPunch->nama_produks->title)}}
+                                                                                @if(strtoupper($labelIdentitas->nama_produks->title) == strtoupper($labelIdentitas->kode_produks->title))
+                                                                                    {{ strtoupper($labelIdentitas->nama_produks->title)}}
                                                                                 @else
-                                                                                    {{ strtoupper($labelPunch->nama_produks->title)."/".strtoupper($labelPunch->kode_produks->title)}}
+                                                                                    {{ strtoupper($labelIdentitas->nama_produks->title)."/".strtoupper($labelIdentitas->kode_produks->title)}}
                                                                                 @endif
                                                                             </td>
                                                                         </tr>
@@ -300,7 +281,7 @@
                                                                             </td>
                                                                             <td style="border: none;"
                                                                                 class="fs-6 px-5 my-4">
-                                                                                {{ ucwords($labelPunch->masa_pengukuran) }}
+                                                                                {{ ucwords($labelIdentitas->masa_pengukuran) }}
                                                                             </td>
                                                                         </tr>
                                                                         <tr style="border: none; height: 30px;">
@@ -314,7 +295,7 @@
                                                                             <td style="border: none;"
                                                                                 class="fs-6 px-5 my-4">
                                                                                 {{-- {{ date_format($tglPengukuran->created_at, 'd M Y') }} --}}
-                                                                                {{ date_format($labelPunch->created_at, 'd M Y') }}
+                                                                                {{ date_format($labelIdentitas->created_at, 'd M Y') }}
                                                                             </td>
                                                                         </tr>
                                                                         <tr style="border: none; height: 30px;">
@@ -353,7 +334,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if ($labelPunch->masa_pengukuran == 'pengukuran awal')
+                                @if ($labelIdentitas->masa_pengukuran == 'pengukuran awal')
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead>
@@ -421,7 +402,7 @@
                                                 <div class="col-12">
                                                     <div class="d-flex flex-column mx-2">
                                                         <label for="referensi_drawing" class="form-label">Referensi Drawing</label>
-                                                        <input type="text" class="form-control" value="{{$labelPunch->referensi_drawing}}" id="referensi_drawing" name="referensi_drawing" placeholder="Insert Reference Drawing" @readonly(true) />
+                                                        <input type="text" class="form-control" value="{{$labelIdentitas->referensi_drawing}}" id="referensi_drawing" name="referensi_drawing" placeholder="Insert Reference Drawing" @readonly(true) />
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
@@ -429,13 +410,13 @@
                                                         <div class="col-12 mt-3">
                                                             <div class="d-flex flex-column mx-2">
                                                                 <label for="catatan" class="form-label">Catatan</label>
-                                                                <textarea class="form-control" id="catatan" name="catatan" rows="3" placeholder="Insert Your Message" @readonly(true)>{{$labelPunch->catatan}}</textarea>
+                                                                <textarea class="form-control" id="catatan" name="catatan" rows="3" placeholder="Insert Your Message" @readonly(true)>{{$labelIdentitas->catatan}}</textarea>
                                                             </div>
                                                         </div>
                                                         <div class="col-12 mt-3">
                                                             <div class="d-flex flex-column mx-2">
                                                                 <label for="kesimpulan" class="form-label">Kesimpulan</label>
-                                                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" rows="3" placeholder="Insert Your Message" @readonly(true)>{{$labelPunch->kesimpulan}}</textarea>
+                                                                <textarea class="form-control" id="kesimpulan" name="kesimpulan" rows="3" placeholder="Insert Your Message" @readonly(true)>{{$labelIdentitas->kesimpulan}}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -453,14 +434,14 @@
                                                                 </thead>
                                                                 <tbody>
                                                                 <?php
-                                                                $tgl_kalibrasi_1 = $labelPunch->tgl_kalibrasi_tools_1 ? new DateTime($labelPunch->tgl_kalibrasi_tools_1) : null;
-                                                                $tgl_kalibrasi_2 = $labelPunch->tgl_kalibrasi_tools_2 ? new DateTime($labelPunch->tgl_kalibrasi_tools_2) : null;
-                                                                $tgl_kalibrasi_3 = $labelPunch->tgl_kalibrasi_tools_3 ? new DateTime($labelPunch->tgl_kalibrasi_tools_3) : null;
+                                                                $tgl_kalibrasi_1 = $labelIdentitas->tgl_kalibrasi_tools_1 ? new DateTime($labelIdentitas->tgl_kalibrasi_tools_1) : null;
+                                                                $tgl_kalibrasi_2 = $labelIdentitas->tgl_kalibrasi_tools_2 ? new DateTime($labelIdentitas->tgl_kalibrasi_tools_2) : null;
+                                                                $tgl_kalibrasi_3 = $labelIdentitas->tgl_kalibrasi_tools_3 ? new DateTime($labelIdentitas->tgl_kalibrasi_tools_3) : null;
                                                                 ?>
 
                                                                 <tr>
                                                                     <td>
-                                                                        <input type="text" value="{{ $labelPunch->kalibrasi1->title }}" class="form-control" readonly>
+                                                                        <input type="text" value="{{ $labelIdentitas->kalibrasi1->title }}" class="form-control" readonly>
                                                                     </td>
                                                                     <td>
                                                                         <input type="text" value="{{ $tgl_kalibrasi_1 ? date_format($tgl_kalibrasi_1, 'd M Y') : '' }}" name="tgl_kalibrasi_1" id="tgl_kalibrasi_1" class="form-control" readonly>
@@ -468,7 +449,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>
-                                                                        <input type="text" value="{{ $labelPunch->kalibrasi2->title }}" class="form-control" readonly>
+                                                                        <input type="text" value="{{ $labelIdentitas->kalibrasi2->title }}" class="form-control" readonly>
                                                                     </td>
                                                                     <td>
                                                                         <input type="text" value="{{ $tgl_kalibrasi_2 ? date_format($tgl_kalibrasi_2, 'd M Y') : '' }}" name="tgl_kalibrasi_2" id="tgl_kalibrasi_2" class="form-control" @readonly(true)>
@@ -476,7 +457,7 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td>
-                                                                        <input type="text" value="{{ $labelPunch->kalibrasi3->title }}" class="form-control" readonly>
+                                                                        <input type="text" value="{{ $labelIdentitas->kalibrasi3->title }}" class="form-control" readonly>
                                                                     </td>
                                                                     <td>
                                                                         <input type="text" value="{{ $tgl_kalibrasi_3 ? date_format($tgl_kalibrasi_3, 'd M Y') : '' }}" name="tgl_kalibrasi_3" id="tgl_kalibrasi_3" class="form-control" @readonly(true)>

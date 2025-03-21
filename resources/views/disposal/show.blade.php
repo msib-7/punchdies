@@ -67,7 +67,7 @@
                                                 <div class="row">
                                                     <div class="col">:</div>
                                                     <div class="col-11">
-                                                        @if ($dataApproval->punch_id != null || $dataApproval->punch_id != '-')
+                                                        @if ($dataApproval->punch_id != null)
                                                             {{ ucwords($dataApproval->punch->jenis) }}
                                                         @else
                                                             {{ ucwords($dataApproval->dies->jenis) }}
@@ -85,7 +85,7 @@
                                                 <div class="row">
                                                     <div class="col">:</div>
                                                     <div class="col-11">
-                                                        @if ($dataApproval->punch_id != null || $dataApproval->punch_id != '-')
+                                                        @if ($dataApproval->punch_id != null)
                                                             {{ ucwords($dataApproval->punch->merk) }}
                                                         @else
                                                             {{ ucwords($dataApproval->dies->merk) }}
@@ -103,7 +103,7 @@
                                                 <div class="row">
                                                     <div class="col">:</div>
                                                     <div class="col-11">
-                                                        @if ($dataApproval->punch_id != null || $dataApproval->punch_id != '-')
+                                                        @if ($dataApproval->punch_id != null)
                                                             {{ $dataApproval->punch->bulan_pembuatan.' '.$dataApproval->punch->tahun_pembuatan }}
                                                         @else
                                                             {{ $dataApproval->dies->bulan_pembuatan.' '.$dataApproval->dies->tahun_pembuatan }}
@@ -121,7 +121,7 @@
                                                 <div class="row">
                                                     <div class="col">:</div>
                                                     <div class="col-11">
-                                                        @if ($dataApproval->punch_id != null || $dataApproval->punch_id != '-')
+                                                        @if ($dataApproval->punch_id != null)
                                                             {{ ucwords($dataApproval->punch->masa_pengukuran) }}
                                                         @else
                                                             {{ ucwords($dataApproval->dies->masa_pengukuran) }}
@@ -139,7 +139,7 @@
                                                 <div class="row">
                                                     <div class="col">:</div>
                                                     <div class="col-11">
-                                                        @if ($dataApproval->punch_id != null || $dataApproval->punch_id != '-')
+                                                        @if ($dataApproval->punch_id != null)
                                                             {{ ucwords($dataApproval->punch->updated_at) }}
                                                         @else
                                                             {{ ucwords($dataApproval->dies->updated_at) }}

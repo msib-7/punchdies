@@ -6,7 +6,9 @@ use App\Events\NotificationEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Dies;
 use App\Models\ApprovalDisposal;
+use App\Models\PengukuranAwalDies;
 use App\Models\PengukuranAwalPunch;
+use App\Models\PengukuranRutinDies;
 use App\Models\PengukuranRutinPunch;
 use App\Models\Punch;
 use App\Models\User;
@@ -27,44 +29,67 @@ class DisposalController extends Controller
     public function show($id){
         $dataApproval = ApprovalDisposal::find($id);
 
-        if($dataApproval->punch_id != null || $dataApproval->punch_id != '-'){
+        if($dataApproval->punch_id === null){
             if ($dataApproval->is_draft == '1') {
-                return redirect()->route('pnd.request.disposal.create', $dataApproval->punch_id)->with('warning', 'You are in draft mode!');
-            }elseif($dataApproval->is_revisi == '1'){
-                return redirect()->route('pnd.request.disposal.create', $dataApproval->punch_id)->with('warning', 'You are in revisi mode!');
-            }else{
-                $data = Punch::where('punch_id', $dataApproval->punch_id)->latest()->first();
-            }
-        }else{
-            if ($dataApproval->is_draft == '1') {
+                session()->put('store', 'dies_id');
                 return redirect()->route('pnd.request.disposal.create', $dataApproval->dies_id)->with('warning', 'You are in draft mode!');
-            }elseif($dataApproval->is_revisi == '1'){
+            } elseif ($dataApproval->is_revisi == '1') {
+                session()->put('store', 'dies_id');
                 return redirect()->route('pnd.request.disposal.create', $dataApproval->dies_id)->with('warning', 'You are in revisi mode!');
-            }else{
+            } else {
                 $data = Dies::where('dies_id', $dataApproval->dies_id)->latest()->first();
             }
+        }elseif($dataApproval->dies_id === null){
+            if ($dataApproval->is_draft == '1') {
+                session()->put('store', 'punch_id');
+                return redirect()->route('pnd.request.disposal.create', $dataApproval->punch_id)->with('warning', 'You are in draft mode!');
+            } elseif ($dataApproval->is_revisi == '1') {
+                session()->put('store', 'punch_id');
+                return redirect()->route('pnd.request.disposal.create', $dataApproval->punch_id)->with('warning', 'You are in revisi mode!');
+            } else {
+                $data = Punch::where('punch_id', $dataApproval->punch_id)->latest()->first();
+            }
         }
-
+        
         return view('disposal.show', compact('dataApproval', 'data'));
     }
 
-    public function create($id) {
-        $labelPunch = Punch::where('punch_id', $id)->latest()->first();
-        $draft = ApprovalDisposal::where('punch_id', $id)->latest()->first();
-        // dd($draft);
+    public function create($id) 
+    {
+        session()->remove('store');
+        $queryPunch = Punch::where('punch_id', $id);
+        $queryDies = Dies::where('dies_id', $id);
 
-        $masaPengukuran = $labelPunch->masa_pengukuran;
-        if($masaPengukuran == 'pengukuran awal'){
-            $dataPengukuran = PengukuranAwalPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->get();
-            $data = PengukuranAwalPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->first();
-        }else{
-            $dataPengukuran = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->get();
-            $data = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->first();
+        $punchExist = $queryPunch->exists();
+        $diesExist = $queryDies->exists();
+
+        $labelIdentitas = $queryPunch->latest()->first() ?? $queryDies->latest()->first();
+
+        if ($punchExist) {
+            $draft = ApprovalDisposal::where('punch_id', $id)->latest()->first();
+            $masaPengukuran = $labelIdentitas ? $labelIdentitas->masa_pengukuran : null;
+            if ($masaPengukuran == 'pengukuran awal') {
+                $dataPengukuran = PengukuranAwalPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->get();
+                $data = PengukuranAwalPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->first();
+            } else {
+                $dataPengukuran = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->get();
+                $data = PengukuranRutinPunch::where(['punch_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->first();
+            }
+        }elseif ($diesExist) {
+            $draft = ApprovalDisposal::where('dies_id', $id)->latest()->first();
+            $masaPengukuran = $labelIdentitas ? $labelIdentitas->masa_pengukuran : null;
+            if ($masaPengukuran == 'pengukuran awal') {
+                $dataPengukuran = PengukuranAwalDies::where(['dies_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->get();
+                $data = PengukuranAwalDies::where(['dies_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->first();
+            } else {
+                $dataPengukuran = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->get();
+                $data = PengukuranRutinDies::where(['dies_id' => $id, 'masa_pengukuran' => $masaPengukuran])->latest()->first();
+            }
         }
 
         // Periksa apakah terdapat NOK
         $hasNok = $dataPengukuran->contains(function ($item) {
-            return $item->status === 'NOK'; // Asumsikan 'status' adalah nama kolom
+            return $item->status === 'NOK';
         });
 
         if($hasNok){
@@ -73,14 +98,19 @@ class DisposalController extends Controller
             $statusPengukuran = '<span class="badge badge-success fs-6">OK</span>';
         }
 
-        // dd($dataPengukuran);
-        return view('disposal.punch.pengukuran-rutin.create', compact('labelPunch', 'dataPengukuran', 'data', 'statusPengukuran', 'draft'));
+        if($punchExist){
+            session()->put('store', 'punch_id');
+            return view('disposal.punch.create', compact('labelIdentitas', 'dataPengukuran', 'data', 'statusPengukuran', 'draft'));
+        }elseif($diesExist){
+            session()->put('store', 'dies_id');
+            return view('disposal.dies.create', compact('labelIdentitas', 'dataPengukuran', 'data', 'statusPengukuran', 'draft'));
+        }
     }
 
     public function store(Request $request, $id)
     {
         // Determine if there is an existing draft
-        $existingDraft = ApprovalDisposal::where('punch_id', $id)->first();
+        $existingDraft = ApprovalDisposal::where(session('store'), $id)->first();
         // Validate the request
         $request->validate([
             'dokumen1' => $existingDraft && $existingDraft->attach_1 ? 'file|mimes:pdf,jpg,jpeg,png|max:2048' : 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -91,6 +121,7 @@ class DisposalController extends Controller
         ]);
 
         // Determine punch_id and dies_id based on existence
+        // $data = Punch::where('punch_id', $id)->first() ?? Dies::where('dies_id', $id)->first();
         $data = Punch::where('punch_id', $id)->first() ?? Dies::where('dies_id', $id)->first();
         $punch_id = $data instanceof Punch ? $data->punch_id : null;
         $dies_id = $data instanceof Dies ? $data->dies_id : null;
@@ -125,7 +156,7 @@ class DisposalController extends Controller
         // }
 
         // Create or update the record
-        ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+        ApprovalDisposal::updateOrCreate([session('store') => $id], array_merge([
             'req_id' => $newId,
             'punch_id' => $punch_id,
             'dies_id' => $dies_id,
@@ -143,7 +174,7 @@ class DisposalController extends Controller
         ], $filePaths));
 
         // Retrieve the newly created or updated record
-        $newApproval = ApprovalDisposal::where('punch_id', $id)->latest()->first();
+        $newApproval = ApprovalDisposal::where(session('store'), $id)->latest()->first();
         $disposalId = $newApproval->id;
 
         $users = User::whereHas('roles', function ($query) {
@@ -245,17 +276,18 @@ class DisposalController extends Controller
         foreach (range(1, 5) as $i) {
             $file = $request->file('dokumen' . $i);
             if ($file) {
-                $fileName = 'disposal_' . $newId . '_' . $i . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePaths['attach_' . $i] = $file->storeAs('uploads', $fileName, 'public');
+                $fileName = 'disposal_' . $newId . '_' . $i . '_' . time() . '.' . $file->extension();
+                $file->move(public_path('assets/img/disposals'), $fileName);
+                $filePaths['attach_' . $i] = $fileName;
             } else {
                 // If no new file is uploaded, keep the existing value
-                $existingDraft = ApprovalDisposal::where('punch_id', $id)->first();
+                $existingDraft = ApprovalDisposal::where(session('store'), $id)->first();
                 $filePaths['attach_' . $i] = $existingDraft ? $existingDraft->{'attach_' . $i} : '-'; // Default value if no existing draft
             }
         }
 
         //Periksa Apakah data ini sudah pernah di draft sebelumnya
-        $dataDraft = ApprovalDisposal::where('punch_id', $id)->orWhere('dies_id', $id);
+        $dataDraft = ApprovalDisposal::where(session('store'), $id)->orWhere('dies_id', $id);
 
         
         if($dataDraft->exists()){
@@ -263,7 +295,7 @@ class DisposalController extends Controller
 
             if ($isRevisi->is_revisi == '1') {
                 // Update the existing record
-                ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+                ApprovalDisposal::updateOrCreate([session('store') => $id], array_merge([
                     'user_id' => auth()->user()->id,
                     'tgl_submit' => now(),
                     'req_note' => $request->note ?? '-',
@@ -274,10 +306,11 @@ class DisposalController extends Controller
                     'is_revisi' => '1',
                 ], $filePaths))->latest();
 
+                session()->remove('store');
                 return redirect()->back()->with('success', 'Data Revisi Saved to Draft!');
             } else {
                 // Update the existing record
-                ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+                ApprovalDisposal::updateOrCreate([session('store') => $id], array_merge([
                     'user_id' => auth()->user()->id,
                     'tgl_submit' => now(),
                     'req_note' => $request->note ?? '-',
@@ -288,6 +321,7 @@ class DisposalController extends Controller
                     'is_revisi' => '0',
                 ], $filePaths))->latest();
 
+                session()->remove('store');
                 return redirect()->back()->with('success', 'Data Saved to Draft!');
             }
         }else{
@@ -298,7 +332,7 @@ class DisposalController extends Controller
             $dies_id = $data instanceof Dies ? $data->dies_id : null;
 
 
-            ApprovalDisposal::updateOrCreate(['punch_id' => $id], array_merge([
+            ApprovalDisposal::updateOrCreate([session('store') => $id], array_merge([
                 'req_id' => $newId,
                 'punch_id' => $punch_id,
                 'dies_id' => $dies_id,
@@ -316,6 +350,7 @@ class DisposalController extends Controller
                 'is_revisi' => '0',
             ], $filePaths))->latest();
 
+            session()->remove('store');
             return redirect()->back()->with('warning', 'Data Saved to Draft!');
         }
     }

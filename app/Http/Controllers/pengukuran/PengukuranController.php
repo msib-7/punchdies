@@ -1036,7 +1036,7 @@ class PengukuranController extends Controller
                     ->leftJoin('pengukuran_rutin_diess', 'diess.dies_id', '=', 'pengukuran_rutin_diess.dies_id')
                     ->leftJoin('users', 'pengukuran_rutin_diess.user_id', '=', 'users.id')
                     ->where('diess.dies_id', $id)
-                    ->select('punch.*', 'users.nama as user_nama') // Menambahkan select untuk field yang diinginkan
+                    ->select('diess.*', 'users.nama as user_nama') // Menambahkan select untuk field yang diinginkan
                     ->latest('diess.created_at') // Pastikan untuk menggunakan kolom yang tepat untuk latest
                     ->first();
             }

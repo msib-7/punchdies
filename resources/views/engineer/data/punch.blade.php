@@ -541,18 +541,18 @@
         </div>
     </div>
     {{-- Buat Data Pengukuran --}}
-    <div class="modal fade" tabindex="-1" id="modal_buat_pengukuran_1">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true" id="modal_buat_pengukuran_1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Buat Data Pengukuran</h4>
-
+{{-- 
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                         aria-label="Close">
                         <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
                     </div>
-                    <!--end::Close-->
+                    <!--end::Close--> --}}
                 </div>
 
                 <form action="{{route('pnd.pa.' . $route . '.create-punch')}}">

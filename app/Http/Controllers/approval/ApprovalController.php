@@ -400,7 +400,7 @@ class ApprovalController extends Controller
     {
         $dataApproval = ApprovalDisposal::where('req_id', $req_id)->first();
 
-        if ($dataApproval->punch_id != null || $dataApproval->punch_id != '-') {
+        if ($dataApproval->punch_id != null) {
             if ($dataApproval->is_draft == '1') {
                 return redirect()->route('pnd.request.disposal.create', $dataApproval->punch_id)->with('warning', 'You are in draft mode!');
             } elseif ($dataApproval->is_revisi == '1') {

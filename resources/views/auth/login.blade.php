@@ -176,12 +176,6 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                     Audit Trail
                                 </a>
                             </div>
-                            <!--end::Links-->
-                            @if ($browser->isMobile())
-
-                                device detected mobile
-
-                            @endif
                         </div>
                         <!--end::Footer-->
                     </div>
