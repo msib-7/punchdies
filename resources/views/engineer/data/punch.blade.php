@@ -316,8 +316,8 @@
     <!--end::Content-->
 
     {{-- Create Data Punch Modal --}}
-    <div class="modal fade" tabindex="-1" id="modal_create_data_punch">
-        <div class="modal-dialog modal-dialog-centered {{ $browser->isMobile() ? '' : 'modal-lg'}}">
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" id="modal_create_data_punch">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable {{ $browser->isMobile() ? '' : 'modal-lg'}}">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">Create Data {{$jenisPunch}}</h3>
