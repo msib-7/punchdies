@@ -1,9 +1,10 @@
 <script>    
     $(document).ready(function() {
         $('.page-loading').fadeIn();
-        $(window).on('load', function() {
-            $('.page-loading').fadeOut();
-        });
+    });
+
+    $(window).on('load', function() {
+        $('.page-loading').fadeOut();
     });
     function showLoading(){
         // $('#modal_confirm_pengukuran').modal('hide');
