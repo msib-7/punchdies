@@ -22,7 +22,7 @@
 
     <!--begin::Page loading(append to body)-->
     <div class="page-loading">
-        <div class="page-loader flex-column">
+        <div class="page-loader flex-column bg-light bg-opacity-50">
             <span class="spinner-border text-success" style="width: 3rem; height: 3rem;" role="status"></span>
             <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
         </div>
