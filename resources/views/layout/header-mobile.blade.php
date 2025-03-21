@@ -7,7 +7,7 @@
         id="kt_app_header_container">
         <!--begin::Logo-->
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
-            <a href="?page=index">
+            <a href="{{route('dashboard')}}">
                 <img alt="Logo" src="{{asset('assets/logo/Logo-Kalbe-&-BSB_Original.png')}}"
                     class="h-60px app-sidebar-logo-default theme-light-show" />
                 <img alt="Logo" src="{{asset('assets/logo/Logo-Kalbe-&-BSB_Original.png')}}"
