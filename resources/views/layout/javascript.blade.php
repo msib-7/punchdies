@@ -1,7 +1,7 @@
 <script>    
-    $(document).ready(function() {
-        $('.page-loading').fadeIn();
-    });
+    // $(document).ready(function() {
+    //     $('.page-loading').fadeIn();
+    // });
 
     $(window).on('load', function() {
         $('.page-loading').fadeOut();
