@@ -9,7 +9,7 @@
         <!--end::Copyright-->
         <!--begin::Menu-->
         @foreach (auth()->user()->permissions as $item)
-                @if (str_starts_with($item->url, 'dev.'))
+                @if (str_starts_with($item->url, 'dev.index'))
                     <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
                         <li class="menu-item">
                             @php
