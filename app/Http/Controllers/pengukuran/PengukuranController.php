@@ -1110,7 +1110,7 @@ class PengukuranController extends Controller
     public function pilih_pengukuran(Request $request, $id) 
     {
         if($request->segment(3) == 'punch-atas' or $request->segment(3) =='punch-bawah'){
-            $dataPunch = Punch::where('punch_id', $id)->get();
+            $dataPunch = Punch::where('punch_id', $id)->latest()->get();
             
             $arrayData = json_decode($dataPunch, true);
             foreach($arrayData as $data){
@@ -1118,7 +1118,7 @@ class PengukuranController extends Controller
                 echo '<option value="'.$data['masa_pengukuran'].'">'.$data['masa_pengukuran'].'</option>';
             }
         }elseif($request->segment(3) == 'dies'){
-            $dataDies = Dies::where('dies_id', $id)->get();
+            $dataDies = Dies::where('dies_id', $id)->latest()->get();
 
             $arrayData = json_decode($dataDies, true);
             foreach ($arrayData as $data) {
