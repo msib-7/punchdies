@@ -270,7 +270,7 @@ class DeveloperController extends Controller
         );
 
         if (SettingIdleTime::first() === null) {
-            SettingIdleTime::create($idle_time);
+            SettingIdleTime::create(['idle_time' => $idle_time]);
         } else {
             SettingIdleTime::first()->update(['idle_time' => $idle_time]);
         }
