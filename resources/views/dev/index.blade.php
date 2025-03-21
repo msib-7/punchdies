@@ -21,7 +21,7 @@
 <div id="kt_app_content" class="app-content flex-column-fluid">
     <!--begin::Content container-->
     <div id="kt_app_content_container" class="app-container container-xxl">
-        <div class="card card-flush">
+        {{-- <div class="card card-flush">
             <div class="card-header">
                 <h3 class="card-title">Developers Email</h3>
             </div>
@@ -29,7 +29,7 @@
                 @include('dev.settings.mail.index')
             </div>
         </div>
-        <hr>
+        <hr> --}}
         <form action="{{ route('dev.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card card-flush">
