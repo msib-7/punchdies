@@ -44,24 +44,23 @@
                                             <tr>
                                                 <td>{{$no++}}</td>
                                                 <td>{{$item->req_id}}</td>
-                                                @if ($item->punch_id != null || $item->punch_id != '-')
-                                                    @php $printed = false; @endphp
+                                                @if ($item->punch_id != null)
                                                     @foreach ($dataPunch as $punch)
-                                                        @if ($item->punch_id == $punch->punch_id && !$printed)
+                                                        @if ($item->punch_id == $punch->punch_id)
                                                             <td>{{$punch->merk}}</td>
                                                             <td>{{$punch->jenis}}</td>
                                                             <td>{{$punch->masa_pengukuran}}</td>
-                                                            @php $printed = true; @endphp
+                                                            @break
                                                         @endif
                                                     @endforeach
-                                                @elseif ($item->dies_id != null || $item->dies_id != '-')
-                                                    @php $printed = false; @endphp
+                                                @endif
+                                                @if ($item->dies_id != null)
                                                     @foreach ($dataDies as $dies)
-                                                        @if ($item->dies_id == $punch->dies_id && !$printed)
+                                                        @if ($item->dies_id == $dies->dies_id)
                                                             <td>{{$dies->merk}}</td>
                                                             <td>{{$dies->jenis}}</td>
                                                             <td>{{$dies->masa_pengukuran}}</td>
-                                                            @php $printed = true; @endphp
+                                                            @break
                                                         @endif
                                                     @endforeach
                                                 @endif

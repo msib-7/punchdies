@@ -11,7 +11,7 @@
     <!--begin::Engage-->
 	<div class="app-engage " id="kt_app_engage">  
 		<!--begin::Prebuilts toggle-->
-        <a href="{{route('pnd.'.$masaPengukuran.'.'.$route.'.print', $labelDies->dies_id)}}" class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
+        <a href="{{route('pnd.'.$masaPengukuran.'.dies.print', $labelDies->dies_id)}}" class="app-engage-btn hover-dark" id="kt_drawer_example_basic_button">
             <i class="ki-duotone ki-printer fs-1 pt-1 mb-2">
                 <span class="path1"></span>
                 <span class="path2"></span>
