@@ -15,6 +15,7 @@
         content="Metronic - Bootstrap Admin Template, HTML, VueJS, React, Angular. Laravel, Asp.Net Core, Ruby on Rails, Spring Boot, Blazor, Django, Express.js, Node.js, Flask Admin Dashboard Theme & Template" />
     <meta property="og:url" content="https://bit.ly/kfoperation" />
     <meta property="og:site_name" content="PT Kalbe Farma" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
     <link rel="shortcut icon" href="{{ asset('assets/logo/favicon.ico') }}" />
     <!--begin::Fonts(mandatory for all pages)-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
@@ -27,8 +28,8 @@
         // Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }
 
     </script>
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.2/dist/sweetalert2.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.2/dist/sweetalert2.all.min.js"></script>
+    <link href="{{ asset('assets/css/sweetalert2.min.css')}}" rel="stylesheet">
+    <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
 </head>
 <!--end::Head-->
 <!--begin::Body-->

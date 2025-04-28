@@ -1638,6 +1638,8 @@ class PengukuranController extends Controller
             //Master Kalibrasi Tools
             $data['kalibrasiTools'] = KalibrasiTool::get();
 
+            // dd($data);
+
             return view('operator.data.form.pengukuran-punch', $data);
 
         } elseif ($request->segment(3) == 'dies') {
@@ -2295,5 +2297,55 @@ class PengukuranController extends Controller
                 //     });
             }
         }
+    }
+
+    // Cek Master Referensi Pengukuran
+    public function cekMasterReferensi(Request $request)
+    {
+        $masaPengukuran = $request->masaPengukuran;
+        $punch_id = $request->punch_id;
+
+        if ($masaPengukuran == 'pengukuran awal') {
+            $data = PengukuranAwalPunch::query()
+                ->where('punch_id', $punch_id)
+                ->where('masa_pengukuran', $masaPengukuran)
+                ->get();
+        } else {
+            $data = PengukuranRutinPunch::query()
+                ->where('punch_id', $punch_id)
+                ->where('masa_pengukuran', $masaPengukuran)
+                ->get();
+        }
+
+        if($data->master_referensi === null){
+            return response()->json(['error' => 'Data not found'], 404);
+        }
+
+        return response()->json($data);
+    }
+
+    public function saveMasterReferensi(Request $request) 
+    {
+        $masaPengukuran = $request->masaPengukuran;
+        $punch_id = $request->punch_id;
+        $masterPunch = $request->master_punch;
+
+        if ($masaPengukuran === 'pengukuran awal') {
+            $data = PengukuranAwalPunch::query()
+                ->where('punch_id', $punch_id)
+                ->where('masa_pengukuran', $masaPengukuran)
+                ->update([
+                    'master_referensi' => $masterPunch,
+                ]);
+        } else {
+            $data = PengukuranRutinPunch::query()
+                ->where('punch_id', $punch_id)
+                ->where('masa_pengukuran', $masaPengukuran)
+                ->update([
+                    'master_referensi' => $masterPunch,
+                ]);
+        }
+
+        return response()->json('success');
     }
 }

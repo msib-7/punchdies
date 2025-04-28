@@ -248,6 +248,12 @@ Route::prefix('pnd')->name('pnd.')->middleware(['auth', 'CheckRoleUser'])->group
 
 Route::post('pnd/pa/{route}/get-data', [PengukuranController::class, 'preview']);
 
+// Cek Apakah Master Referensi Sudah Ada
+Route::post('cek-master-referensi', [PengukuranController::class, 'cekMasterReferensi']);
+
+// Save Master Referensi Pegukuran
+Route::post('save-master-referensi', [PengukuranController::class, 'saveMasterReferensi']);
+
 Route::post('approval/check-password', [AuthController::class, 'checkPasswordApproval']);
 
 Route::post('user/update-password', [Users::class, 'updatePassword']);
