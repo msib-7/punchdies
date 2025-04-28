@@ -4,7 +4,7 @@
         <!--begin::Copyright-->
         <div class="text-dark order-2 order-md-1">
             <span class="text-muted fw-semibold me-1">2024&copy;</span>
-            <a href="" target="_blank" class="text-gray-800 text-hover-primary">Plant Technical Support</a>
+            <a href="" target="_blank" class="text-gray-800 text-hover-primary">Manufacturing Technology Development</a>
         </div>
         <!--end::Copyright-->
         @if (!request()->is('audit-trail*'))
