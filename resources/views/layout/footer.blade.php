@@ -7,8 +7,9 @@
             <a href="" target="_blank" class="text-gray-800 text-hover-primary">Plant Technical Support</a>
         </div>
         <!--end::Copyright-->
-        <!--begin::Menu-->
-        @foreach (auth()->user()->permissions as $item)
+        @if (!request()->is('audit-trail*'))
+            <!--begin::Menu-->
+            @foreach (auth()->user()->permissions as $item)
                 @if (str_starts_with($item->url, 'dev.index'))
                     <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
                         <li class="menu-item">
@@ -26,8 +27,9 @@
                     </ul>
                     @break
                 @endif
-        @endforeach
-        <!--end::Menu-->
+            @endforeach
+            <!--end::Menu-->
+        @endif
     </div>
     <!--end::Footer container-->
 </div>
