@@ -429,6 +429,7 @@ $idleMinutes = $idleTimeSetting ? $idleTimeSetting->idle_time : 59; // Default t
 <script src="{{asset("/assets/js/scripts.bundle.js")}}"></script>
 <script src="{{ asset('assets/js/check.js') }}"></script>
 <!--end::Global Javascript Bundle-->
+@yield('javascript')
 <!--begin::Vendors Javascript(used for this page only)-->
 <script src="{{asset("/assets/plugins/custom/fslightbox/fslightbox.bundle.js")}}"></script>
 <script src="{{asset("/assets/plugins/custom/datatables/datatables.bundle.js")}}"></script>
@@ -437,12 +438,12 @@ $idleMinutes = $idleTimeSetting ? $idleTimeSetting->idle_time : 59; // Default t
 <script src="{{asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js')}}"></script>
 <!--begin::Custom Javascript(used for this page only)-->
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/table.js')}}"></script>
-<script src="{{asset('assets/js/custom/apps/user-management/users/list/export-users.js')}}"></script>
+{{-- <script src="{{asset('assets/js/custom/apps/user-management/users/list/export-users.js')}}"></script>
 <script src="{{asset('assets/js/custom/apps/user-management/users/list/add.js')}}"></script>
-<script src="{{asset('assets/js/custom/apps/user-management/users/list/add2.js')}}"></script>
+<script src="{{asset('assets/js/custom/apps/user-management/users/list/add2.js')}}"></script> --}}
 <script src="{{asset('assets/js/custom/apps/user-management/permissions/list.js')}}"></script>
-<script src="{{asset('assets/js/custom/apps/user-management/permissions/add-permission.js')}}"></script>
-<script src="{{asset('assets/js/custom/apps/user-management/permissions/update-permission.js')}}"></script>
+{{-- <script src="{{asset('assets/js/custom/apps/user-management/permissions/add-permission.js')}}"></script>
+<script src="{{asset('assets/js/custom/apps/user-management/permissions/update-permission.js')}}"></script> --}}
 <script src="{{asset('assets/js/widgets.bundle.js')}}"></script>
 <script src="{{asset('assets/js/custom/widgets.js')}}"></script>
 <!--end::Custom Javascript-->

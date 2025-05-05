@@ -32,7 +32,7 @@ Route::redirect('/', '/login');
 
 Route::post('/login-auth', [AuthController::class, 'login_auth']);
 
-Route::get('/audit-trail', [AuditController::class, 'audit_trail_guest'])->name('audit');
+Route::get('/audit-trail', [AuditController::class, 'audit_trail_guest'])->middleware(['auth'])->name('audit');
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 

@@ -18,7 +18,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
     <link rel="shortcut icon" href="{{ asset('assets/logo/favicon.ico') }}" />
     <!--begin::Fonts(mandatory for all pages)-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+    <link rel="stylesheet" href="{{ asset('assets/css/inter_font_api.css') }}" />
     <!--end::Fonts-->
     <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
@@ -158,7 +158,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 <!--begin::Submit button-->
                                 <div class="d-grid mt-8">
                                     <button type="submit" id="kt_sign_in_submit" class="btn btn-primary bg-primary bg-gradient">
-                                        <span class="indicator-label">Log in Accout</span>
+                                        <span class="indicator-label">Log in Account</span>
                                     </button>
                                 </div>
                                 <!--end::Submit button-->
@@ -166,7 +166,8 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                             <!--end::Form-->
                         </div>
                         <!--end::Wrapper-->
-                        <div class="separator separator-content"><i>guest</i></div>
+                        <div class="separator"></div>
+                        {{-- <div class="separator separator-content"><i>guest</i></div>
                         <!--begin::Footer-->
                         <div class="d-grid my-5">
                             <!--begin::Links-->
@@ -178,7 +179,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
                                 </a>
                             </div>
                         </div>
-                        <!--end::Footer-->
+                        <!--end::Footer--> --}}
                     </div>
                     <!--end::Content-->
                 </div>
@@ -295,7 +296,7 @@ style="background-image: url('/assets/img/bglineB.svg'); background-repeat: repe
     <script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
     <!--end::Global Javascript Bundle-->
     <!--begin::Custom Javascript(used for this page only)-->
-    <script src="{{asset('assets/js/custom/authentication/sign-in/general.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/custom/authentication/sign-in/general.js')}}"></script> --}}
     <!--end::Custom Javascript-->
     <!--end::Javascript-->
 </body>

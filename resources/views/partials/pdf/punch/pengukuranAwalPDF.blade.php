@@ -176,41 +176,41 @@
                 </tbody>
             </table>
             @if (!$loop->last)
-            <div class="footer"></div>
-                @pageBreak
-            </div>
-        </div>
-        <div class="container mt-10">
-            <div class="section">
-                <h2>Data Pengukuran Awal {{ $jenis }}</h2>
-        
-                <div class="section">
-                    <h3>Product Information</h3>
-                    <table>
-                        <tr>
-                            <th>Merk Punch</th>
-                            <td>{{ strtoupper($labelPunch->merk) }}</td>
-                        </tr>
-                        <tr>
-                            <th>Bulan/Tahun Pembuatan</th>
-                            <td>{{ strtoupper($labelPunch->bulan_pembuatan) . ' ' . $labelPunch->tahun_pembuatan }}</td>
-                        </tr>
-                        <tr>
-                            <th>Nama Mesin Cetak</th>
-                            <td>{{ strtoupper($labelPunch->nama_mesin_cetak) }}</td>
-                        </tr>
-                        <tr>
-                            <th>Kode/Nama Produk</th>
-                            <td>
-                                <?php if(strtoupper($labelPunch->nama_produks->title) == strtoupper($labelPunch->kode_produks->title)) {?>
-                                    {{ strtoupper($labelPunch->nama_produks->title)}}
-                                <?php } else {?>
-                                    {{ strtoupper($labelPunch->nama_produks->title)."/".strtoupper($labelPunch->kode_produks->title)}}
-                                <?php }?>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="footer"></div>
+                        @pageBreak
+                    </div>
                 </div>
+                <div class="container mt-10">
+                    <div class="section">
+                        <h2>Data Pengukuran Awal {{ $jenis }}</h2>
+                
+                        <div class="section">
+                            <h3>Product Information</h3>
+                            <table>
+                                <tr>
+                                    <th>Merk Punch</th>
+                                    <td>{{ strtoupper($labelPunch->merk) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Bulan/Tahun Pembuatan</th>
+                                    <td>{{ strtoupper($labelPunch->bulan_pembuatan) . ' ' . $labelPunch->tahun_pembuatan }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nama Mesin Cetak</th>
+                                    <td>{{ strtoupper($labelPunch->nama_mesin_cetak) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Kode/Nama Produk</th>
+                                    <td>
+                                        <?php if(strtoupper($labelPunch->nama_produks->title) == strtoupper($labelPunch->kode_produks->title)) {?>
+                                            {{ strtoupper($labelPunch->nama_produks->title)}}
+                                        <?php } else {?>
+                                            {{ strtoupper($labelPunch->nama_produks->title)."/".strtoupper($labelPunch->kode_produks->title)}}
+                                        <?php }?>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
             @endif
         @endforeach
         </div>
